@@ -201,6 +201,17 @@ typedef struct _ValaEnumRegisterFunction ValaEnumRegisterFunction;
 typedef struct _ValaEnumRegisterFunctionClass ValaEnumRegisterFunctionClass;
 typedef struct _ValaEnumRegisterFunctionPrivate ValaEnumRegisterFunctionPrivate;
 
+#define VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION (vala_error_domain_register_function_get_type ())
+#define VALA_ERROR_DOMAIN_REGISTER_FUNCTION(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION, ValaErrorDomainRegisterFunction))
+#define VALA_ERROR_DOMAIN_REGISTER_FUNCTION_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION, ValaErrorDomainRegisterFunctionClass))
+#define VALA_IS_ERROR_DOMAIN_REGISTER_FUNCTION(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION))
+#define VALA_IS_ERROR_DOMAIN_REGISTER_FUNCTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION))
+#define VALA_ERROR_DOMAIN_REGISTER_FUNCTION_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_ERROR_DOMAIN_REGISTER_FUNCTION, ValaErrorDomainRegisterFunctionClass))
+
+typedef struct _ValaErrorDomainRegisterFunction ValaErrorDomainRegisterFunction;
+typedef struct _ValaErrorDomainRegisterFunctionClass ValaErrorDomainRegisterFunctionClass;
+typedef struct _ValaErrorDomainRegisterFunctionPrivate ValaErrorDomainRegisterFunctionPrivate;
+
 #define VALA_TYPE_GERROR_MODULE (vala_gerror_module_get_type ())
 #define VALA_GERROR_MODULE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_GERROR_MODULE, ValaGErrorModule))
 #define VALA_GERROR_MODULE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_GERROR_MODULE, ValaGErrorModuleClass))
@@ -422,9 +433,11 @@ struct _ValaCCodeBaseModule {
 	ValaClass* gqueue_type;
 	ValaClass* gvaluearray_type;
 	ValaTypeSymbol* gstringbuilder_type;
-	ValaTypeSymbol* garray_type;
+	ValaClass* garray_type;
 	ValaTypeSymbol* gbytearray_type;
 	ValaTypeSymbol* genericarray_type;
+	ValaClass* gsequence_type;
+	ValaClass* gsequence_iter_type;
 	ValaTypeSymbol* gthreadpool_type;
 	ValaDataType* gquark_type;
 	ValaStruct* gvalue_type;
@@ -477,7 +490,7 @@ struct _ValaCCodeBaseModuleClass {
 	ValaTargetValue* (*load_this_parameter) (ValaCCodeBaseModule* self, ValaTypeSymbol* sym);
 	void (*store_value) (ValaCCodeBaseModule* self, ValaTargetValue* lvalue, ValaTargetValue* value, ValaSourceReference* source_reference);
 	gchar* (*get_delegate_target_cname) (ValaCCodeBaseModule* self, const gchar* delegate_cname);
-	ValaCCodeExpression* (*get_delegate_target_cexpression) (ValaCCodeBaseModule* self, ValaExpression* delegate_expr, ValaCCodeExpression* * delegate_target_destroy_notify);
+	ValaCCodeExpression* (*get_delegate_target_cexpression) (ValaCCodeBaseModule* self, ValaExpression* delegate_expr, ValaCCodeExpression** delegate_target_destroy_notify);
 	ValaCCodeExpression* (*get_delegate_target_cvalue) (ValaCCodeBaseModule* self, ValaTargetValue* value);
 	ValaCCodeExpression* (*get_delegate_target_destroy_notify_cvalue) (ValaCCodeBaseModule* self, ValaTargetValue* value);
 	gchar* (*get_delegate_target_destroy_notify_cname) (ValaCCodeBaseModule* self, const gchar* delegate_cname);
@@ -498,12 +511,7 @@ struct _ValaCCodeBaseModuleClass {
 	ValaCCodeExpression* (*get_value_setter_function) (ValaCCodeBaseModule* self, ValaDataType* type_reference);
 	ValaCCodeExpression* (*get_value_taker_function) (ValaCCodeBaseModule* self, ValaDataType* type_reference);
 	void (*register_dbus_info) (ValaCCodeBaseModule* self, ValaCCodeBlock* block, ValaObjectTypeSymbol* bindable);
-	gchar* (*get_dynamic_property_getter_cname) (ValaCCodeBaseModule* self, ValaDynamicProperty* node);
-	gchar* (*get_dynamic_property_setter_cname) (ValaCCodeBaseModule* self, ValaDynamicProperty* node);
 	gchar* (*get_dynamic_signal_cname) (ValaCCodeBaseModule* self, ValaDynamicSignal* node);
-	gchar* (*get_dynamic_signal_connect_wrapper_name) (ValaCCodeBaseModule* self, ValaDynamicSignal* node);
-	gchar* (*get_dynamic_signal_connect_after_wrapper_name) (ValaCCodeBaseModule* self, ValaDynamicSignal* node);
-	gchar* (*get_dynamic_signal_disconnect_wrapper_name) (ValaCCodeBaseModule* self, ValaDynamicSignal* node);
 	gchar* (*get_array_length_cname) (ValaCCodeBaseModule* self, const gchar* array_cname, gint dim);
 	gchar* (*get_variable_array_length_cname) (ValaCCodeBaseModule* self, ValaVariable* variable, gint dim);
 	ValaCCodeExpression* (*get_array_length_cexpression) (ValaCCodeBaseModule* self, ValaExpression* array_expr, gint dim);
@@ -690,6 +698,15 @@ struct _ValaEnumRegisterFunction {
 };
 
 struct _ValaEnumRegisterFunctionClass {
+	ValaTypeRegisterFunctionClass parent_class;
+};
+
+struct _ValaErrorDomainRegisterFunction {
+	ValaTypeRegisterFunction parent_instance;
+	ValaErrorDomainRegisterFunctionPrivate * priv;
+};
+
+struct _ValaErrorDomainRegisterFunctionClass {
 	ValaTypeRegisterFunctionClass parent_class;
 };
 
@@ -1054,6 +1071,7 @@ VALA_EXTERN ValaBlock* vala_ccode_base_module_next_closure_block (ValaCCodeBaseM
 VALA_EXTERN ValaCCodeFunction* vala_ccode_base_module_get_ccode (ValaCCodeBaseModule* self);
 VALA_EXTERN ValaArrayList* vala_ccode_base_module_get_temp_ref_values (ValaCCodeBaseModule* self);
 VALA_EXTERN ValaSet* vala_ccode_base_module_reserved_identifiers;
+VALA_EXTERN ValaSet* vala_ccode_base_module_reserved_vala_identifiers;
 VALA_EXTERN gint vala_ccode_base_module_get_next_temp_var_id (ValaCCodeBaseModule* self);
 VALA_EXTERN void vala_ccode_base_module_set_next_temp_var_id (ValaCCodeBaseModule* self,
                                                   gint value);
@@ -1067,6 +1085,7 @@ VALA_EXTERN void vala_ccode_base_module_set_current_method_return (ValaCCodeBase
 VALA_EXTERN ValaMap* vala_ccode_base_module_get_variable_name_map (ValaCCodeBaseModule* self);
 VALA_EXTERN gint vala_ccode_base_module_ccode_attribute_cache_index;
 VALA_EXTERN ValaCCodeBaseModule* vala_ccode_base_module_construct (GType object_type);
+VALA_EXTERN void vala_ccode_base_module_init (void);
 VALA_EXTERN void vala_ccode_base_module_push_context (ValaCCodeBaseModule* self,
                                           ValaCCodeBaseModuleEmitContext* emit_context);
 VALA_EXTERN void vala_ccode_base_module_pop_context (ValaCCodeBaseModule* self);
@@ -1248,7 +1267,7 @@ VALA_EXTERN gchar* vala_ccode_base_module_get_delegate_target_cname (ValaCCodeBa
                                                          const gchar* delegate_cname);
 VALA_EXTERN ValaCCodeExpression* vala_ccode_base_module_get_delegate_target_cexpression (ValaCCodeBaseModule* self,
                                                                              ValaExpression* delegate_expr,
-                                                                             ValaCCodeExpression* * delegate_target_destroy_notify);
+                                                                             ValaCCodeExpression** delegate_target_destroy_notify);
 VALA_EXTERN ValaCCodeExpression* vala_ccode_base_module_get_delegate_target_cvalue (ValaCCodeBaseModule* self,
                                                                         ValaTargetValue* value);
 VALA_EXTERN ValaCCodeExpression* vala_ccode_base_module_get_delegate_target_destroy_notify_cvalue (ValaCCodeBaseModule* self,
@@ -1338,7 +1357,7 @@ VALA_EXTERN gboolean vala_ccode_base_module_is_lvalue_access_allowed (ValaCCodeB
                                                           ValaDataType* type);
 VALA_EXTERN gboolean vala_ccode_base_module_requires_memset_init (ValaCCodeBaseModule* self,
                                                       ValaVariable* variable,
-                                                      ValaCCodeExpression* * size);
+                                                      ValaCCodeExpression** size);
 VALA_EXTERN ValaCCodeDeclaratorSuffix* vala_ccode_base_module_get_ccode_declarator_suffix (ValaCCodeBaseModule* self,
                                                                                ValaDataType* type);
 VALA_EXTERN ValaCCodeConstant* vala_ccode_base_module_get_signal_canonical_constant (ValaCCodeBaseModule* self,
@@ -1373,18 +1392,8 @@ VALA_EXTERN ValaCCodeExpression* vala_ccode_base_module_get_value_taker_function
 VALA_EXTERN void vala_ccode_base_module_register_dbus_info (ValaCCodeBaseModule* self,
                                                 ValaCCodeBlock* block,
                                                 ValaObjectTypeSymbol* bindable);
-VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_property_getter_cname (ValaCCodeBaseModule* self,
-                                                                 ValaDynamicProperty* node);
-VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_property_setter_cname (ValaCCodeBaseModule* self,
-                                                                 ValaDynamicProperty* node);
 VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_signal_cname (ValaCCodeBaseModule* self,
                                                         ValaDynamicSignal* node);
-VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_signal_connect_wrapper_name (ValaCCodeBaseModule* self,
-                                                                       ValaDynamicSignal* node);
-VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_signal_connect_after_wrapper_name (ValaCCodeBaseModule* self,
-                                                                             ValaDynamicSignal* node);
-VALA_EXTERN gchar* vala_ccode_base_module_get_dynamic_signal_disconnect_wrapper_name (ValaCCodeBaseModule* self,
-                                                                          ValaDynamicSignal* node);
 VALA_EXTERN gchar* vala_ccode_base_module_get_array_length_cname (ValaCCodeBaseModule* self,
                                                       const gchar* array_cname,
                                                       gint dim);
@@ -1509,6 +1518,14 @@ VALA_EXTERN void vala_enum_register_function_set_enum_reference (ValaEnumRegiste
 VALA_EXTERN ValaEnumRegisterFunction* vala_enum_register_function_new (ValaEnum* en);
 VALA_EXTERN ValaEnumRegisterFunction* vala_enum_register_function_construct (GType object_type,
                                                                  ValaEnum* en);
+VALA_EXTERN GType vala_error_domain_register_function_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaErrorDomainRegisterFunction, vala_typeregister_function_unref)
+VALA_EXTERN ValaErrorDomain* vala_error_domain_register_function_get_error_domain_reference (ValaErrorDomainRegisterFunction* self);
+VALA_EXTERN void vala_error_domain_register_function_set_error_domain_reference (ValaErrorDomainRegisterFunction* self,
+                                                                     ValaErrorDomain* value);
+VALA_EXTERN ValaErrorDomainRegisterFunction* vala_error_domain_register_function_new (ValaErrorDomain* edomain);
+VALA_EXTERN ValaErrorDomainRegisterFunction* vala_error_domain_register_function_construct (GType object_type,
+                                                                                ValaErrorDomain* edomain);
 VALA_EXTERN GType vala_gerror_module_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaGErrorModule, vala_code_visitor_unref)
 VALA_EXTERN GType vala_gtype_module_get_type (void) G_GNUC_CONST ;
@@ -1645,6 +1662,8 @@ VALA_EXTERN void vala_set_delegate_target_destroy_notify (ValaExpression* expr,
                                               ValaCCodeExpression* destroy_notify);
 VALA_EXTERN void vala_append_array_length (ValaExpression* expr,
                                ValaCCodeExpression* size);
+VALA_EXTERN void vala_set_array_length (ValaExpression* expr,
+                            ValaCCodeExpression* size);
 VALA_EXTERN ValaList* vala_get_array_lengths (ValaExpression* expr);
 VALA_EXTERN gboolean vala_get_lvalue (ValaTargetValue* value);
 VALA_EXTERN gboolean vala_get_non_null (ValaTargetValue* value);

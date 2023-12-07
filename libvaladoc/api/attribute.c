@@ -27,9 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <vala.h>
 #include <valagee.h>
-#include <glib-object.h>
 
 enum  {
 	VALADOC_API_ATTRIBUTE_0_PROPERTY,
@@ -142,7 +142,7 @@ valadoc_api_attribute_get_source_file (ValadocApiAttribute* self)
 {
 	ValadocApiSourceFile* _tmp0_;
 	ValadocApiSourceFile* _tmp1_;
-	ValadocApiSourceFile* result = NULL;
+	ValadocApiSourceFile* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->file;
 	_tmp1_ = _g_object_ref0 (_tmp0_);
@@ -180,7 +180,7 @@ valadoc_api_attribute_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp55_;
 	ValadocApiSignatureBuilder* _tmp56_;
 	ValadocContentRun* _tmp57_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiAttribute*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	builder = _tmp0_;
@@ -390,13 +390,13 @@ valadoc_api_attribute_get_type_once (void)
 GType
 valadoc_api_attribute_get_type (void)
 {
-	static volatile gsize valadoc_api_attribute_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_attribute_type_id__volatile)) {
+	static volatile gsize valadoc_api_attribute_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_attribute_type_id__once)) {
 		GType valadoc_api_attribute_type_id;
 		valadoc_api_attribute_type_id = valadoc_api_attribute_get_type_once ();
-		g_once_init_leave (&valadoc_api_attribute_type_id__volatile, valadoc_api_attribute_type_id);
+		g_once_init_leave (&valadoc_api_attribute_type_id__once, valadoc_api_attribute_type_id);
 	}
-	return valadoc_api_attribute_type_id__volatile;
+	return valadoc_api_attribute_type_id__once;
 }
 
 static void

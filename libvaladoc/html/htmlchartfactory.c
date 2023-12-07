@@ -24,7 +24,8 @@
  */
 
 #include "valadoc.h"
-#include <graphviz/gvc.h>
+#include <gvc.h>
+#include <glib-object.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -101,7 +102,7 @@ valadoc_html_simple_chart_factory_real_create_graph (ValadocChartsFactory* base,
 	Agraph_t* graph = NULL;
 	Agraph_t* _tmp0_;
 	ValadocApiNode* _tmp1_;
-	Agraph_t* result = NULL;
+	Agraph_t* result;
 	self = (ValadocHtmlSimpleChartFactory*) base;
 	g_return_val_if_fail (item != NULL, NULL);
 	_tmp0_ = VALADOC_CHARTS_FACTORY_CLASS (valadoc_html_simple_chart_factory_parent_class)->create_graph ((ValadocChartsFactory*) G_TYPE_CHECK_INSTANCE_CAST (self, VALADOC_CHARTS_TYPE_SIMPLE_FACTORY, ValadocChartsSimpleFactory), item);
@@ -121,7 +122,7 @@ valadoc_html_simple_chart_factory_real_configure_type (ValadocChartsSimpleFactor
 	ValadocHtmlSimpleChartFactory * self;
 	Agnode_t* _tmp0_;
 	ValadocApiNode* _tmp1_;
-	Agnode_t* result = NULL;
+	Agnode_t* result;
 	self = (ValadocHtmlSimpleChartFactory*) base;
 	g_return_val_if_fail (node != NULL, NULL);
 	g_return_val_if_fail (item != NULL, NULL);
@@ -193,12 +194,12 @@ valadoc_html_simple_chart_factory_get_type_once (void)
 GType
 valadoc_html_simple_chart_factory_get_type (void)
 {
-	static volatile gsize valadoc_html_simple_chart_factory_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_simple_chart_factory_type_id__volatile)) {
+	static volatile gsize valadoc_html_simple_chart_factory_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_simple_chart_factory_type_id__once)) {
 		GType valadoc_html_simple_chart_factory_type_id;
 		valadoc_html_simple_chart_factory_type_id = valadoc_html_simple_chart_factory_get_type_once ();
-		g_once_init_leave (&valadoc_html_simple_chart_factory_type_id__volatile, valadoc_html_simple_chart_factory_type_id);
+		g_once_init_leave (&valadoc_html_simple_chart_factory_type_id__once, valadoc_html_simple_chart_factory_type_id);
 	}
-	return valadoc_html_simple_chart_factory_type_id__volatile;
+	return valadoc_html_simple_chart_factory_type_id__once;
 }
 

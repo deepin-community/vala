@@ -194,7 +194,7 @@ ValaList*
 vala_error_domain_get_codes (ValaErrorDomain* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->codes;
 	result = _tmp0_;
@@ -210,7 +210,7 @@ ValaList*
 vala_error_domain_get_methods (ValaErrorDomain* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->methods;
 	result = _tmp0_;
@@ -312,7 +312,7 @@ static gboolean
 vala_error_domain_real_is_reference_type (ValaTypeSymbol* base)
 {
 	ValaErrorDomain * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaErrorDomain*) base;
 	result = FALSE;
 	return result;
@@ -330,7 +330,7 @@ vala_error_domain_real_check (ValaCodeNode* base,
 	gint _tmp6_;
 	gboolean _tmp40_;
 	gboolean _tmp41_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaErrorDomain*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -527,12 +527,12 @@ vala_error_domain_get_type_once (void)
 GType
 vala_error_domain_get_type (void)
 {
-	static volatile gsize vala_error_domain_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_error_domain_type_id__volatile)) {
+	static volatile gsize vala_error_domain_type_id__once = 0;
+	if (g_once_init_enter (&vala_error_domain_type_id__once)) {
 		GType vala_error_domain_type_id;
 		vala_error_domain_type_id = vala_error_domain_get_type_once ();
-		g_once_init_leave (&vala_error_domain_type_id__volatile, vala_error_domain_type_id);
+		g_once_init_leave (&vala_error_domain_type_id__once, vala_error_domain_type_id);
 	}
-	return vala_error_domain_type_id__volatile;
+	return vala_error_domain_type_id__once;
 }
 

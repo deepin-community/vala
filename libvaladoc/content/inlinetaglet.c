@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 enum  {
 	VALADOC_CONTENT_INLINE_TAGLET_0_PROPERTY,
@@ -132,7 +133,7 @@ valadoc_content_inline_taglet_get_content (ValadocContentInlineTaglet* self)
 	ValadocContentContentElement* _tmp0_;
 	ValadocContentContentElement* _tmp2_;
 	ValadocContentContentElement* _tmp3_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_content;
 	if (_tmp0_ == NULL) {
@@ -209,7 +210,7 @@ static gboolean
 valadoc_content_inline_taglet_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentInlineTaglet * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentInlineTaglet*) base;
 	result = FALSE;
 	return result;
@@ -280,12 +281,12 @@ valadoc_content_inline_taglet_get_type_once (void)
 GType
 valadoc_content_inline_taglet_get_type (void)
 {
-	static volatile gsize valadoc_content_inline_taglet_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_inline_taglet_type_id__volatile)) {
+	static volatile gsize valadoc_content_inline_taglet_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_inline_taglet_type_id__once)) {
 		GType valadoc_content_inline_taglet_type_id;
 		valadoc_content_inline_taglet_type_id = valadoc_content_inline_taglet_get_type_once ();
-		g_once_init_leave (&valadoc_content_inline_taglet_type_id__volatile, valadoc_content_inline_taglet_type_id);
+		g_once_init_leave (&valadoc_content_inline_taglet_type_id__once, valadoc_content_inline_taglet_type_id);
 	}
-	return valadoc_content_inline_taglet_type_id__volatile;
+	return valadoc_content_inline_taglet_type_id__once;
 }
 

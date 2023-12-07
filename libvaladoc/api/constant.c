@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <vala.h>
 #include <valacodegen.h>
 
@@ -143,7 +144,7 @@ valadoc_api_constant_get_cname (ValadocApiConstant* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -172,7 +173,7 @@ valadoc_api_constant_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp11_;
 	ValadocContentRun* _tmp12_;
 	ValadocContentInline* _tmp13_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiConstant*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	_tmp1_ = _tmp0_;
@@ -224,7 +225,7 @@ valadoc_api_constant_class_init (ValadocApiConstantClass * klass,
 	g_type_class_adjust_private_offset (klass, &ValadocApiConstant_private_offset);
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_constant_real_build_signature;
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_constant_real_accept;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_constant_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_constant_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_constant_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_api_constant_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_constant_finalize;
@@ -271,13 +272,13 @@ valadoc_api_constant_get_type_once (void)
 GType
 valadoc_api_constant_get_type (void)
 {
-	static volatile gsize valadoc_api_constant_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_constant_type_id__volatile)) {
+	static volatile gsize valadoc_api_constant_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_constant_type_id__once)) {
 		GType valadoc_api_constant_type_id;
 		valadoc_api_constant_type_id = valadoc_api_constant_get_type_once ();
-		g_once_init_leave (&valadoc_api_constant_type_id__volatile, valadoc_api_constant_type_id);
+		g_once_init_leave (&valadoc_api_constant_type_id__once, valadoc_api_constant_type_id);
 	}
-	return valadoc_api_constant_type_id__volatile;
+	return valadoc_api_constant_type_id__once;
 }
 
 static void

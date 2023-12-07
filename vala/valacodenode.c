@@ -35,8 +35,9 @@
 
 #define _vala_source_reference_unref0(var) ((var == NULL) ? NULL : (var = (vala_source_reference_unref (var), NULL)))
 #define _vala_iterable_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterable_unref (var), NULL)))
-#define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
+#define _vala_map_iterator_unref0(var) ((var == NULL) ? NULL : (var = (vala_map_iterator_unref (var), NULL)))
+#define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _vala_attribute_cache_unref0(var) ((var == NULL) ? NULL : (var = (vala_attribute_cache_unref (var), NULL)))
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
 typedef struct _ValaParamSpecCodeNode ValaParamSpecCodeNode;
@@ -306,7 +307,7 @@ static gboolean
 vala_code_node_real_check (ValaCodeNode* self,
                            ValaCodeContext* context)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (context != NULL, FALSE);
 	result = TRUE;
 	return result;
@@ -399,7 +400,7 @@ vala_code_node_get_attribute (ValaCodeNode* self,
                               const gchar* name)
 {
 	GList* _tmp0_;
-	ValaAttribute* result = NULL;
+	ValaAttribute* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->attributes;
@@ -430,10 +431,76 @@ vala_code_node_get_attribute (ValaCodeNode* self,
 	return result;
 }
 
+/**
+ * Add attribute and append key/value pairs to an existing one.
+ *
+ * @param a  an attribute to add
+ */
 static gpointer
 _vala_code_node_ref0 (gpointer self)
 {
 	return self ? vala_code_node_ref (self) : NULL;
+}
+
+void
+vala_code_node_add_attribute (ValaCodeNode* self,
+                              ValaAttribute* a)
+{
+	ValaAttribute* old_a = NULL;
+	const gchar* _tmp0_;
+	const gchar* _tmp1_;
+	ValaAttribute* _tmp2_;
+	ValaAttribute* _tmp3_;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (a != NULL);
+	_tmp0_ = vala_attribute_get_name (a);
+	_tmp1_ = _tmp0_;
+	_tmp2_ = vala_code_node_get_attribute (self, _tmp1_);
+	old_a = _tmp2_;
+	_tmp3_ = old_a;
+	if (_tmp3_ == NULL) {
+		ValaAttribute* _tmp4_;
+		_tmp4_ = _vala_code_node_ref0 (a);
+		self->attributes = g_list_append (self->attributes, _tmp4_);
+	} else {
+		ValaMapIterator* it = NULL;
+		ValaMap* _tmp5_;
+		ValaMap* _tmp6_;
+		ValaMapIterator* _tmp7_;
+		_tmp5_ = vala_attribute_get_args (a);
+		_tmp6_ = _tmp5_;
+		_tmp7_ = vala_map_map_iterator (_tmp6_);
+		it = _tmp7_;
+		while (TRUE) {
+			ValaMapIterator* _tmp8_;
+			ValaAttribute* _tmp9_;
+			ValaMap* _tmp10_;
+			ValaMap* _tmp11_;
+			ValaMapIterator* _tmp12_;
+			gpointer _tmp13_;
+			gchar* _tmp14_;
+			ValaMapIterator* _tmp15_;
+			gpointer _tmp16_;
+			gchar* _tmp17_;
+			_tmp8_ = it;
+			if (!vala_map_iterator_next (_tmp8_)) {
+				break;
+			}
+			_tmp9_ = old_a;
+			_tmp10_ = vala_attribute_get_args (_tmp9_);
+			_tmp11_ = _tmp10_;
+			_tmp12_ = it;
+			_tmp13_ = vala_map_iterator_get_key (_tmp12_);
+			_tmp14_ = (gchar*) _tmp13_;
+			_tmp15_ = it;
+			_tmp16_ = vala_map_iterator_get_value (_tmp15_);
+			_tmp17_ = (gchar*) _tmp16_;
+			vala_map_set (_tmp11_, _tmp14_, _tmp17_);
+			_g_free0 (_tmp17_);
+			_g_free0 (_tmp14_);
+		}
+		_vala_map_iterator_unref0 (it);
+	}
 }
 
 static ValaAttribute*
@@ -444,7 +511,7 @@ vala_code_node_get_or_create_attribute (ValaCodeNode* self,
 	ValaAttribute* _tmp0_;
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp7_;
-	ValaAttribute* result = NULL;
+	ValaAttribute* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = vala_code_node_get_attribute (self, name);
@@ -473,6 +540,25 @@ vala_code_node_get_or_create_attribute (ValaCodeNode* self,
 }
 
 /**
+ * Returns true if the specified attribute is set.
+ *
+ * @param  attribute attribute name
+ * @return           true if the node has the given attribute
+ */
+gboolean
+vala_code_node_has_attribute (ValaCodeNode* self,
+                              const gchar* attribute)
+{
+	ValaAttribute* _tmp0_;
+	gboolean result;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (attribute != NULL, FALSE);
+	_tmp0_ = vala_code_node_get_attribute (self, attribute);
+	result = _tmp0_ != NULL;
+	return result;
+}
+
+/**
  * Returns true if the specified attribute argument is set.
  *
  * @param  attribute attribute name
@@ -488,7 +574,7 @@ vala_code_node_has_attribute_argument (ValaCodeNode* self,
 	ValaAttribute* _tmp0_;
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
 	g_return_val_if_fail (argument != NULL, FALSE);
@@ -516,7 +602,7 @@ vala_g_list_remove_full (GList* self,
                          GFreeFunc func)
 {
 	GList* l = NULL;
-	GList* result = NULL;
+	GList* result;
 	l = self;
 	while (TRUE) {
 		GList* _tmp0_;
@@ -655,7 +741,7 @@ vala_code_node_get_attribute_string (ValaCodeNode* self,
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (attribute != NULL, NULL);
 	g_return_val_if_fail (argument != NULL, NULL);
@@ -691,7 +777,7 @@ vala_code_node_get_attribute_integer (ValaCodeNode* self,
 	ValaAttribute* _tmp0_;
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (attribute != NULL, 0);
 	g_return_val_if_fail (argument != NULL, 0);
@@ -725,7 +811,7 @@ vala_code_node_get_attribute_double (ValaCodeNode* self,
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp2_;
 	ValaAttribute* _tmp3_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (self != NULL, 0.0);
 	g_return_val_if_fail (attribute != NULL, 0.0);
 	g_return_val_if_fail (argument != NULL, 0.0);
@@ -764,7 +850,7 @@ vala_code_node_get_attribute_bool (ValaCodeNode* self,
 	ValaAttribute* _tmp1_;
 	ValaAttribute* _tmp2_;
 	ValaAttribute* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
 	g_return_val_if_fail (argument != NULL, FALSE);
@@ -892,7 +978,7 @@ vala_code_node_set_attribute_double (ValaCodeNode* self,
 static gchar*
 bool_to_string (gboolean self)
 {
-	gchar* result = NULL;
+	gchar* result;
 	if (self) {
 		gchar* _tmp0_;
 		_tmp0_ = g_strdup ("true");
@@ -942,7 +1028,7 @@ vala_code_node_copy_attribute_string (ValaCodeNode* self,
                                       const gchar* attribute,
                                       const gchar* argument)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (source != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
@@ -975,7 +1061,7 @@ vala_code_node_copy_attribute_integer (ValaCodeNode* self,
                                        const gchar* attribute,
                                        const gchar* argument)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (source != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
@@ -1003,7 +1089,7 @@ vala_code_node_copy_attribute_double (ValaCodeNode* self,
                                       const gchar* attribute,
                                       const gchar* argument)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (source != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
@@ -1031,7 +1117,7 @@ vala_code_node_copy_attribute_bool (ValaCodeNode* self,
                                     const gchar* attribute,
                                     const gchar* argument)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (source != NULL, FALSE);
 	g_return_val_if_fail (attribute != NULL, FALSE);
@@ -1060,7 +1146,7 @@ vala_code_node_get_attribute_cache (ValaCodeNode* self,
 	ValaAttributeCache** _tmp1_;
 	gint _tmp1__length1;
 	ValaAttributeCache* _tmp2_;
-	ValaAttributeCache* result = NULL;
+	ValaAttributeCache* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->attributes_cache;
 	_tmp0__length1 = self->priv->attributes_cache_length1;
@@ -1135,7 +1221,7 @@ vala_code_node_real_to_string (ValaCodeNode* self)
 	GString* _tmp12_;
 	const gchar* _tmp13_;
 	gchar* _tmp14_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_string_new ("");
 	str = _tmp0_;
 	_tmp1_ = str;
@@ -1247,7 +1333,7 @@ vala_code_node_get_temp_name (void)
 	gchar* _tmp2_;
 	gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	vala_code_node_last_temp_nr = vala_code_node_last_temp_nr + 1;
 	_tmp0_ = vala_code_node_last_temp_nr;
 	_tmp1_ = g_strdup_printf ("%i", _tmp0_);
@@ -1268,7 +1354,7 @@ gint
 vala_code_node_get_attribute_cache_index (void)
 {
 	gint _tmp0_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = vala_code_node_next_attribute_cache_index;
 	vala_code_node_next_attribute_cache_index = _tmp0_ + 1;
 	result = _tmp0_;
@@ -1475,13 +1561,13 @@ vala_code_node_get_type_once (void)
 GType
 vala_code_node_get_type (void)
 {
-	static volatile gsize vala_code_node_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_code_node_type_id__volatile)) {
+	static volatile gsize vala_code_node_type_id__once = 0;
+	if (g_once_init_enter (&vala_code_node_type_id__once)) {
 		GType vala_code_node_type_id;
 		vala_code_node_type_id = vala_code_node_get_type_once ();
-		g_once_init_leave (&vala_code_node_type_id__volatile, vala_code_node_type_id);
+		g_once_init_leave (&vala_code_node_type_id__once, vala_code_node_type_id);
 	}
-	return vala_code_node_type_id__volatile;
+	return vala_code_node_type_id__once;
 }
 
 gpointer
@@ -1688,13 +1774,13 @@ vala_attribute_cache_get_type_once (void)
 GType
 vala_attribute_cache_get_type (void)
 {
-	static volatile gsize vala_attribute_cache_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_attribute_cache_type_id__volatile)) {
+	static volatile gsize vala_attribute_cache_type_id__once = 0;
+	if (g_once_init_enter (&vala_attribute_cache_type_id__once)) {
 		GType vala_attribute_cache_type_id;
 		vala_attribute_cache_type_id = vala_attribute_cache_get_type_once ();
-		g_once_init_leave (&vala_attribute_cache_type_id__volatile, vala_attribute_cache_type_id);
+		g_once_init_leave (&vala_attribute_cache_type_id__once, vala_attribute_cache_type_id);
 	}
-	return vala_attribute_cache_type_id__volatile;
+	return vala_attribute_cache_type_id__once;
 }
 
 gpointer

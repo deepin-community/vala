@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -168,12 +169,12 @@ vala_using_directive_get_type_once (void)
 GType
 vala_using_directive_get_type (void)
 {
-	static volatile gsize vala_using_directive_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_using_directive_type_id__volatile)) {
+	static volatile gsize vala_using_directive_type_id__once = 0;
+	if (g_once_init_enter (&vala_using_directive_type_id__once)) {
 		GType vala_using_directive_type_id;
 		vala_using_directive_type_id = vala_using_directive_get_type_once ();
-		g_once_init_leave (&vala_using_directive_type_id__volatile, vala_using_directive_type_id);
+		g_once_init_leave (&vala_using_directive_type_id__once, vala_using_directive_type_id);
 	}
-	return vala_using_directive_type_id__volatile;
+	return vala_using_directive_type_id__once;
 }
 

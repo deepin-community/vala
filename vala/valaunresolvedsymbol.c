@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -172,7 +173,7 @@ vala_unresolved_symbol_real_to_string (ValaCodeNode* base)
 {
 	ValaUnresolvedSymbol * self;
 	ValaUnresolvedSymbol* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaUnresolvedSymbol*) base;
 	_tmp0_ = self->priv->_inner;
 	if (_tmp0_ == NULL) {
@@ -214,7 +215,7 @@ vala_unresolved_symbol_copy (ValaUnresolvedSymbol* self)
 	ValaSourceReference* _tmp3_;
 	ValaSourceReference* _tmp4_;
 	ValaUnresolvedSymbol* _tmp5_;
-	ValaUnresolvedSymbol* result = NULL;
+	ValaUnresolvedSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_inner;
 	_tmp1_ = vala_symbol_get_name ((ValaSymbol*) self);
@@ -268,12 +269,12 @@ vala_unresolved_symbol_get_type_once (void)
 GType
 vala_unresolved_symbol_get_type (void)
 {
-	static volatile gsize vala_unresolved_symbol_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_unresolved_symbol_type_id__volatile)) {
+	static volatile gsize vala_unresolved_symbol_type_id__once = 0;
+	if (g_once_init_enter (&vala_unresolved_symbol_type_id__once)) {
 		GType vala_unresolved_symbol_type_id;
 		vala_unresolved_symbol_type_id = vala_unresolved_symbol_get_type_once ();
-		g_once_init_leave (&vala_unresolved_symbol_type_id__volatile, vala_unresolved_symbol_type_id);
+		g_once_init_leave (&vala_unresolved_symbol_type_id__once, vala_unresolved_symbol_type_id);
 	}
-	return vala_unresolved_symbol_type_id__volatile;
+	return vala_unresolved_symbol_type_id__once;
 }
 

@@ -1,10 +1,1578 @@
+2023-11-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.14
+
+2023-11-12  Mazhar Hussain  <realmazharhussain@gmail.com>
+
+	gstreamer-1.0: Make ElementFactory.make()'s name parameter default to null
+
+2023-11-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Generate compatible wrapper of ref-void functions
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1486
+
+2023-10-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Prevent usage of strlen() on non-null-terminated string
+	next_pos is not guaranteed to hold a null-terminated string.
+	Therefore g_str_has_prefix() can fail in strlen() and crash.
+
+	Based on patch by Daniel Kolesa
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1485
+
+2023-10-18  Corentin Noël  <corentin.noel@collabora.com>
+
+	gtk4-wayland: Add the missing wayland-client bindings
+	Bind the native Wayland types and unskip the methods.
+
+	wayland-client: Complete the binding
+	Increase the coverage of the binding.
+
+2023-10-18  zhangdiandian  <1635468471@qq.com>
+
+	doc: Fix typo in release notes
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1487
+
+2023-10-18  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	glib-2.0: Add new symbols from 2.78
+
+2023-08-29  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.13
+
+2023-08-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Restore CssProvider.load_from_data() signature to take an array
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1478
+
+2023-08-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.12
+
+	gtk4: Preserve compatibility with <= 4.8.x
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1475
+
+2023-08-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Only transform default initializers of parameters
+	Explicitly passed sizeof/typeof arguments are resolved properly
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1474
+
+2023-08-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.11
+
+2023-08-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Regenerate GIR-based bindings
+
+2023-08-12  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	girparser: Support glib:ref-func, glib:unref-func, copy-function and free-function
+
+2023-08-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Add MarkupReader.has_attribute() helper and use it accordingly
+
+	vala: Add CodeNode.has_attribute() helper and use it accordingly
+
+2023-08-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Update to 4.12.0
+
+	vala: Infer generic type from typeof() initializer of parameters
+	Additionally improve inference from sizeof() initializers
+
+2023-08-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.10
+
+2023-08-03  hrxi  <hrrrxi@gmail.com>
+
+	codegen: Don't emit casts in static field initializers
+	Found by -std=c99 -pedantic-errors
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1459
+
+2023-08-03  Val Och  <v19930312@gmail.com>
+
+	linux: Add resolution field to Input.AbsInfo
+
+2023-08-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	parser: Reset tokens buffer when parsing a new source file
+	Old token buffer entries will result in faulty source references.
+
+	vala: Correctly handle possible null from SourceFile.get_source_line()
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1464
+
+2023-08-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	glib-2.0: Update return-type of HashTable.add/insert/replace() and GenericSet.add()
+	These return bool since 2.40
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1465
+
+2023-08-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Allow "set" method of an container to return void or bool
+
+	vala: Output additional information when accessing unknown member
+	Return location of the variable declaration which will usually
+	show its type.
+
+	libpq: Fix a few binding errors
+
+2023-07-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.9
+
+2023-06-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Improve handling of sealed classes
+	Avoid redundant declarations and make *_get_type() show up in public header
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1451
+
+2023-06-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	testrunner: Add support to check generated header
+
+2023-06-30  Alistair Thomas  <astavale@yahoo.co.uk>
+
+	vapi: Add documentation to GLib.Math that '-X -lm' may be needed when compiling
+	See https://gitlab.gnome.org/GNOME/vala/issues/1388
+
+2023-06-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Pick up fix for Gdk.Toplevel.compute_size.size parameter
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add missing EXTERN flag for GType function of error domains
+	In addition to da4ff03c5ca427cf7cc4574f52f5190dc1b0dfb9
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1448
+
+2023-06-21  Tomoaki Kawada  <kawada@kmckk.co.jp>
+
+	glib-2.0: Add ConvertError.{NO_MEMORY,EMBEDDED_NUL}
+	They are available since 2.40 and 2.56 respectively.
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Regenerate GIR-based bindings
+
+	vala: Fix spaces for attributes when writing property accessors
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gio-2.0: Ease implemention of GLib.ActionGroup
+	*.get_action_*/has_action vfuncs are not required to be implemented
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1447
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Report an error when trying to chain up to inaccessible private ctor
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1445
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	girwriter: Fix c:type attribute for real struct parameters
+	Non-simple structs are always by reference
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1444
+
+2023-06-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	glib-2.0: Fix return-type of GLib.SourceOnceFunc
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1446
+
+	manual: Update from wiki.gnome.org
+
+2023-05-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.8
+
+2023-05-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Update c-expected
+
+2023-05-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add more method tests to increase coverage
+
+2023-05-21  Val Och  <v19930312@gmail.com>
+
+	gtk4: Don't skip AlertDialog ctor
+
+2023-05-21  JCWasmx86  <JCWasmx86@t-online.de>
+
+	glib-2.0: Fix binding of g_variant_type_n_items()
+
+2023-05-21  Andre Klapper  <a9016009@gmx.de>
+
+	DOAP: Replace defunct mailing-list with developer-forum (GNOME Discourse)
+
+2023-04-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add more Werror=... flags for clang
+
+	gio-2.0: Add new symbols from 2.76
+
+	glib-2.0: Add new symbols from 2.76
+
+	codegen: Include "glib-object.h" when using GType/GBoxedCopyFunc
+
+2023-04-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	valadoc/tests: Add girwriter test
+
+	valadoc: Backing method of lambda-expression isn't included in valadoc AST
+
+	build: valadoc requires valac 0.18.1
+
+	build: Improve usage of AC_PATH_PROG() for valacs
+
+2023-04-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.7
+
+2023-04-17  Florian Weimer  <fweimer@redhat.com>
+
+	glib-2.0: g_chdir is declared in <glib/gstdio.h>
+	Not <glib.h>.  Fixes an implicit function error when building deja-dup.
+
+2023-04-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gee: Fix type-arguments in cast
+
+	gee: Fix reversed type-arguments
+
+2023-04-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Allow inheritance from sealed class in bindings
+	Cherry-picked from 46b5b957df1eca5379774348a13f0a6847cdf7da
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1036
+
+2023-04-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add missing instance fields to GIR test files
+
+2023-04-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Fix usage of lambda-expression from delegate initializer
+	Unset delegate-type if a lambda-expression handler was found to use
+	the correct code paths.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1428
+
+2023-04-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Return CCodeInvalidExpression instead of null
+	This fixes the following criticals:
+
+	  vala_ccode_cast_expression_construct: assertion 'expr != NULL' failed
+	  vala_ccode_function_call_add_argument: assertion 'expr != NULL' failed
+
+	Remove dead code, this is already handled in get_dup_func_expression()
+
+2023-04-13  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	vala: Improve check of type_referene in ObjectCreationExpression
+
+2023-04-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Don't report consequential error when base_method is incompatible already
+
+	valadoc: Add missing generic type arguments
+
+	gee: Add more missing generic type arguments
+
+	gee: Fix return-type of HashMap.MapIterator.get_key()/get_value()
+	They didn't match the declarations in Vala.MapIterator interface.
+
+	vala: Improve error message for wrong number of type-arguments
+
+	vala: Improve Symbol.to_string() to include TypeParameters
+
+	Use already available glib_ns instead of root_symbol.scope.lookup ("GLib")
+
+	vala: Check type-argument count of interface prerequisites
+	Additionally add test case for type-argument count of class base-types
+
+	gio-2.0: Add missing type-argument in ListStore.find_with_equal_func_full()
+
+	girparser: Apply "instance_idx" metadata for delegates
+
+	glib-2.0: Fix a few binding errors
+
+	gtk+-3.0: Fix a few binding issues
+
+	gtk4: Fix a few binding errors
+
+	libvaladoc: Make better use of properties
+
+	valadoc: Check correct value for null when looking for return comment
+
+2023-04-13  Biswapriyo Nath  <nathbappai@gmail.com>
+
+	g-i: Fix compiling with mingw clang
+	This adds the return type with GetFullPathNameA declaration.
+	Otherwise the following error is shown with clang 16
+
+	grealpath.h:29:19: error: type specifier missing, defaults to 'int';
+	ISO C99 and later do not support implicit int [-Wimplicit-int]
+
+2023-04-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.6
+
+2023-04-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	webkit2gtk-6.0: Update to 2.40.0
+
+	webkit2gtk-4.1: Update to 2.40.0
+
+	webkit2gtk-4.0: Update to 2.40.0
+
+2023-03-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	glib-2.0,gio-2.0,gobject-2.0: Update 2.74 symbols
+
+2023-03-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Improve initialization of namespace fields with compound literal
+	Regression of 9c35019ef300082243ef7c71c22088c52d3db38e
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1424
+
+2023-03-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.5
+
+2023-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Extend "struct-typed properties" tests to increase coverage
+
+	tests: Add "signal with struct parameter" test to increase coverage
+
+	gtk+-3.0: Fix ToolPalette.icon_size get-accessor type
+
+	vala: Allow assignment of namespace fields with inline allocated arrays
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/945
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Fix -Werror=array-bounds failure
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Set proper value-type of unary ref/out expression in initializers
+	So the expected pointer-type for these expressions is available in AST.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1421
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add declaration for register call of dynamic DBus interfaces
+	The call was added without the required extern declaration
+
+	Found by -Werror=implicit-function-declaration
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1422
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Use g_object_class_override_property to implement generic interface properties
+	This caused the criticals like:
+
+	    GLib-GObject-CRITICAL **: Read/writable property 'data' on class 'Foo' has type
+	    'gchararray' which is not exactly equal to the type 'gpointer' of the property on
+	    the interface 'IFoo'
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1419
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add cast to accessor calls for generic property implementations
+	Found by -Werror=int-conversion
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Consistently handle GLib.Error as boxed type
+	Use G_TYPE_ERROR and GBoxed API for all error domains.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1418
+
+2023-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Correctly handle pre/post-increment expression as index of element access
+	Regression of cb1828cfc5273aca752de9b39a77e0cd53305e61
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1417
+
+2023-03-20  Corentin Noël  <corentin.noel@collabora.com>
+
+	gtk4: Add sealed to all the final types
+	Allows to know in advance if a type can be subclassed or not
+
+	Required until https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4575 is merged
+	or the right heuristic is implemented on Vala side.
+
+2023-03-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Update to 4.10.1~40b154bf from 0.58
+
+2023-03-02  Niels De Graef  <nielsdegraef@gmail.com>
+
+	gtkmodule: Improve error messages
+	Be a bit more specific about some of the errors that valac can
+	encounter when parsing a UI file.
+
+	(for my use case specifically, it helped me to figure out I had a
+	<property> tag without a name attribute in one of my UI files)
+
+2023-03-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	webkitgtk-6.0: Update to 2.39.90
+
+	webkitgtk-6.0: Update to 2.39.7
+
+2023-02-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.4
+
+	pango: Fix a few binding errors
+
+2023-02-11  Ole André Vadla Ravnås  <oleavr@gmail.com>
+
+	libgvc: Fix `cheader_filename` of the `Gvc` namespace
+	The .pc only adds `${includedir}/graphviz` to the include path.
+
+2023-02-11  Fina Wilke  <code@felinira.net>
+
+	vapi: Update gnome-desktop-3.0 and gnome-desktop-4
+
+2023-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Better handling of [NoReturn] call inside finally clause
+	This caused the following criticals:
+
+	  vala_flow_analyzer_jump_target_construct_finally_clause: assertion 'last_block != NULL' failed
+	  vala_flow_analyzer_jump_target_get_is_exit_target: assertion 'self != NULL' failed
+	  vala_flow_analyzer_jump_target_get_is_error_target: assertion 'self != NULL' failed
+	  vala_flow_analyzer_jump_target_get_is_finally_clause: assertion 'self != NULL' failed
+
+2023-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Cast vfunc of property accessors by using cast_method_pointer()
+	Found by -Wincompatible-function-pointer-types
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1408
+
+2023-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Cast return value of generic type accessor functions
+	Found by -Wincompatible-function-pointer-types
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1408
+
+2023-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Perform required cast while assigning and passing function pointers
+	Found by -Wincompatible-function-pointer-types
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1408
+
+2023-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Allow more general usage of PropertyAccessor.get_method()
+
+	vala: Inherit more important attributes for PropertyAccessor method
+
+2023-02-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Correctly handle fixed-length array initialization of fields in classes
+
+	vala: Allow to use store_field() for initializations
+
+	tests: Split up gir parser tests into dedicated files
+
+2023-02-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Perform required casts for generic types of return-values and in/out-parameters
+	Found by -Werror=int-conversion
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1407
+
+2023-01-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Improve missing exponent check for real literals
+
+	vala: Improve compatibility type checks of array elements in assignments
+
+	tests: Extend string.replace() test to increase coverage
+
+	tests: Add "one-line declaration of local variables" test to increase coverage
+
+2023-01-30  wszqkzqk  <wszqkzqk@qq.com>
+
+	vala,libvaladoc: Properly check for colored terminal output on Windows
+	Additionally look for `_isatty()` and adjust for more possible results
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1383
+
+2023-01-30  wszqkzqk  <wszqkzqk@qq.com>
+
+	parser: Properly handle chained equality expressions
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1385
+
+2023-01-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Use a special CCodeBinaryExpression for string comparisons
+	This preserves support for recursive replacement of arguments while this
+	expression was actually transformed into a function call.
+
+	parser: Move parsing of IS and AS type checks to dedicated function
+
+	tests: Add "string relation" tests to increase coverage
+
+	tests: Add "type check comparison" test to increase coverage
+
+2023-01-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Update workaround for DropTarget.drop() signal conflict
+	Deprecate DropTarget.on_drop()
+
+	Additionally don't skip Notebook.insert_page_menu()
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1312
+
+2023-01-30  星外之神  <wszqkzqk@qq.com>
+
+	gitignore: Add built files on Windows
+
+2023-01-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	webkit2gtk-*.*: Update to 2.37.91
+
+2022-12-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	cairo: Drop broken PsSurface.get_levels() which is bound as PsLevel.get_levels()
+
+2022-12-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	cairo: Add missing Cairo.Pattern.get_rgba()
+	Thanks to Wayne Blaszczyk
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1381
+
+2022-12-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Add webkitgtk-6.0 bindings
+
+	gtk4: Require pangocairo which is a dependency of Gdk-4.0
+
+2022-11-27  wszqkzqk  <wszqkzqk@qq.com>
+
+	Fix output decoding error of non-ASCII character on Win32
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1379
+
+2022-11-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Actually use printf-like way of Report.*()
+
+2022-10-27  星外之神  <wszqkzqk@qq.com>
+
+	vala: Report error in real literal if exponent has no digits
+
+2022-10-27  Alberts Muktupāvels  <alberts.muktupavels@gmail.com>
+
+	codegen: Append VALA_EXTERN also when using fast-vapi
+
+2022-10-27  David Hewitt  <davidmhewitt@gmail.com>
+
+	pixman-1: Fix instance position of region copy methods
+
+2022-10-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add glib.h include for TRUE/FALSE literal
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1364
+
+	tests: Add "entry point exists" test to increase coverage
+
+	gtk4: Make Gtk.show_uri_full() an instance method of Gtk.Window
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1347
+
+2022-10-27  wszqkzqk  <wszqkzqk@qq.com>
+
+	glib-2.0: Add `double_hash` and `double_equal`
+
+2022-10-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	manual: Update from wiki.gnome.org
+
+2022-09-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.3
+
+2022-09-03  星外之神  <wszqkzqk@qq.com>
+
+	vala: Avoid problems with '\' in #line directives on Windows
+	Replace '\' with '/' in SourceFile.relative_path like in CodeContext.realpath().
+
+	  F:/msys64/home/x/test/test.vala.c: In function '_vala_main':
+	  F:/msys64/home/x/test/test.vala.c:12:9: warning: unknown escape sequence: '\M'
+	     12 | #line 3 "C:\MyFiles\test.vala"
+	        |         ^~~~~~~~~~~~~~~~~~~~~~
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1353
+
+2022-09-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	glib-2.0: Use g_abort for GLib.Process.abort() beginning with 2.50
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1350
+
+2022-08-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Make try-statement parsing more resilient
+	Regression of f5934184d050d1a19f394fdab6f2ee66ff30965f
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1304
+
+2022-08-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	atspi-2: Fix a few binding errors
+
+2022-08-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gidlparser: Set source reference of parameters
+
+2022-07-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Don't unconditionally expect ObjectType of Class
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1341
+
+2022-07-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk+-3.0: Correctly unhide BindingSet.by_class to avoid Version attribute
+
+2022-07-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	doap: Demote idle maintainers to authors
+	Requested by Michael Catanzaro <mcatanzaro@gnome.org>
+
+	Release 0.56.2
+
+2022-07-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Add rest-1.0 bindings
+
+	vapi: Add geocode-glib-2.0 binding
+
+2022-06-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Check cname of fields and methods against reserved identfiers
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1329
+
+	codegen: Split reserved identifiers for C and Vala
+
+	codegen: Make sure to initialize static collections
+
+	vala: Avoid critical in SourceFile.get_mapped_length()
+	See https://gitlab.gnome.org/GNOME/vala/issues/1330
+
+2022-06-04  Corentin Noël  <corentin.noel@collabora.com>
+
+	vapi: Add initial wayland-client binding
+	Allow to properly use gtk4-wayland.
+
+2022-06-02  Gustav Hartvigsson  <gustav.hartvigsson@gmail.com>
+
+	glib2.0: Add abs() to int8/int16/int32/ssize_t
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1328
+
+2022-05-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Detect usage of static type-parameter in runtime context
+	Compact classes doesn't carry runtime information of its type-parameters.
+	In case this information is required we need report an error.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1326
+
+2022-05-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Correctly set array-length for NoAccessorMethods properties
+	If value is a null-terminated array then calculate and set its length.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1316
+
+2022-04-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.1
+
+2022-04-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	manual: Update from wiki.gnome.org
+
+	vapi: Update GIR-based bindings
+
+	gstreamer: Update from 1.21.0+ git main
+
+2022-04-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Split out gtk4-wayland and gtk4-x11 into separate bindings
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1308
+
+2022-04-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	valadoc: Include path to doclet in error message
+
+2022-04-07  m-shinder  <mihail@shinder.ml>
+
+	gtk4: Fix GLib.Value parameter in ContentProvider.get_value()
+	Value is `out caller-allocates` and it is also initialized by caller.
+
+2022-04-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Improve accessibility check inside member initializer
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1300
+
+2022-03-29  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Don't allow nullable enum value as real GObject property
+	It is basically a boxed integer value.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1074
+
+2022-03-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Update GIR-based bindings
+
+	gstreamer: Update from 1.21+ git main
+
+2022-03-19  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	Add release notes for 0.56
+
+2022-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.56.0
+
+2022-03-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Add webkit2gtk-4.1 bindings
+
+2022-03-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	libarchive: Fix a few binding errors
+
+2022-03-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Drop confusing warning when accessing interface members
+	Making assumptions for member access using the current class is not correct.
+
+	Introduced by 0aace7bd6d3ec72e77f4eabbb7d5fffd3b2e86a8
+
+2022-03-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	SDL2_ttf: Fix a few binding errors
+
+	tiff: Fix a few binding errors
+
+	glib-2.0: Fix memory management of TestSuite.add*/get_root() with 2.70
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1295
+
+2022-03-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.55.91
+
+	vapi: Regenerate GIR-based bindings to pick up previously skipped delegate parameters
+
+	girparser: Don't count instance-parameter when checking for backwards closure reference
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/721
+
+2022-02-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gstreamer-video-1.0: Fix a few binding errors
+
+	gstreamer-base-1.0: Fix a few bindings errors
+
+	gstreamer-audio-1.0: Fix a few binding errors
+
+	gst-editing-services-1.0: Fix BaseEffect.set_time_translation_funcs()
+
+	gtk4: Fix content_deserialize_async()
+
+	libgrss: Fix FeedItem.get_geo_point() parameters
+
+	libarchive: Fix a few binding errors
+
+	libgsf-1: Fix a few binding errors
+
+	girparser: Add support for "copy_/free_function" metadata for compact classes
+
+	girparser: Handle duplicated and unnamed symbols
+	Issue warnings and skip such symbols to avoid errors on vala's side.
+
+2022-02-26  Princeton Ferro  <princetonferro@gmail.com>
+
+	g-i: Update gidl binding to include type hierarchy
+	The IdlNode* classes should be declared as subclasses of IdlNode, that
+	way the compiler can be sure that casting from an IdlNode is safe.
+
+2022-02-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.55.90
+
+2022-02-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Regenerate GIR-based bindings to pick up type_id of error domains
+
+	girparser: Pick up type_id of error domains
+
+	codegen: Emit GType definition for error domains
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/699
+
+	codegen: Default to "has_type_id = false" for external error-domains
+
+	glib-2.0: Add type_id of GLib.Error
+
+	glib-2.0: Annotate error-domains with "has_type_id = false"
+
+	codegen: Emit G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC() for structs
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1293
+
+	codegen: Emit G_DEFINE_AUTOPTR_CLEANUP_FUNC() for interfaces with base class
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1292
+
+	codegen: Split out GTypeModule.generate_autoptr_cleanup()
+
+2022-02-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: gtk4-unix-print is GIR-based
+
+	glib-2.0: Update 2.70/72 symbols
+
+	vapi: Update GIR-based bindings
+
+	gstreamer: Update from 1.21.0+ git main
+
+	vala: Allow delegate without target to be used as constant type
+
+	vala: Keep error-code symbol reference in callable expression context
+
+	vala: Add common CallableExpression.call property API
+
+	vala: Drop unused MemberAccess.creation_member property API
+
+	tests: Extend "direct access to error code" test to increase coverage
+
+	tests: Add invalid "error creation" tests to increase coverage
+
+	tests: Fix objectcreation-no-creation-method.test
+
+	vala: Member reference for ObjectCreationExpression is never null
+
+2022-02-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add more Werror=... flags
+
+2022-02-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Only add catch clause if an inner error is possible
+	See d9f702289b4b39683d0c9361e1ea02fd51ecae22
+
+	build: Update git-version-gen to latest upstream
+	From commit b5a3c17daa05f6d76f70369e7cbeefe0db012499 of
+	https://git.savannah.gnu.org/cgit/gnulib.git/log/build-aux/git-version-gen
+
+	build: Update gitlog-to-changelog to latest upstream
+	From commit b5a3c17daa05f6d76f70369e7cbeefe0db012499 of
+	https://git.savannah.gnu.org/cgit/gnulib.git/tree/build-aux/gitlog-to-changelog
+
+2022-02-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Catch and throw possible inner error of lock statements
+	See 40c1dbfbfedb6c4a6b88df045eb1c2e7bdd38d93
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/83
+
+2022-02-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.55.3
+
+2022-02-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Clear SemanticAnalyzer.current_{symbol,source_file} when not needed anymore
+
+	vala: Free empty stack list for code contexts
+	While having the stack list created on demand, make sure to destroy it
+	when it is not required anymore. Otherwise it will be leaked without an
+	option to avoid that to happen.
+
+	gtkmodule: Recurse inner classes of ObjectTypeSymbols (2)
+
+	gtkmodule: Improve UI parsing and handling of nested objects and properties
+	Don't restrict GtkCallback to instance methods
+
+	gtkmodule: Recurse inner classes of ObjectTypeSymbols
+
+	test/gtktemplate: Use correct class name
+
+2022-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Remove some public API from symbols and types
+
+	parser: Clean up creation of constant declaration
+
+2022-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	parser: Allow usage of dynamic on VarType
+	  dynamic var foo = bar.get_foo();
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/187
+
+2022-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Stop generating wrappers for dynamic property access
+
+	vala: Move dynamic property errors to semantic analyzer pass
+
+2022-02-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Make sure to drop our "trap" jump target in case of an error
+	Otherwise this can result in an infinite loop in FlowAnalyzer.intersect()
+
+	Improve source reference for jump out of finally block
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1287
+
+2022-02-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Update GIR-based bindings
+
+	gio-2.0,glib-2.0,gobject-2.0: Update 2.72 symbols
+
+	gtk4: Update to 4.6.0+06ec4ec1
+
+	gstreamer: Update from 1.19.90+ git main
+
+2022-02-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Relax dependency of asynchronous/method-main-async.vala on build environment
+	See 45fe8523ad392f1aaa0f24d83b63e91774938775
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1286
+
+2022-02-03  Niels De Graef  <nielsdg@redhat.com>
+
+	gtk4: Specify sentinel for GtkAcessible methods
+
+2022-01-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Use correct target/destroy of delegate field initializer
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1285
+
+2022-01-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Improve check of generic type references in static contexts
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1284
+
+	tests: Generic type inference for static methods only in compact classes
+
+	vala: Add missing TraverseVisitor.visit_data_type()
+
+	vala: Some simplifications while TypeParameter is a TypeSymbol
+
+2022-01-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.55.2
+
+	manual: Update from wiki.gnome.org
+
+2022-01-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Write array length of formal parameters with fixed length
+	"void foo (gint i[3]) { ... }" instead of "void foo (gint* i) { ... }"
+
+2022-01-26  wxx  <769218589@qq.com>
+
+	vala: Transform assignment of an array element as needed
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/889
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1258
+
+2022-01-25  Nikola Hadžić  <nikola.hadzic.000@protonmail.com>
+
+	v4l2: Update V4l2.Capabilities and fix some inline arrays
+
+	posix: Add limits.h binding
+
+	alsa: Add/fix *.alloca() functions
+
+	vapi: Add linux-media bindings (linux/media.h)
+
+2022-01-25  Nahuel Gomez  <contact@nahuelgomez.com.ar>
+
+	glib-2.0: Fix criticals in string.joinv() with arrays that start with null
+
+2022-01-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	parser: Improve handling of nullable VarType in with-statement
+
+2022-01-25  Princeton Ferro  <princetonferro@gmail.com>
+
+	codegen: Cast generic return value from g_sequence_get()
+	Use convert_from_generic_pointer() to generate C code without warnings
+	when accessing scalar elements from a GSequence.
+
+	Addtionally check type arguments of given GSequence during codegen.
+
+	In addition to 44195a02c9d26453dc698282deb4947425a4b0b1
+
+2022-01-25  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	vala: Add support to infer return type of dynamic signals
+
+2022-01-25  Princeton Ferro  <princetonferro@gmail.com>
+
+	vala: Add foreach statement support for GLib.Sequence
+	It is now possible to use foreach with a GLib.Sequence
+
+2022-01-24  Princeton Ferro  <princetonferro@gmail.com>
+
+	vala: Add foreach statement support for GLib.Array
+	It is now possible to use foreach with a GLib.Array
+
+2022-01-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Access of stack allocated struct is guaranteed to be non null
+	Found by -Werror=address with GCC 12
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1282
+
+2022-01-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Don't uncoditionally null check callback_func for GLib.Closure
+	Found by -Werror=address with GCC 12
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1282
+
+2022-01-23  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Access of inline allocated array is guaranteed to be non null
+	and improve null check for container in slice expression
+
+	Found by -Werror=address with GCC 12
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/1282
+
+2022-01-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtk4: Update to 4.6.0+a092986a
+
+	gstreamer: Update from 1.19.3+ git master
+
+	glib-2.0,gio-2.0: Update 2.72 symbols
+
+2022-01-19  Princeton Ferro  <princetonferro@gmail.com>
+
+	vala: async-ize main block when yield is used
+	This allows yield statements and expressions to be used in the main
+	block.
+
+2022-01-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Make Vala.Variable an abstract class
+
+2022-01-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Implement missing YieldStatement.accept()
+
+	parser: Reduce the source reference of main block method to its beginning
+	The end contains broken information which lead to a crash while trying to
+	report this multi-line source reference.
+
+2022-01-18  Alvarito050506  <donfrutosgomez@gmail.com>
+
+	codegen: Avoid symbol clashes with "va_*" from "stdarg.h"
+	A few more symbol clashes with the va_* macros from stdarg.h, that seem to
+	happen only in some systems, like Alpine Linux or NetBSD.
+
+2022-01-17  Princeton Ferro  <princetonferro@gmail.com>
+
+	codegen: Add support for async main
+	If main() is async then setup a new GMainLoop and call _vala_main()
+	asynchronously.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1275
+
+2022-01-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Require lvalue access of delegate target/destroy "fields"
+	In addition to c054da918a40f8ef93c1a006034fb6ab4717c135
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/857
+
+2022-01-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Release 0.55.1
+
+	vapi: Update GIR-based bindings
+
+	gtk4: Update to 4.6.0+06e5da45
+
+2022-01-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Generated SimpleType structs don't have a type id
+	Set "CCode.has_type_id" in CCodeStructModule.generate_struct_declaration()
+	like in GTypeModule.visit_struct() for SimpleType structs which might be
+	executed too late.
+
+	In addition to 2e798fc3f8e9af25a4c231c2561894d9f0a0be50
+
+2022-01-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Sync NEWS from 0.54
+
+	vapi: Update GIR-based bindings
+
+2022-01-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Skip runtime of array length type test on "32-bit"
+
+2022-01-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Clear existing length values when revisiting a slice expression
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1274
+
+	tests: Add "async signal handler" test to increase coverage
+
+2022-01-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Add native support to specify non default length-type for arrays
+	    string[:long] foo = new string[:long] { "foo" };
+
+	This applies to generated bindings where this new syntax will be
+	picked up. It will apply a stricter variable type checking for
+	such array types.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/607
+
+2022-01-04  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	Support "emit" for explicit signal emission
+	If "foo" is a signal then "foo.emit (...);" is allowed now additionally to
+	"foo (...);". This is required to emit dynamic signals.
+
+2022-01-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add XFAIL tests if undefined behavior sanitizer is enabled
+	In addition to d3bfaa4ae34c0e6c7a7a9d124e6c3a276c545391
+
+	tests: Skip constants/member-access-enum.vala for ASAN
+	In addition to 50414570d1b54a6106a9a64274bb84977d817616
+
+2022-01-03  Val Och  <v19930312@gmail.com>
+
+	codegen: Use __once instead of __volatile in generated code
+	This better reflects purpose of relevant variables, especially
+	given that they aren't volatile anymore on GLib 2.68+.
+
+2022-01-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Initialize "result" variable on declaration for abstract methods only
+
+	codegen: Cast given default-value of struct with possible member initializer
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1272
+
+	codegen: Allow boxing of non-external SimpleType structs
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1273
+
+2021-12-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gio-2.0: Add custom MemoryOutputStream.with_*data() wrappers
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1271
+
+2021-12-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Show source location when reporting deprecations
+
+	Revert "Make more use of native GLib.Regex syntax"
+	This reverts commit b2ef0ed8d2c37a813f9ad8b35c7a7e4a1d639e1c.
+
+2021-12-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Make more use of native GLib.Regex syntax
+
+2021-12-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	parser: Improve partial classes support
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/370
+
+	vala: Correctly replace "in" expression in pre-/postconditions of method
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1269
+
+2021-12-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Silently accept unsafe assignment of "0" literal to enum type
+	In addition to 9f1de7ae875b59939ca6200e08dddd69106fb486
+
+	Properly use [Flags] feature for ModifierFlags and CCodeModifiers
+	See 2afaae5e0755b2d8619808d2d148761b92c355b5
+
+2021-12-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Non nullable enum types are simple types
+	Fixes a regression of 5b6345a6386b05aaf3f11cb3572940413eb878a8
+
+	vala: Allow unsafe assignment of integer to enum while reporting a notice
+
+	Sync NEWS from 0.54
+
+2021-12-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	girparser: Avoid possibily creating duplicated attributes
+	Don't append an attribute without checking if there is an existing one.
+	In case the attribute already exists append the new key/value pairs.
+
+	vapi: Update GIR-based bindings
+
+2021-12-15  Corentin Noël  <corentin.noel@collabora.com>
+
+	gstreamer-1.0: Unskip the ElementFactory.make/create_full() symbols
+	Also add floating reference to all the new creation functions.
+
+2021-12-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Initialize type parameter properties for generics earlier
+	If g_object_new() is used then additionally initialize type parameter
+	properties with it.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/67
+
+2021-12-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Add "type-parameter property clash" test to increase coverage
+	This needs to be handled gracefully. So throwing an error is no option.
+
+2021-12-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Use a dedicated EmitContext for _variant_get*() functions
+
+	vala: Report statement parsing error if it is not meant to be an expression
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1261
+
+2021-12-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Drop duplicate check for unsupported flag of struct methods
+
+	vala: Drop duplicate check for unsupported flag of creation methods
+
+	tests: Add more "chain up" tests to increase coverage
+
+2021-12-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Set is_yield_expression in async context when chaining up to async base ctor
+	vala-CRITICAL **: vala_member_access_get_inner: assertion 'self != NULL' failed
+	vala-CRITICAL **: vala_member_access_get_member_name: assertion 'self != NULL' failed
+
+	Avoid these spurious criticals and trigger the currently expected error.
+
+2021-12-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Correctly handle chain up of struct creation methods
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1264
+
+	tests: Add missing tests/structs/struct-static-field-initializer.c-expected
+
+2021-12-08  wxx  <769218589@qq.com>
+
+	vala: NullLiteral is not a valid argument for string concatenation
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1260
+
+2021-12-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gtkmodule: Handle nested closure elements and bind them accordingly
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1262
+
+2021-12-02  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	tests/girwriter: Use the actual expected output of our girwriter
+
+2021-12-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	build: Update git-version-gen to latest upstream
+	From commit 378351df7e63daca234c581f086b542026e07a27 of
+	https://git.savannah.gnu.org/cgit/autoconf.git/tree/build-aux/git-version-gen
+
+2021-12-01  Alexander Kanavin  <alex.kanavin@gmail.com>
+
+	vapigen.m4: use $PKG_CONFIG_SYSROOT_DIR
+	This is necessary in cross-compiling environments, where directories
+	returned by pkg-config should be prefixed with sysroot location.
+
+2021-11-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Check accessibility of initializer for constant and enum value
+
+	glib-2.0: Always use the actual C type for CCode.array_length_type
+
+2021-11-29  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Sync NEWS from 0.54
+
+	tests: Add missing methods/parameter-ccode-type.vala
+	In addition to 0e097710e37b671b17ed1da330dd83b9e2340602
+
+	vapi: Update GIR-based bindings
+
+2021-11-28  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	tests: Rename colliding test case to avoid conflict
+
+2021-11-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Add gnome-desktop-4, gnome-bg-4 and gnome-rr-4 bindings
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1257
+
+	gnome-desktop-3.0: Some parameter fixes
+
+2021-11-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Accept CCode.type attribute on parameters
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/876
+
+	codegen: Drop inconsistent space for ObjectType parameters
+
+2021-11-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Rename colliding test cases to avoid conflicts
+
+	webkit2gtk-*.0: Update to 2.35.1
+
+	build: Add "test-update" which passed UPDATE_EXPECTED=1 to refresh c-expected
+
+	vala: Fix signals with generic return
+	In addition to 36999b5ffd63cc56a8648791b02bf07e7da88077
+
+2021-11-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Report error on missing gio-2.0 package for async constructors
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1256
+
+	tests: Add runtime checks to signals tests and increase coverage
+
+2021-11-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests/girwriter: Increase coverage
+
+	tests: Add [Profile] method test to increase coverage
+
+	vala: Add [Profile] as known attribute for methods
+
+	ccode: Fix CCodeUnaryExpression.write() for PREFIX_INCREMENT/PREFIX_DECREMENT
+	Regression of 0f65d306f5a2eca7ea798e5c835cf66b6e327c8e
+
+2021-11-23  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	genie: Accept accessibility and async modifiers on "construct" creation methods
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1235
+
+	gstreamer-base-1.0: Some parameter fixes
+
+	gstreamer: Update from 1.19.3+ git master
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1255
+
+2021-11-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Remove wrongly committed files
+
+2021-11-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add missing check while overriding virtual async interface methods
+	This fixes a couple of criticals and possibly faulty C code.
+
+	In addition to fc246aa7f8cbc6cb176724246a0187e19fe91198
+
+	See https://gitlab.gnome.org/GNOME/vala/issues/852
+
+2021-11-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Check required length of enum type name for GType support
+	Add corresponding tests for types which have support for GType
+
+2021-11-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Check for unavailable value-type of variable initializer
+	Regression of 6690ea0e3c6f0d81d849e13548efc8c0809149cc
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1253
+
+2021-11-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Add and use CCodeConstantIdentifier for accessing constants
+	If an address to a constant value is required then its identifier needs
+	to be used instead of referring to a temporary copy.
+
+	Fixes a regression of f1a8f2a4c6771124abd61fd0ebfa991c846575fe
+
+	Found by -fsanitize=address
+
+2021-11-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Update GIR-based bindings
+
+	glib-2.0: Update 2.72 symbols
+
+2021-11-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gdbus: Use g_dbus_method_invocation_take_error() as simplification
+
+2021-11-12  Yotam Nachum  <me@yotam.net>
+
+	vala: Don't allow casting real structs to classes or simple-types
+	This led to C compiler errors or obvious runtimes failures.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1249
+
+2021-11-08  Colin Kiama  <colinkiama@gmail.com>
+
+	vala: Don't allow casting to void
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1070
+
+2021-11-08  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	vala: Add multi-line support to Vala.Report
+	To fix multi-line errors, the "^~~~"-underline appears now under all lines
+	and columns between the begin and end of the source reference.
+
+	Also a line number with a "|" at the left side is added for better finding
+	the source of the error. This helps also one-line errors.
+
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/764
+
+2021-11-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Emit constants without initializer list in defines section
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/440
+
+2021-11-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Use CCodeConstant for member access of constant symbol
+	This broke assumptions in CCodeBaseModule.is_constant_ccode_expression()
+
+	vala: Drop SemanticAnalyzer.is_type_accessible()
+
+	vala: Add accessibility check of type for constants and structs base type
+
+	tests: Fix mixed up naming of base-type tests for classes
+
+	tests: Add more "statement" tests for genie to increase coverage
+
+2021-11-06  Yotam Nachum  <me@yotam.net>
+
+	gtkmodule: Improve error message for invalid signal element in ui-file
+
+2021-11-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	tests: Fix Makefile.am
+
+	tests: Add more "declaration" tests for genie to increase coverage
+
+	genie: Use TokenType.EXCEPTION instead of TokenType.ERRORDOMAIN
+
+2021-11-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	genie: Properly handle plain "get" or "set" property accessors
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1248
+
+2021-11-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	genie: Accept INTERR token before type arguments when parsing type
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1245
+
+2021-11-03  Alistair Thomas  <astavale@yahoo.co.uk>
+
+	genie: Amend text of indent and dedent for error messages
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/497
+
+2021-11-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	parser: Better handling of misplaced switch sections
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1246
+
+	parser: Split out Parser.parse_switch_section_statement()
+
+2021-11-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	codegen: Stop generating wrappers for dynamic signal connections
+
+	codegen: Split out GSignalModule.emit_signal()
+
+	vala: Using SignalHandler.disconnect() is required for dynamic signals
+
+	tests: Extend "dynamic" signal test to increase coverage
+
+2021-10-30  Nikola Hadžić  <NH000@nikolahadzic.in.rs>
+
+	alsa: Add more API and fix a few things
+
 2021-10-30  Rico Tzschichholz  <ricotz@ubuntu.com>
 
-	Release 0.54.3
+	tests: Add missing tests/objects/class-partial.c-expected
 
-2021-10-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+	vala: Add support for nested methods (local functions)
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1232
+
+2021-10-30  Simon Werbeck  <simon.werbeck@gmail.com>
+
+	Add support for partial classes
+	Fixes https://gitlab.gnome.org/GNOME/vala/issues/370
+
+2021-10-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	gstreamer-1.0: Make Gst.Uri a sealed class
+
+	girparser: Accept "sealed" for transformed records and compact classes
+
+2021-10-30  Lorenz Wildberg  <lorenz@wild-fisch.de>
+
+	vala: Improve error message for invalid handler of dynamic signal
+
+2021-10-30  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Sync NEWS from 0.54
+
+2021-10-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vapi: Add webkit2gtk-5.0 bindings
+
+	vapi: Add libsoup-3.0 binding
+	Required by webkit2gtk-5.0
+
+	vapi: Update GIR-based bindings
+
+	gstreamer: Update from 1.19.2+ git main
+
+2021-10-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	Revert "Use ErrorType-based collection for CodeNode.get_error_types()"
+	Unfortunately, it is causing issues with the way the GIR/GIDL parser works.
+
+	This reverts commit 0751a9e3bf46fc830d3e7ca3d0cfd3ae48846e68.
+
+2021-10-23  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add "throws error code" tests to increase coverage
+
+	Use ErrorType-based collection for CodeNode.get_error_types()
 
 	vala: Improve CodeWriter.visit_catch_clause()
 	Properly output general catch clause
@@ -25,6 +1593,8 @@
 
 	tests: Add more invalid "(un)lock" tests to increase coverage
 
+2021-10-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Correctly output signature of callable throwing error
 
 	vala: Really check compatiblity of error types for delegate symbol
@@ -32,7 +1602,9 @@
 
 2021-10-19  Rico Tzschichholz  <ricotz@ubuntu.com>
 
-	vala: Set more missing source references of CodeNode instances
+	Sync NEWS from 0.54
+
+2021-10-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Split "Variant (de)serialization" test to trigger one error at a time
 
@@ -40,9 +1612,17 @@
 
 	tests: Add more invalid "member access" tests to increase coverage
 
+	tests: Add missing tests/enums/bug614424.c-expected
+
 	tests: Add "instance access to implicit to_string() method of enum" test
 
 	tests: Add invalid "target/destroy access" tests to increase coverage
+
+2021-10-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Set more missing source references of CodeNode instances
+
+	codegen: Move some errors to semantic analyzer pass
 
 	parser: Don't bail parsing of yield expression on error
 	Reporting the error is enough to handle this properly.
@@ -53,6 +1633,8 @@
 
 	tests: Rename invalid yield-return test to avoid conflict
 
+2021-10-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Actually free data when using "remove(_all)" on GLib.Queue/(S)List
 	When using e.g. GLib.List.remove() there is no context/feedback whether an
 	item was removed or needed manual free'ing.
@@ -61,6 +1643,8 @@
 	they were found.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1238
+
+2021-10-15  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: More thorough check of ValueType and set CodeNode.error on failure
 
@@ -72,22 +1656,34 @@
 
 	gee: Add missing type-arguments
 
+2021-10-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Add support for "ref_/ref_sink_/unref_function" metadata for classes
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1233
 
-2021-10-19  wxx  <769218589@qq.com>
+2021-10-14  wxx  <769218589@qq.com>
 
 	vala: Parameter following ellipsis parameter is not allowed
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1237
 
-2021-10-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+2021-10-01  Rico Tzschichholz  <ricotz@ubuntu.com>
 
-	Release 0.54.2
+	glib-2.0: Add Unicode 14.0 symbols
+
+	Set TypeParameter as symbol of GenericType
+
+	vala: Drop RealLiteral.get_type_name()
 
 	vala: Set source references of created DataType instances in OCE
 	This improves error message for expected type arguments.
 
+	vala: Preserve the source reference when resolving data types
+
 2021-09-29  Rico Tzschichholz  <ricotz@ubuntu.com>
+
+	vala: Add optional SourceReference parameter to DataType classes
+
+	Bump version suffix to 0.56
 
 	glib-2.0: Update 2.70 symbols
 
@@ -387,6 +1983,8 @@
 	By now all the relevant structures should have counterparts in net/if.h, so let's try
 	to just not include the kernel header, but use the userland header instead.
 
+2021-06-30  Dr. Michael Lauer  <mickey@vanille-media.de>
+
 	linux: Add SocketCAN bindings, and ISOTP constants and options
 
 2021-06-28  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -476,6 +2074,8 @@
 	We want to ensure that public symbols are exported, which isn't the
 	default when generating a shared library in MSVC, for example.
 
+2021-05-20  Princeton Ferro  <princetonferro@gmail.com>
+
 	ccode: Allow appending `#elif`, `#else` cases to CCodeIfSection
 
 2021-05-20  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -520,6 +2120,8 @@
 	required.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/160
+
+2021-05-04  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gstreamer-rtp-1.0: Move some static functions to matching parent symbols
 
@@ -610,10 +2212,14 @@
 
 	tests: Add "generics reference transfer" test to increase coverage
 
+2021-04-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	tests: Extend "finally block execution" test to increase coverage
 	In addition to 9f21d0b182edad861f93a91674787b8b3b4fc2c5
 
 	See https://bugzilla.gnome.org/show_bug.cgi?id=579101
+
+2021-04-19  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: More use of get_variable_cexpression()
 
@@ -646,6 +2252,8 @@
 	    unowned var? bar = "bar";
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1146
+
+2021-04-15  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
 
@@ -696,6 +2304,8 @@
 	codegen: Don't free temp-var for element-access to array with boxed structs (2)
 	See https://gitlab.gnome.org/GNOME/vala/issues/1174
 
+2021-04-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't free temp-var for element-access to array with boxed structs
 	Check the symbol_reference of inner element-access as needed.
 
@@ -726,11 +2336,15 @@
 
 	pixman-1: Fix some bindings errors
 
+2021-04-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't override valid target/destroy of previous lambda argument
 	This does not enable proper support for delegates sharing a data argument,
 	but allows this special case.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/59
+
+2021-04-06  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Always use CCodeConstant for NULL
 
@@ -759,6 +2373,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/1038
 
+2021-03-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gio-2.0: Fix TlsPassword.get_value() binding
 
 	gtk+-3.0: Fix ModuleInitFunc binding
@@ -779,7 +2395,11 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/270
 
+2021-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libvaladoc/girimporter: parse_constant() use "c:identifier" attribute first
+
+2021-03-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc/girimporter: Don't guess length of xml header, iterate forward to <repository>
 	If e.g. the xml header is missing, it resulted in errors like:
@@ -814,6 +2434,8 @@
 
 	girparser: Add support for NoWrapper metadata for methods
 
+2021-03-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Include "glib.h" for deprecated symbols (GOBJECT)
 	It is required for G_GNUC_DEPRECATED in declarations of
 	enums, delegates, methods, property accessors and structs.
@@ -839,12 +2461,16 @@
 	build: Add --enable-test-asan configure option
 	List XFAIL tests if address sanatizer is enabled
 
+2021-03-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	linux: Provide Input.Event.input_event_sec/input_event_usec fields
 	Mark Input.Event.time as deprecated
 
 	See https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=152194fe9c3f
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1152
+
+2021-03-14  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Improve error for incompatible expressions in conditional expression
 
@@ -884,12 +2510,16 @@
 	codegen: Fix access to captured generics in async method of interfaces
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/537
 
+2021-03-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Use the one available source_reference for internal error
 	This will at least provide some pointer to where things are going wrong.
 
 	In addition to 837d593e00d1a3ca8a6f2d13fb1514bed7672965
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/436
+
+2021-03-09  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Free intermediate temp-variables of postcondition expression
 	and not clearing "temp_ref_values" caused invalid references later.
@@ -910,6 +2540,8 @@
 	gio-2.0: Add some missing type-arguments
 
 	glib-2.0: Add some missing type-arguments
+
+2021-03-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Add missing null-check in DataType.get_type_signature()
 	If an instance struct field can not be resolved to a valid
@@ -939,6 +2571,8 @@
 	Use pre-resolved symbol/type of SemanticAnalyzer if possible
 
 	codegen: More use of get_ccode_type_name()
+
+2021-03-05  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Inherit GType from base struct of SimpleType structs
 	GValue functions and marshaller type are inherited from base structs
@@ -990,10 +2624,14 @@
 
 	tests: Add some "unary expressions" tests to increase coverage
 
+2021-02-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Report error for invalid inner operand of unary expressions
 	This fixes criticals like:
 
 	    vala_unary_expression_is_integer_type: assertion 'type != NULL' failed
+
+2021-02-27  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Set proper source_reference for implicit "this" and "result" variables
 
@@ -1055,6 +2693,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1137
 
+2021-02-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Move SemanticAnalyzer.vist_member_initializer() to MemberInitializer
 
 	vala: Simplify Expression.parent_statement
@@ -1099,9 +2739,13 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/1134
 
+2021-02-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	build: Ease source for AC_LANG_SOURCE of CGRAPH check
 
 	libvaladoc: Add wrapper for "agedge" of graphviz
+
+2021-02-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Correctly retrieve symbol_reference of nested cast expressions
 	Regression of 63551acaf0d83fac8b50904c2759c1098fbfaa71
@@ -1137,11 +2781,15 @@
 
 	testrunner: Add "-Werror=return-stack-address" flag
 
+2021-02-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add Block.unreachable_exit and have it set accordingly by FlowAnalyzer
 	Use this control flow information in codegen rather than doing an
 	educated guess based on occurring ReturnStatement nodes.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/838
+
+2021-02-04  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Don't leak array if length is -1
 	Found by -fsanitize=address
@@ -1315,11 +2963,15 @@
 
 	Update THANKS from git log
 
+2021-01-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	valadoc: Replace png icons with elementary's svg version
 	These match what was introduced by 8af8158c106eaafe12a628514f74e5788274d8d2
 
 	The icons were written by Daniel Foré for valadoc.org. They were taken from
 	https://github.com/Valadoc/valadoc-org
+
+2021-01-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
 
@@ -1365,6 +3017,8 @@
 
 	tests: Add more invalid "GtkTemplate" tests to increase coverage
 
+2021-01-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Don't allow assigning GtkChild fields/properties
 	These are handled exclusively by GtkBuilder
 
@@ -1403,10 +3057,14 @@
 
 	gdk-pixbuf-2.0: Update to 2.42.3~
 
+2021-01-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Minor improvement to field getter detection
 	Allow DataType.compatible() to be called without initialized SemanticAnalyzer
 
 	Additionally report a warning if field collides with method
+
+2021-01-14  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	girparser: Handle anonymous delegate not backed by virtual-method or signal
 
@@ -1519,6 +3177,8 @@
 	in a double free.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1118
+
+2020-12-21  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codewriter: Wrap AddressofExpression and PointerIndirection in parens
 
@@ -1660,6 +3320,8 @@
 
 	vapigen: Avoid superfluous cast
 
+2020-11-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add support for type narrowing
 	This causes type of given variable to be narrowed for the correspoding
 	child block of an if-statement.
@@ -1698,6 +3360,8 @@
 	In addition to 39331e235f1183223c8ea685e3501ab4ca932c8f
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/152
+
+2020-11-10  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Avoid taking extra reference of foreach collection for index iteration
 
@@ -1770,6 +3434,8 @@
 
 	curses: Correctly use [PrintfFormat] attribute
 
+2020-10-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	valadoc: Don't call CodeContext.pop() on empty stack
 	Otherwise this results in an expected assertion.
 
@@ -1801,6 +3467,8 @@
 	Add attribute A_ITALIC (ncurses extension).
 
 	curses: Remove initial “w” from some Window method names for consistency
+
+2020-10-21  Reuben Thomas  <rrt@sc3d.org>
 
 	glib-2.0: Add return codes to FileStream.putc/puts(), like posix
 	The corresponding C functions return a status code; make the GLib types
@@ -1910,6 +3578,8 @@
 	This resulted in invalid C code:
 	    error: lvalue required as left operand of assignment
 
+2020-09-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't falsly use g_return_val_if_fail() for async creation method
 	Asynchronous creation methods are represented by 5 functions, "*_new",
 	"*_new_finish", "*_construct", "*_construct_co" and "*_construct_finish".
@@ -1926,6 +3596,8 @@
 	Replaces b2746b9c3a2edc17ae7d27b30123fe0aeec52f82
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1043
+
+2020-09-27  Nick Schrader  <nick.schrader@mailbox.org>
 
 	vala: Prioritize the usage of an existing with-variable instance
 
@@ -1949,6 +3621,8 @@
 2020-09-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk4: Update to 3.99.1+9afdb41b
+
+2020-09-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk4: Don't skip LayoutManager.create_layout_child()
 	It is marked as not introspectable for some reason.
@@ -1985,6 +3659,8 @@
 
 	gtk4: Update to 3.99.0+6c9fe63a
 
+2020-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Don't use locale dependent string functions on syntax strings
 	Replace usage of string.down() with string.ascii_down(),
 	and string.up() with string.ascii_up()
@@ -2004,10 +3680,14 @@
 
 	  valadoc_taglets_param_set_is_c_self_param: assertion 'self != NULL' failed
 
+2020-08-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libvaladoc/gtkdoc-importer: Correctly retrieve "url" from "ulink" elements
 	This caused criticals like:
 
 	  g_uri_parse_scheme: assertion 'uri != NULL' failed
+
+2020-08-27  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc/girimporter: Fallback to "name" for callback
 	This caused criticals like:
@@ -2018,10 +3698,14 @@
 
 	girparser: Additionally fallback to "glib:type-name" to retrieve the cname
 
+2020-08-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libvaladoc/girimporter: Fallback to "glib:type-name" for class, interface and record
 	This caused criticals like:
 
 	  valadoc_importer_gir_documentation_importer_attach_comment: assertion 'cname != NULL' failed
+
+2020-08-24  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc/girimporter: Improve parse_symbol_doc() and don't use parse_doc()
 
@@ -2076,6 +3760,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/169
 
+2020-08-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "codegen: Don't append unreachable clean-up section of Block"
 	This reverts commit 8f3a0a0b64e0c7fbcc9231c3058247920dd6eeda.
 
@@ -2103,6 +3789,8 @@
 	tests: Add "pre-post-increment with side effect" tests to increase coverage
 	See https://gitlab.gnome.org/GNOME/vala/issues/1061
 
+2020-08-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Force usage of temporary variables for "tainted" member accesses
 	This is required to handle the side effect of postfix- and unary-
 	increment/decrement expressions.
@@ -2111,6 +3799,8 @@
 	and b9035aaf17a9a97a070812a8ee83251fd3893b1e
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1061
+
+2020-08-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Move transformation of unary increment/decrement to codegen
 	In preparation for https://gitlab.gnome.org/GNOME/vala/issues/1061
@@ -2137,10 +3827,14 @@
 
 	tests: Add more "invalid" tests to increase coverage
 
+2020-08-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "girwriter: Use appropriate get_ccode_* functions"
 	This reverts commit 7b0498d4f4fcaa3bd9e04d65560324847136f0ac.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1059
+
+2020-08-10  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Release 0.49.2
 
@@ -2186,6 +3880,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/57
 
+2020-08-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gio-2.0: Include "gio/gsettingsbackend.h" for GLib.SettingsBackend members
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1054
 
@@ -2201,6 +3897,8 @@
 	gstreamer: Update from 1.17.2+ git master
 
 	gtk4: Update to 3.99.0+bbb15f65
+
+2020-08-04  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Inherit CCode.returns_floating_reference attribute from base method
 	Regression of 49a6d475052ec476140c545a26ac8d5abe35c849
@@ -2249,6 +3947,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/241
 
+2020-07-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Properly destroy elements of an inline struct array
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/365
 
@@ -2270,6 +3970,8 @@
 2020-07-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Check error-type accessibility of creation methods and delegates
+
+2020-07-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Check param for null before using it
 	Regression of 5490b0b21a4089d803d51c91311430d60d266f7b
@@ -2299,6 +4001,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1038
 
+2020-07-20  Jean Pierre Dudey  <me@jeandudey.tech>
+
 	girwriter: Write c:type="void" when name="none"
 	This is to match g-ir-scanner behaviour of using the c:type to
 	identify void return value.
@@ -2312,6 +4016,8 @@
 	Regression of 4db1b33e7a8424e12abc85342111e75bd07c7aa9
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1039
+
+2020-07-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Improve check of expression passed to yield
 	Report a proper error and fix codegen cricical when a signal is given:
@@ -2401,6 +4107,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/1029
 
+2020-07-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	testrunner: Add more -Werror=* flags
 
 	codegen: Properly compare string if binary-expression contains string-literal
@@ -2489,11 +4197,15 @@
 
 	glib-2.0: Add GLib.Uri bindings (since 2.66)
 
+2020-06-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Don't carry floating reference into unknown target type expression
 	A floating reference result of a method, which may throw an error, needs
 	to be sinked when passed as argument for ellipsis parameter.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/1018
+
+2020-06-26  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add "named argument" test to increase coverage
 
@@ -2501,6 +4213,8 @@
 
 	vala: Improve parameter check of "get" method meant to be used by foreach (2)
 	Actually all integer-types as index parameter.
+
+2020-06-26  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Improve parameter check of "get" method meant to be used by foreach
 	The index-based iteration requires the "get" method to take one integer
@@ -2573,6 +4287,8 @@
 
 	libvaladoc: Remove unused Api.Class.get_finalize_function_name() API
 
+2020-06-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Consistently use get_ccode_lower_case_prefix() for function names
 	Create the expected name for "constructor" and "finalize" functions
 	which are non-public API.
@@ -2604,6 +4320,8 @@
 	passing --disable-assert.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/1005
+
+2020-06-09  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gstreamer-audio-1.0: Adjustments for Gst.Audio.Sink class extension
 
@@ -2665,11 +4383,15 @@
 
 	vala: Improve source documentation
 
+2020-05-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Improve array-dup-wrapper for empty arrays
 	Guard against negative lengths and consistently return NULL if allocated
 	size would be 0.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/999
+
+2020-05-27  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Revert "codegen: Dup arrays only if length > 0, this consistently returns NULL (POSIX)"
 	This reverts commit 18847c9221362081c9a9d37e2922f3e3ea648088.
@@ -2677,11 +4399,11 @@
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/999
 
 2020-05-26  wb9688  <36312-wb9688@users.noreply.gitlab.gnome.org>
+	    Simon Werbeck  <simon.werbeck@gmail.com>
 
 	parser: Map empty start/end index to 0/length for slice expressions
 	This allows a syntax like a[:], a[2:] or a[:3] for arrays and strings.
 
-	Co-authored-by: Simon Werbeck <simon.werbeck@gmail.com>
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/238
 
@@ -2721,6 +4443,8 @@
 
 	vala: Explicit "new" method may be incompatible with a posssible base method
 
+2020-05-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Use loop index instead of get_ccode_pos() for ellipsis parameter
 	Otherwise this will cause an index clash resulting in loosing the first
 	variable list parameter.
@@ -2733,15 +4457,21 @@
 
 	gtk4: Update to 3.98.3+386b36a6
 
+2020-05-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Transform cast from integer-type to boxed-type
 	Don't generate faulty c-code with results in segmentation faults.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/992
 
+2020-05-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Transform cast from floating-type to boxed-type
 	Don't generate invalid c-code leading to "cannot convert to a pointer type"
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/991
+
+2020-05-10  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Correctly handle cast-expression of real struct to nullable struct
 	Don't generate invalid c-code leading to "cannot convert to a pointer type"
@@ -2765,6 +4495,8 @@
 
 	valadoc: Add implicit "Posix" using-directive for POSIX profile
 
+2020-05-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	valadoc: Keep using add_package() for default packages and handle POSIX
 	Caused empty documentations for glib-2.0 and gobject-2.0 after
 	bd73f1ba11c387c919ad06d44badfd7065d1e35f
@@ -2778,6 +4510,8 @@
 
 	vala: SemanticAnalyzer.get_instance_base_type() is not allowed to return null
 	This is private internal API.
+
+2020-05-05  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Allow node_reference being null in SemanticAnalyzer.get_instance_base_type()
 	This allows a wider usage of DataType.get_actual_type() without an actual
@@ -2801,6 +4535,8 @@
 	Sync NEWS from 0.48
 
 	tests: Extend "fastvapi" test to increase coverage
+
+2020-04-23  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Revert "vala: Set default_construction_method in semantic-analyzer check if required"
 	This reverts commit d176f179581fac880f5598bb53b3475392af2c4b.
@@ -2882,6 +4618,8 @@
 	codegen: Check vfunc of abstract/virtual methods for NULL before using it
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/153
 
+2020-04-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Fix base-access to non-abstract/non-virtual properties
 	Don't unconditionally try to access vfuncs and actually emit assignments.
 
@@ -2890,6 +4628,8 @@
 2020-04-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	testrunner: Add -Werror=array-bounds
+
+2020-04-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Use specified indices to access multidimensional array constants
 	This fixes compile issues together with -Waggressive-loop-optimizations
@@ -2901,6 +4641,8 @@
 
 	codegen: Correctly handle signals returning real non-nullable struct
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/466
+
+2020-04-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Use get_value_*_function() in GSignalModule.generate_marshaller()
 	This makes sure to pick up the intended function like the generated ones
@@ -2925,6 +4667,8 @@
 	vala: Add SourceLocation.to_string()
 
 	vala: Add SourceReference.contains()
+
+2020-04-11  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gstreamer-1.0: Don't skip GST_*_FORMAT strings
 	Partially reverts 10b87427a263886b0e36d5f4a297d6e079b74b6e
@@ -2983,6 +4727,8 @@
 
 	gtk4: Update to 3.98.2+11495027
 
+2020-04-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't pass CCodeCastExpression to NULL-aware free macro
 	This resulted in invalid C code:
 	    error: lvalue required as left operand of assignment
@@ -2997,6 +4743,8 @@
 
 	Keep obsolete setting of 'vala-dbus-interface-info' to preserve backwards
 	compatibility.
+
+2020-04-05  Corentin Noël  <corentin@elementary.io>
 
 	tests: Extend "DBus signals" test to increase coverage
 	This adds code coverage for generating multiple signals, tests for
@@ -3017,6 +4765,8 @@
 	Import definitions from generated header files if available
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/713
+
+2020-04-05  Mason Bogue  <scythe@ortsz.com>
 
 	codegen: Use defintions of public header in internal header if available
 	Add CCode API to distinguish between public and internal header files.
@@ -3058,12 +4808,16 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/954
 
+2020-03-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't free value if property setter takes ownership
 	Correctly handle owned property accessor in object initializer.
 
 	In addition to c0e955db075d3d155782c167a0abb81e0dce5f59
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/953
+
+2020-03-31  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add "local clash with implicit this" test to increase coverage
 
@@ -3096,11 +4850,15 @@
 
 	vala: Move setting of target profile and standard packages into CodeContext
 
+2020-03-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Strip "Enum"-suffix only from enumeration
 	This lead to superfluous symbol clashes when applied widely.
 	e.g. GLib.ParamSpecEnum which is subclass of GLib.ParamSpec
 
 	Introduced with 37201b0016a6f710dea6c9db08ff351641086686
+
+2020-03-25  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Add Expression.is_always_true/false() helpers
 
@@ -3135,6 +4893,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/910
 
+2020-03-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Inline-allocated array can't be instantiated with creation expression
 	This generalizes 0554ed7ad9cefe0f56e53dc00be88488dfa788bf
 
@@ -3163,6 +4923,8 @@
 	codegen: Initialize temp-var for property array length before calling getter
 	Regression of d33e9fbca63674b7dfa339c25a9d5e27cce187f3
 
+2020-03-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Use memset to initialize inline-allocated array with non-constant size
 	In addition to a0bb129e5a2e8580eb272d9a68ba054e7b170dba
 
@@ -3174,6 +4936,8 @@
 	This affects methods, parameters, field and properties.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/938
+
+2020-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Inherit "array_length_type" from (base-/base-interface) parameter/property/method
 	See https://gitlab.gnome.org/GNOME/vala/issues/938
@@ -3201,10 +4965,14 @@
 
 	valadoc: Create and register current Vala.CodeContext properly
 
+2020-03-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Use error() instead of Report.error() inside of CodeContext.get()
 	This is a bad thing while Report.error() actually uses CodeContext.get()
 
 	Regression of e436f2833dc332e3fd728fe6f6b2cd7f224dcf33
+
+2020-03-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Add cairo-gobject binding
 	and update reverse depends if appropriate
@@ -3228,6 +4996,8 @@
 	codegen: Reset outdated array _size_ variable after use as ref parameter
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/929
 
+2020-03-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapigen: Define "GOBJECT" corresponding to set profile of CodeContext
 	This is required to evaluate pre-processor directives correctly in
 	sourced bindings.
@@ -3242,6 +5012,8 @@
 2020-03-11  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Release 0.48.1
+
+2020-03-11  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Avoid symbol clashes with "va_*" from "stdarg.h"
 	Make a better choice for naming the local variables in
@@ -3274,10 +5046,14 @@
 	poppler-glib: Update to 0.85
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/922
 
+2020-03-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Real struct-type without type_id can't be used for GObject property
 	It caused an invalid usage of G_TYPE_POINTER with g_param_spec_boxed().
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/921
+
+2020-03-08  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	glib-2.0: Add missing "type_id" or "has_type_id" attributes to structs
 	See https://gitlab.gnome.org/GNOME/vala/issues/921
@@ -3300,6 +5076,8 @@
 
 	tests: Extend "GenericAccessors" test to increase coverage
 
+2020-03-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Add destroy of parameter in vfunc of delegate property setter
 	The vfunc of an owned setter requires a destroy parameter. Support for
 	this was introduced with 1e90d53dba0eff6ec2babd8292676099308dd4f6
@@ -3315,6 +5093,8 @@
 	codegen: Replace hard-coded "gsize" with resolved "size_t"
 
 	linux: Don't depend on GLib.Time when using POSIX profile
+
+2020-03-06  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codewriter: Output inner interface declarations
 	Missing in d79401ad13a4bc5121f5ae187547c53b6a0a7701
@@ -3409,6 +5189,8 @@
 
 	tests: Add invalid "return" tests to increase coverage
 
+2020-02-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapi: Add some fundamental deps files
 	When using --nostdpkg those are important to have.
 
@@ -3437,6 +5219,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/278
 
+2020-02-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Never add "null" in ForeachStatement.get_defined_variables()
 	See https://gitlab.gnome.org/GNOME/vala/issues/911
 
@@ -3447,10 +5231,14 @@
 
 	  vala_method_get_closure: assertion 'self != NULL' failed
 
+2020-02-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Set error and return early on invalid index in ElementAccess
 	This caused criticals like:
 
 	  vala_code_node_check: assertion 'self != NULL' failed
+
+2020-02-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Don't process initializer of parameter if error is set
 	This caused criticals like:
@@ -3458,12 +5246,18 @@
 	  vala_data_type_compatible: assertion 'self != NULL' failed
 	  vala_code_node_to_string: assertion 'self != NULL' failed
 
+2020-02-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	tests: Add "GObject and GType class lifetime" tests to increase coverage
+
+2020-02-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Handle PointerType and VoidType in Constant.check_const_type()
 	This caused criticals like:
 
 	  vala_typesymbol_is_subtype_of: assertion 'self != NULL' failed
+
+2020-02-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	testrunner: Pass G_DEBUG=fatal-warnings to invalid test
 
@@ -3478,6 +5272,8 @@
 
 	pango: Update and add harfbuzz-gobject as dependency
 	See https://gitlab.gnome.org/GNOME/pango/issues/458
+
+2020-02-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Add harfbuzz-gobject binding
 	Mark it as experimental while is it subject to change.
@@ -3577,6 +5373,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/901
 
+2020-01-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Skip StructRegisterFunction for boolean/integer/floating types
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/901
 
@@ -3640,6 +5438,8 @@
 	glib-2.0: Let (u)int.try_parse() return false if there is an unparsed part
 	This is how our other try_parse() implementions behave.
 
+2020-01-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Use result value of assignment rather than its computation
 	An inline assignment of an array-length, like
 
@@ -3675,6 +5475,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/893
 
+2020-01-08  Jeremy Philippe  <jeremy.philippe@gmail.com>
+
 	vala: Infer target_type in coalescing expressions
 	Correctly handle reference tranfers of inner expressions.
 
@@ -3689,6 +5491,8 @@
 	that is obviously wrong and causes a cyclic call stack.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/891
+
+2020-01-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Release 0.47.2
 
@@ -3706,6 +5510,8 @@
 	Standard library functions only set errno on error and these particular
 	functions return an "in-band" error indicator (the error indicator is
 	also a normal return value).
+
+2020-01-06  Jeremy Philippe  <jeremy.philippe@gmail.com>
 
 	genie: Fix parser's inner state when a struct is declared after a class
 	If the struct is declared after a class and has a default creation
@@ -3752,6 +5558,8 @@
 
 	See https://gitlab.gnome.org/GNOME/glib/issues/541
 	and https://gitlab.gnome.org/GNOME/vala/issues/879
+
+2019-12-05  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Remove unreachable code in TypeRegisterFunction.init_from_type()
 	Not used since 79b1a3e39a3d2bac9fbe40c99336b3b89e374571
@@ -3820,6 +5628,8 @@
 
 	gstreamer: Update from 1.17.0+ git master
 
+2019-11-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add a basic parameter check for [Print] methods
 	and add tests to increase coverage
 
@@ -3848,10 +5658,14 @@
 
 	vala: Unify "this_parameter" creation using SemanticAnalyzer.get_this_type()
 
+2019-11-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Allow SemanticAnalyzer.get_this_type() to handle more symbols
 	and append possible type-parameters to match get_data_type_for_symbol()
 
 	Suported symbol types are Method, Property, Constructor and Destructor
+
+2019-11-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gidl/girparser: Creation methods must not be marked as static
 
@@ -3921,6 +5735,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/873
 
+2019-11-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	compiler: Add "--list-sources" options to output a list of all sources
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/872
 
@@ -3944,6 +5760,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/152
 
+2019-11-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gtk4,gtk4-unix-print: Update to 3.96.0+fbea677a
 
 	g-i: Ignore flags like -mfpmath=sse, -msse or -msse2
@@ -3957,6 +5775,8 @@
 	vala: Don't mark method as used on recursive usage of itself
 	See https://gitlab.gnome.org/GNOME/vala/issues/100
 
+2019-11-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Write value of constants/enums in fast-vapi if they are constant only
 	Introduced by 89a1243a4f066cc9652b26f86eb94fd038874982
 
@@ -3969,6 +5789,8 @@
 	and type-parameters.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/190
+
+2019-11-04  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Make type-parameter properties readable
 	Those are immutable while being construct-only properties.
@@ -4008,12 +5830,16 @@
 
 	vala: Do not allow to .resize() on arrays with fixed length
 
+2019-10-29  Florian Brosch  <flo.brosch@gmail.com>
+
 	vala: Infer array length of inline allocated arrays for fields
 	Don't allow non-arrays as initializer for inline allocated arrays
 
 	Same as 0f0bca7e0519af13d9217fbca2c20ce67cd3baba
 
 	See https://bugzilla.gnome.org/show_bug.cgi?id=644046
+
+2019-10-29  Florian Brosch  <flo.brosch@gmail.com>
 
 	vala: Do not allow += for arrays with fixed length
 
@@ -4039,6 +5865,8 @@
 	tests: Add invalid "silent cast of array" test to increase coverage
 
 	tests: Add "typeof" tests for fundamental GLib.Type
+
+2019-10-23  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Issue warning when passing arrays to typeof(), except for "string[]"
 	Passing arrays resolve to G_TYPE_INVALID, and "string[]" to G_TYPE_STRV
@@ -4066,6 +5894,8 @@
 
 	glib-2.0: Add (u)int.try_parse()
 	See https://gitlab.gnome.org/GNOME/vala/issues/649
+
+2019-10-21  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	glib-2.0: Add optional "base" parameter to *.parse/try_parse() of integers
 	Appending optional parameters to method implementations in VAPIs is not an
@@ -4159,12 +5989,16 @@
 	vala: Accept interface as inner type for object-type symbols
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/697
 
+2019-10-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Respect --abi-stability in Class/Interface.accept_children()
 	Add common implementation to ObjectTypeSymbol.accept_children() and match
 	generate_class_struct_declaration() and generate_interface_declaration()
 
 	Accepting fields earlier for interfaces in not a concern while there is
 	no support for instance/class fields yet.
+
+2019-10-16  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	glib-2.0: Add new symbols from 2.64
 
@@ -4259,6 +6093,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/861
 
+2019-10-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	tests: Extend "fastvapi" test to increase coverage
 
 2019-10-03  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -4269,11 +6105,15 @@
 	vala: Add delegate_target_type and delegate_target_destroy_type to SemanticAnalyzer
 	This is a plain copy from CCodeBaseModule.
 
+2019-10-03  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Support gobject property of delegates not carrying their target
 	Properly evaluate given delegate_target attribute on properties to create
 	the expected API.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/856
+
+2019-10-03  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Allow passing/retrieving any delegate to/from varargs parameter
 	Initialize target/notify cvalues of delegate-typed arguments/result of
@@ -4281,6 +6121,8 @@
 
 	Only the actual function pointer will be passed or retrieved. The target
 	and destroy values will be null.
+
+2019-10-03  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add dedicated "delegate without target through varargs" test
 
@@ -4300,6 +6142,8 @@
 2019-10-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Unify backing symbol instance of data-types (2)
+
+2019-10-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Support gobject property of null-terminated array without length
 	Properly evaluate given array_length and array_null_terminated attributes
@@ -4409,6 +6253,8 @@
 
 	Additionally adjust some header references.
 
+2019-09-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Directly use "memmove()" while g_memmove() is deprecated since 2.40
 
 	gobject-2.0: Some cherry-picking from GIR generated binding
@@ -4442,6 +6288,8 @@
 	gstreamer: Update from 1.17.0+ git master
 
 	gtk4: Update to 3.96.0+97231ca2
+
+2019-09-15  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-3.0: Fix ownership mismatch of ColorButton.rgba property-accessor
 	Regression of 9a5cc9e58e160d8bb5308fe5bfc8b433d8c269f5 in combination with
@@ -4479,6 +6327,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/772
 
+2019-09-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libvaladoc: Don't traverse into close circles with parent
 	SymbolResolver.resolve_thrown_list() adds error-type nodes which are
 	allowed to be NodeType.ERROR_DOMAIN and NodeType.CLASS.
@@ -4515,17 +6365,25 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/840
 
+2019-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Add boolean CodeContext.keep_going and corresponding compiler option
 	If keep_going is set then check() will continue after hitting errors in
 	resolver and analyzer.
+
+2019-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Don't unconditionally add/return internal "result" variable
 	Found by -Werror=unreachable-code
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/838
 
+2019-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't cause double-free due append_local_free() in uncaught-errors
 	See https://gitlab.gnome.org/GNOME/vala/issues/838
+
+2019-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Don't append unreachable clean-up section of Block
 	Found by -Werror=unreachable-code
@@ -4537,6 +6395,8 @@
 	glib-2.0: Add missing "DestroysInstance" attributes to Mutex/Locker API
 
 	glib-2.0: Fix MutexLocker binding
+
+2019-09-02  Jeremy Philippe  <jeremy.philippe@gmail.com>
 
 	glib-2.0: Use 'GStatBuf' as ctype for 'Stat'
 	The documentation of g_stat () states:
@@ -4550,6 +6410,8 @@
 	on the platform and/or compiler being used. On POSIX it is just
 	struct stat, but note that even on POSIX platforms, stat() might
 	be a macro.
+
+2019-09-02  Jeremy Philippe  <jeremy.philippe@gmail.com>
 
 	codewriter: Write "weak" modifier for properties
 
@@ -4698,17 +6560,23 @@
 
 	Regression of 7d771a0c07d63cb7605cbdc28dd8df50719731f8
 
+2019-07-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: NoAccessorMethod checks require GOBJECT profile
 	This fixes criticals like
 	    vala_class_real_is_subtype_of: assertion 't != NULL' failed
 
 	Regression of a6441ec3c27e059d32501a4e09c937ac668f3ad9
 
+2019-07-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: 'construct' is not supported in POSIX profile
 	This fixes criticals like
 	    vala_class_real_is_subtype_of: assertion 't != NULL' failed
 
 	Regession of 6c8c75f59024b32230b1c13ea344a568f19b86df
+
+2019-07-19  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	posix: Fix return-value of mknod() and c-include for tcgetsid()
 	Introduced with 535f2734d19875ccc1f170841b72eba0c4adad1e
@@ -4785,6 +6653,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/745
 
+2019-07-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add Symbol.is_extern and use/set is accordingly
 	This actually holds the information whether a symbol was declared
 	with `extern` modificator. Adjust the setting of Symbol.external and
@@ -4810,6 +6680,8 @@
 
 	tests: Null-terminate arrays for compatibility test of uint8 and uchar
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/809
+
+2019-06-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Only warn about imcompatible type of external construct property
 	This is to reduce the initial fallout.
@@ -4895,11 +6767,15 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/795
 
+2019-05-16  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Regenerate GIDL-based bindings to fix getter ownership of struct properties
 
 	Regenerate GIR-based bindings to fix getter ownership of struct properties
 
 	vala: Trust "value_owned" when writing property getter
+
+2019-05-16  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: No-accessor struct properties in GLib.Object class must be owned
 	Real structs are returned as heap-allocated structor by g_object_get() and
@@ -4907,6 +6783,8 @@
 
 	Additionally force DelegateType, PointerType and ValueType as unowned to
 	preserve the current behaviour for binding generation.
+
+2019-05-16  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Properties with NoAccessorMethod return heap-allocated structs
 
@@ -4948,6 +6826,8 @@
 	It was defined with OptionArg.NONE and never took an extra argument.
 
 	Regression of d8e810680f370fac7e9a5e80f8d94316707625c2
+
+2019-05-01  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
 
@@ -5012,6 +6892,8 @@
 2019-04-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add "fast-vapi" test to increase coverage
+
+2019-04-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Write "Source" attribute in fast-vapi mode
 	This enables users to reference to the original source of a symbol.
@@ -5117,6 +6999,8 @@
 	gobject-introspection-1.0: Fix TypeInfo and TypeTag method references
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/778
 
+2019-03-28  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Create correct output in get_default_lower_case_suffix()
 	It must match the output of CCodeAttribute.get_default_lower_case_suffix()
 
@@ -5139,6 +7023,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/755
 
+2019-03-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Handle "modulo" operation on floating-types in CCodeAssignmentModule
 	Duplication with CCodeBaseModule.visit_binary_expression()
 
@@ -5150,6 +7036,8 @@
 	Compact classes might have a unref_function in external packages. Therefore
 	subclassing them resulted in an errornous reference to free_function.
 
+2019-03-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Move implicit GValue cast for comparison to BinaryExpression
 	Handle "==" and "!=" only as it was done before.
 
@@ -5157,6 +7045,8 @@
 	value-based comparisons.
 
 	See https://bugzilla.gnome.org/show_bug.cgi?id=585063
+
+2019-03-25  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
 
@@ -5199,6 +7089,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/671
 
+2019-03-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add CodeContext.get_source_file() and perform some sanity checks
 
 	codegen: No need to retrieve CodeContext.save_csources inside loop
@@ -5224,22 +7116,30 @@
 
 	vala: Report error for yield statements without async context
 
+2019-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Report error for public creation methods of abstract classes
 	Only report a warning for external creation methods to reduce the initial
 	fallout.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/766
 
+2019-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Add support for --target-glib=auto
 	Determine target-glib according to the available version of glib-2.0.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/761
+
+2019-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Require and target GLib >= 2.48
 	The next stable release of vala will happen 3.5 years after the
 	release of GLib 2.48.0.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/671
+
+2019-03-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Bump version suffix to 0.46
 
@@ -5341,6 +7241,8 @@
 
 	codegen: Include "glib-object.h" for typeof expression
 
+2019-03-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Don't ignore qualified parent when inferring type of enum member
 	Regression of 33c91a04f758c89f0402994a6df894e6c2032def
 
@@ -5429,6 +7331,8 @@
 	tests: Add regression test for modulo operation on double and float
 	https://bugzilla.gnome.org/show_bug.cgi?id=610660
 
+2019-02-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "vala: Don't replace assignments for local variables with non-null simple-types"
 	This reverts commit e701142da4601ece5ca71cc4484728b08969c74e.
 
@@ -5459,6 +7363,8 @@
 	libvaladoc: Properly support the output of async constructors
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/753
 
+2019-02-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	clutter-1.0: Drop deprecated from Actor.pick()
 	The signal "pick" was deprecated with 1.12, but not the virtual method.
 
@@ -5488,10 +7394,14 @@
 	Revert "valadoc: Update API tests"
 	This reverts commit 881333fe7a8ecf64de21633c165b0db0db2e41ff.
 
+2019-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "valadoc: Drop duplicated code to add source files and use CodeContext API"
 	This reverts commit 54ba304eddd05264cbb9eacd734914938f50c7e4.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/748
+
+2019-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk4: Update to 3.94.0+d2d35e52
 
@@ -5521,6 +7431,8 @@
 	goocanvas: Update from 1.0.0+af07af5d
 
 	g-i: Fix return value on error in start_discriminator()
+
+2019-01-29  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc: Don't change the size of an array in-parameter
 	Avoid a possible memory issue while the resize of an array reference is
@@ -5561,6 +7473,8 @@
 
 	Release 0.43.6
 
+2019-01-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Don't tweak closure on static lambdas
 	Regression of 92ba4e178723b1aa6404da556c79b08abe5eaf05
 
@@ -5575,10 +7489,14 @@
 	tests: Add asynchronous "catch-error-scope" regression test
 	See https://gitlab.gnome.org/GNOME/vala/issues/741
 
+2019-01-21  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "codegen: Use copies of error_variable of catch-clauses for nested usage"
 	This reverts commit 765c39c73c3096dd1de984db023763ec13448ef5.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/741
+
+2019-01-21  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc/girimporter: Skip "source-position" elements
 	See https://gitlab.gnome.org/GNOME/gobject-introspection/merge_requests/75
@@ -5638,6 +7556,8 @@
 	but allows this special case.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/59
+
+2019-01-15  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Use get_ccode_*name/get_parameter_cexpression() for Parameters
 
@@ -5704,17 +7624,23 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/318
 
+2019-01-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapi: Regenerate GIR-based bindings to fix non-standard error position
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/265
 
 	girparser: Recognize error parameter before delegate target parameter
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/265
 
+2019-01-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Add "error_pos" CCode attribute and use it as needed
 	This makes it possible to use non-standard error parameter positions
 	within the vala source.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/728
+
+2019-01-10  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Use a parameter-map for creation of delegate declaration
 	This is required to take instance_pos into account and will allow the error
@@ -5729,6 +7655,8 @@
 	the error parameter. Vala does not support that at this point.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/728
+
+2019-01-09  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	atspi-2: Drop superfluous Atspi-2.0-custom.vala
 
@@ -5746,6 +7674,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/636
 
+2019-01-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gio-2.0: Make DBusInterface[GS]etPropertyFunc usable
 	These delegates don't place their target at the end, but their error
 	parameter. Vala does not support that at this point.
@@ -5753,6 +7683,8 @@
 	Introduced with 1df2c050ba29c84026a14e7ee23fa6bcd00b1044
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/728
+
+2019-01-08  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gio-2.0: Drop superfluous metadata
 
@@ -5809,6 +7741,8 @@
 
 	gstreamer: Update from 1.15+ git master
 
+2019-01-05  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't check boolean values for (in)equality in GTask API
 	This resolves any value but 0 to true as it is suppose to be.
 
@@ -5846,6 +7780,8 @@
 
 	gobject-2.0: Use correct array-length-type for returned arrays
 
+2019-01-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	glib-2.0: Use correct array-length-type for returned arrays
 	As usual length is returned by an implicit out-parameter where the
 	provided target variable must have a matching data type.
@@ -5877,6 +7813,8 @@
 	codegen: Use temp-vars for ellipsis out-arguments to fix memory management
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/722
 
+2018-12-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Use temp-var for MethodCall with out/ref arguments
 	Checking arguments of a MethodCall expression is required for varidic
 	methods where checking parameters isn't sufficient. Doing this makes
@@ -5887,6 +7825,8 @@
 2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Allow explicit interface methods to be virtual
+
+2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Use properly checked implicit interface implementations
 	Collect implicit interface implementations in AST and avoid doing the same
@@ -5900,6 +7840,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/548
 
+2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Search in all interfaces for an implementation match and don't bail early
 	The first imcompatible method match doesn't mean there is no match for another
 	interface. This might mean an implementation is missing which will be covered
@@ -5907,7 +7849,11 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/548
 
+2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: No need to look further if an implementations was found
+
+2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Don't just guess and check for a matching base_interface_method too
 	This fixes class with multiple interfaces which require implementations of
@@ -5919,6 +7865,8 @@
 	e1a3ff9470763e7c6ff5a887036390bd418f4e46
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/548
+
+2018-12-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Add Method.compatible_no_error()
 
@@ -5965,6 +7913,8 @@
 	vapi: Regenerate GIR-based bindings to fix non-standard async methods
 	See https://gitlab.gnome.org/GNOME/vala/issues/709
 
+2018-12-11  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Handle non-default AsyncResult parameter position
 	Unfortunately gdbus-codegen puts the AsyncResult parameter after possible
 	out-parameters therefore there is an "async_result_pos" attribute required
@@ -5989,6 +7939,8 @@
 2018-12-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add "emit order" tests
+
+2018-12-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Emit delegate/enum typedefs to type-declaration section
 	This fixes compilation of circular dependency of delegates with enums,
@@ -6055,6 +8007,8 @@
 	This fixes criticals and doesn't rely on codegen error reporting.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/446
+
+2018-11-29  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Admit that structs are emtpy even with a static property
 	See https://gitlab.gnome.org/GNOME/vala/issues/446
@@ -6157,6 +8111,8 @@
 
 	tests: Add default defines test for VALA_0_XX and GLIB_2_XX
 
+2018-11-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Move setting of default defines for VALA_0_XX and GLIB_2_XX to Context
 	This avoids duplicated code and reduces the setup burden for library users.
 
@@ -6229,6 +8185,8 @@
 	gdk-x11-3.0,gtk+-3.0: Update to 3.24.1+356f1f59
 
 	gstreamer: Update from 1.15+ git master
+
+2018-11-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	parser: Use comment which was already retrieved in parse_declaration()
 	This caused to loose comment of first element of enums and error domains.
@@ -6400,6 +8358,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/696
 
+2018-11-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gstreamer: Update from 1.15+ git master
 
 	gio-2.0: Result of DBusMessage.get_header() is unowned
@@ -6484,6 +8444,8 @@
 
 	vala: Add ArrayType.length_type and ArrayCreationExpression.length_type
 	https://gitlab.gnome.org/GNOME/vala/issues/607
+
+2018-11-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Initialize internal temp-variables used as reference parameter
 	When casting Variant to multi-dimensional arrays the length fields are
@@ -6620,6 +8582,8 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/684
 
+2018-10-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Add support for SingleInstance attribute for GObject classes
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/647
 
@@ -6651,6 +8615,8 @@
 
 	tests: Extent "girwriter" test to increase coverage
 
+2018-10-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	build: Allow disabling the build of valadoc
 	Allow disabling build of valadoc with configure option --disable-valadoc
 
@@ -6679,19 +8645,27 @@
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/677
 
+2018-09-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Drop deprecated syntax support of += and -= for signals
 	The connect/disconnect methods should be used instead for a long time.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/676
 
+2018-09-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Move some errors from signal-module to the semantic-analyzer pass
 
 	tests: Add some invalid "signal" tests to increase coverage
+
+2018-09-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Enforce "return yield ..." syntax to be expected
 	"yield return ..." wasn't handled correctly and resulted in broken c-code.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/675
+
+2018-09-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codewriter: Prepend "yield" if is_yield_expression is set on MethodCall/ObjectCreationExpression
 
@@ -6737,12 +8711,16 @@
 
 	vala: Check if ArrayType supports its given element-type in analyzer pass
 
+2018-09-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Fix typo in is_pure_ccode_expression()
 	Note that this method is not used anymore and should likely be dropped.
 
 	Introduced with e086fada22eb7221cdbe34d7d4ac41445a50130a
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/673
+
+2018-09-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	g-i: Fix use after free in scanner
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/674
@@ -6762,6 +8740,8 @@
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/663
 
+2018-09-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codewriter: Use List.sort() instead of custom local implementation
 
 2018-09-17  Rico Tzschichholz  <ricotz@t-online.de>
@@ -6777,11 +8757,15 @@
 
 	Release 0.42.1
 
+2018-09-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapigen: Warn if the library argument doesn't match any package attribute
 	GIR files can contain a package key referring to the pkg-config name which
 	is the recommended and even required naming of a vapi.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/669
+
+2018-09-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
 
@@ -6939,10 +8923,14 @@
 
 	codegen: Add source_reference to unsupported floating reference error
 
+2018-07-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "codegen: Stop taking explicit references on 'this' for captured blocks"
 	This reverts commit 75e61cfbadb3d98f44835665d25fa3b836cbceb5.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/654
+
+2018-07-26  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	glib-2.0: Variant.byte() takes an uint8 argument
 
@@ -6977,10 +8965,14 @@
 
 	Regression of df56f916e52e5efe3876afed59a6190f6cead1c8
 
+2018-07-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Move interface_init calls before g_type_add_instance_private()
 
 	Revert "codegen: Don't emit g_type_add_instance_private() in *_register_type()"
 	This reverts commit cb669029dbd56e1d60586b39161f4948250c2f56.
+
+2018-07-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Don't emit g_type_add_instance_private() in *_register_type()
 	This fixes warnings like "sys:1: Warning: cannot add private field to
@@ -6995,11 +8987,15 @@
 	gio-2.0: Add custom IOError.from_errno() to make it work as expected
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/253
 
+2018-07-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	parser: Accept "empty" enums/error-domains
 	This drops the semantic check from the parser. Actual errors will be caught
 	later by the SemanticAnalyzer.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/253
+
+2018-07-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Report error for error-domains without any code
 
@@ -7040,6 +9036,8 @@
 	resulting GIR file.
 
 	Attributed namespaces will be skipped altogether.
+
+2018-07-05  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Allow TypeModule subclasses as parameter-type in module-init-method
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/648
@@ -7131,6 +9129,8 @@
 	reference them as GSource.
 
 	See https://gitlab.gnome.org/GNOME/vala/issues/641
+
+2018-06-16  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Custom abstract methods of GLib.Source are handled differently
 	Regression of 28b4f45b709622e821e86655f245fdcb75d3afaf
@@ -7240,14 +9240,20 @@
 
 	gio-2.0: Delegate fields of DBus*VTable do not have implicit target fields
 
+2018-05-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gio-2.0: Apply delegate_target = false on ActionEntry callbacks and make them weak
 	They break struct ABI and the "require_copy/destroy" check in codegen
 	while being defined with target.
 
 	Fixes https://gitlab.gnome.org/GNOME/vala/issues/630
 
+2018-05-31  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Add support for bool delegate_target
 	https://gitlab.gnome.org/GNOME/vala/issues/520
+
+2018-05-31  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Handle delegate_target attribute of fields
 	Delegate fields without a delegate target don't require special handling
@@ -7297,6 +9303,8 @@
 
 	codegen: Avoid critical for array in-parameters with custom length-type
 	Regression of 049b9b3943831e6dd242889a8196bd88b7858268
+
+2018-05-21  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Drop fatal assert on big-endian archs
 	The assert isn't required to verify this specific fix, but obviously shows
@@ -7380,13 +9388,19 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=643088
 
+2018-05-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	ccode: Properly depend on in-tree built libvala
+
+2018-05-14  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Don't return null if no rank attribute was found
 	There was already an error message introduced with
 	3158ae7a0f990b44f114d51498636e669609af0d
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=660991
+
+2018-05-14  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	genie: Add support for the \v escape charactor
 	https://bugzilla.gnome.org/show_bug.cgi?id=664689
@@ -7402,12 +9416,16 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=769935
 
+2018-05-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Fix serializing multidimensional arrays
 	The same type signature was being used for every dimension of the array.
 
 	Based on patch by Abderrahim Kitouni
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=735437
+
+2018-05-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Remove mx-1.0 bindings
 	https://bugzilla.gnome.org/show_bug.cgi?id=796041
@@ -7467,6 +9485,8 @@
 	Regenerate bindings to accommodate for "unlock" being a keyword now
 	https://bugzilla.gnome.org/show_bug.cgi?id=795545
 
+2018-04-25  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	parser: Add support for explicit "unlock" syntax
 	By providing more control over the internal support for Mutex creation and
 	usage, this allows a more complex resource control while having an explicit
@@ -7477,6 +9497,8 @@
 	  unlock (foo);
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=795545
+
+2018-04-25  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Respect cname ccode-attribute of lockable fields
 	https://bugzilla.gnome.org/show_bug.cgi?id=795521
@@ -7492,6 +9514,8 @@
 
 	codewriter: Add 'new' to symbols if needed to match the original source
 	https://bugzilla.gnome.org/show_bug.cgi?id=614686
+
+2018-04-24  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	webkit2gtk-4.0: Add JSC namespace to javascriptcoregtk-4.0 and fix depends
 	Make JS namespace deprecated since 2.22 accordingly
@@ -7543,6 +9567,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=795225
 
+2018-04-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Accessors of abstract properties cannot have bodies
 	https://bugzilla.gnome.org/show_bug.cgi?id=795225
 
@@ -7590,6 +9616,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=795225
 
+2018-04-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Support anonymous definitions of delegates in bindings
 	If a library header does not include a defintion for a delegate then
 	bindings can use the CCode annotation "has_typedef = false" which will
@@ -7599,6 +9627,8 @@
 	public delegate void Func ();
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=794920
+
+2018-04-14  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-2.0: Set NoAccessorMethod on Gtk.Radio*.group properties
 	The type of get/set_group() doesn't match the property type.
@@ -7706,6 +9736,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=794651
 
+2018-03-24  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	clutter-1.0: Avoid duplications of implemented interfaces
 
 2018-03-24  Dr. Michael Lauer  <mickey@vanille-media.de>
@@ -7721,18 +9753,26 @@
 	vapi: Remove twitter-glib-1.0 bindings
 	https://bugzilla.gnome.org/show_bug.cgi?id=794609
 
+2018-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapi: Remove gdu and gdu-gtk bindings
 	Their replacement is udisks2 for a long time.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=794608
 
+2018-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libgsf-1: Fix metadata warnings and Outfile.new_child*()
+
+2018-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-*.0: Fix iter parameter of TextView.backward*/forward*/move_visually()
 	Those methods are changing the passed iter structure and therefore it needs
 	be marked as ref for vala taking this into account.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=794345
+
+2018-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-4.0: Update to 3.93.0+b01ee88f
 
@@ -7755,6 +9795,8 @@
 	wrapper with a compatible signature.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=694765
+
+2018-03-21  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gobject-2.0: Fix bootstrap with valac < 0.26
 
@@ -7855,10 +9897,14 @@
 	posix: Fix crypt(3), now that we have feature test macros.
 	Note that crypt(3) returns 'null' on error.
 
+2018-03-06  Dr. Michael Lauer  <mickey@vanille-media.de>
+
 	posix: Add wordexp(3), wordexp_t, and assorted constants
 	Based on a patch by Andre Masella.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=663633
+
+2018-03-06  Dr. Michael Lauer  <mickey@vanille-media.de>
 
 	posix: Add fnmatch(3) and assorted constants.
 	Based on a patch by Andre Masella.
@@ -7893,6 +9939,8 @@
 
 	gstreamer-1.0: Update to 1.13.1+
 
+2018-02-26  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	method: Check with same rules for dbus compatibility as in GBusModule
 	Only issue warning if the method would actually be end up on DBus as
 	per generate_interface_method_call_function() or get_method_info().
@@ -7900,6 +9948,8 @@
 	Based on patch by Corentin Noël
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=793859
+
+2018-02-26  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Fix wrong attributes
 
@@ -7941,6 +9991,8 @@
 	linux: Add feature_test_macros to non-POSIX file control constants and dup3
 	https://bugzilla.gnome.org/show_bug.cgi?id=793444
 
+2018-02-20  Dr. Michael Lauer  <mickey@vanille-media.de>
+
 	codegen: Add support for feature test macros
 	This adds new CCode string attribute 'feature_test_macro = "VALUE"'. Such
 	values will be added before the headers section as '#define VALUE'.
@@ -7971,6 +10023,8 @@
 	  const gint tri_numbers[2][2][3] = {{{1, 2, 3}, {5, 5, 6}}, {{6, 7}}};
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=604371
+
+2018-02-17  Marco Trevisan (Treviño)  <mail@3v1n0.net>
 
 	codegen: Use pointers when accessing constant multi-dimensional arrays
 	https://bugzilla.gnome.org/show_bug.cgi?id=604371
@@ -8027,6 +10081,8 @@
 
 	vapi: Update GIR-based bindings
 
+2018-02-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	build: Don't install vapicheck
 	This tool can't be used to check the syntax of vapi files as the name
 	suggests. So better drop it until it gets some fixing.
@@ -8049,10 +10105,14 @@
 
 	tests: Add some "girparser" tests to increase coverage
 
+2018-02-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	compiler: Prefix headers for set_cheader_override() if includedir is given
 	We need to account for changes done by SourceFile.get_cinclude_filename()
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=793299
+
+2018-02-08  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Avoid critical when connecting dynamic signals
 
@@ -8085,6 +10145,8 @@
 	of type ‘GDestroyNotify {aka void (*)(void *)}’
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=639059
+
+2018-02-06  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add various regression "codegen" tests to increase coverage
 
@@ -8120,6 +10182,8 @@
 
 	Release 0.39.7
 
+2018-02-04  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Don't try to infer error argument on async begin methods
 	Only the async finish method might have an error parameter.
 
@@ -8139,10 +10203,14 @@
 
 	Regenerate GIR-based bindings
 
+2018-01-29  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Don't accept methods as property-accessor which throw errors
 	This should be considered a temporary fix.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=792998
+
+2018-01-29  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	girparser: Ignore conflicting closure/destroy indexes
 	Reverse references from closure/destroy parameters back to the callback
@@ -8165,6 +10233,8 @@
 	Otherwise doing so results in a malformed declaration.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=787521
+
+2018-01-27  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	tests: Add missing PrintfFormat attribute
 	https://bugzilla.gnome.org/show_bug.cgi?id=657378
@@ -8199,6 +10269,8 @@
 	equals to G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB
 
 	build: Bump bootstrap requirement to 0.39.6 for --abi-stability build flag
+
+2018-01-20  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Add abi-stability path for interfaces
 	Based on patch by Daniel Espinosa
@@ -8239,11 +10311,15 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=731322
 
+2018-01-18  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	tests: Add test for parameter type checking of async methods
 	https://bugzilla.gnome.org/show_bug.cgi?id=792660
 
 	vala: Skip default-value positioning check for parameters of coroutines
 	https://bugzilla.gnome.org/show_bug.cgi?id=644241
+
+2018-01-18  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Revert "Do not warn about non-default parameters for coroutines."
 	Breaks parameter inference for async method overrides.
@@ -8305,6 +10381,8 @@
 
 	Regenerate GIR-based bindings
 
+2018-01-09  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: Improve instance method detection
 	Improve reparenting static namespace functions to their presumably parent
 	structures. Only allow this if the first parameter is not defined as (out)
@@ -8316,6 +10394,8 @@
 	Based on patch by Simon Werbeck <simon.werbeck@gmail.com>
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=732460
+
+2018-01-09  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	valadoc: Less string copying
 
@@ -8341,6 +10421,8 @@
 	  cleanup for single-line comments.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=736483
+
+2018-01-09  Michael James Gratton  <mike@vee.net>
 
 	libvaladoc: Allow @link tags to be split over multiple lines
 	* libvaladoc/documentation/documentationparser.vala
@@ -8441,10 +10523,14 @@
 
 	webkit2gtk-4.0: Update to 2.19.3
 
+2018-01-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	parser: Allow custom invocations of parse_file()
 	Use CodeContext of SourceFile if needed
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=791936
+
+2018-01-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-4.0: Update to 3.93.0+fcc8d778
 
@@ -8498,17 +10584,23 @@
 	gtk+-2.0: Mark MessageDialog constructor parameter, message_format, as nullable
 	https://bugzilla.gnome.org/show_bug.cgi?id=791570
 
+2017-12-13  Alistair Thomas  <astavale@yahoo.co.uk>
+
 	vapi: Remove librsvg-2.0 binding
 	This binding was upstreamed 19 June 2012. See:
 	https://git.gnome.org/browse/librsvg/commit/?id=729a3d6b6486faa92c7a56a5a4f5bf04173c8624
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=776025
 
+2017-12-13  Alistair Thomas  <astavale@yahoo.co.uk>
+
 	vapi: Remove libgdata bindings
 	This binding was upstreamed 24 February 2013. See:
 	https://git.gnome.org/browse/libgdata/commit/?id=2186969875520d535704f61280f62145932b4948
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=776024
+
+2017-12-13  Alistair Thomas  <astavale@yahoo.co.uk>
 
 	vapi: Remove gtksourceview-3.0 bindings
 	This binding was upstreamed 12 August 2014. See:
@@ -8518,11 +10610,15 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=776023
 
+2017-12-13  Alistair Thomas  <astavale@yahoo.co.uk>
+
 	vapi: Remove libgnome-keyring binding
 	This binding has been upstreamed since 28 June 2012. See
 	https://git.gnome.org/browse/libgnome-keyring/commit/?id=ea1476c1a941d71d6d7be90aa6fc5b8ba8da7c83
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=776022
+
+2017-12-13  Alistair Thomas  <astavale@yahoo.co.uk>
 
 	vapi: Remove gedit 3 binding
 	The bindings have been upstreamed since 17 February 2014. See
@@ -8555,6 +10651,8 @@
 	gtk+-3.0: Drop obsolete GIDL sources
 	https://bugzilla.gnome.org/show_bug.cgi?id=730746
 
+2017-12-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gtk+-3.0: Switch to GIR
 	Initially based on patch by Evan Nemerson
 
@@ -8582,6 +10680,8 @@
 
 	Improve error message for missing type-parameter on enclosing type
 	https://bugzilla.gnome.org/show_bug.cgi?id=587905
+
+2017-12-09  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	SemanticAnalyser.get_actual_type() should never return null
 	So better return an InvalidType in case of error.
@@ -8702,11 +10802,15 @@
 
 	tests: Make lambda tests fatal and add some more cases
 
+2017-11-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Avoid use of temp-var for some callables returning ValueType
 	It is safe to do for callables which don't have out/ref parameters without
 	breaking the control-flow.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=789071
+
+2017-11-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Avoid use of temp-var to access in/ref parameters
 	https://bugzilla.gnome.org/show_bug.cgi?id=789071
@@ -8714,11 +10818,15 @@
 	valadoc: Acknowledge possible properties in structs
 	https://bugzilla.gnome.org/show_bug.cgi?id=784705
 
+2017-11-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gstreamer-1.0: Bind GST_TIME_ARGS, GST_STIME_ARGS formatting macros
 	Gst.ClockTime ts = 0ULL;
 	print ("%" + Gst.TIME_FORMAT + "\n", Gst.TIME_ARGS (ts));
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=750840
+
+2017-11-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Add boolean "use_inplace" ccode-attribute for methods
 	This can be use to avoid temp-variables for an expanding macro.
@@ -8754,19 +10862,27 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=666035
 
+2017-11-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Report error for missing type-parameter on enclosing type
 	Make a qualified guess for the cause of the problem instead of triggering
 	an assertion.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=587905
 
+2017-11-19  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Enforce name-length >= 3 for structs using GType
 	https://bugzilla.gnome.org/show_bug.cgi?id=764041
+
+2017-11-19  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	compiler: Properly parse arguments for vala interpeter-mode
 	Arguments for the target need to be passed with --run-args from now on.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=663070
+
+2017-11-19  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Allow to pass compatible delegates to signal.connect()
 	https://bugzilla.gnome.org/show_bug.cgi?id=787521
@@ -8858,6 +10974,8 @@
 	Regenerate GIR-based bindings
 	https://bugzilla.gnome.org/show_bug.cgi?id=788775
 
+2017-10-10  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Prioritize "array_length=true" over "array_null_terminated=true"
 	If arrays claim to have an array-length and also are null-terminated then
 	use and rely on the given length.
@@ -8910,11 +11028,15 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=784691
 
+2017-09-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Report warning if property-type is not compatible with GLib.Object
 	Not all types are supported to be used for "real" Object-properties.
 	Therefore start to report a warning instead of not registering it silently.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=693932
+
+2017-09-15  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	glib-2.0: Use type-id/marshaller-type for (u)int16/(u)short from (u)int32
 	https://bugzilla.gnome.org/show_bug.cgi?id=693932
@@ -9001,11 +11123,15 @@
 
 	vala: Add CallableType as base for DelegateType, MethodType, SignalType
 
+2017-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Add support for "type-func" in ui-files
 	If "type-func" attribute is given then prefer it over "class" if matching
 	it to a known object is possible.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=787033
+
+2017-09-02  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Initialize temp-variable for fixed-size arrays to zero first
 	https://bugzilla.gnome.org/show_bug.cgi?id=787152
@@ -9022,6 +11148,8 @@
 
 	codegen: Use given dup_function for structs
 
+2017-08-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Adjust format-index for printf/scanf-methods which throw errors
 	If there is no explicit FormatArg annotation while this method throws an
 	error, it is required to mark the parameter located right before ellipsis
@@ -9037,6 +11165,8 @@
 	and results in a double definition.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=786845
+
+2017-08-26  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	libvaladoc: Fix some -Wincompatible-pointer-types warnings
 
@@ -9080,6 +11210,8 @@
 	because that script adds a namespace around each test.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=786652
+
+2017-08-23  Alistair Thomas  <astavale@yahoo.co.uk>
 
 	Add .editorconfig file
 	EditorConfig (http://editorconfig.org/) has become the
@@ -9206,6 +11338,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=782782
 
+2017-06-27  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	libgvc: Add WITH_CGRAPH conditionals
 
 	gee: Add some useful symbols from gee-0.8
@@ -9254,6 +11388,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=783897
 
+2017-06-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vapi: Update GIR-based bindings
 
 2017-06-12  Carlos Garnacho  <carlosg@gnome.org>
@@ -9298,10 +11434,14 @@
 	gio-2.0: Use default 'length = null' for DataInputStream.read_line_utf8*
 	https://bugzilla.gnome.org/show_bug.cgi?id=783351
 
+2017-06-07  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gio-2.0: Add DBusConnection 'closed' signal as 'on_closed'
 	It was masked by property with same name.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=684358
+
+2017-06-07  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Support renamed signals
 	The CCode attribute 'cname' needs to be the canonical representation as it
@@ -9339,11 +11479,15 @@
 	g_list_free_full and g_slist_free_full are available since 2.28.
 	g_queue_free_full is available since 2.32.
 
+2017-05-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Require and target GLib >= 2.40
 	The next stable release of vala will happen 3.5 years after the
 	release of GLib 2.40.0.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=782005
+
+2017-05-17  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gdbus: Don't leak nested HashTable on deserialization
 	Additionally make sure types derived from string are freed, e.g. ObjectPath
@@ -9401,6 +11545,8 @@
 	leaking a reference to the scopes GLib.AsyncResult.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=641171
+
+2017-04-30  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codewriter: Update timestamps of generated c-files if needed
 	If a changed source-file produces the same ccode we currently leave
@@ -9521,12 +11667,18 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=780426
 
+2017-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Fix delegate initializer for instance fields
 	Set delegate-target to "self" which is available in *_instance_init().
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=683925
 
+2017-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Slightly improve lamdba-expression error on target-type mismatch
+
+2017-03-22  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Perform arguments-check against actual .end() method-signature
 	This results in error message referring to the actual expected signature.
@@ -9584,6 +11736,8 @@
 
 	tests: Merge two main methods
 
+2017-03-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	signalmodule: Handle nullable ValueTypes properly and treat them as pointer
 	Nullable value-types are actually pointers to heap-allocated structures.
 	Therefore a pointer-based marshaller is required for those types.
@@ -9597,10 +11751,14 @@
 	g_cclosure_marshal_VOID__VARIANT
 	g_cclosure_marshal_BOOLEAN__BOXED_BOXED
 
+2017-03-13  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Introduce $API_VERSION as base for $PACKAGE_SUFFIX and for usage in manual
 	This goes along with unbreaking the manual-build with libxslt < 1.1.27.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=779968
+
+2017-03-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	Require gee-0.8 >= 0.19.91
 	https://bugzilla.gnome.org/show_bug.cgi?id=774653
@@ -9615,6 +11773,8 @@
 	This is check was introduced with 64b9bfc1bc0abfed45ad07a8ebaef8a5f167f848
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=779955
+
+2017-03-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	poppler-glib: Update to 0.52.0
 
@@ -9686,6 +11846,8 @@
 	girparser: Add metadata-support for "returns_modified_pointer"
 	https://bugzilla.gnome.org/show_bug.cgi?id=759255
 
+2017-03-08  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gstreamer-1.0: Fix Gst.Base.Adapter.map/take bindings
 	There is no explicit array-length returned while it is implicitly related
 	to the in-parameter those methods are taking.
@@ -9747,11 +11909,15 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=778540
 
+2017-03-06  Carlos Garnacho  <carlosg@gnome.org>
+
 	codegen: Avoid early return on sync dbus methods returning an error
 	If there are arguments that need freeing, we need to fall through the
 	_error label, if there is any.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=778540
+
+2017-03-06  Carlos Garnacho  <carlosg@gnome.org>
 
 	codegen: Only add _error path if there's parameters that require unref
 	Fixes the _error label from being set at the end of a compound statement
@@ -9826,6 +11992,8 @@
 
 	To properly account for non-void *_async methods we require some additional
 	metadata since only the return-type of *_finish method is known.
+
+2017-02-28  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gdk-pixbuf-2.0: Use correct finish-func for Pixbuf.from_stream_at_scale_async()
 	https://bugzilla.gnome.org/show_bug.cgi?id=779366
@@ -9942,6 +12110,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=778540
 
+2017-02-18  Carlos Garnacho  <carlosg@gnome.org>
+
 	tests: Add test for dbus fd passing failures
 	The server will exhaust all fds before the fd list in the dbus
 	request is opened. We do expect it to fail in the client.
@@ -10001,6 +12171,8 @@
 	sdl: Make Palette and PixelFormat a struct
 	https://bugzilla.gnome.org/show_bug.cgi?id=778052
 
+2017-02-14  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gobject-2.0: Add a bunch of missing symbols
 	Additions for ObjectClass, Type, TypeClass, TypeInterface are based on
 	patch by therebedragons111
@@ -10010,6 +12182,8 @@
 2017-02-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vapi: Update GIR-based bindings
+
+2017-02-13  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Don't create duplicated complete-async code
 	Treat methods with non-void return-type special while they require a return
@@ -10028,11 +12202,15 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=778540
 
+2017-02-13  Carlos Garnacho  <carlosg@gnome.org>
+
 	gdbus: Ensure extracted data from the GVariant is freed on error
 	This will make extracted variables properly freed when extracting those
 	fails at some point.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=778540
+
+2017-02-13  Carlos Garnacho  <carlosg@gnome.org>
 
 	gdbus: Initialize intermediate variables
 	Those may be left uninitialized after error handling paths are introduced,
@@ -10045,6 +12223,8 @@
 	Fix broken 20a1536f9911c1aadbfbe046bc01afc57bb724a5
 	https://bugzilla.gnome.org/show_bug.cgi?id=777697
 
+2017-02-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	codegen: Support casting arbitary value-types to arrays
 	Also calculate a valid length for the resulting array.
 
@@ -10052,8 +12232,12 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=777194
 
+2017-02-12  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	vala: Non-null initializers are not allowed for owned namespace fields
 	https://bugzilla.gnome.org/show_bug.cgi?id=777697
+
+2017-02-12  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	codegen: Fix memory leak when using object initializer for properties
 	Assigning values to properties this way leads to a ref/copy of the source
@@ -10277,6 +12461,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=775446
 
+2016-12-01  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gtk+-4.0: Update to 3.89.1+e09b78f7
 
 2016-11-30  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -10467,10 +12653,14 @@
 
 	tests: Enable -Werror=format-security
 
+2016-11-03  Jürg Billeter  <j@bitron.ch>
+
 	codegen: Avoid temporary variables for calls to [FormatArg] methods
 	This prevents bogus C compiler warnings with -Wformat-nonliteral.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=769229
+
+2016-11-03  Jürg Billeter  <j@bitron.ch>
 
 	Do not use non-literal printf format strings
 
@@ -10642,6 +12832,8 @@
 	Regenerate for GIR-based bindings including array-related metadata fixes
 	https://bugzilla.gnome.org/show_bug.cgi?id=772902
 
+2016-10-15  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	girparser: More complete parsing of field information
 	Especially to retrieve available array-length information.
 
@@ -10760,6 +12952,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=761360
 
+2016-10-05  Simon Werbeck  <simon.werbeck@gmail.com>
+
 	codegen: Fix emission of constant array length
 	https://bugzilla.gnome.org/show_bug.cgi?id=756376
 
@@ -10867,6 +13061,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=741175
 
+2016-09-20  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Add support for the \v escape charactor
 	https://bugzilla.gnome.org/show_bug.cgi?id=664689
 
@@ -10902,6 +13098,8 @@
 
 	glib-2.0: Update Unicode symbols
 
+2016-09-17  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	Revert "valainterface: Don't allow 'type' properties"
 	Breaks build of udisks2.vapi
 
@@ -10936,6 +13134,8 @@
 	Patch by therebedragons111
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=763831
+
+2016-09-16  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	vala: Don't force array-elements to be owned, unowned ones are supported
 	Passing an (unowned string) array literal to a function causes the array
@@ -11034,6 +13234,8 @@
 
 	Fixes bug 719597.
 
+2016-09-01  Evan Nemerson  <evan@nemerson.com>
+
 	gstreamer-1.0: remove experimental tag
 
 2016-09-01  Arnaud Bonatti  <arnaud.bonatti@gmail.com>
@@ -11047,6 +13249,8 @@
 	Based on patch by therebedragons111
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=769903
+
+2016-08-30  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gtk+-3.0: Update to 3.21.5
 
@@ -11093,6 +13297,8 @@
 	Fix metadata indentation for, it was mixed with space and tabs.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=768380
+
+2016-07-21  Guillaume Poirier-Morency  <guillaumepoiriermorency@gmail.com>
 
 	libxml-2.0: Fix 'htmlEncodeEntities' and 'UTF8ToHtml' using 'ref' instead of 'out'
 	The passed buffer lengths are updated by these calls to indicate how
@@ -11154,6 +13360,8 @@
 2016-06-25  Matthias Berndt  <matthias_berndt@gmx.de>
 
 	Set parent_node for resolved base types
+
+2016-06-25  Matthias Berndt  <matthias_berndt@gmx.de>
 
 	Check type arguments recursively
 	This fixes error checking for code like this:
@@ -11367,6 +13575,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=761736
 
+2016-02-09  Jürg Billeter  <j@bitron.ch>
+
 	vala: Fix critical warning with dynamic properties
 
 2016-02-08  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -11492,6 +13702,8 @@
 
 	gobject-2.0: Add [Version] attributes
 
+2016-01-30  Florian Brosch  <flo.brosch@gmail.com>
+
 	Introduce [Version (...)]
 	Parameters:
 	 since: string, version number
@@ -11564,12 +13776,16 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=725194
 
+2016-01-10  Philip Withnall  <philip.withnall@collabora.co.uk>
+
 	charts: Fix error handling if gvRenderData() returns an error
 	If libgvc was not built properly or is running against incorrectly versioned
 	plugins, gvRenderData() can fail and return a null string. Ensure libvaladoc
 	handles this correctly.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=711590
+
+2016-01-10  Philip Withnall  <philip.withnall@collabora.co.uk>
 
 	libvaladoc: Improve error message on failing to load a driver
 	https://bugzilla.gnome.org/show_bug.cgi?id=711559
@@ -11581,6 +13797,8 @@
 	Use VALA_COLORS to change colors
 
 	E.g. VALA_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+
+2016-01-10  Florian Brosch  <flo.brosch@gmail.com>
 
 	Allow to link to named constructors directly
 	Fixes bug #746062
@@ -11687,6 +13905,8 @@
 
 	glib-2.0: Fix g_unix_open_pipes binding
 	Fixes bug 751291.
+
+2015-11-23  Rico Tzschichholz  <ricotz@ubuntu.com>
 
 	gstreamer-1.0: Add Caps.simple, Fix URIHandler interface, Buffer.copy_into
 	Thanks to Pierre Lamot!
@@ -11967,6 +14187,8 @@
 
 	posix: add gethostbyname(3) and assorted struct
 
+2015-04-08  Dr. Michael Lauer  <mickey@vanille-media.de>
+
 	Revert "posix: add gethostbyname(3) and assorted struct"
 	This reverts commit 0d8aea145d90ab04a57e2868b0cc56693ddd7e8d.
 
@@ -12234,6 +14456,8 @@
 
 	Fixes bug 737222
 
+2014-12-05  Simon Werbeck  <simon.werbeck@gmail.com>
+
 	Improve pre/postcondition messages
 
 2014-12-04  Luca Bruno  <lucabru@src.gnome.org>
@@ -12403,6 +14627,8 @@
 
 	Fixes bug 738012
 
+2014-10-13  Luca Bruno  <luca.bruno@immobiliare.it>
+
 	gtk+-3.0: Add a11y.h header to accessible objects
 	Based on patch by Peter Vagner
 
@@ -12462,10 +14688,14 @@
 	parser: Warn on if/else/lock without body
 	Fixes bug 682906.
 
+2014-09-23  Florian Brosch  <flo.brosch@gmail.com>
+
 	Check destructor names
 	Edit: make it an error instead of warning
 
 	Fixes bug 655343.
+
+2014-09-23  Florian Brosch  <flo.brosch@gmail.com>
 
 	Add colored output
 	Use --no-color to disable colors
@@ -12566,6 +14796,8 @@
 	doap++
 
 	xcb: re-add GetPropertyReply.format
+
+2014-09-02  Florian Brosch  <flo.brosch@gmail.com>
 
 	GirWriter: do not generate <errordomain> elements
 	Invalid:
@@ -12779,6 +15011,8 @@
 
 	Fixes bug 734611
 
+2014-08-12  XZS  <d.f.fischer@web.de>
+
 	glib: make the parameter of VariantDict constructor nullable
 	The underlying glib implementation accepts null to initialize an empty
 	dictionary. The vapi now reflects this, defaulting the single parameter
@@ -12951,6 +15185,8 @@
 
 	Fix previous 6c36eb4 commit
 
+2014-06-28  Luca Bruno  <lucabru@src.gnome.org>
+
 	codewriter: Do not write (unowned string)[] for constants
 	The element type of a constant array is forced to be unowned
 	in the parser. Therefore we don't write (unowned string) to avoid
@@ -12985,6 +15221,8 @@
 2014-06-26  Evan Nemerson  <evan@nemerson.com>
 
 	gstreamer-1.0: update bindings to latest git
+
+2014-06-26  Evan Nemerson  <evan@nemerson.com>
 
 	gstreamer-rtsp-server-1.0: update bindings
 	The previous bindings only worked for an unstable pre-release version
@@ -13054,6 +15292,8 @@
 
 	glib-2.0: add HashTable.take and length
 
+2014-06-12  Evan Nemerson  <evan@nemerson.com>
+
 	glib-2.0: add GLib.HashSet
 	This is basically just a convenience wrapper around GLib.HashTable
 	where the key and value are set to the same value, providing a set
@@ -13061,17 +15301,23 @@
 
 	Fixes bug 686609.
 
+2014-06-12  Evan Nemerson  <evan@nemerson.com>
+
 	gio-2.0: callbacks in ActionEntry must not have a target
 	Fixes bug 681896.
 
 	Revert "gobject-2.0: make ObjectClass.list_properties transfer container"
 	Breaks bootstrapping with valac <= 0.24
 
+2014-06-12  Evan Nemerson  <evan@nemerson.com>
+
 	gobject-2.0: make TypeClass non-reference-counted
 	The ref function was always broken and would generate invalid C, so
 	this should be safe.
 
 	Fixes bug 679481.
+
+2014-06-12  Evan Nemerson  <evan@nemerson.com>
 
 	glib-2.0: don't use the container type's generic in static methods
 	Fixes bug 669816.
@@ -13118,11 +15364,15 @@
 	xcb: Replies are nullable and errors are optional
 	Also a few whitespace consistency changes thrown in.
 
+2014-06-01  Robert Ancell  <robert.ancell@canonical.com>
+
 	xcb: Add helper methods for GetPropertyReply
 	Add helper methods for GetPropertyReply so you don't have to access a void
 	pointer.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=730230
+
+2014-06-01  Robert Ancell  <robert.ancell@canonical.com>
 
 	xcb: Add more methods and use Vala types for accessing data
 	https://bugzilla.gnome.org/show_bug.cgi?id=730218
@@ -13284,12 +15534,16 @@
 	xcb: Missing EnterNotifyEvent, LeaveNotifyEvent, KeymapNotifyEvent, VisibilityNotifyEvent, ReparentNotifyEvent, GravityNotifyEvent, CirculateNotifyEvent, PropertyNotifyEvent, SelectionNotifyEvent, ColormapNotifyEvent, MappingNotifyEvent classes
 	https://bugzilla.gnome.org/show_bug.cgi?id=730097
 
+2014-05-14  Robert Ancell  <robert.ancell@canonical.com>
+
 	xcb: Remove unnecessary padding fields
 	Some structures allow access to the padding fields from the C structures. Since
 	these don't do anything except make the memory be set out correctly there's no
 	reason to access them from Vala.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=730094
+
+2014-05-14  Robert Ancell  <robert.ancell@canonical.com>
 
 	xcb: Add methods to access pixmap formats
 	https://bugzilla.gnome.org/show_bug.cgi?id=730092
@@ -13374,6 +15628,8 @@
 	GtkListBox API itself was modelled from).
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=728474
+
+2014-04-18  Ryan Lortie  <desrt@desrt.ca>
 
 	gtk+-3.0: fix flowbox selection foreach API
 	The callback doesn't have a destroy notify, so don't mark it 'owned'.
@@ -13681,6 +15937,8 @@
 
 	Release 0.23.2
 
+2014-02-04  Jürg Billeter  <j@bitron.ch>
+
 	gdk-3.0: Fix GdkEvent* bindings
 	GdkEvent structs have hidden fields and must be exposed as compact
 	classes.
@@ -13857,6 +16115,8 @@
 2014-01-11  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Support "foo is G"
+
+2014-01-11  Luca Bruno  <lucabru@src.gnome.org>
 
 	Fix coalescing operator semantics check.
 	The left operand was not put in any code block
@@ -14080,6 +16340,8 @@
 	Based on patch by Florian Müllner.
 
 	Fixes bug 710912.
+
+2013-10-26  Luca Bruno  <lucabru@src.gnome.org>
 
 	Revert "gio-2.0: Fix uint8[]/char** types for contents parameters for g_file_[load|replace]_contents()"
 	This reverts commit e4ef6fb72f560da385a09d262ef8afd2b64a1fc8.
@@ -14333,6 +16595,8 @@
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=666796
 
+2013-09-06  Rico Tzschichholz  <ricotz@ubuntu.com>
+
 	gtk+-2.0, gtk+-3.0: Fixes for Icon* related bindings and some deprecations
 
 2013-09-05  Rico Tzschichholz  <ricotz@ubuntu.com>
@@ -14390,6 +16654,8 @@
 
 	Do not warn about non-default parameters for coroutines.
 	Reopens bug 644241.
+
+2013-08-26  Luca Bruno  <lucabru@src.gnome.org>
 
 	girparser: Support scope=async parameters.
 	Based on patch by Evan.
@@ -14736,6 +17002,8 @@
 	Fix C code generated for local string array constants
 	Fixes bug 646970.
 
+2013-05-21  Jürg Billeter  <j@bitron.ch>
+
 	Set target_type for start and stop values of slice expressions
 	This ensures type conversions are generated as needed.
 
@@ -14754,6 +17022,8 @@
 2013-05-10  Luca Bruno  <lucabru@src.gnome.org>
 
 	Fix crash introduced by previous patch.
+
+2013-05-10  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Cast return values if [CCode (type)] is supplied
 	Patch by avi.w.levy@gmail.com
@@ -14845,6 +17115,8 @@
 	Based on patch by shuerhaaken.
 
 	Fixes bug 695812.
+
+2013-03-20  Luca Bruno  <lucabru@src.gnome.org>
 
 	gtk+-2.0, gtk+-3.0: Fix IconView.get_visible_range
 	Based on patch by shuerhaaken.
@@ -15278,6 +17550,8 @@
 2012-11-14  Jürg Billeter  <j@bitron.ch>
 
 	gstreamer-1.0: Update to 1.0.2
+
+2012-11-14  Jürg Billeter  <j@bitron.ch>
 
 	gtk+-3.0: Fix gtk_css_provider_get_named binding
 	Fixes bug 688292.
@@ -15767,6 +18041,8 @@
 	This now appends a paragraph to the gtk-doc comment explaining that
 	particular throw value and description.
 
+2012-08-14  Philip Withnall  <philip@tecnocode.co.uk>
+
 	doclet/gtkdoc: Use <code> rather than <blockquote> in for monospace in the gtkdoc doclet
 	<blockquote> is a block-level element, but Valadoc’s ``backtick syntax``
 	for monospaced text is meant to be inline. Use <code> instead.
@@ -15916,11 +18192,15 @@
 
 	Do not access static members with instance references
 
+2012-08-06  Jürg Billeter  <j@bitron.ch>
+
 	Drop warnings about unused internal symbols when using fast vapi files
 	It is impossible to determine whether internal symbols are used when
 	using fast vapi files.
 
 	Fixes bug 680218.
+
+2012-08-06  Jürg Billeter  <j@bitron.ch>
 
 	Drop POSIX profile
 
@@ -16026,6 +18306,8 @@
 	Also fixes a leading whitespace error.
 
 	Fixes bug 675389.
+
+2012-07-27  Jens Georg  <mail@jensge.org>
 
 	vala.m4: Fix typo
 	Fixes bug 675388.
@@ -16137,6 +18419,8 @@
 
 	Fixes bug 666478.
 
+2012-07-12  Maciej Piechotka  <uzytkownik2@gmail.com>
+
 	codegen: Fix array move when the areas don't overlap
 	Fixes bug 667452.
 
@@ -16217,10 +18501,14 @@
 	gtk+-2.0, gtk+-3.0: Fix gtk_widget_style_get_property binding
 	Fixes bug 671896.
 
+2012-06-24  Jürg Billeter  <j@bitron.ch>
+
 	Report error when accessing constants of outer methods
 	This is planned to be supported.
 
 	https://bugzilla.gnome.org/show_bug.cgi?id=678617
+
+2012-06-24  Jürg Billeter  <j@bitron.ch>
 
 	Release 0.17.2
 
@@ -16678,6 +18966,8 @@
 
 	gtk+-3.0: Fix autogeneration of ColorButton.get_rgba
 	Apologies for approving commit 51044a92ed44776e6.
+
+2012-03-09  Luca Bruno  <lucabru@src.gnome.org>
 
 	gio-2.0: Mark TlsCertificate as a concrete class
 	Keep the class concrete for backward compatibility.
@@ -17330,6 +19620,8 @@
 	Set correct default value for Pango.Weight
 	https://bugzilla.gnome.org/show_bug.cgi?id=662974
 
+2012-01-05  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
 	gidl parse default_value for enums
 	It can be useful for correct default value in properties
 
@@ -17404,6 +19696,8 @@
 	instead of breaking the backward compatibility.
 
 	Fixes bug 665624.
+
+2011-12-22  Luca Bruno  <lucabru@src.gnome.org>
 
 	girparser: Allow specifying abstract metadata for classes
 
@@ -17510,6 +19804,8 @@
 
 	Report error on duplicate attributes
 
+2011-12-09  Jürg Billeter  <j@bitron.ch>
+
 	gtk+-3.0: Fix gtk_widgets_compute_expand bindings
 	Based on patch by Alexander Larsson.
 
@@ -17589,6 +19885,8 @@
 	Based on patch by Paul Jakma.
 
 	Fixes bug 664465.
+
+2011-11-21  Luca Bruno  <lucabru@src.gnome.org>
 
 	gidlparser: Support abstract metadata for properties
 
@@ -17794,6 +20092,8 @@
 
 	Fixes bug 661291.
 
+2011-10-09  Luca Bruno  <lucabru@src.gnome.org>
+
 	girparser: Do not create ArrayType twice with array metadata argument
 
 2011-10-08  Jürg Billeter  <j@bitron.ch>
@@ -17823,6 +20123,8 @@
 2011-10-04  Luca Bruno  <lucabru@src.gnome.org>
 
 	glib-2.0: Fix default value for static RecMutex, RWLock and Private
+
+2011-10-04  Luca Bruno  <lucabru@src.gnome.org>
 
 	mx-1.0: Fix regression about Draggable and Droppable virtual methods
 	The regression was introduced by the mx-1.0 switch to GIR.
@@ -17861,11 +20163,15 @@
 
 	Fixes bug 658006.
 
+2011-09-29  Luca Bruno  <lucabru@src.gnome.org>
+
 	codegen: Do not set accessor vfunc for NoAccessorMethod properties
 	Partially fixes bug 658006.
 
 	linux: Remove extra parameter from forkpty()
 	Fixes bug 660473.
+
+2011-09-29  Luca Bruno  <lucabru@src.gnome.org>
 
 	Fix regression when calling .resize() or .move() on arrays inside structs
 	The check for lvalue access has been extended to arrays for simplifying
@@ -18080,6 +20386,8 @@
 
 	glib-2.0: Add StringBuilder.insert_unichar
 
+2011-08-31  Luca Bruno  <lucabru@src.gnome.org>
+
 	codegen: Fix equal function for SimpleType structs with only static fields
 	The function produced wrong results if the struct had static fields but
 	no instance fields.
@@ -18096,6 +20404,8 @@
 	Based on patch by Nathan Summers.
 
 	Partially fixes bug 657346.
+
+2011-08-30  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Do not add null-check for SimpleType structs
 
@@ -18195,15 +20505,21 @@
 	codegen: Skip precondition check for parameters in the posix profile
 	Fixes bug 648204.
 
+2011-08-17  Luca Bruno  <lucabru@src.gnome.org>
+
 	codegen: Add null check for non-null struct parameters
 	Commit 94d4b1e91a437f739b42f fixes another relevant part of the bug.
 
 	Fixes bug 656693.
 
+2011-08-17  Luca Bruno  <lucabru@src.gnome.org>
+
 	codewriter: Write type parameters for struct declaration
 	Based on patch by Andre Masella.
 
 	Fixes bug 656708.
+
+2011-08-17  Luca Bruno  <lucabru@src.gnome.org>
 
 	codewriter: Factorize writing type parameters in write_type_parameters
 
@@ -18213,6 +20529,8 @@
 	Assign possible (*expr) to a temp variable to ensure copying the struct.
 
 	Fixes bug 656693.
+
+2011-08-16  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Always copy struct on access only when it's non-nullable
 	We currently don't copy the nullable struct, only the reference,
@@ -18739,7 +21057,11 @@
 
 	Fixes bug 654980.
 
+2011-07-20  Luca Bruno  <lucabru@src.gnome.org>
+
 	gtk+-2.0, gtk+-3.0: Fix bindings of Widget.get_requisition
+
+2011-07-20  Luca Bruno  <lucabru@src.gnome.org>
 
 	gtk+-3.0: Hide the creation method of Requisition
 	The method gtk_requisition_new is provided to help bindings of high-level
@@ -18772,6 +21094,8 @@
 	Fixes bug 654794.
 
 	girparser: Handle the abstract attribute of the gir for classes
+
+2011-07-17  Luca Bruno  <lucabru@src.gnome.org>
 
 	pango: Mark return value of Language.from_string to be unowned
 	Fixes regression introduced by commit 5d6c21cebd3c5a.
@@ -19060,6 +21384,8 @@
 
 	Fixes bug 653527.
 
+2011-06-27  Luca Bruno  <lucabru@src.gnome.org>
+
 	girparser: Add cprefix metadata argument for classes
 
 	codewriter: Write lower_case_cprefix for classes
@@ -19082,10 +21408,14 @@
 	codegen: Do not free captured parameters in return statements
 	Fixes bug 653391.
 
+2011-06-26  Luca Bruno  <lucabru@src.gnome.org>
+
 	gtk+-2.0, gtk+-3.0: Fix ActionCallback bindings and usage in fields
 	Fix the regression introduced by commit 227214f0d92b06e029961.
 
 	Fixes bug 653046.
+
+2011-06-26  Luca Bruno  <lucabru@src.gnome.org>
 
 	codewriter: Write delegate_target for fields
 
@@ -19103,6 +21433,8 @@
 	Fixes bug 653188.
 
 	codegen: Fix warning about copying delegate parameters in async method
+
+2011-06-22  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Fix regression when setting delegate properties
 	The regression was introduced by 1e90d53dba0eff6ec2b.
@@ -19187,6 +21519,8 @@
 	Based on patch by Robert Ancell.
 
 	Fixes bug 652441.
+
+2011-06-13  Luca Bruno  <lucabru@src.gnome.org>
 
 	tests: Add regression test for bug 623092
 
@@ -19423,6 +21757,8 @@
 	girparser: Fix setting cname for fields of nested structs
 	Fixes bug 650768.
 
+2011-05-23  Luca Bruno  <lucabru@src.gnome.org>
+
 	gtk+-3.0: Add FileFilter.set_filter_name and get_filter_name
 	Vala does not allow specifying methods that do not override interface
 	abstract methods (get_name and set_name in this case from Gtk.Buildable).
@@ -19430,6 +21766,8 @@
 	going to be implemented anytime soon.
 
 	Fixes bug 647122.
+
+2011-05-23  Luca Bruno  <lucabru@src.gnome.org>
 
 	girwriter: Fix field callback of virtual async methods
 	Fixes bug 646202.
@@ -19458,6 +21796,8 @@
 
 	tests: Do not use xargs GNU extension in the test runner
 	Fixes bug 644884.
+
+2011-05-20  Alexander Kojevnikov  <alexander@kojevnikov.com>
 
 	tests: Search path for bash
 	Bash on BSDs is not in /bin.
@@ -19760,10 +22100,14 @@
 	Forbid pointer indirection for void type
 	Fixes bug 648890.
 
+2011-04-30  Luca Bruno  <lucabru@src.gnome.org>
+
 	vte: Fix Terminal.fork_command_full binding
 	Based on patch by Jacques-Pascal Deplaix.
 
 	Fixes bug 649004.
+
+2011-04-30  Luca Bruno  <lucabru@src.gnome.org>
 
 	gdk-3.0: Mark Device.grab cursor parameter to be nullable
 	Fixes bug 649011.
@@ -19873,10 +22217,14 @@
 	Fix default free function for classes
 	Fixes bug 642362.
 
+2011-04-22  Luca Bruno  <lucabru@src.gnome.org>
+
 	gio-2.0: Use uint8[] for Socket buffers in send/receive methods
 	Based on patch by Robert Ancell.
 
 	Fixes bug 642528.
+
+2011-04-22  Luca Bruno  <lucabru@src.gnome.org>
 
 	girparser: Auto detect real-non-null-struct out parameter as return type
 
@@ -19963,6 +22311,8 @@
 	Based on patch by Geert Jordaens.
 
 	Fixes bug 591552.
+
+2011-04-09  Luca Bruno  <lucabru@src.gnome.org>
 
 	Forbid implicit construction for SimpleType structs
 	Fixes bug 616600.
@@ -20052,6 +22402,8 @@
 	Based on patch by Evan Nemerson.
 
 	Fixes bug 615493.
+
+2011-04-04  Luca Bruno  <lucabru@src.gnome.org>
 
 	codegen: Drop MemberAccess creation for static field initialization
 
@@ -20193,11 +22545,15 @@
 	glib-2.0: Add string.get_next_char
 	Fixes bug 645150.
 
+2011-04-02  Jürg Billeter  <j@bitron.ch>
+
 	codegen: Fix array size variable on assignment
 	The array size of the right-hand side should not be used as the copy may
 	have a different size.
 
 	Fixes bug 646294.
+
+2011-04-02  Jürg Billeter  <j@bitron.ch>
 
 	glib-2.0: Add g_unichar_ismark binding
 
@@ -20338,6 +22694,8 @@
 
 	D-Bus: Fix get_proxy.begin calls
 
+2011-03-16  Jürg Billeter  <j@bitron.ch>
+
 	glib-2.0: Do not use strnlen
 	strnlen is not available on all systems.
 
@@ -20361,6 +22719,8 @@
 	gio: one more fix for GActionGroup.list_actions()
 	We must explicitly specify that the array is null-terminated.
 
+2011-03-14  Ryan Lortie  <desrt@desrt.ca>
+
 	gio: fix binding for GActionGroup.list_actions()
 	vapigen was detecting
 
@@ -20382,6 +22742,8 @@
 	This reverts commit 09b06c19dd7eb965f02d26305e810a9126e9bc93.
 
 	g_module_close() is the free function.
+
+2011-03-13  Ryan Lortie  <desrt@desrt.ca>
 
 	GModule vapi: add missing close() method
 
@@ -21182,6 +23544,8 @@
 
 	Fixes bug 638912.
 
+2011-01-10  Luca Bruno  <lucabru@src.gnome.org>
+
 	gio-2.0: Add missing metadata for previous commit setting IOError throws.
 	Previous commit was 58f542837b1f0204b4 that only affected the gio-2.0.vapi.
 
@@ -21949,11 +24313,15 @@
 
 	D-Bus: Support cached property values in GDBus clients
 
+2010-10-20  Jürg Billeter  <j@bitron.ch>
+
 	D-Bus: Add flags parameter to get_proxy_sync methods
 	This also changes the default flags to DBusProxyFlags.NONE, which
 	enables property caching.
 
 	Fixes bug 631228.
+
+2010-10-20  Jürg Billeter  <j@bitron.ch>
 
 	tests: Enable extra checks during C compilation
 
@@ -22007,6 +24375,8 @@
 
 	codegen: Use append_array_size for out and ref arguments
 
+2010-10-17  Jürg Billeter  <j@bitron.ch>
+
 	Fix side-effects in array element assignments
 	Make sure to not evaluate the index multiple times.
 
@@ -22033,12 +24403,16 @@
 	Improve error message for declaration in embedded statement
 	Fixes bug 615230.
 
+2010-10-16  Jürg Billeter  <j@bitron.ch>
+
 	Report error when trying to use stacked arrays
 	Stacked array support was never completed. Report an error instead of
 	generating incorrect C code.
 
 	Fixes bug 546603, bug 548428, bug 548429, bug 565865, bug 565872,
 	bug 571322, bug 572649, and bug 576611.
+
+2010-10-16  Jürg Billeter  <j@bitron.ch>
 
 	GObject: Check for incompatible properties in constructor chain up
 	Fixes bug 622119.
@@ -22612,6 +24986,8 @@
 
 	CodeWriter: Omit cheader_filename for fast vapi
 
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
+
 	valac: Output make-style dependency file
 	Add a --deps= option to the compiler to write out a make-style
 	dependency file.  The name of the target used is the name of the
@@ -22621,16 +24997,22 @@
 	or may not be touched depending if it was changed).  The dependency
 	output is always touched.
 
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
+
 	Properties, Methods: Relax some checks
 	Only enforce property/method body requirements in the case that the
 	SourceFileType is SOURCE.  This allows fast-vapi to slip through without
 	complaints.
+
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
 
 	Symbol: Add SourceFileType source_type
 	Pass this through from the SourceFileType of the source file.  If there
 	is no source file, use SourceFileType.NONE.
 
 	Redefine 'external_package' in terms of this new property.
+
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
 
 	SourceFileType: Add SourceFileType.NONE
 
@@ -22643,6 +25025,8 @@
 	valac: Add --fast-vapi= commandline argument
 	Outputs a file with the given name using CodeWriterType.FAST
 
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
+
 	CodeWriter: Add CodeWriterType.FAST enum value
 	Designed to emit .vapi files before the resolution stage has run.
 
@@ -22652,12 +25036,16 @@
 	Also includes the values of constants and enums so that headers are not
 	required.
 
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
+
 	MemberAccess: Fix crash in .to_string()
 	MemberAccess.to_string() would crash if it was run before the symbol
 	resolver.  Fix that.
 
 	UnresolvedType: Improve .to_string()
 	Include nullable designation and generic type arguments in the output.
+
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
 
 	CodeWriter: Introduce CodeWriterType enumeration
 	CodeWriterType has 3 possible values:
@@ -22667,6 +25055,8 @@
 
 	and replaces CodeWriter.emit_internal and CodeWriter.dump_tree booleans
 	with a new field called 'type'.
+
+2010-09-09  Ryan Lortie  <desrt@desrt.ca>
 
 	SourceFile: Introduce SourceFileType enumeration
 	SourceFileType has 2 possible values:
@@ -22865,6 +25255,8 @@
 
 	Fixes bug 620706.
 
+2010-08-20  Luca Bruno  <lethalman88@gmail.com>
+
 	Extend signal details to support string expressions
 	Fixes bug 566909.
 
@@ -22993,6 +25385,8 @@
 
 	codegen: check delegate type has_target in object creation expr
 	Fixes bug 626949.
+
+2010-08-14  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
 	readline.vapi: include stdio.h before readline.h
 	This solves compilation error with the readline sample
@@ -23388,6 +25782,8 @@
 
 	Fixes bug 624923.
 
+2010-07-21  Philip Withnall  <philip.withnall@collabora.co.uk>
+
 	girparser: Add mapping from GIR's gsize to Vala's size_t
 
 	girparser: Completely ignore <doc> tags
@@ -23565,6 +25961,8 @@
 	Internally handled as properties to avoid ABI issues.
 
 	Fixes bug 623503.
+
+2010-07-13  Jürg Billeter  <j@bitron.ch>
 
 	dova: Use unsigned hash codes
 
@@ -23900,12 +26298,16 @@
 	gstreamer-0.10: Fix GstParse bindings
 	Some ownership, return type and nullable fixes
 
+2010-06-23  Sebastian Dröge  <sebastian.droege@collabora.co.uk>
+
 	Use atomic ref/unref for closure data
 	This prevents potential problems if it's used from
 	multiple threads, which could happen with GStreamer
 	for example.
 
 	Fixes bug #622476.
+
+2010-06-23  Sebastian Dröge  <sebastian.droege@collabora.co.uk>
 
 	gstreamer-0.10: Fix Gst.Pipeline bindings
 	Some ownership and nullable changes.
@@ -24237,6 +26639,8 @@
 
 	D-Bus: Keep instance alive when calling dynamic async D-Bus methods
 
+2010-06-05  Luca Bruno  <lethalman88@gmail.com>
+
 	Fix crash when passing method as argument to dynamic method
 	Target type is not set for arguments of dynamic methods.
 
@@ -24330,6 +26734,8 @@
 
 	Fixes bug 615552.
 
+2010-05-27  Tobias Mueller  <tobiasmue@gnome.org>
+
 	gobject-introspection: Free allocated memory and fix format strings
 	g_markup_printf_escaped allocates memory which now is free()d. Also,
 	move from g_string_append_printf to g_string_append because it has a
@@ -24349,6 +26755,8 @@
 	Add rest-extras bindings to Makefile.am
 
 	Add bindings for rest-extras-0.6
+
+2010-05-27  Adrien Bustany  <abustany@gnome.org>
 
 	rest-0.6: Various fixes
 	This commit cleans the .metadata file, and fixes the ProxyCall binding.
@@ -24503,6 +26911,8 @@
 
 	Fixes bug 618406.
 
+2010-05-14  Julian Andres Klode  <jak@jak-linux.org>
+
 	sqlite3: Cast errmsg to char** in C.
 	Vala's string out arguments are const char**, but sqlite3_exec() and
 	sqlite3_get_table() expect 'char**'. Add [CCode (type = "char**")] to
@@ -24510,6 +26920,8 @@
 	compiler.
 
 	Fixes bug 618457.
+
+2010-05-14  Julian Andres Klode  <jak@jak-linux.org>
 
 	sqlite3: Fix wrappers to not assign to invalid output parameter.
 	Check that the output parameter is not null before assigning to
@@ -24711,6 +27123,8 @@
 
 	build: INSTALL is updated by automake, remove it
 	Fixes part of bug 615402.
+
+2010-04-27  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
 	build: Delete .version in autogen to pick up new version
 	This is recommended by git-version-gen script.
@@ -25324,10 +27738,14 @@
 	Avoid conflicts for internal array size variables
 	Fixes bug 570547.
 
+2010-03-22  Jürg Billeter  <j@bitron.ch>
+
 	Improve error message on duplicate definition
 	Display location of previous definition.
 
 	Fixes bug 591977.
+
+2010-03-22  Jürg Billeter  <j@bitron.ch>
 
 	Fix code generation for large integer literals
 	Fixes bug 583669.
@@ -25515,6 +27933,8 @@
 
 	Fixes bug 595697.
 
+2010-03-20  Jürg Billeter  <j@bitron.ch>
+
 	Check rank when checking array type compatibility
 	Fixes bug 577222.
 
@@ -25565,10 +27985,14 @@
 	Fix constructor chain up to generic compact classes
 	Fixes bug 594063.
 
+2010-03-20  Jürg Billeter  <j@bitron.ch>
+
 	gobject-2.0: Remove Object.finalize binding
 	Overriding Object.finalize conflicts with destructors.
 
 	Fixes bug 592265.
+
+2010-03-20  Jürg Billeter  <j@bitron.ch>
 
 	Do not allow access to instance members of outer classes
 	Fixes bug 595216.
@@ -25616,6 +28040,8 @@
 	dova profile.
 
 	Fixes bug 601346.
+
+2010-03-20  Jürg Billeter  <j@bitron.ch>
 
 	Report error when using reference parameters in async methods
 	Fixes bug 610624.
@@ -25792,6 +28218,8 @@
 
 	Based on patch by Adam Folmert, fixes bug 597955.
 
+2010-03-13  Jürg Billeter  <j@bitron.ch>
+
 	build: Use git-version-gen
 	Add git-version-gen script from gnulib.
 
@@ -25854,6 +28282,8 @@
 	extension that is only defined with _GNU_SOURCE.
 
 	__compar_fn_t at least has the advantage of always working on glibc.
+
+2010-03-10  Ryan Lortie  <desrt@desrt.ca>
 
 	more GVariant vapi updates
 
@@ -26592,10 +29022,14 @@
 
 	Fix has_type_id attribute writing in VAPI files
 
+2010-01-16  Jürg Billeter  <j@bitron.ch>
+
 	Write has_type_id attribute for structs in VAPI files
 	Make sure we don't lose has_type_id if it's false.
 
 	Based on patch by Marc-André Lureau, fixes bug 606580.
+
+2010-01-16  Jürg Billeter  <j@bitron.ch>
 
 	Fix freeing ThreadPool
 	Adds special case for g_thread_pool_free, which takes 3 arguments.
@@ -26889,6 +29323,8 @@
 	Fix crash with unsupported use of multi-dimensional array length
 	Fixes bug 604589.
 
+2009-12-19  Jürg Billeter  <j@bitron.ch>
+
 	Initial support for array slices
 	Add support for slice expressions such as array[1:5] to retrieve a
 	slice of length 4 starting at the second element of the array. Slice
@@ -26896,6 +29332,8 @@
 	an appropriate slice method.
 
 	Based on patch by Robin Sonefors, fixes bug 571352.
+
+2009-12-19  Jürg Billeter  <j@bitron.ch>
 
 	glib-2.0: Add string.splice method
 
@@ -26912,10 +29350,14 @@
 
 	Print error domain and code of uncaught errors
 
+2009-12-15  Jürg Billeter  <j@bitron.ch>
+
 	valac: Add --symbols option
 	Writes the name of each exported function to the specified file.
 
 	Based on patch by Haakon Sporsheim, fixes bug 586494.
+
+2009-12-15  Jürg Billeter  <j@bitron.ch>
 
 	gstreamer-0.10: Fix GstCoreError binding
 	Fixes bug 604601.
@@ -27160,6 +29602,8 @@
 
 	Fixes bug 599053.
 
+2009-11-07  Philipp Zabel  <philipp.zabel@gmail.com>
+
 	pango: fix Pango.Attribute constructors' transfer of ownership and Pango.Scale
 	The Pango.attr_*_new constructors return owned Pango.Attribute references.
 	Pango.Scale is not an enum. Turn it into a namespace with double constants.
@@ -27178,13 +29622,19 @@
 	hildon-1: fix Hildon.gtk_init binding
 	Finishes fixing bug 598656.
 
+2009-11-07  Philipp Zabel  <philipp.zabel@gmail.com>
+
 	hildon-1: un-hide Hildon.Note.note_type property
 	This needs to be visible if one wants to subclass Hildon.Note.
 
 	Partially fixes bug 598656.
 
+2009-11-07  Philipp Zabel  <philipp.zabel@gmail.com>
+
 	hildon-1: update to Fremantle bindings
 	Partially fixes bug 598656.
+
+2009-11-07  Philipp Zabel  <philipp.zabel@gmail.com>
 
 	hildon-1: add Hildon specific gtk+-2.0 modifications in hildon-1-custom.vala
 	Hildon depends on a modified GTK. Instead of polluting gtk+-2.0.vapi with
@@ -27364,6 +29814,8 @@
 	gtk+-2.0: Fix GtkScale::format-value binding
 	Fixes bug 599727.
 
+2009-10-27  Jürg Billeter  <j@bitron.ch>
+
 	GASync: Do not declare async data struct too early
 	Async data struct declaration depends on declarations of local
 	variable types and thus must be appended after visiting the method
@@ -27472,6 +29924,8 @@
 
 	Fix error messages for unsupported signal parameters
 	Fixes bug 598865.
+
+2009-10-20  Jürg Billeter  <j@bitron.ch>
 
 	glib-2.0: Fix GMarkupParser binding
 	As the GMarkupParser struct only stores function pointers and no
@@ -27933,6 +30387,8 @@
 
 	Note that only default argument positions are supported.
 
+2009-09-27  Jan Hudec  <bulb@ucw.cz>
+
 	GIR writer: Fix generation of async methods
 	GObject-Introspection does not have any special support for async
 	methods, so we need to write them out as two entries corresponding to
@@ -28335,6 +30791,8 @@
 
 	Fixes bug 591191.
 
+2009-09-15  Evan Nemerson  <evan@polussystems.com>
+
 	libpanelapplet-2.0: Add PanelAppletOrient and some missing methods
 	Fixes bug 590544.
 
@@ -28509,12 +30967,16 @@
 
 	Add has_copy_function and has_destroy_function struct attributes
 
+2009-09-13  Jürg Billeter  <j@bitron.ch>
+
 	Do not warn about unhandled errors of dynamic method calls
 	It is impossible to know at compile-time what error types dynamic
 	methods may throw, so it does not make sense to warn about possibly
 	unhandled errors in this case.
 
 	Fixes bug 548439.
+
+2009-09-13  Jürg Billeter  <j@bitron.ch>
 
 	Fix crash with type check expressions
 	Fixes bug 594399.
@@ -28942,6 +31404,8 @@
 	gobject-2.0: Add binding for g_value_array_copy
 	Fixes bug 591370.
 
+2009-08-15  Mark Lee  <marklee@src.gnome.org>
+
 	Arrays: Add array_length_type annotation to methods
 	Adds support for the array_length_type CCode annotation, which allows
 	methods with non-int array length parameters to be declared properly.
@@ -29058,6 +31522,8 @@
 2009-07-30  Jürg Billeter  <j@bitron.ch>
 
 	Arrays: Fix inline-allocated arrays
+
+2009-07-30  Jürg Billeter  <j@bitron.ch>
 
 	Arrays: Change syntax for fixed-length arrays
 	To clarify the difference to normal arrays and allow declaration
@@ -30038,6 +32504,8 @@
 
 	Fix parameter type declaration of signals
 
+2009-05-08  Jürg Billeter  <j@bitron.ch>
+
 	Add initial support for POSIX profile
 	Add --profile command-line option.
 
@@ -30056,11 +32524,15 @@
 	The correct unref function for GnomeKeyring.NetworkPasswordData is
 	gnome_keyring_network_password_free(). Fixes part of bug 578204.
 
+2009-05-07  Mark Lee  <marklee@svn.gnome.org>
+
 	gnome-keyring-1: Fix gnome_keyring_set_network_password_sync binding
 	The item_id parameter for GnomeKeyring.set_network_password_sync needs
 	to be annotated as an "out" parameter.
 
 	Fixes part of bug 578204.
+
+2009-05-07  Mark Lee  <marklee@svn.gnome.org>
 
 	gnome-keyring-1: Update to gnome-keyring 2.26.0
 	Fixes part of bug 578204.
@@ -30322,6 +32794,8 @@
 
 	Update code using deprecated # modifier or operator
 
+2009-04-15  Jürg Billeter  <j@bitron.ch>
+
 	Introduce new signal connect/disconnect syntax
 	foo.clicked.connect (handler);
 
@@ -30427,12 +32901,16 @@
 
 	Declare base types of pointer types
 
+2009-04-10  Jürg Billeter  <j@bitron.ch>
+
 	Arrays: Add experimental support for fixed-length arrays
 	Local fixed-length arrays are allocated on the stack.
 
 	    int[3] array = { 1, 2, 3 };
 
 	Fixes bug 492481.
+
+2009-04-10  Jürg Billeter  <j@bitron.ch>
 
 	Remove result variable warning
 	Implicit result variable not planned for Vala 1.0.
@@ -30846,12 +33324,16 @@
 
 	Fixes bug 576061.
 
+2009-03-29  Víctor Manuel Jáquez Leal  <vjaquez@igalia.com>
+
 	gstreamer-0.10: gst_element_set_bus parameter is nullable
 	gst_element_set_bus () function can set a bus as NULL value in
 	order to remove the current element bus, so the parameter can be
 	nullable in the vala context.
 
 	Fixes bug 575534.
+
+2009-03-29  Víctor Manuel Jáquez Leal  <vjaquez@igalia.com>
 
 	gstreamer-pbutils-0.10: Ownership transfer fixes
 	According to the documentation, these functions return newly-allocated

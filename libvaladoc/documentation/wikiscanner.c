@@ -200,7 +200,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -322,7 +322,7 @@ valadoc_wiki_scanner_set_code_escape_mode (ValadocWikiScanner* self,
 gint
 valadoc_wiki_scanner_get_line (ValadocWikiScanner* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = self->priv->_line;
 	return result;
@@ -339,7 +339,7 @@ valadoc_wiki_scanner_real_get_line_content (ValadocWikiScanner* self)
 	GString* _tmp15_;
 	const gchar* _tmp16_;
 	gchar* _tmp17_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
 	_tmp1_ = self->priv->_index;
@@ -421,7 +421,7 @@ string_index_of_nth_char (const gchar* self,
                           glong c)
 {
 	gchar* _tmp0_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_offset_to_pointer (self, c);
 	result = (gint) (_tmp0_ - ((gchar*) self));
@@ -434,7 +434,7 @@ valadoc_wiki_scanner_get_next_char (ValadocWikiScanner* self,
 {
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	_tmp0_ = self->priv->_index;
 	_tmp1_ = self->priv->_index;
@@ -993,7 +993,7 @@ valadoc_wiki_scanner_append_char (ValadocWikiScanner* self,
 static gint
 valadoc_wiki_scanner_real_get_line_start_column (ValadocWikiScanner* self)
 {
-	gint result = 0;
+	gint result;
 	result = 0;
 	return result;
 }
@@ -1342,7 +1342,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -1358,7 +1358,7 @@ valadoc_wiki_scanner_look_for (ValadocWikiScanner* self,
 	gint _tmp6_;
 	gint _tmp7_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (str != NULL, FALSE);
 	g_return_val_if_fail (type != NULL, FALSE);
@@ -1473,12 +1473,12 @@ valadoc_wiki_scanner_get_type_once (void)
 GType
 valadoc_wiki_scanner_get_type (void)
 {
-	static volatile gsize valadoc_wiki_scanner_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_wiki_scanner_type_id__volatile)) {
+	static volatile gsize valadoc_wiki_scanner_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_wiki_scanner_type_id__once)) {
 		GType valadoc_wiki_scanner_type_id;
 		valadoc_wiki_scanner_type_id = valadoc_wiki_scanner_get_type_once ();
-		g_once_init_leave (&valadoc_wiki_scanner_type_id__volatile, valadoc_wiki_scanner_type_id);
+		g_once_init_leave (&valadoc_wiki_scanner_type_id__once, valadoc_wiki_scanner_type_id);
 	}
-	return valadoc_wiki_scanner_type_id__volatile;
+	return valadoc_wiki_scanner_type_id__once;
 }
 

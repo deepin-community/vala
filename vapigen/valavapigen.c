@@ -26,7 +26,6 @@
 #include <glib-object.h>
 #include <vala.h>
 #include <glib.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gstdio.h>
@@ -174,43 +173,39 @@ vala_vapi_gen_quit (ValaVAPIGen* self)
 	ValaCodeContext* _tmp0_;
 	ValaReport* _tmp1_;
 	ValaReport* _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->context;
 	_tmp1_ = vala_code_context_get_report (_tmp0_);
 	_tmp2_ = _tmp1_;
 	if (vala_report_get_errors (_tmp2_) == 0) {
 		if (!vala_vapi_gen_quiet_mode) {
-			FILE* _tmp3_;
-			ValaCodeContext* _tmp4_;
+			ValaCodeContext* _tmp3_;
+			ValaReport* _tmp4_;
 			ValaReport* _tmp5_;
-			ValaReport* _tmp6_;
-			_tmp3_ = stdout;
-			_tmp4_ = self->priv->context;
-			_tmp5_ = vala_code_context_get_report (_tmp4_);
-			_tmp6_ = _tmp5_;
-			fprintf (_tmp3_, "Generation succeeded - %d warning(s)\n", vala_report_get_warnings (_tmp6_));
+			_tmp3_ = self->priv->context;
+			_tmp4_ = vala_code_context_get_report (_tmp3_);
+			_tmp5_ = _tmp4_;
+			g_print ("Generation succeeded - %d warning(s)\n", vala_report_get_warnings (_tmp5_));
 		}
 		vala_code_context_pop ();
 		result = 0;
 		return result;
 	} else {
 		if (!vala_vapi_gen_quiet_mode) {
-			FILE* _tmp7_;
-			ValaCodeContext* _tmp8_;
-			ValaReport* _tmp9_;
+			ValaCodeContext* _tmp6_;
+			ValaReport* _tmp7_;
+			ValaReport* _tmp8_;
+			ValaCodeContext* _tmp9_;
 			ValaReport* _tmp10_;
-			ValaCodeContext* _tmp11_;
-			ValaReport* _tmp12_;
-			ValaReport* _tmp13_;
-			_tmp7_ = stdout;
-			_tmp8_ = self->priv->context;
-			_tmp9_ = vala_code_context_get_report (_tmp8_);
-			_tmp10_ = _tmp9_;
-			_tmp11_ = self->priv->context;
-			_tmp12_ = vala_code_context_get_report (_tmp11_);
-			_tmp13_ = _tmp12_;
-			fprintf (_tmp7_, "Generation failed: %d error(s), %d warning(s)\n", vala_report_get_errors (_tmp10_), vala_report_get_warnings (_tmp13_));
+			ValaReport* _tmp11_;
+			_tmp6_ = self->priv->context;
+			_tmp7_ = vala_code_context_get_report (_tmp6_);
+			_tmp8_ = _tmp7_;
+			_tmp9_ = self->priv->context;
+			_tmp10_ = vala_code_context_get_report (_tmp9_);
+			_tmp11_ = _tmp10_;
+			g_print ("Generation failed: %d error(s), %d warning(s)\n", vala_report_get_errors (_tmp8_), vala_report_get_warnings (_tmp11_));
 		}
 		vala_code_context_pop ();
 		result = 1;
@@ -225,7 +220,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -248,7 +243,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -394,7 +389,7 @@ vala_vapi_gen_run (ValaVAPIGen* self)
 	ValaCodeWriter* _tmp147_;
 	ValaCodeContext* _tmp148_;
 	const gchar* _tmp149_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = vala_code_context_new ();
 	_vala_code_context_unref0 (self->priv->context);
@@ -860,47 +855,45 @@ vala_vapi_gen_main (gchar** args,
                     gint args_length1)
 {
 	const gchar* _tmp0_;
-	gchar** _tmp15_;
-	gint _tmp15__length1;
+	gchar** _tmp11_;
+	gint _tmp11__length1;
 	ValaVAPIGen* vapigen = NULL;
-	ValaVAPIGen* _tmp17_;
-	ValaVAPIGen* _tmp18_;
+	ValaVAPIGen* _tmp12_;
+	ValaVAPIGen* _tmp13_;
 	GError* _inner_error0_ = NULL;
-	gint result = 0;
+	gint result;
 	setlocale (LC_ALL, "");
 	_tmp0_ = vala_get_build_version ();
 	if (g_strcmp0 (_tmp0_, VALA_BUILD_VERSION) != 0) {
-		FILE* _tmp1_;
-		const gchar* _tmp2_;
-		_tmp1_ = stderr;
-		_tmp2_ = vala_get_build_version ();
-		fprintf (_tmp1_, "Integrity check failed (libvala %s doesn't match vapigen %s)\n", _tmp2_, VALA_BUILD_VERSION);
+		const gchar* _tmp1_;
+		_tmp1_ = vala_get_build_version ();
+		g_printerr ("Integrity check failed (libvala %s doesn't match vapigen %s)\n", _tmp1_, VALA_BUILD_VERSION);
 		result = 1;
 		return result;
 	}
 	{
 		GOptionContext* opt_context = NULL;
+		GOptionContext* _tmp2_;
 		GOptionContext* _tmp3_;
 		GOptionContext* _tmp4_;
 		GOptionContext* _tmp5_;
-		GOptionContext* _tmp6_;
-		_tmp3_ = g_option_context_new ("- Vala API Generator");
-		opt_context = _tmp3_;
+		_tmp2_ = g_option_context_new ("- Vala API Generator");
+		opt_context = _tmp2_;
+		_tmp3_ = opt_context;
+		g_option_context_set_help_enabled (_tmp3_, TRUE);
 		_tmp4_ = opt_context;
-		g_option_context_set_help_enabled (_tmp4_, TRUE);
+		g_option_context_add_main_entries (_tmp4_, VALA_VAPI_GEN_options, NULL);
 		_tmp5_ = opt_context;
-		g_option_context_add_main_entries (_tmp5_, VALA_VAPI_GEN_options, NULL);
-		_tmp6_ = opt_context;
-		g_option_context_parse (_tmp6_, (gint*) (&args_length1), &args, &_inner_error0_);
+		g_option_context_parse (_tmp5_, (gint*) (&args_length1), &args, &_inner_error0_);
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {
-			gint _tmp7_ = -1;
+			gint _tmp6_ = -1;
 			_g_option_context_free0 (opt_context);
 			if (_inner_error0_->domain == G_OPTION_ERROR) {
 				goto __catch0_g_option_error;
 			}
 			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
 			g_clear_error (&_inner_error0_);
-			return _tmp7_;
+			return _tmp6_;
 		}
 		_g_option_context_free0 (opt_context);
 	}
@@ -908,51 +901,43 @@ vala_vapi_gen_main (gchar** args,
 	__catch0_g_option_error:
 	{
 		GError* e = NULL;
-		FILE* _tmp8_;
-		GError* _tmp9_;
-		const gchar* _tmp10_;
-		FILE* _tmp11_;
-		const gchar* _tmp12_;
+		GError* _tmp7_;
+		const gchar* _tmp8_;
+		const gchar* _tmp9_;
 		e = _inner_error0_;
 		_inner_error0_ = NULL;
-		_tmp8_ = stdout;
-		_tmp9_ = e;
-		_tmp10_ = _tmp9_->message;
-		fprintf (_tmp8_, "%s\n", _tmp10_);
-		_tmp11_ = stdout;
-		_tmp12_ = args[0];
-		fprintf (_tmp11_, "Run '%s --help' to see a full list of available command line options.\n", _tmp12_);
+		_tmp7_ = e;
+		_tmp8_ = _tmp7_->message;
+		g_print ("%s\n", _tmp8_);
+		_tmp9_ = args[0];
+		g_print ("Run '%s --help' to see a full list of available command line options.\n", _tmp9_);
 		result = 1;
 		_g_error_free0 (e);
 		return result;
 	}
 	__finally0:
 	if (G_UNLIKELY (_inner_error0_ != NULL)) {
-		gint _tmp13_ = -1;
+		gint _tmp10_ = -1;
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
 		g_clear_error (&_inner_error0_);
-		return _tmp13_;
+		return _tmp10_;
 	}
 	if (vala_vapi_gen_version) {
-		FILE* _tmp14_;
-		_tmp14_ = stdout;
-		fprintf (_tmp14_, "Vala API Generator %s\n", VALA_BUILD_VERSION);
+		g_print ("Vala API Generator %s\n", VALA_BUILD_VERSION);
 		result = 0;
 		return result;
 	}
-	_tmp15_ = vala_vapi_gen_sources;
-	_tmp15__length1 = _vala_array_length (vala_vapi_gen_sources);
-	if (_tmp15_ == NULL) {
-		FILE* _tmp16_;
-		_tmp16_ = stderr;
-		fprintf (_tmp16_, "No source file specified.\n");
+	_tmp11_ = vala_vapi_gen_sources;
+	_tmp11__length1 = _vala_array_length (vala_vapi_gen_sources);
+	if (_tmp11_ == NULL) {
+		g_printerr ("No source file specified.\n");
 		result = 1;
 		return result;
 	}
-	_tmp17_ = vala_vapi_gen_new ();
-	vapigen = _tmp17_;
-	_tmp18_ = vapigen;
-	result = vala_vapi_gen_run (_tmp18_);
+	_tmp12_ = vala_vapi_gen_new ();
+	vapigen = _tmp12_;
+	_tmp13_ = vapigen;
+	result = vala_vapi_gen_run (_tmp13_);
 	_vala_vapi_gen_unref0 (vapigen);
 	return result;
 }
@@ -1152,13 +1137,13 @@ vala_vapi_gen_get_type_once (void)
  G_GNUC_INTERNAL GType
 vala_vapi_gen_get_type (void)
 {
-	static volatile gsize vala_vapi_gen_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_vapi_gen_type_id__volatile)) {
+	static volatile gsize vala_vapi_gen_type_id__once = 0;
+	if (g_once_init_enter (&vala_vapi_gen_type_id__once)) {
 		GType vala_vapi_gen_type_id;
 		vala_vapi_gen_type_id = vala_vapi_gen_get_type_once ();
-		g_once_init_leave (&vala_vapi_gen_type_id__volatile, vala_vapi_gen_type_id);
+		g_once_init_leave (&vala_vapi_gen_type_id__once, vala_vapi_gen_type_id);
 	}
-	return vala_vapi_gen_type_id__volatile;
+	return vala_vapi_gen_type_id__once;
 }
 
  G_GNUC_INTERNAL gpointer

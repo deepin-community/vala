@@ -110,7 +110,7 @@ ValaList*
 vala_object_type_symbol_get_members (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->members;
 	result = _tmp0_;
@@ -126,7 +126,7 @@ ValaList*
 vala_object_type_symbol_get_fields (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->fields;
 	result = _tmp0_;
@@ -142,7 +142,7 @@ ValaList*
 vala_object_type_symbol_get_methods (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->methods;
 	result = _tmp0_;
@@ -158,7 +158,7 @@ ValaList*
 vala_object_type_symbol_get_properties (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->properties;
 	result = _tmp0_;
@@ -174,7 +174,7 @@ ValaList*
 vala_object_type_symbol_get_signals (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->signals;
 	result = _tmp0_;
@@ -344,7 +344,7 @@ ValaList*
 vala_object_type_symbol_get_classes (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->classes;
 	result = _tmp0_;
@@ -360,7 +360,7 @@ ValaList*
 vala_object_type_symbol_get_interfaces (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->interfaces;
 	result = _tmp0_;
@@ -376,7 +376,7 @@ ValaList*
 vala_object_type_symbol_get_structs (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->structs;
 	result = _tmp0_;
@@ -392,7 +392,7 @@ ValaList*
 vala_object_type_symbol_get_enums (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->enums;
 	result = _tmp0_;
@@ -408,7 +408,7 @@ ValaList*
 vala_object_type_symbol_get_delegates (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->delegates;
 	result = _tmp0_;
@@ -580,7 +580,7 @@ ValaList*
 vala_object_type_symbol_get_constants (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->constants;
 	result = _tmp0_;
@@ -621,7 +621,7 @@ ValaList*
 vala_object_type_symbol_get_type_parameters (ValaObjectTypeSymbol* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->type_parameters;
 	result = _tmp0_;
@@ -633,7 +633,7 @@ vala_object_type_symbol_has_type_parameters (ValaObjectTypeSymbol* self)
 {
 	gboolean _tmp0_ = FALSE;
 	ValaList* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp1_ = self->priv->type_parameters;
 	if (_tmp1_ != NULL) {
@@ -657,7 +657,7 @@ vala_object_type_symbol_real_get_type_parameter_index (ValaTypeSymbol* base,
 {
 	ValaObjectTypeSymbol * self;
 	gint i = 0;
-	gint result = 0;
+	gint result;
 	self = (ValaObjectTypeSymbol*) base;
 	g_return_val_if_fail (name != NULL, 0);
 	i = 0;
@@ -1320,9 +1320,9 @@ vala_object_type_symbol_real_check (ValaCodeNode* base,
 	gboolean _tmp5_ = FALSE;
 	gboolean _tmp6_;
 	gboolean _tmp7_;
+	gboolean _tmp10_;
 	gboolean _tmp11_;
-	gboolean _tmp12_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaObjectTypeSymbol*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -1338,9 +1338,7 @@ vala_object_type_symbol_real_check (ValaCodeNode* base,
 	_tmp6_ = vala_symbol_get_external_package ((ValaSymbol*) self);
 	_tmp7_ = _tmp6_;
 	if (!_tmp7_) {
-		ValaAttribute* _tmp8_;
-		_tmp8_ = vala_code_node_get_attribute ((ValaCodeNode*) self, "DBus");
-		_tmp5_ = _tmp8_ != NULL;
+		_tmp5_ = vala_code_node_has_attribute ((ValaCodeNode*) self, "DBus");
 	} else {
 		_tmp5_ = FALSE;
 	}
@@ -1350,16 +1348,16 @@ vala_object_type_symbol_real_check (ValaCodeNode* base,
 		_tmp4_ = FALSE;
 	}
 	if (_tmp4_) {
+		ValaSourceReference* _tmp8_;
 		ValaSourceReference* _tmp9_;
-		ValaSourceReference* _tmp10_;
 		vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
-		_tmp9_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-		_tmp10_ = _tmp9_;
-		vala_report_error (_tmp10_, "gio-2.0 package required for DBus support");
+		_tmp8_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+		_tmp9_ = _tmp8_;
+		vala_report_error (_tmp9_, "gio-2.0 package required for DBus support");
 	}
-	_tmp11_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp12_ = _tmp11_;
-	result = !_tmp12_;
+	_tmp10_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp11_ = _tmp10_;
+	result = !_tmp11_;
 	return result;
 }
 
@@ -1490,12 +1488,12 @@ vala_object_type_symbol_get_type_once (void)
 GType
 vala_object_type_symbol_get_type (void)
 {
-	static volatile gsize vala_object_type_symbol_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_object_type_symbol_type_id__volatile)) {
+	static volatile gsize vala_object_type_symbol_type_id__once = 0;
+	if (g_once_init_enter (&vala_object_type_symbol_type_id__once)) {
 		GType vala_object_type_symbol_type_id;
 		vala_object_type_symbol_type_id = vala_object_type_symbol_get_type_once ();
-		g_once_init_leave (&vala_object_type_symbol_type_id__volatile, vala_object_type_symbol_type_id);
+		g_once_init_leave (&vala_object_type_symbol_type_id__once, vala_object_type_symbol_type_id);
 	}
-	return vala_object_type_symbol_type_id__volatile;
+	return vala_object_type_symbol_type_id__once;
 }
 

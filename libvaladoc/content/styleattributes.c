@@ -39,7 +39,7 @@ valadoc_content_horizontal_align_from_string (const gchar* str)
 	static GQuark _tmp1_label1 = 0;
 	static GQuark _tmp1_label2 = 0;
 	static GQuark _tmp1_label3 = 0;
-	ValadocContentHorizontalAlign result = 0;
+	ValadocContentHorizontalAlign result;
 	g_return_val_if_fail (str != NULL, 0);
 	_tmp0_ = str;
 	_tmp2_ = (NULL == _tmp0_) ? 0 : g_quark_from_string (_tmp0_);
@@ -82,7 +82,7 @@ valadoc_content_horizontal_align_from_string (const gchar* str)
 const gchar*
 valadoc_content_horizontal_align_to_string (ValadocContentHorizontalAlign self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALADOC_CONTENT_HORIZONTAL_ALIGN_NONE:
 		{
@@ -122,13 +122,13 @@ valadoc_content_horizontal_align_get_type_once (void)
 GType
 valadoc_content_horizontal_align_get_type (void)
 {
-	static volatile gsize valadoc_content_horizontal_align_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_horizontal_align_type_id__volatile)) {
+	static volatile gsize valadoc_content_horizontal_align_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_horizontal_align_type_id__once)) {
 		GType valadoc_content_horizontal_align_type_id;
 		valadoc_content_horizontal_align_type_id = valadoc_content_horizontal_align_get_type_once ();
-		g_once_init_leave (&valadoc_content_horizontal_align_type_id__volatile, valadoc_content_horizontal_align_type_id);
+		g_once_init_leave (&valadoc_content_horizontal_align_type_id__once, valadoc_content_horizontal_align_type_id);
 	}
-	return valadoc_content_horizontal_align_type_id__volatile;
+	return valadoc_content_horizontal_align_type_id__once;
 }
 
 ValadocContentVerticalAlign
@@ -140,7 +140,7 @@ valadoc_content_vertical_align_from_string (const gchar* str)
 	static GQuark _tmp1_label1 = 0;
 	static GQuark _tmp1_label2 = 0;
 	static GQuark _tmp1_label3 = 0;
-	ValadocContentVerticalAlign result = 0;
+	ValadocContentVerticalAlign result;
 	g_return_val_if_fail (str != NULL, 0);
 	_tmp0_ = str;
 	_tmp2_ = (NULL == _tmp0_) ? 0 : g_quark_from_string (_tmp0_);
@@ -183,7 +183,7 @@ valadoc_content_vertical_align_from_string (const gchar* str)
 const gchar*
 valadoc_content_vertical_align_to_string (ValadocContentVerticalAlign self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALADOC_CONTENT_VERTICAL_ALIGN_NONE:
 		{
@@ -223,13 +223,13 @@ valadoc_content_vertical_align_get_type_once (void)
 GType
 valadoc_content_vertical_align_get_type (void)
 {
-	static volatile gsize valadoc_content_vertical_align_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_vertical_align_type_id__volatile)) {
+	static volatile gsize valadoc_content_vertical_align_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_vertical_align_type_id__once)) {
 		GType valadoc_content_vertical_align_type_id;
 		valadoc_content_vertical_align_type_id = valadoc_content_vertical_align_get_type_once ();
-		g_once_init_leave (&valadoc_content_vertical_align_type_id__volatile, valadoc_content_vertical_align_type_id);
+		g_once_init_leave (&valadoc_content_vertical_align_type_id__once, valadoc_content_vertical_align_type_id);
 	}
-	return valadoc_content_vertical_align_type_id__volatile;
+	return valadoc_content_vertical_align_type_id__once;
 }
 
 ValadocContentHorizontalAlign
@@ -326,12 +326,12 @@ valadoc_content_style_attributes_get_type_once (void)
 GType
 valadoc_content_style_attributes_get_type (void)
 {
-	static volatile gsize valadoc_content_style_attributes_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_style_attributes_type_id__volatile)) {
+	static volatile gsize valadoc_content_style_attributes_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_style_attributes_type_id__once)) {
 		GType valadoc_content_style_attributes_type_id;
 		valadoc_content_style_attributes_type_id = valadoc_content_style_attributes_get_type_once ();
-		g_once_init_leave (&valadoc_content_style_attributes_type_id__volatile, valadoc_content_style_attributes_type_id);
+		g_once_init_leave (&valadoc_content_style_attributes_type_id__once, valadoc_content_style_attributes_type_id);
 	}
-	return valadoc_content_style_attributes_type_id__volatile;
+	return valadoc_content_style_attributes_type_id__once;
 }
 

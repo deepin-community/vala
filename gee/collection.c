@@ -250,7 +250,7 @@ vala_collection_real_add_all (ValaCollection* self,
                               ValaCollection* collection)
 {
 	gboolean changed = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (collection != NULL, FALSE);
 	changed = FALSE;
 	{
@@ -316,7 +316,7 @@ vala_collection_real_to_array (ValaCollection* self,
                                gint* result_length1)
 {
 	GType t = 0UL;
-	gpointer* result = NULL;
+	gpointer* result;
 	t = self->priv->g_type;
 	if (t == G_TYPE_BOOLEAN) {
 		gint _tmp0_ = 0;
@@ -588,7 +588,7 @@ vala_collection_to_bool_array (ValaCollection* coll,
 	gint index = 0;
 	gboolean* _tmp10_;
 	gint _tmp10__length1;
-	gboolean* result = NULL;
+	gboolean* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -649,7 +649,7 @@ vala_collection_to_char_array (ValaCollection* coll,
 	gint index = 0;
 	gchar* _tmp10_;
 	gint _tmp10__length1;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -710,7 +710,7 @@ vala_collection_to_uchar_array (ValaCollection* coll,
 	gint index = 0;
 	guchar* _tmp10_;
 	gint _tmp10__length1;
-	guchar* result = NULL;
+	guchar* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -771,7 +771,7 @@ vala_collection_to_int_array (ValaCollection* coll,
 	gint index = 0;
 	gint* _tmp10_;
 	gint _tmp10__length1;
-	gint* result = NULL;
+	gint* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -832,7 +832,7 @@ vala_collection_to_uint_array (ValaCollection* coll,
 	gint index = 0;
 	guint* _tmp10_;
 	gint _tmp10__length1;
-	guint* result = NULL;
+	guint* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -893,7 +893,7 @@ vala_collection_to_int64_array (ValaCollection* coll,
 	gint index = 0;
 	gint64** _tmp10_;
 	gint _tmp10__length1;
-	gint64** result = NULL;
+	gint64** result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -957,7 +957,7 @@ vala_collection_to_uint64_array (ValaCollection* coll,
 	gint index = 0;
 	guint64** _tmp10_;
 	gint _tmp10__length1;
-	guint64** result = NULL;
+	guint64** result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -1021,7 +1021,7 @@ vala_collection_to_long_array (ValaCollection* coll,
 	gint index = 0;
 	glong* _tmp10_;
 	gint _tmp10__length1;
-	glong* result = NULL;
+	glong* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -1082,7 +1082,7 @@ vala_collection_to_ulong_array (ValaCollection* coll,
 	gint index = 0;
 	gulong* _tmp10_;
 	gint _tmp10__length1;
-	gulong* result = NULL;
+	gulong* result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -1143,7 +1143,7 @@ vala_collection_to_float_array (ValaCollection* coll,
 	gint index = 0;
 	gfloat** _tmp10_;
 	gint _tmp10__length1;
-	gfloat** result = NULL;
+	gfloat** result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -1207,7 +1207,7 @@ vala_collection_to_double_array (ValaCollection* coll,
 	gint index = 0;
 	gdouble** _tmp10_;
 	gint _tmp10__length1;
-	gdouble** result = NULL;
+	gdouble** result;
 	g_return_val_if_fail (coll != NULL, NULL);
 	_tmp0_ = vala_collection_get_size (coll);
 	_tmp1_ = _tmp0_;
@@ -1284,7 +1284,7 @@ vala_collection_class_init (ValaCollectionClass * klass,
 	((ValaCollectionClass *) klass)->clear = (void (*) (ValaCollection*)) vala_collection_real_clear;
 	((ValaCollectionClass *) klass)->add_all = (gboolean (*) (ValaCollection*, ValaCollection*)) vala_collection_real_add_all;
 	((ValaCollectionClass *) klass)->to_array = (gpointer* (*) (ValaCollection*, gint*)) vala_collection_real_to_array;
-	VALA_COLLECTION_CLASS (klass)->get_is_empty = vala_collection_real_get_is_empty;
+	VALA_COLLECTION_CLASS (klass)->get_is_empty = (gboolean (*) (ValaCollection*)) vala_collection_real_get_is_empty;
 }
 
 static void
@@ -1311,13 +1311,13 @@ vala_collection_get_type_once (void)
 GType
 vala_collection_get_type (void)
 {
-	static volatile gsize vala_collection_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_collection_type_id__volatile)) {
+	static volatile gsize vala_collection_type_id__once = 0;
+	if (g_once_init_enter (&vala_collection_type_id__once)) {
 		GType vala_collection_type_id;
 		vala_collection_type_id = vala_collection_get_type_once ();
-		g_once_init_leave (&vala_collection_type_id__volatile, vala_collection_type_id);
+		g_once_init_leave (&vala_collection_type_id__once, vala_collection_type_id);
 	}
-	return vala_collection_type_id__volatile;
+	return vala_collection_type_id__once;
 }
 
 static void

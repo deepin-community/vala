@@ -26,6 +26,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -175,7 +176,7 @@ vala_unlock_statement_real_check (ValaCodeNode* base,
 	ValaSymbol* _tmp50_;
 	gboolean _tmp51_;
 	gboolean _tmp52_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaUnlockStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -363,12 +364,12 @@ vala_unlock_statement_get_type_once (void)
 GType
 vala_unlock_statement_get_type (void)
 {
-	static volatile gsize vala_unlock_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_unlock_statement_type_id__volatile)) {
+	static volatile gsize vala_unlock_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_unlock_statement_type_id__once)) {
 		GType vala_unlock_statement_type_id;
 		vala_unlock_statement_type_id = vala_unlock_statement_get_type_once ();
-		g_once_init_leave (&vala_unlock_statement_type_id__volatile, vala_unlock_statement_type_id);
+		g_once_init_leave (&vala_unlock_statement_type_id__once, vala_unlock_statement_type_id);
 	}
-	return vala_unlock_statement_type_id__volatile;
+	return vala_unlock_statement_type_id__once;
 }
 

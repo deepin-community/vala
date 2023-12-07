@@ -216,7 +216,7 @@ gint
 gtkdoc_header_cmp (GtkdocHeader* self,
                    GtkdocHeader* header)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (header != NULL, 0);
 	if (self->pos > header->pos) {
@@ -405,13 +405,13 @@ gtkdoc_header_get_type_once (void)
 GType
 gtkdoc_header_get_type (void)
 {
-	static volatile gsize gtkdoc_header_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_header_type_id__volatile)) {
+	static volatile gsize gtkdoc_header_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_header_type_id__once)) {
 		GType gtkdoc_header_type_id;
 		gtkdoc_header_type_id = gtkdoc_header_get_type_once ();
-		g_once_init_leave (&gtkdoc_header_type_id__volatile, gtkdoc_header_type_id);
+		g_once_init_leave (&gtkdoc_header_type_id__once, gtkdoc_header_type_id);
 	}
-	return gtkdoc_header_type_id__volatile;
+	return gtkdoc_header_type_id__once;
 }
 
 gpointer
@@ -440,7 +440,7 @@ _vala_g_strjoinv (const gchar* separator,
                   gint str_array_length1)
 {
 	gboolean _tmp0_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	if (separator == NULL) {
 		separator = "";
 	}
@@ -470,11 +470,12 @@ _vala_g_strjoinv (const gchar* separator,
 		gint _tmp17_;
 		const gchar* res = NULL;
 		void* _tmp18_;
-		void* ptr = NULL;
-		const gchar* _tmp19_;
+		const gchar* _tmp19_ = NULL;
 		const gchar* _tmp20_;
-		void* _tmp21_;
-		const gchar* _tmp31_;
+		void* ptr = NULL;
+		const gchar* _tmp22_;
+		void* _tmp23_;
+		const gchar* _tmp33_;
 		len = (gsize) 1;
 		{
 			gboolean _tmp4_ = FALSE;
@@ -539,54 +540,61 @@ _vala_g_strjoinv (const gchar* separator,
 		len += (gsize) (_tmp17_ * (i - 1));
 		_tmp18_ = g_malloc (len);
 		res = _tmp18_;
-		_tmp19_ = res;
 		_tmp20_ = str_array[0];
-		_tmp21_ = g_stpcpy ((void*) _tmp19_, (const gchar*) _tmp20_);
-		ptr = _tmp21_;
+		if (_tmp20_ != NULL) {
+			const gchar* _tmp21_;
+			_tmp21_ = str_array[0];
+			_tmp19_ = (const gchar*) _tmp21_;
+		} else {
+			_tmp19_ = "";
+		}
+		_tmp22_ = res;
+		_tmp23_ = g_stpcpy ((void*) _tmp22_, _tmp19_);
+		ptr = _tmp23_;
 		{
-			gboolean _tmp22_ = FALSE;
+			gboolean _tmp24_ = FALSE;
 			i = 1;
-			_tmp22_ = TRUE;
+			_tmp24_ = TRUE;
 			while (TRUE) {
-				void* _tmp24_;
-				void* _tmp25_;
-				const gchar* _tmp26_ = NULL;
-				const gchar* _tmp27_;
-				void* _tmp29_;
-				void* _tmp30_;
-				if (!_tmp22_) {
-					gint _tmp23_;
-					_tmp23_ = i;
-					i = _tmp23_ + 1;
+				void* _tmp26_;
+				void* _tmp27_;
+				const gchar* _tmp28_ = NULL;
+				const gchar* _tmp29_;
+				void* _tmp31_;
+				void* _tmp32_;
+				if (!_tmp24_) {
+					gint _tmp25_;
+					_tmp25_ = i;
+					i = _tmp25_ + 1;
 				}
-				_tmp22_ = FALSE;
+				_tmp24_ = FALSE;
 				if (!(i < str_array_length1)) {
 					break;
 				}
-				_tmp24_ = ptr;
-				_tmp25_ = g_stpcpy (_tmp24_, (const gchar*) separator);
-				ptr = _tmp25_;
-				_tmp27_ = str_array[i];
-				if (_tmp27_ != NULL) {
-					const gchar* _tmp28_;
-					_tmp28_ = str_array[i];
-					_tmp26_ = (const gchar*) _tmp28_;
+				_tmp26_ = ptr;
+				_tmp27_ = g_stpcpy (_tmp26_, (const gchar*) separator);
+				ptr = _tmp27_;
+				_tmp29_ = str_array[i];
+				if (_tmp29_ != NULL) {
+					const gchar* _tmp30_;
+					_tmp30_ = str_array[i];
+					_tmp28_ = (const gchar*) _tmp30_;
 				} else {
-					_tmp26_ = "";
+					_tmp28_ = "";
 				}
-				_tmp29_ = ptr;
-				_tmp30_ = g_stpcpy (_tmp29_, _tmp26_);
-				ptr = _tmp30_;
+				_tmp31_ = ptr;
+				_tmp32_ = g_stpcpy (_tmp31_, _tmp28_);
+				ptr = _tmp32_;
 			}
 		}
-		_tmp31_ = res;
+		_tmp33_ = res;
 		res = NULL;
-		result = (gchar*) _tmp31_;
+		result = (gchar*) _tmp33_;
 		return result;
 	} else {
-		gchar* _tmp32_;
-		_tmp32_ = g_strdup ("");
-		result = _tmp32_;
+		gchar* _tmp34_;
+		_tmp34_ = g_strdup ("");
+		result = _tmp34_;
 		return result;
 	}
 }
@@ -619,7 +627,7 @@ gtkdoc_gcomment_to_string (GtkdocGComment* self)
 	GString* _tmp106_;
 	const gchar* _tmp107_;
 	gchar* _tmp108_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -1023,7 +1031,7 @@ gtkdoc_gcomment_to_docbook (GtkdocGComment* self,
 	GString* _tmp58_;
 	const gchar* _tmp59_;
 	gchar* _tmp60_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (reporter != NULL, NULL);
 	deprecated = NULL;
@@ -1421,13 +1429,13 @@ gtkdoc_gcomment_get_type_once (void)
 GType
 gtkdoc_gcomment_get_type (void)
 {
-	static volatile gsize gtkdoc_gcomment_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_gcomment_type_id__volatile)) {
+	static volatile gsize gtkdoc_gcomment_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_gcomment_type_id__once)) {
 		GType gtkdoc_gcomment_type_id;
 		gtkdoc_gcomment_type_id = gtkdoc_gcomment_get_type_once ();
-		g_once_init_leave (&gtkdoc_gcomment_type_id__volatile, gtkdoc_gcomment_type_id);
+		g_once_init_leave (&gtkdoc_gcomment_type_id__once, gtkdoc_gcomment_type_id);
 	}
-	return gtkdoc_gcomment_type_id__volatile;
+	return gtkdoc_gcomment_type_id__once;
 }
 
 gpointer

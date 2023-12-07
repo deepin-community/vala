@@ -55,6 +55,8 @@ static gpointer valadoc_content_list_parent_class = NULL;
 static ValadocContentBlockIface * valadoc_content_list_valadoc_content_block_parent_iface = NULL;
 
 static ValadocContentListBullet* _valadoc_content_list_bullet_dup (ValadocContentListBullet* self);
+static void valadoc_content_list_set_items (ValadocContentList* self,
+                                     ValaList* value);
  G_GNUC_INTERNAL ValadocContentList* valadoc_content_list_new (void);
  G_GNUC_INTERNAL ValadocContentList* valadoc_content_list_construct (GType object_type);
 static void valadoc_content_list_real_check (ValadocContentContentElement* base,
@@ -117,7 +119,7 @@ valadoc_content_list_bullet_from_string (const gchar* str)
 	static GQuark _tmp1_label5 = 0;
 	static GQuark _tmp1_label6 = 0;
 	static GQuark _tmp1_label7 = 0;
-	ValadocContentListBullet* result = NULL;
+	ValadocContentListBullet* result;
 	_tmp0_ = str;
 	_tmp2_ = (NULL == _tmp0_) ? 0 : g_quark_from_string (_tmp0_);
 	if (_tmp2_ == ((0 != _tmp1_label0) ? _tmp1_label0 : (_tmp1_label0 = g_quark_from_static_string ("none")))) {
@@ -224,7 +226,7 @@ valadoc_content_list_bullet_from_string (const gchar* str)
 const gchar*
 valadoc_content_list_bullet_to_string (ValadocContentListBullet self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALADOC_CONTENT_LIST_BULLET_NONE:
 		{
@@ -286,23 +288,21 @@ valadoc_content_list_bullet_get_type_once (void)
 GType
 valadoc_content_list_bullet_get_type (void)
 {
-	static volatile gsize valadoc_content_list_bullet_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_list_bullet_type_id__volatile)) {
+	static volatile gsize valadoc_content_list_bullet_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_list_bullet_type_id__once)) {
 		GType valadoc_content_list_bullet_type_id;
 		valadoc_content_list_bullet_type_id = valadoc_content_list_bullet_get_type_once ();
-		g_once_init_leave (&valadoc_content_list_bullet_type_id__volatile, valadoc_content_list_bullet_type_id);
+		g_once_init_leave (&valadoc_content_list_bullet_type_id__once, valadoc_content_list_bullet_type_id);
 	}
-	return valadoc_content_list_bullet_type_id__volatile;
+	return valadoc_content_list_bullet_type_id__once;
 }
 
 ValadocContentListBullet
 valadoc_content_list_get_bullet (ValadocContentList* self)
 {
 	ValadocContentListBullet result;
-	ValadocContentListBullet _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_bullet;
-	result = _tmp0_;
+	result = self->priv->_bullet;
 	return result;
 }
 
@@ -330,18 +330,42 @@ valadoc_content_list_get_items (ValadocContentList* self)
 	return result;
 }
 
+static gpointer
+_vala_iterable_ref0 (gpointer self)
+{
+	return self ? vala_iterable_ref (self) : NULL;
+}
+
+static void
+valadoc_content_list_set_items (ValadocContentList* self,
+                                ValaList* value)
+{
+	ValaList* old_value;
+	g_return_if_fail (self != NULL);
+	old_value = valadoc_content_list_get_items (self);
+	if (old_value != value) {
+		ValaList* _tmp0_;
+		_tmp0_ = _vala_iterable_ref0 (value);
+		_vala_iterable_unref0 (self->priv->_items);
+		self->priv->_items = _tmp0_;
+		g_object_notify_by_pspec ((GObject *) self, valadoc_content_list_properties[VALADOC_CONTENT_LIST_ITEMS_PROPERTY]);
+	}
+}
+
  G_GNUC_INTERNAL ValadocContentList*
 valadoc_content_list_construct (GType object_type)
 {
 	ValadocContentList * self = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
+	ValaArrayList* _tmp2_;
 	self = (ValadocContentList*) valadoc_content_content_element_construct (object_type);
-	self->priv->_bullet = VALADOC_CONTENT_LIST_BULLET_NONE;
+	valadoc_content_list_set_bullet (self, VALADOC_CONTENT_LIST_BULLET_NONE);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_CONTENT_TYPE_LIST_ITEM, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
-	_vala_iterable_unref0 (self->priv->_items);
-	self->priv->_items = (ValaList*) _tmp1_;
+	_tmp2_ = _tmp1_;
+	valadoc_content_list_set_items (self, (ValaList*) _tmp2_);
+	_vala_iterable_unref0 (_tmp2_);
 	return self;
 }
 
@@ -469,7 +493,7 @@ valadoc_content_list_real_is_empty (ValadocContentContentElement* base)
 	ValaList* _tmp0_;
 	gint _tmp1_;
 	gint _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentList*) base;
 	_tmp0_ = self->priv->_items;
 	_tmp1_ = vala_collection_get_size ((ValaCollection*) _tmp0_);
@@ -488,7 +512,7 @@ valadoc_content_list_real_copy (ValadocContentContentElement* base,
 	ValadocContentList* _tmp1_;
 	ValadocContentList* _tmp2_;
 	ValadocContentListBullet _tmp3_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentList*) base;
 	_tmp0_ = valadoc_content_list_new ();
 	list = _tmp0_;
@@ -500,57 +524,53 @@ valadoc_content_list_real_copy (ValadocContentContentElement* base,
 	{
 		ValaList* _item_list = NULL;
 		ValaList* _tmp4_;
-		ValaList* _tmp5_;
 		gint _item_size = 0;
-		ValaList* _tmp6_;
+		ValaList* _tmp5_;
+		gint _tmp6_;
 		gint _tmp7_;
-		gint _tmp8_;
 		gint _item_index = 0;
-		_tmp4_ = valadoc_content_list_get_items (self);
-		_tmp5_ = _tmp4_;
-		_item_list = _tmp5_;
-		_tmp6_ = _item_list;
-		_tmp7_ = vala_collection_get_size ((ValaCollection*) _tmp6_);
-		_tmp8_ = _tmp7_;
-		_item_size = _tmp8_;
+		_tmp4_ = self->priv->_items;
+		_item_list = _tmp4_;
+		_tmp5_ = _item_list;
+		_tmp6_ = vala_collection_get_size ((ValaCollection*) _tmp5_);
+		_tmp7_ = _tmp6_;
+		_item_size = _tmp7_;
 		_item_index = -1;
 		while (TRUE) {
+			gint _tmp8_;
 			gint _tmp9_;
-			gint _tmp10_;
 			ValadocContentListItem* item = NULL;
-			ValaList* _tmp11_;
-			gpointer _tmp12_;
+			ValaList* _tmp10_;
+			gpointer _tmp11_;
 			ValadocContentListItem* copy = NULL;
-			ValadocContentListItem* _tmp13_;
-			ValadocContentList* _tmp14_;
-			ValadocContentContentElement* _tmp15_;
-			ValadocContentListItem* _tmp16_;
-			ValadocContentList* _tmp17_;
-			ValaList* _tmp18_;
-			ValaList* _tmp19_;
-			ValadocContentListItem* _tmp20_;
+			ValadocContentListItem* _tmp12_;
+			ValadocContentList* _tmp13_;
+			ValadocContentContentElement* _tmp14_;
+			ValadocContentListItem* _tmp15_;
+			ValadocContentList* _tmp16_;
+			ValaList* _tmp17_;
+			ValadocContentListItem* _tmp18_;
 			_item_index = _item_index + 1;
-			_tmp9_ = _item_index;
-			_tmp10_ = _item_size;
-			if (!(_tmp9_ < _tmp10_)) {
+			_tmp8_ = _item_index;
+			_tmp9_ = _item_size;
+			if (!(_tmp8_ < _tmp9_)) {
 				break;
 			}
-			_tmp11_ = _item_list;
-			_tmp12_ = vala_list_get (_tmp11_, _item_index);
-			item = (ValadocContentListItem*) _tmp12_;
-			_tmp13_ = item;
-			_tmp14_ = list;
-			_tmp15_ = valadoc_content_content_element_copy ((ValadocContentContentElement*) _tmp13_, (ValadocContentContentElement*) _tmp14_);
-			_tmp16_ = VALADOC_CONTENT_IS_LIST_ITEM (_tmp15_) ? ((ValadocContentListItem*) _tmp15_) : NULL;
-			if (_tmp16_ == NULL) {
-				_g_object_unref0 (_tmp15_);
+			_tmp10_ = _item_list;
+			_tmp11_ = vala_list_get (_tmp10_, _item_index);
+			item = (ValadocContentListItem*) _tmp11_;
+			_tmp12_ = item;
+			_tmp13_ = list;
+			_tmp14_ = valadoc_content_content_element_copy ((ValadocContentContentElement*) _tmp12_, (ValadocContentContentElement*) _tmp13_);
+			_tmp15_ = VALADOC_CONTENT_IS_LIST_ITEM (_tmp14_) ? ((ValadocContentListItem*) _tmp14_) : NULL;
+			if (_tmp15_ == NULL) {
+				_g_object_unref0 (_tmp14_);
 			}
-			copy = _tmp16_;
-			_tmp17_ = list;
-			_tmp18_ = valadoc_content_list_get_items (_tmp17_);
-			_tmp19_ = _tmp18_;
-			_tmp20_ = copy;
-			vala_collection_add ((ValaCollection*) _tmp19_, _tmp20_);
+			copy = _tmp15_;
+			_tmp16_ = list;
+			_tmp17_ = _tmp16_->priv->_items;
+			_tmp18_ = copy;
+			vala_collection_add ((ValaCollection*) _tmp17_, _tmp18_);
 			_g_object_unref0 (copy);
 			_g_object_unref0 (item);
 		}
@@ -615,13 +635,13 @@ valadoc_content_list_get_type_once (void)
 GType
 valadoc_content_list_get_type (void)
 {
-	static volatile gsize valadoc_content_list_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_list_type_id__volatile)) {
+	static volatile gsize valadoc_content_list_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_list_type_id__once)) {
 		GType valadoc_content_list_type_id;
 		valadoc_content_list_type_id = valadoc_content_list_get_type_once ();
-		g_once_init_leave (&valadoc_content_list_type_id__volatile, valadoc_content_list_type_id);
+		g_once_init_leave (&valadoc_content_list_type_id__once, valadoc_content_list_type_id);
 	}
-	return valadoc_content_list_type_id__volatile;
+	return valadoc_content_list_type_id__once;
 }
 
 static void
@@ -656,6 +676,9 @@ _vala_valadoc_content_list_set_property (GObject * object,
 	switch (property_id) {
 		case VALADOC_CONTENT_LIST_BULLET_PROPERTY:
 		valadoc_content_list_set_bullet (self, g_value_get_enum (value));
+		break;
+		case VALADOC_CONTENT_LIST_ITEMS_PROPERTY:
+		valadoc_content_list_set_items (self, vala_value_get_iterable (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

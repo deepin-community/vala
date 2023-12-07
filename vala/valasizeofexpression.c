@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -146,7 +147,7 @@ static gboolean
 vala_sizeof_expression_real_is_pure (ValaExpression* base)
 {
 	ValaSizeofExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaSizeofExpression*) base;
 	result = TRUE;
 	return result;
@@ -156,7 +157,7 @@ static gboolean
 vala_sizeof_expression_real_is_constant (ValaExpression* base)
 {
 	ValaSizeofExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaSizeofExpression*) base;
 	result = TRUE;
 	return result;
@@ -194,7 +195,7 @@ vala_sizeof_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp8_;
 	gboolean _tmp9_;
 	gboolean _tmp10_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaSizeofExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -280,12 +281,12 @@ vala_sizeof_expression_get_type_once (void)
 GType
 vala_sizeof_expression_get_type (void)
 {
-	static volatile gsize vala_sizeof_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_sizeof_expression_type_id__volatile)) {
+	static volatile gsize vala_sizeof_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_sizeof_expression_type_id__once)) {
 		GType vala_sizeof_expression_type_id;
 		vala_sizeof_expression_type_id = vala_sizeof_expression_get_type_once ();
-		g_once_init_leave (&vala_sizeof_expression_type_id__volatile, vala_sizeof_expression_type_id);
+		g_once_init_leave (&vala_sizeof_expression_type_id__once, vala_sizeof_expression_type_id);
 	}
-	return vala_sizeof_expression_type_id__volatile;
+	return vala_sizeof_expression_type_id__once;
 }
 

@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <gobject/gvaluecollector.h>
 #include <glib-object.h>
+#include <gobject/gvaluecollector.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 typedef struct _ValadocHighlighterParamSpecCodeToken ValadocHighlighterParamSpecCodeToken;
@@ -63,10 +63,8 @@ ValadocHighlighterCodeTokenType
 valadoc_highlighter_code_token_get_token_type (ValadocHighlighterCodeToken* self)
 {
 	ValadocHighlighterCodeTokenType result;
-	ValadocHighlighterCodeTokenType _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_token_type;
-	result = _tmp0_;
+	result = self->priv->_token_type;
 	return result;
 }
 
@@ -294,13 +292,13 @@ valadoc_highlighter_code_token_get_type_once (void)
 GType
 valadoc_highlighter_code_token_get_type (void)
 {
-	static volatile gsize valadoc_highlighter_code_token_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_highlighter_code_token_type_id__volatile)) {
+	static volatile gsize valadoc_highlighter_code_token_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_highlighter_code_token_type_id__once)) {
 		GType valadoc_highlighter_code_token_type_id;
 		valadoc_highlighter_code_token_type_id = valadoc_highlighter_code_token_get_type_once ();
-		g_once_init_leave (&valadoc_highlighter_code_token_type_id__volatile, valadoc_highlighter_code_token_type_id);
+		g_once_init_leave (&valadoc_highlighter_code_token_type_id__once, valadoc_highlighter_code_token_type_id);
 	}
-	return valadoc_highlighter_code_token_type_id__volatile;
+	return valadoc_highlighter_code_token_type_id__once;
 }
 
 gpointer
@@ -330,7 +328,7 @@ valadoc_highlighter_code_token_type_to_string (ValadocHighlighterCodeTokenType s
 	GTypeClass* _tmp0_;
 	GEnumValue* eval = NULL;
 	const gchar* _tmp1_;
-	const gchar* result = NULL;
+	const gchar* result;
 	_tmp0_ = g_type_class_ref (VALADOC_HIGHLIGHTER_TYPE_CODE_TOKEN_TYPE);
 	enumc = (GEnumClass*) _tmp0_;
 	eval = g_enum_get_value (enumc, (gint) self);
@@ -353,12 +351,12 @@ valadoc_highlighter_code_token_type_get_type_once (void)
 GType
 valadoc_highlighter_code_token_type_get_type (void)
 {
-	static volatile gsize valadoc_highlighter_code_token_type_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_highlighter_code_token_type_type_id__volatile)) {
+	static volatile gsize valadoc_highlighter_code_token_type_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_highlighter_code_token_type_type_id__once)) {
 		GType valadoc_highlighter_code_token_type_type_id;
 		valadoc_highlighter_code_token_type_type_id = valadoc_highlighter_code_token_type_get_type_once ();
-		g_once_init_leave (&valadoc_highlighter_code_token_type_type_id__volatile, valadoc_highlighter_code_token_type_type_id);
+		g_once_init_leave (&valadoc_highlighter_code_token_type_type_id__once, valadoc_highlighter_code_token_type_type_id);
 	}
-	return valadoc_highlighter_code_token_type_type_id__volatile;
+	return valadoc_highlighter_code_token_type_type_id__once;
 }
 

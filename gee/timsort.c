@@ -29,6 +29,8 @@
 #include <string.h>
 #include <gobject/gvaluecollector.h>
 
+#define VALA_TIM_SORT_MINIMUM_GALLOP 7
+
 #define VALA_TYPE_TIM_SORT (vala_tim_sort_get_type ())
 #define VALA_TIM_SORT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_TIM_SORT, ValaTimSort))
 #define VALA_TIM_SORT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_TIM_SORT, ValaTimSortClass))
@@ -108,7 +110,6 @@ static gpointer vala_tim_sort_parent_class = NULL;
  G_GNUC_INTERNAL gpointer vala_value_get_tim_sort (const GValue* value) G_GNUC_UNUSED ;
  G_GNUC_INTERNAL GType vala_tim_sort_get_type (void) G_GNUC_CONST  G_GNUC_UNUSED ;
 static void vala_tim_sort_slice_free (ValaTimSortSlice * self);
-#define VALA_TIM_SORT_MINIMUM_GALLOP 7
  G_GNUC_INTERNAL void vala_tim_sort_sort (GType g_type,
                          GBoxedCopyFunc g_dup_func,
                          GDestroyNotify g_destroy_func,
@@ -473,7 +474,7 @@ vala_tim_sort_lower_than (ValaTimSort* self,
 {
 	GCompareDataFunc _tmp0_;
 	gpointer _tmp0__target;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->compare;
 	_tmp0__target = self->priv->compare_target;
@@ -488,7 +489,7 @@ vala_tim_sort_lower_than_or_equal_to (ValaTimSort* self,
 {
 	GCompareDataFunc _tmp0_;
 	gpointer _tmp0__target;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->compare;
 	_tmp0__target = self->priv->compare_target;
@@ -501,7 +502,7 @@ vala_tim_sort_compute_minimum_run_length (ValaTimSort* self,
                                           gint length)
 {
 	gint run_length = 0;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	run_length = 0;
 	while (TRUE) {
@@ -524,7 +525,7 @@ vala_tim_sort_compute_longest_run (ValaTimSort* self,
 	gint run_length = 0;
 	void** _tmp18_;
 	ValaTimSortSlice* _tmp19_;
-	ValaTimSortSlice* result = NULL;
+	ValaTimSortSlice* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (a != NULL, NULL);
 	if (a->length <= 1) {
@@ -948,7 +949,7 @@ vala_tim_sort_gallop_leftmost (ValaTimSort* self,
 	gint offset = 0;
 	void** _tmp0_;
 	void* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (a != NULL, 0);
 	_vala_assert (0 <= hint, "0 <= hint");
@@ -1051,7 +1052,7 @@ vala_tim_sort_gallop_rightmost (ValaTimSort* self,
 	gint offset = 0;
 	void** _tmp0_;
 	void* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (a != NULL, 0);
 	_vala_assert (0 <= hint, "0 <= hint");
@@ -1770,7 +1771,7 @@ vala_tim_sort_slice_pop_first (ValaTimSortSlice* self)
 	void** _tmp1_;
 	gint _tmp2_;
 	void* _tmp3_;
-	void* result = NULL;
+	void* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->length;
 	self->length = _tmp0_ - 1;
@@ -1788,7 +1789,7 @@ vala_tim_sort_slice_pop_last (ValaTimSortSlice* self)
 	gint _tmp0_;
 	void** _tmp1_;
 	void* _tmp2_;
-	void* result = NULL;
+	void* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->length;
 	self->length = _tmp0_ - 1;
@@ -1803,7 +1804,7 @@ vala_tim_sort_slice_peek_first (ValaTimSortSlice* self)
 {
 	void** _tmp0_;
 	void* _tmp1_;
-	void* result = NULL;
+	void* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->list;
 	_tmp1_ = _tmp0_[self->index];
@@ -1816,7 +1817,7 @@ vala_tim_sort_slice_peek_last (ValaTimSortSlice* self)
 {
 	void** _tmp0_;
 	void* _tmp1_;
-	void* result = NULL;
+	void* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->list;
 	_tmp1_ = _tmp0_[(self->index + self->length) - 1];
@@ -2088,13 +2089,13 @@ vala_tim_sort_get_type_once (void)
  G_GNUC_INTERNAL GType
 vala_tim_sort_get_type (void)
 {
-	static volatile gsize vala_tim_sort_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_tim_sort_type_id__volatile)) {
+	static volatile gsize vala_tim_sort_type_id__once = 0;
+	if (g_once_init_enter (&vala_tim_sort_type_id__once)) {
 		GType vala_tim_sort_type_id;
 		vala_tim_sort_type_id = vala_tim_sort_get_type_once ();
-		g_once_init_leave (&vala_tim_sort_type_id__volatile, vala_tim_sort_type_id);
+		g_once_init_leave (&vala_tim_sort_type_id__once, vala_tim_sort_type_id);
 	}
-	return vala_tim_sort_type_id__volatile;
+	return vala_tim_sort_type_id__once;
 }
 
  G_GNUC_INTERNAL gpointer

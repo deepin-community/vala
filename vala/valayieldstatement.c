@@ -25,10 +25,13 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_yield_statement_parent_class = NULL;
 static ValaStatementIface * vala_yield_statement_vala_statement_parent_iface = NULL;
 
+static void vala_yield_statement_real_accept (ValaCodeNode* base,
+                                       ValaCodeVisitor* visitor);
 static gboolean vala_yield_statement_real_check (ValaCodeNode* base,
                                           ValaCodeContext* context);
 static void vala_yield_statement_real_emit (ValaCodeNode* base,
@@ -57,6 +60,16 @@ vala_yield_statement_new (ValaSourceReference* source_reference)
 	return vala_yield_statement_construct (VALA_TYPE_YIELD_STATEMENT, source_reference);
 }
 
+static void
+vala_yield_statement_real_accept (ValaCodeNode* base,
+                                  ValaCodeVisitor* visitor)
+{
+	ValaYieldStatement * self;
+	self = (ValaYieldStatement*) base;
+	g_return_if_fail (visitor != NULL);
+	vala_code_visitor_visit_yield_statement (visitor, self);
+}
+
 static gboolean
 vala_yield_statement_real_check (ValaCodeNode* base,
                                  ValaCodeContext* context)
@@ -71,7 +84,7 @@ vala_yield_statement_real_check (ValaCodeNode* base,
 	ValaMethod* _tmp8_;
 	gboolean _tmp17_;
 	gboolean _tmp18_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaYieldStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -135,6 +148,7 @@ vala_yield_statement_class_init (ValaYieldStatementClass * klass,
                                  gpointer klass_data)
 {
 	vala_yield_statement_parent_class = g_type_class_peek_parent (klass);
+	((ValaCodeNodeClass *) klass)->accept = (void (*) (ValaCodeNode*, ValaCodeVisitor*)) vala_yield_statement_real_accept;
 	((ValaCodeNodeClass *) klass)->check = (gboolean (*) (ValaCodeNode*, ValaCodeContext*)) vala_yield_statement_real_check;
 	((ValaCodeNodeClass *) klass)->emit = (void (*) (ValaCodeNode*, ValaCodeGenerator*)) vala_yield_statement_real_emit;
 }
@@ -169,12 +183,12 @@ vala_yield_statement_get_type_once (void)
 GType
 vala_yield_statement_get_type (void)
 {
-	static volatile gsize vala_yield_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_yield_statement_type_id__volatile)) {
+	static volatile gsize vala_yield_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_yield_statement_type_id__once)) {
 		GType vala_yield_statement_type_id;
 		vala_yield_statement_type_id = vala_yield_statement_get_type_once ();
-		g_once_init_leave (&vala_yield_statement_type_id__volatile, vala_yield_statement_type_id);
+		g_once_init_leave (&vala_yield_statement_type_id__once, vala_yield_statement_type_id);
 	}
-	return vala_yield_statement_type_id__volatile;
+	return vala_yield_statement_type_id__once;
 }
 

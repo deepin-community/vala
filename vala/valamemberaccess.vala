@@ -63,11 +63,6 @@ public class Vala.MemberAccess : Expression {
 	public bool tainted_access { get; set; }
 
 	/**
-	 * Specifies whether the member is used for object creation.
-	 */
-	public bool creation_member { get; set; }
-
-	/**
 	 * Qualified access to global symbol.
 	 */
 	public bool qualified { get; set; }
@@ -198,8 +193,19 @@ public class Vala.MemberAccess : Expression {
 
 	public override bool is_non_null () {
 		unowned Constant? c = symbol_reference as Constant;
+		unowned LocalVariable? l = symbol_reference as LocalVariable;
+		unowned Method? m = symbol_reference as Method;
 		if (c != null) {
 			return (c is EnumValue || !c.type_reference.nullable);
+		} else if (l != null) {
+			unowned DataType type = l.variable_type;
+			if (type is ArrayType) {
+				return ((ArrayType) type).inline_allocated;
+			} else {
+				return type.is_real_non_null_struct_type () || type.is_non_null_simple_type ();
+			}
+		} else if (m != null) {
+			return (m.binding == MemberBinding.STATIC || prototype_access);
 		} else {
 			return false;
 		}
@@ -390,6 +396,12 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
+			if (inner.value_type is SignalType && member_name == "emit") {
+				// transform foo.sig.emit() to foo.sig()
+				parent_node.replace_expression (this, inner);
+				return true;
+			}
+
 			if (inner is MemberAccess) {
 				unowned MemberAccess ma = (MemberAccess) inner;
 				if (ma.prototype_access) {
@@ -418,8 +430,7 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			if (inner is MemberAccess && inner.symbol_reference is TypeParameter) {
-				inner.value_type = new GenericType ((TypeParameter) inner.symbol_reference);
-				inner.value_type.source_reference = source_reference;
+				inner.value_type = new GenericType ((TypeParameter) inner.symbol_reference, source_reference);
 			}
 
 			if (symbol_reference == null && inner.value_type != null) {
@@ -477,6 +488,10 @@ public class Vala.MemberAccess : Expression {
 						prop.owner = inner.value_type.type_symbol.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
 						symbol_reference = prop;
+						if (!dynamic_object_type.type_symbol.is_subtype_of (context.analyzer.object_type)) {
+							Report.error (source_reference, "dynamic properties are not supported for `%s'", dynamic_object_type.type_symbol.get_full_name ());
+							error = true;
+						}
 					}
 				} else if (parent_node is MemberAccess && inner is MemberAccess && parent_node.parent_node is MethodCall) {
 					unowned MemberAccess ma = (MemberAccess) parent_node;
@@ -490,12 +505,32 @@ public class Vala.MemberAccess : Expression {
 							unowned MemberAccess? arg = s.handler as MemberAccess;
 							if (arg == null || !arg.check (context) || !(arg.symbol_reference is Method)) {
 								error = true;
-								Report.error (s.handler.source_reference, "Invalid handler for `%s'", s.get_full_name ());
+								if (s.handler is LambdaExpression) {
+									Report.error (s.handler.source_reference, "Lambdas are not allowed for dynamic signals");
+								} else {
+									Report.error (s.handler.source_reference, "Cannot infer call signature for dynamic signal `%s' from given expression", s.get_full_name ());
+								}
 							}
 						}
 						s.access = SymbolAccessibility.PUBLIC;
 						dynamic_object_type.type_symbol.scope.add (null, s);
 						symbol_reference = s;
+					} else if (ma.member_name == "emit") {
+						// dynamic signal
+						unowned MethodCall mcall = (MethodCall) ma.parent_node;
+						var return_type = mcall.target_type ?? new VoidType ();
+						if (return_type is VarType) {
+							error = true;
+							Report.error (mcall.source_reference, "Cannot infer return type for dynamic signal `%s' from given context", member_name);
+						}
+						var s = new DynamicSignal (inner.value_type, member_name, return_type, source_reference);
+						s.access = SymbolAccessibility.PUBLIC;
+						s.add_parameter (new Parameter.with_ellipsis ());
+						dynamic_object_type.type_symbol.scope.add (null, s);
+						symbol_reference = s;
+					} else if (ma.member_name == "disconnect") {
+						error = true;
+						Report.error (ma.source_reference, "Use SignalHandler.disconnect() to disconnect from dynamic signal");
 					}
 				}
 				if (symbol_reference == null) {
@@ -512,6 +547,10 @@ public class Vala.MemberAccess : Expression {
 					prop.owner = inner.value_type.type_symbol.scope;
 					dynamic_object_type.type_symbol.scope.add (null, prop);
 					symbol_reference = prop;
+					if (!dynamic_object_type.type_symbol.is_subtype_of (context.analyzer.object_type)) {
+						Report.error (source_reference, "dynamic properties are not supported for %s", dynamic_object_type.type_symbol.get_full_name ());
+						error = true;
+					}
 				}
 				if (symbol_reference != null) {
 					may_access_instance_members = true;
@@ -576,6 +615,9 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s", member_name, base_type_name, base_type_package, visited_types_string);
+			if (inner != null && inner.symbol_reference != null && inner.symbol_reference.source_reference != null) {
+				Report.notice (inner.symbol_reference.source_reference, "`%s' was declared here", inner.symbol_reference.name);
+			}
 			value_type = new InvalidType ();
 			return false;
 		} else if (symbol_reference.error) {
@@ -593,7 +635,7 @@ public class Vala.MemberAccess : Expression {
 			unowned CodeNode? parent = ma.parent_node;
 			if (parent != null && !(parent is ElementAccess) && !(((MemberAccess) ma).inner is BaseAccess)
 			    && (!(parent is MethodCall) || ((MethodCall) parent).get_argument_list ().contains (this))) {
-				if (sig.get_attribute ("HasEmitter") != null) {
+				if (sig.has_attribute ("HasEmitter")) {
 					if (!sig.check (context)) {
 						return false;
 					}
@@ -860,9 +902,11 @@ public class Vala.MemberAccess : Expression {
 		} else if (member is Signal) {
 			instance = true;
 			access = member.access;
-		} else if (!creation_member && member is ErrorCode) {
-			symbol_reference = ((ErrorCode) member).code;
-			member = symbol_reference;
+		} else if (member is ErrorCode) {
+			if (!(parent_node is CallableExpression && ((CallableExpression) parent_node).call == this)) {
+				symbol_reference = ((ErrorCode) member).code;
+				member = symbol_reference;
+			}
 		}
 
 		// recursive usage of itself doesn't count as used
@@ -878,6 +922,7 @@ public class Vala.MemberAccess : Expression {
 		}
 		member.version.check (context, source_reference);
 
+		// FIXME Code duplication with MemberInitializer.check()
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
 			unowned TypeSymbol target_type = (TypeSymbol) member.parent_symbol;
 
@@ -949,11 +994,9 @@ public class Vala.MemberAccess : Expression {
 				value_type = context.analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
 				value_type.source_reference = source_reference;
 			} else if (symbol_reference is Field) {
-				value_type = new FieldPrototype ((Field) symbol_reference);
-				value_type.source_reference = source_reference;
+				value_type = new FieldPrototype ((Field) symbol_reference, source_reference);
 			} else if (symbol_reference is Property) {
-				value_type = new PropertyPrototype ((Property) symbol_reference);
-				value_type.source_reference = source_reference;
+				value_type = new PropertyPrototype ((Property) symbol_reference, source_reference);
 			} else {
 				error = true;
 				value_type = new InvalidType ();
@@ -1003,8 +1046,7 @@ public class Vala.MemberAccess : Expression {
 			if (m != null && m.binding == MemberBinding.STATIC && m.parent_symbol is ObjectTypeSymbol &&
 			    inner != null && inner.value_type == null && inner_ma.type_argument_list.size > 0) {
 				// support static methods in generic classes
-				inner.value_type = new ObjectType ((ObjectTypeSymbol) m.parent_symbol);
-				inner.value_type.source_reference = source_reference;
+				inner.value_type = new ObjectType ((ObjectTypeSymbol) m.parent_symbol, source_reference);
 
 				foreach (var type_argument in inner_ma.type_argument_list) {
 					inner.value_type.add_type_argument (type_argument);
@@ -1043,6 +1085,23 @@ public class Vala.MemberAccess : Expression {
 
 		if (value_type != null) {
 			value_type.check (context);
+		}
+
+		if (symbol_reference is ArrayLengthField) {
+			if (inner.value_type is ArrayType && ((ArrayType) inner.value_type).rank > 1 && !(parent_node is ElementAccess)) {
+				Report.error (source_reference, "unsupported use of length field of multi-dimensional array");
+				error = true;
+			}
+		} else if (symbol_reference is DelegateTargetField) {
+			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
+				Report.error (source_reference, "unsupported use of target field of delegate without target");
+				error = true;
+			}
+		} else if (symbol_reference is DelegateDestroyField) {
+			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
+				Report.error (source_reference, "unsupported use of destroy field of delegate without target");
+				error = true;
+			}
 		}
 
 		// Provide some extra information for the code generator
@@ -1096,7 +1155,15 @@ public class Vala.MemberAccess : Expression {
 			}
 		}
 
-		if (symbol_reference is Method && ((Method) symbol_reference).get_attribute ("DestroysInstance") != null) {
+		if (symbol_reference is DelegateTargetField || symbol_reference is DelegateDestroyField) {
+			inner.lvalue = true;
+			if (ma != null) {
+				ma.lvalue = true;
+				ma.check_lvalue_access ();
+			}
+		}
+
+		if (symbol_reference is Method && ((Method) symbol_reference).has_attribute ("DestroysInstance")) {
 			unowned Class? cl = ((Method) symbol_reference).parent_symbol as Class;
 			if (cl != null && cl.is_compact && ma != null) {
 				ma.lvalue = true;
@@ -1136,7 +1203,7 @@ public class Vala.MemberAccess : Expression {
 
 	bool is_tainted () {
 		unowned CodeNode node = this;
-		if (node.parent_node is MemberAccess) {
+		if (node.parent_node is ElementAccess || node.parent_node is MemberAccess) {
 			return false;
 		}
 

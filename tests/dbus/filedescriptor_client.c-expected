@@ -38,7 +38,7 @@ typedef GDBusProxyClass TestProxyClass;
 
 struct _TestIface {
 	GTypeInterface parent_iface;
-	GUnixInputStream* (*test_in) (Test* self, GUnixInputStream* i, GUnixInputStream* * j, GError** error);
+	GUnixInputStream* (*test_in) (Test* self, GUnixInputStream* i, GUnixInputStream** j, GError** error);
 };
 
 VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
@@ -47,9 +47,10 @@ VALA_EXTERN guint test_register_object (void* object,
                             const gchar* path,
                             GError** error);
 VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN GUnixInputStream* test_test_in (Test* self,
                                 GUnixInputStream* i,
-                                GUnixInputStream* * j,
+                                GUnixInputStream** j,
                                 GError** error);
 static GType test_get_type_once (void);
 static void test_proxy_g_signal (GDBusProxy* proxy,
@@ -58,7 +59,7 @@ static void test_proxy_g_signal (GDBusProxy* proxy,
                           GVariant* parameters);
 static GUnixInputStream* test_proxy_test_in (Test* self,
                                       GUnixInputStream* i,
-                                      GUnixInputStream* * j,
+                                      GUnixInputStream** j,
                                       GError** error);
 static void test_proxy_test_interface_init (TestIface* iface);
 static void _dbus_test_test_in (Test* self,
@@ -105,7 +106,7 @@ static const GDBusInterfaceVTable _test_dbus_interface_vtable = {test_dbus_inter
 GUnixInputStream*
 test_test_in (Test* self,
               GUnixInputStream* i,
-              GUnixInputStream* * j,
+              GUnixInputStream** j,
               GError** error)
 {
 	TestIface* _iface_;
@@ -140,13 +141,13 @@ test_get_type_once (void)
 GType
 test_get_type (void)
 {
-	static volatile gsize test_type_id__volatile = 0;
-	if (g_once_init_enter (&test_type_id__volatile)) {
+	static volatile gsize test_type_id__once = 0;
+	if (g_once_init_enter (&test_type_id__once)) {
 		GType test_type_id;
 		test_type_id = test_get_type_once ();
-		g_once_init_leave (&test_type_id__volatile, test_type_id);
+		g_once_init_leave (&test_type_id__once, test_type_id);
 	}
-	return test_type_id__volatile;
+	return test_type_id__once;
 }
 
 G_DEFINE_TYPE_EXTENDED (TestProxy, test_proxy, G_TYPE_DBUS_PROXY, 0, G_IMPLEMENT_INTERFACE (TYPE_TEST, test_proxy_test_interface_init) )
@@ -173,7 +174,7 @@ test_proxy_init (TestProxy* self)
 static GUnixInputStream*
 test_proxy_test_in (Test* self,
                     GUnixInputStream* i,
-                    GUnixInputStream* * j,
+                    GUnixInputStream** j,
                     GError** error)
 {
 	GUnixFDList* _fd_list;
@@ -274,14 +275,12 @@ _dbus_test_test_in (Test* self,
 		g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_FAILED, "FD List is NULL");
 	}
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	result = test_test_in (self, i, &j, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

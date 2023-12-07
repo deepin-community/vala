@@ -260,7 +260,7 @@ valadoc_api_tree_get_external_c_files (ValadocApiTree* self)
 {
 	ValaArrayList* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->external_c_files;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -289,7 +289,7 @@ valadoc_api_tree_get_package_list (ValadocApiTree* self)
 {
 	ValaArrayList* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->packages;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -436,7 +436,7 @@ valadoc_api_tree_search_relative_to (ValadocApiTree* self,
 	ValadocApiNode* _tmp0_;
 	gboolean _tmp6_ = FALSE;
 	ValadocApiNode* _tmp7_;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = _g_object_ref0 (element);
@@ -503,7 +503,7 @@ valadoc_api_tree_search_symbol_path (ValadocApiTree* self,
                                      gint path_length1)
 {
 	ValadocApiNode* node = NULL;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	node = NULL;
 	if (element != NULL) {
@@ -588,7 +588,7 @@ valadoc_api_tree_search_symbol_type_cstr (ValadocApiTree* self,
 	ValadocCTypeResolver* _tmp0_;
 	ValadocCTypeResolver* _tmp2_;
 	ValadocApiTypeSymbol* _tmp3_;
-	ValadocApiTypeSymbol* result = NULL;
+	ValadocApiTypeSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (cname != NULL, NULL);
 	_tmp0_ = self->priv->_cresolver;
@@ -612,7 +612,7 @@ valadoc_api_tree_search_symbol_cstr (ValadocApiTree* self,
 	ValadocCTypeResolver* _tmp0_;
 	ValadocCTypeResolver* _tmp2_;
 	ValadocApiNode* _tmp3_;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (cname != NULL, NULL);
 	_tmp0_ = self->priv->_cresolver;
@@ -646,7 +646,7 @@ valadoc_api_tree_search_symbol_str (ValadocApiTree* self,
 	gboolean _tmp5_ = FALSE;
 	gchar** _tmp6_;
 	gint _tmp6__length1;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (symname != NULL, NULL);
 	_tmp1_ = valadoc_api_tree_split_name (self, symname, &_tmp0_);
@@ -768,7 +768,7 @@ valadoc_api_tree_split_name (ValadocApiTree* self,
 	gint i = 0;
 	gchar** _tmp5_;
 	gint _tmp5__length1;
-	gchar** result = NULL;
+	gchar** result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (full_name != NULL, NULL);
 	_tmp1_ = _tmp0_ = g_strsplit (full_name, ".", -1);
@@ -840,7 +840,7 @@ valadoc_api_tree_get_file_path (ValadocApiTree* self,
 	gchar* filename = NULL;
 	gchar** _tmp4_;
 	gchar** _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (basename != NULL, NULL);
 	filename = NULL;
@@ -915,7 +915,7 @@ valadoc_api_tree_get_file_path (ValadocApiTree* self,
 gboolean
 valadoc_api_tree_create_tree (ValadocApiTree* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	valadoc_api_tree_add_dependencies_to_source_package (self);
 	result = TRUE;
@@ -928,7 +928,7 @@ valadoc_api_tree_get_source_package (ValadocApiTree* self)
 	ValadocApiPackage* _tmp0_;
 	ValadocApiPackage* _tmp14_;
 	ValadocApiPackage* _tmp15_;
-	ValadocApiPackage* result = NULL;
+	ValadocApiPackage* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_source_package;
 	if (_tmp0_ == NULL) {
@@ -1516,13 +1516,13 @@ valadoc_api_tree_inherit_doc_container_get_type_once (void)
 static GType
 valadoc_api_tree_inherit_doc_container_get_type (void)
 {
-	static volatile gsize valadoc_api_tree_inherit_doc_container_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_tree_inherit_doc_container_type_id__volatile)) {
+	static volatile gsize valadoc_api_tree_inherit_doc_container_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_tree_inherit_doc_container_type_id__once)) {
 		GType valadoc_api_tree_inherit_doc_container_type_id;
 		valadoc_api_tree_inherit_doc_container_type_id = valadoc_api_tree_inherit_doc_container_get_type_once ();
-		g_once_init_leave (&valadoc_api_tree_inherit_doc_container_type_id__volatile, valadoc_api_tree_inherit_doc_container_type_id);
+		g_once_init_leave (&valadoc_api_tree_inherit_doc_container_type_id__once, valadoc_api_tree_inherit_doc_container_type_id);
 	}
-	return valadoc_api_tree_inherit_doc_container_type_id__volatile;
+	return valadoc_api_tree_inherit_doc_container_type_id__once;
 }
 
 static gpointer
@@ -1749,13 +1749,13 @@ valadoc_api_tree_get_type_once (void)
 GType
 valadoc_api_tree_get_type (void)
 {
-	static volatile gsize valadoc_api_tree_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_tree_type_id__volatile)) {
+	static volatile gsize valadoc_api_tree_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_tree_type_id__once)) {
 		GType valadoc_api_tree_type_id;
 		valadoc_api_tree_type_id = valadoc_api_tree_get_type_once ();
-		g_once_init_leave (&valadoc_api_tree_type_id__volatile, valadoc_api_tree_type_id);
+		g_once_init_leave (&valadoc_api_tree_type_id__once, valadoc_api_tree_type_id);
 	}
-	return valadoc_api_tree_type_id__volatile;
+	return valadoc_api_tree_type_id__once;
 }
 
 gpointer

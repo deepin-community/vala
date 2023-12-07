@@ -91,7 +91,7 @@ public class Vala.Method : Subroutine, Callable {
 	 */
 	public bool returns_modified_pointer {
 		get {
-			return get_attribute ("ReturnsModifiedPointer") != null;
+			return has_attribute ("ReturnsModifiedPointer");
 		}
 		set {
 			set_attribute ("ReturnsModifiedPointer", value);
@@ -133,6 +133,8 @@ public class Vala.Method : Subroutine, Callable {
 
 	public bool entry_point { get; private set; }
 
+	public bool is_main_block { get; private set; }
+
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
@@ -143,7 +145,7 @@ public class Vala.Method : Subroutine, Callable {
 	 */
 	public bool printf_format {
 		get {
-			return get_attribute ("PrintfFormat") != null;
+			return has_attribute ("PrintfFormat");
 		}
 		set {
 			set_attribute ("PrintfFormat", value);
@@ -155,7 +157,7 @@ public class Vala.Method : Subroutine, Callable {
 	 */
 	public bool scanf_format {
 		get {
-			return get_attribute ("ScanfFormat") != null;
+			return has_attribute ("ScanfFormat");
 		}
 		set {
 			set_attribute ("ScanfFormat", value);
@@ -219,6 +221,18 @@ public class Vala.Method : Subroutine, Callable {
 	public Method (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
+	}
+
+	/**
+	 * Creates a new main block method.
+	 *
+	 * @param source_reference  reference to source code
+	 * @return                  newly created method
+	 */
+	public Method.main_block (SourceReference? source_reference = null) {
+		base ("main", source_reference, null);
+		return_type = new VoidType ();
+		is_main_block = true;
 	}
 
 	/**
@@ -577,6 +591,23 @@ public class Vala.Method : Subroutine, Callable {
 		}
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (preconditions != null) {
+			var index = preconditions.index_of (old_node);
+			if (index >= 0) {
+				preconditions[index] = new_node;
+				new_node.parent_node = this;
+			}
+		}
+		if (postconditions != null) {
+			var index = postconditions.index_of (old_node);
+			if (index >= 0) {
+				postconditions[index] = new_node;
+				new_node.parent_node = this;
+			}
+		}
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (base_interface_type == old_type) {
 			base_interface_type = new_type;
@@ -721,10 +752,10 @@ public class Vala.Method : Subroutine, Callable {
 			this_parameter.check (context);
 		}
 
-		if (get_attribute ("DestroysInstance") != null) {
+		if (has_attribute ("DestroysInstance")) {
 			this_parameter.variable_type.value_owned = true;
 		}
-		if (get_attribute ("NoThrow") != null) {
+		if (has_attribute ("NoThrow")) {
 			error_types = null;
 		}
 
@@ -748,7 +779,7 @@ public class Vala.Method : Subroutine, Callable {
 			return false;
 		}
 
-		if (get_attribute ("NoWrapper") != null && !(is_abstract || is_virtual)) {
+		if (has_attribute ("NoWrapper") && !(is_abstract || is_virtual)) {
 			error = true;
 			Report.error (source_reference, "[NoWrapper] methods must be declared abstract or virtual");
 			return false;
@@ -801,6 +832,22 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
+		// auto-convert main block to async if a yield expression is used
+		if (is_main_block && body != null) {
+			body.accept (new TraverseVisitor (node => {
+				if (!(node is Statement || node is Expression || node is Variable || node is CatchClause)) {
+					return TraverseStatus.STOP;
+				}
+				if (node is YieldStatement
+				    || (node is MethodCall && ((MethodCall) node).is_yield_expression)
+				    || (node is ObjectCreationExpression && ((ObjectCreationExpression) node).is_yield_expression)) {
+					coroutine = true;
+					return TraverseStatus.STOP;
+				}
+				return TraverseStatus.CONTINUE;
+			}));
+		}
+
 		if (coroutine && !external_package && !context.has_package ("gio-2.0")) {
 			error = true;
 			Report.error (source_reference, "gio-2.0 package required for async methods");
@@ -827,8 +874,7 @@ public class Vala.Method : Subroutine, Callable {
 			return false;
 		}
 
-		var init_attr = get_attribute ("ModuleInit");
-		if (init_attr != null) {
+		if (has_attribute ("ModuleInit")) {
 			source_reference.file.context.module_init_method = this;
 		}
 
@@ -838,10 +884,23 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
 
-		if (get_attribute ("Print") != null && (parameters.size != 1 || parameters[0].variable_type.type_symbol != context.analyzer.string_type.type_symbol)) {
+		if (has_attribute ("Print") && (parameters.size != 1 || parameters[0].variable_type.type_symbol != context.analyzer.string_type.type_symbol)) {
 			error = true;
 			Report.error (source_reference, "[Print] methods must have exactly one parameter of type `string'");
 		}
+
+		// Collect generic type references
+		// TODO Can this be done in the SymbolResolver?
+		List<GenericType> referenced_generics = new ArrayList<GenericType> ();
+		var traverse = new TraverseVisitor (node => {
+			if (node is GenericType) {
+				referenced_generics.add ((GenericType) node);
+				return TraverseStatus.STOP;
+			}
+			return TraverseStatus.CONTINUE;
+		});
+
+		return_type.accept (traverse);
 
 		var optional_param = false;
 		var params_array_param = false;
@@ -860,6 +919,9 @@ public class Vala.Method : Subroutine, Callable {
 				Report.error (param.source_reference, "Variadic parameters are not supported for async methods");
 				return false;
 			}
+
+			param.accept_children (traverse);
+
 			// TODO: begin and end parameters must be checked separately for coroutines
 			if (coroutine) {
 				continue;
@@ -908,6 +970,24 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
+		// Check if referenced type-parameters are present
+		// TODO Can this be done in the SymbolResolver?
+		if (binding == MemberBinding.STATIC && parent_symbol is Class && !((Class) parent_symbol).is_compact) {
+			Iterator<GenericType> ref_generics_it = referenced_generics.iterator ();
+			while (ref_generics_it.next ()) {
+				var ref_generics = ref_generics_it.get ();
+				foreach (var type_param in get_type_parameters ()) {
+					if (ref_generics.type_parameter.name == type_param.name) {
+						ref_generics_it.remove ();
+					}
+				}
+			}
+			foreach (var type in referenced_generics) {
+				error = true;
+				Report.error (type.source_reference, "The type name `%s' could not be found", type.type_parameter.name);
+			}
+		}
+
 		if (coroutine) {
 			// TODO: async methods with out-parameters before in-parameters are not supported
 			bool requires_pointer = false;
@@ -931,7 +1011,7 @@ public class Vala.Method : Subroutine, Callable {
 				error_type.check (context);
 
 				// check whether error type is at least as accessible as the method
-				if (!context.analyzer.is_type_accessible (this, error_type)) {
+				if (!error_type.is_accessible (this)) {
 					error = true;
 					Report.error (source_reference, "error type `%s' is less accessible than method `%s'", error_type.to_string (), get_full_name ());
 					return false;
@@ -959,16 +1039,11 @@ public class Vala.Method : Subroutine, Callable {
 			body.check (context);
 		}
 
-		if (context.analyzer.current_struct != null) {
-			if (is_abstract || is_virtual || overrides) {
-				error = true;
-				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract", get_full_name ());
-				return false;
-			}
-		} else if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
+		if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
 			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
 			overrides = false;
-		} else if (overrides && base_method == null && base_interface_method == null) {
+		} else if (!error && overrides && base_method == null && base_interface_method == null) {
+			error = true;
 			Report.error (source_reference, "`%s': no suitable method found to override", get_full_name ());
 		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
@@ -998,7 +1073,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		// check whether return type is at least as accessible as the method
-		if (!context.analyzer.is_type_accessible (this, return_type)) {
+		if (!return_type.is_accessible (this)) {
 			error = true;
 			Report.error (source_reference, "return type `%s' is less accessible than method `%s'", return_type.to_string (), get_full_name ());
 			return false;
@@ -1055,7 +1130,7 @@ public class Vala.Method : Subroutine, Callable {
 		// check that DBus methods at least throw "GLib.Error" or "GLib.DBusError, GLib.IOError"
 		if (!(this is CreationMethod) && binding == MemberBinding.INSTANCE
 		    && !overrides && access == SymbolAccessibility.PUBLIC
-		    && parent_symbol is ObjectTypeSymbol && parent_symbol.get_attribute ("DBus") != null) {
+		    && parent_symbol is ObjectTypeSymbol && parent_symbol.has_attribute ("DBus")) {
 			Attribute? dbus_attr = get_attribute ("DBus");
 			if (dbus_attr == null || dbus_attr.get_bool ("visible", true)) {
 				bool throws_gerror = false;
@@ -1103,14 +1178,9 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (source_reference, "\"main\" method cannot be inline");
 			}
-
-			if (coroutine) {
-				error = true;
-				Report.error (source_reference, "\"main\" method cannot be async");
-			}
 		}
 
-		if (get_attribute ("GtkCallback") != null) {
+		if (has_attribute ("GtkCallback")) {
 			used = true;
 		}
 
@@ -1247,8 +1317,7 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
-		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
-		callback_type.source_reference = source_reference;
+		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"), source_reference);
 		callback_type.nullable = true;
 		callback_type.value_owned = true;
 		callback_type.is_called_once = true;

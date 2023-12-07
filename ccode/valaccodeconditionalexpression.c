@@ -25,6 +25,7 @@
 
 #include "valaccode.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_ccode_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_ccode_node_unref (var), NULL)))
 
@@ -224,12 +225,12 @@ vala_ccode_conditional_expression_get_type_once (void)
 GType
 vala_ccode_conditional_expression_get_type (void)
 {
-	static volatile gsize vala_ccode_conditional_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_conditional_expression_type_id__volatile)) {
+	static volatile gsize vala_ccode_conditional_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_conditional_expression_type_id__once)) {
 		GType vala_ccode_conditional_expression_type_id;
 		vala_ccode_conditional_expression_type_id = vala_ccode_conditional_expression_get_type_once ();
-		g_once_init_leave (&vala_ccode_conditional_expression_type_id__volatile, vala_ccode_conditional_expression_type_id);
+		g_once_init_leave (&vala_ccode_conditional_expression_type_id__once, vala_ccode_conditional_expression_type_id);
 	}
-	return vala_ccode_conditional_expression_type_id__volatile;
+	return vala_ccode_conditional_expression_type_id__once;
 }
 

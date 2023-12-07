@@ -359,7 +359,9 @@ public class Vala.BinaryExpression : Expression {
 		    && left.value_type.compatible (context.analyzer.string_type)) {
 			// string concatenation
 
-			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)) {
+			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)
+			    || left is NullLiteral || right is NullLiteral) {
+				// operands cannot be null
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
 				return false;
@@ -465,7 +467,12 @@ public class Vala.BinaryExpression : Expression {
 				DataType resulting_type;
 
 				if (is_chained) {
-					var lbe = (BinaryExpression) left;
+					unowned BinaryExpression lbe = (BinaryExpression) left;
+					if (lbe.right.value_type.compatible (context.analyzer.string_type)
+					    && right.value_type.compatible (context.analyzer.string_type)) {
+						value_type = context.analyzer.bool_type;
+						break;
+					}
 					resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.target_type, right.target_type);
 				} else {
 					resulting_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
@@ -473,7 +480,14 @@ public class Vala.BinaryExpression : Expression {
 
 				if (resulting_type == null) {
 					error = true;
-					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
+					unowned DataType left_type;
+					if (is_chained) {
+						unowned BinaryExpression lbe = (BinaryExpression) left;
+						left_type = lbe.right.value_type;
+					} else {
+						left_type = left.value_type;
+					}
+					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'", left_type.to_string (), right.value_type.to_string ());
 					return false;
 				}
 
@@ -513,17 +527,31 @@ public class Vala.BinaryExpression : Expression {
 				}
 			}
 
-			if (!right.value_type.compatible (left.value_type)
-			    && !left.value_type.compatible (right.value_type)) {
-				Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible", right.value_type.to_string (), left.value_type.to_string ());
-				error = true;
-				return false;
+			DataType resulting_type;
+			if (is_chained) {
+				unowned BinaryExpression lbe = (BinaryExpression) left;
+				resulting_type = context.analyzer.get_arithmetic_result_type (lbe.right.target_type, right.target_type);
+				if (!right.value_type.compatible (lbe.right.value_type)
+				    && !lbe.right.value_type.compatible (right.value_type)) {
+					Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible", right.value_type.to_string (), lbe.right.value_type.to_string ());
+					error = true;
+					return false;
+				}
+			} else {
+				resulting_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
+				if (!right.value_type.compatible (left.value_type)
+				    && !left.value_type.compatible (right.value_type)) {
+					Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible", right.value_type.to_string (), left.value_type.to_string ());
+					error = true;
+					return false;
+				}
 			}
 
-			var resulting_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
 			if (resulting_type != null) {
 				// numeric operation
-				left.target_type = resulting_type.copy ();
+				if (!is_chained) {
+					left.target_type = resulting_type.copy ();
+				}
 				right.target_type = resulting_type.copy ();
 			}
 

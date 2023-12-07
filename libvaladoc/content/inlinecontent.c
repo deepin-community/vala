@@ -51,6 +51,8 @@ struct _ValadocContentInlineContentPrivate {
 static gint ValadocContentInlineContent_private_offset;
 static gpointer valadoc_content_inline_content_parent_class = NULL;
 
+static void valadoc_content_inline_content_set_content (ValadocContentInlineContent* self,
+                                                 ValaList* value);
  G_GNUC_INTERNAL ValadocContentInlineContent* valadoc_content_inline_content_construct (GType object_type);
 static void valadoc_content_inline_content_real_check (ValadocContentContentElement* base,
                                                 ValadocApiTree* api_root,
@@ -75,6 +77,10 @@ static void _vala_valadoc_content_inline_content_get_property (GObject * object,
                                                         guint property_id,
                                                         GValue * value,
                                                         GParamSpec * pspec);
+static void _vala_valadoc_content_inline_content_set_property (GObject * object,
+                                                        guint property_id,
+                                                        const GValue * value,
+                                                        GParamSpec * pspec);
 
 static inline gpointer
 valadoc_content_inline_content_get_instance_private (ValadocContentInlineContent* self)
@@ -91,6 +97,28 @@ valadoc_content_inline_content_get_content (ValadocContentInlineContent* self)
 	_tmp0_ = self->priv->_content;
 	result = _tmp0_;
 	return result;
+}
+
+static gpointer
+_vala_iterable_ref0 (gpointer self)
+{
+	return self ? vala_iterable_ref (self) : NULL;
+}
+
+static void
+valadoc_content_inline_content_set_content (ValadocContentInlineContent* self,
+                                            ValaList* value)
+{
+	ValaList* old_value;
+	g_return_if_fail (self != NULL);
+	old_value = valadoc_content_inline_content_get_content (self);
+	if (old_value != value) {
+		ValaList* _tmp0_;
+		_tmp0_ = _vala_iterable_ref0 (value);
+		_vala_iterable_unref0 (self->priv->_content);
+		self->priv->_content = _tmp0_;
+		g_object_notify_by_pspec ((GObject *) self, valadoc_content_inline_content_properties[VALADOC_CONTENT_INLINE_CONTENT_CONTENT_PROPERTY]);
+	}
 }
 
  G_GNUC_INTERNAL ValadocContentInlineContent*
@@ -206,43 +234,41 @@ static gboolean
 valadoc_content_inline_content_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentInlineContent * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentInlineContent*) base;
 	{
 		ValaList* _item_list = NULL;
 		ValaList* _tmp0_;
-		ValaList* _tmp1_;
 		gint _item_size = 0;
-		ValaList* _tmp2_;
+		ValaList* _tmp1_;
+		gint _tmp2_;
 		gint _tmp3_;
-		gint _tmp4_;
 		gint _item_index = 0;
-		_tmp0_ = valadoc_content_inline_content_get_content (self);
-		_tmp1_ = _tmp0_;
-		_item_list = _tmp1_;
-		_tmp2_ = _item_list;
-		_tmp3_ = vala_collection_get_size ((ValaCollection*) _tmp2_);
-		_tmp4_ = _tmp3_;
-		_item_size = _tmp4_;
+		_tmp0_ = self->priv->_content;
+		_item_list = _tmp0_;
+		_tmp1_ = _item_list;
+		_tmp2_ = vala_collection_get_size ((ValaCollection*) _tmp1_);
+		_tmp3_ = _tmp2_;
+		_item_size = _tmp3_;
 		_item_index = -1;
 		while (TRUE) {
+			gint _tmp4_;
 			gint _tmp5_;
-			gint _tmp6_;
 			ValadocContentInline* item = NULL;
-			ValaList* _tmp7_;
-			gpointer _tmp8_;
-			ValadocContentInline* _tmp9_;
+			ValaList* _tmp6_;
+			gpointer _tmp7_;
+			ValadocContentInline* _tmp8_;
 			_item_index = _item_index + 1;
-			_tmp5_ = _item_index;
-			_tmp6_ = _item_size;
-			if (!(_tmp5_ < _tmp6_)) {
+			_tmp4_ = _item_index;
+			_tmp5_ = _item_size;
+			if (!(_tmp4_ < _tmp5_)) {
 				break;
 			}
-			_tmp7_ = _item_list;
-			_tmp8_ = vala_list_get (_tmp7_, _item_index);
-			item = (ValadocContentInline*) _tmp8_;
-			_tmp9_ = item;
-			if (!valadoc_content_content_element_is_empty ((ValadocContentContentElement*) _tmp9_)) {
+			_tmp6_ = _item_list;
+			_tmp7_ = vala_list_get (_tmp6_, _item_index);
+			item = (ValadocContentInline*) _tmp7_;
+			_tmp8_ = item;
+			if (!valadoc_content_content_element_is_empty ((ValadocContentContentElement*) _tmp8_)) {
 				result = FALSE;
 				_g_object_unref0 (item);
 				return result;
@@ -282,13 +308,15 @@ valadoc_content_inline_content_constructor (GType type,
 	ValadocContentInlineContent * self;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
+	ValaArrayList* _tmp2_;
 	parent_class = G_OBJECT_CLASS (valadoc_content_inline_content_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, VALADOC_CONTENT_TYPE_INLINE_CONTENT, ValadocContentInlineContent);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_CONTENT_TYPE_INLINE, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
-	_vala_iterable_unref0 (self->priv->_content);
-	self->priv->_content = (ValaList*) _tmp1_;
+	_tmp2_ = _tmp1_;
+	valadoc_content_inline_content_set_content (self, (ValaList*) _tmp2_);
+	_vala_iterable_unref0 (_tmp2_);
 	return obj;
 }
 
@@ -302,6 +330,7 @@ valadoc_content_inline_content_class_init (ValadocContentInlineContentClass * kl
 	((ValadocContentContentElementClass *) klass)->accept_children = (void (*) (ValadocContentContentElement*, ValadocContentContentVisitor*)) valadoc_content_inline_content_real_accept_children;
 	((ValadocContentContentElementClass *) klass)->is_empty = (gboolean (*) (ValadocContentContentElement*)) valadoc_content_inline_content_real_is_empty;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_content_inline_content_get_property;
+	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_content_inline_content_set_property;
 	G_OBJECT_CLASS (klass)->constructor = valadoc_content_inline_content_constructor;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_content_inline_content_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), VALADOC_CONTENT_INLINE_CONTENT_CONTENT_PROPERTY, valadoc_content_inline_content_properties[VALADOC_CONTENT_INLINE_CONTENT_CONTENT_PROPERTY] = vala_param_spec_iterable ("content", "content", "content", VALA_TYPE_LIST, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
@@ -336,13 +365,13 @@ valadoc_content_inline_content_get_type_once (void)
 GType
 valadoc_content_inline_content_get_type (void)
 {
-	static volatile gsize valadoc_content_inline_content_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_inline_content_type_id__volatile)) {
+	static volatile gsize valadoc_content_inline_content_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_inline_content_type_id__once)) {
 		GType valadoc_content_inline_content_type_id;
 		valadoc_content_inline_content_type_id = valadoc_content_inline_content_get_type_once ();
-		g_once_init_leave (&valadoc_content_inline_content_type_id__volatile, valadoc_content_inline_content_type_id);
+		g_once_init_leave (&valadoc_content_inline_content_type_id__once, valadoc_content_inline_content_type_id);
 	}
-	return valadoc_content_inline_content_type_id__volatile;
+	return valadoc_content_inline_content_type_id__once;
 }
 
 static void
@@ -356,6 +385,24 @@ _vala_valadoc_content_inline_content_get_property (GObject * object,
 	switch (property_id) {
 		case VALADOC_CONTENT_INLINE_CONTENT_CONTENT_PROPERTY:
 		vala_value_set_iterable (value, valadoc_content_inline_content_get_content (self));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+static void
+_vala_valadoc_content_inline_content_set_property (GObject * object,
+                                                   guint property_id,
+                                                   const GValue * value,
+                                                   GParamSpec * pspec)
+{
+	ValadocContentInlineContent * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, VALADOC_CONTENT_TYPE_INLINE_CONTENT, ValadocContentInlineContent);
+	switch (property_id) {
+		case VALADOC_CONTENT_INLINE_CONTENT_CONTENT_PROPERTY:
+		valadoc_content_inline_content_set_content (self, vala_value_get_iterable (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

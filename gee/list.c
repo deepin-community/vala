@@ -222,7 +222,7 @@ static gpointer
 vala_list_real_first (ValaList* self)
 {
 	gpointer _tmp0_;
-	gpointer result = NULL;
+	gpointer result;
 	_tmp0_ = vala_list_get (self, 0);
 	result = _tmp0_;
 	return result;
@@ -251,7 +251,7 @@ vala_list_real_last (ValaList* self)
 	gint _tmp0_;
 	gint _tmp1_;
 	gpointer _tmp2_;
-	gpointer result = NULL;
+	gpointer result;
 	_tmp0_ = vala_collection_get_size ((ValaCollection*) self);
 	_tmp1_ = _tmp0_;
 	_tmp2_ = vala_list_get (self, _tmp1_ - 1);
@@ -419,12 +419,12 @@ vala_list_get_type_once (void)
 GType
 vala_list_get_type (void)
 {
-	static volatile gsize vala_list_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_list_type_id__volatile)) {
+	static volatile gsize vala_list_type_id__once = 0;
+	if (g_once_init_enter (&vala_list_type_id__once)) {
 		GType vala_list_type_id;
 		vala_list_type_id = vala_list_get_type_once ();
-		g_once_init_leave (&vala_list_type_id__volatile, vala_list_type_id);
+		g_once_init_leave (&vala_list_type_id__once, vala_list_type_id);
 	}
-	return vala_list_type_id__volatile;
+	return vala_list_type_id__once;
 }
 

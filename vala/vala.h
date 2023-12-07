@@ -22,6 +22,11 @@ G_BEGIN_DECLS
 #define VALA_EXTERN extern
 #endif
 #endif
+#define VALA_MAJOR_VERSION 0
+#define VALA_MINOR_VERSION 56
+#define VALA_MICRO_VERSION 14
+#define VALA_API_VERSION "0.56"
+#define VALA_BUILD_VERSION "0.56.14"
 
 #define VALA_TYPE_CODE_NODE (vala_code_node_get_type ())
 #define VALA_CODE_NODE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CODE_NODE, ValaCodeNode))
@@ -1571,11 +1576,11 @@ typedef enum  {
 	VALA_GENIE_TOKEN_TYPE_ELSE,
 	VALA_GENIE_TOKEN_TYPE_ENUM,
 	VALA_GENIE_TOKEN_TYPE_ENSURES,
-	VALA_GENIE_TOKEN_TYPE_ERRORDOMAIN,
 	VALA_GENIE_TOKEN_TYPE_EOF,
 	VALA_GENIE_TOKEN_TYPE_EOL,
 	VALA_GENIE_TOKEN_TYPE_EVENT,
 	VALA_GENIE_TOKEN_TYPE_EXCEPT,
+	VALA_GENIE_TOKEN_TYPE_EXCEPTION,
 	VALA_GENIE_TOKEN_TYPE_EXTERN,
 	VALA_GENIE_TOKEN_TYPE_FALSE,
 	VALA_GENIE_TOKEN_TYPE_FINAL,
@@ -1813,6 +1818,8 @@ typedef enum  {
 typedef struct _ValaParser ValaParser;
 typedef struct _ValaParserClass ValaParserClass;
 typedef struct _ValaParserPrivate ValaParserPrivate;
+
+#define VALA_TYPE_PARSE_ERROR (vala_parse_error_get_type ())
 typedef struct _ValaPhiFunctionPrivate ValaPhiFunctionPrivate;
 typedef struct _ValaPointerIndirectionPrivate ValaPointerIndirectionPrivate;
 
@@ -1955,6 +1962,7 @@ typedef enum  {
 	VALA_TOKEN_TYPE_OVERRIDE,
 	VALA_TOKEN_TYPE_OWNED,
 	VALA_TOKEN_TYPE_PARAMS,
+	VALA_TOKEN_TYPE_PARTIAL,
 	VALA_TOKEN_TYPE_PERCENT,
 	VALA_TOKEN_TYPE_PLUS,
 	VALA_TOKEN_TYPE_PRIVATE,
@@ -2480,6 +2488,9 @@ struct _ValaCallableExpressionIface {
 	GTypeInterface parent_iface;
 	gboolean (*get_is_yield_expression) (ValaCallableExpression* self);
 	void (*set_is_yield_expression) (ValaCallableExpression* self, gboolean value);
+	gboolean (*get_is_chainup) (ValaCallableExpression* self);
+	void (*set_is_chainup) (ValaCallableExpression* self, gboolean value);
+	ValaExpression* (*get_call) (ValaCallableExpression* self);
 	void (*add_argument) (ValaCallableExpression* self, ValaExpression* arg);
 	ValaList* (*get_argument_list) (ValaCallableExpression* self);
 };
@@ -2675,7 +2686,7 @@ struct _ValaCodeGeneratorClass {
 	ValaTargetValue* (*load_parameter) (ValaCodeGenerator* self, ValaParameter* param, ValaExpression* expr);
 	void (*store_parameter) (ValaCodeGenerator* self, ValaParameter* param, ValaTargetValue* value, gboolean capturing_parameter, ValaSourceReference* source_reference);
 	ValaTargetValue* (*load_field) (ValaCodeGenerator* self, ValaField* field, ValaTargetValue* instance, ValaExpression* expr);
-	void (*store_field) (ValaCodeGenerator* self, ValaField* field, ValaTargetValue* instance, ValaTargetValue* value, ValaSourceReference* source_reference);
+	void (*store_field) (ValaCodeGenerator* self, ValaField* field, ValaTargetValue* instance, ValaTargetValue* value, ValaSourceReference* source_reference, gboolean initializer);
 };
 
 struct _ValaAttributeCache {
@@ -3310,6 +3321,7 @@ typedef enum  {
 	VALA_PARSE_ERROR_SYNTAX
 } ValaParseError;
 #define VALA_PARSE_ERROR vala_parse_error_quark ()
+
 struct _ValaPhiFunction {
 	GTypeInstance parent_instance;
 	volatile int ref_count;
@@ -3476,6 +3488,7 @@ struct _ValaSemanticAnalyzer {
 	ValaDataType* garray_type;
 	ValaDataType* gvaluearray_type;
 	ValaDataType* genericarray_type;
+	ValaDataType* gsequence_type;
 	ValaClass* gerror_type;
 	ValaDataType* list_type;
 	ValaDataType* tuple_type;
@@ -3919,6 +3932,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaDestructor, vala_code_node_unref)
 VALA_EXTERN GType vala_parameter_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaParameter, vala_code_node_unref)
 VALA_EXTERN GType vala_callable_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCallable, vala_code_node_unref)
 VALA_EXTERN GType vala_array_copy_method_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaArrayCopyMethod, vala_code_node_unref)
 VALA_EXTERN ValaArrayCopyMethod* vala_array_copy_method_new (ValaSourceReference* source_reference);
@@ -3983,8 +3997,6 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaReferenceType, vala_code_node_unref)
 VALA_EXTERN GType vala_array_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaArrayType, vala_code_node_unref)
 VALA_EXTERN ValaDataType* vala_array_type_get_element_type (ValaArrayType* self);
-VALA_EXTERN void vala_array_type_set_element_type (ValaArrayType* self,
-                                       ValaDataType* value);
 VALA_EXTERN ValaDataType* vala_array_type_get_length_type (ValaArrayType* self);
 VALA_EXTERN void vala_array_type_set_length_type (ValaArrayType* self,
                                       ValaDataType* value);
@@ -4139,6 +4151,7 @@ VALA_EXTERN ValaBinaryExpression* vala_binary_expression_construct_chained (GTyp
                                                                 ValaSourceReference* source);
 VALA_EXTERN const gchar* vala_binary_operator_to_string (ValaBinaryOperator self);
 VALA_EXTERN GType vala_statement_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaStatement, vala_code_node_unref)
 VALA_EXTERN GType vala_block_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaBlock, vala_code_node_unref)
 VALA_EXTERN gboolean vala_block_get_contains_jump_statement (ValaBlock* self);
@@ -4189,9 +4202,11 @@ VALA_EXTERN GType vala_value_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaValueType, vala_code_node_unref)
 VALA_EXTERN GType vala_boolean_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaBooleanType, vala_code_node_unref)
-VALA_EXTERN ValaBooleanType* vala_boolean_type_new (ValaStruct* type_symbol);
+VALA_EXTERN ValaBooleanType* vala_boolean_type_new (ValaStruct* type_symbol,
+                                        ValaSourceReference* source_reference);
 VALA_EXTERN ValaBooleanType* vala_boolean_type_construct (GType object_type,
-                                              ValaStruct* type_symbol);
+                                              ValaStruct* type_symbol,
+                                              ValaSourceReference* source_reference);
 VALA_EXTERN GType vala_break_statement_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaBreakStatement, vala_code_node_unref)
 VALA_EXTERN ValaBreakStatement* vala_break_statement_new (ValaSourceReference* source);
@@ -4204,9 +4219,14 @@ VALA_EXTERN void vala_callable_add_parameter (ValaCallable* self,
                                   ValaParameter* param);
 VALA_EXTERN ValaList* vala_callable_get_parameters (ValaCallable* self);
 VALA_EXTERN GType vala_callable_expression_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCallableExpression, vala_code_node_unref)
 VALA_EXTERN gboolean vala_callable_expression_get_is_yield_expression (ValaCallableExpression* self);
 VALA_EXTERN void vala_callable_expression_set_is_yield_expression (ValaCallableExpression* self,
                                                        gboolean value);
+VALA_EXTERN gboolean vala_callable_expression_get_is_chainup (ValaCallableExpression* self);
+VALA_EXTERN void vala_callable_expression_set_is_chainup (ValaCallableExpression* self,
+                                              gboolean value);
+VALA_EXTERN ValaExpression* vala_callable_expression_get_call (ValaCallableExpression* self);
 VALA_EXTERN void vala_callable_expression_add_argument (ValaCallableExpression* self,
                                             ValaExpression* arg);
 VALA_EXTERN ValaList* vala_callable_expression_get_argument_list (ValaCallableExpression* self);
@@ -4214,7 +4234,8 @@ VALA_EXTERN GType vala_callable_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCallableType, vala_code_node_unref)
 VALA_EXTERN ValaCallable* vala_callable_type_get_callable_symbol (ValaCallableType* self);
 VALA_EXTERN ValaCallableType* vala_callable_type_construct (GType object_type,
-                                                ValaSymbol* symbol);
+                                                ValaSymbol* symbol,
+                                                ValaSourceReference* source_reference);
 VALA_EXTERN GType vala_cast_expression_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCastExpression, vala_code_node_unref)
 VALA_EXTERN ValaExpression* vala_cast_expression_get_inner (ValaCastExpression* self);
@@ -4270,6 +4291,9 @@ VALA_EXTERN void vala_class_set_base_class (ValaClass* self,
 VALA_EXTERN gboolean vala_class_get_is_abstract (ValaClass* self);
 VALA_EXTERN void vala_class_set_is_abstract (ValaClass* self,
                                  gboolean value);
+VALA_EXTERN gboolean vala_class_get_is_partial (ValaClass* self);
+VALA_EXTERN void vala_class_set_is_partial (ValaClass* self,
+                                gboolean value);
 VALA_EXTERN gboolean vala_class_get_is_sealed (ValaClass* self);
 VALA_EXTERN void vala_class_set_is_sealed (ValaClass* self,
                                gboolean value);
@@ -4324,9 +4348,11 @@ VALA_EXTERN gboolean vala_class_implements (ValaClass* self,
 VALA_EXTERN GType vala_class_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaClassType, vala_code_node_unref)
 VALA_EXTERN ValaClass* vala_class_type_get_class_symbol (ValaClassType* self);
-VALA_EXTERN ValaClassType* vala_class_type_new (ValaClass* class_symbol);
+VALA_EXTERN ValaClassType* vala_class_type_new (ValaClass* class_symbol,
+                                    ValaSourceReference* source_reference);
 VALA_EXTERN ValaClassType* vala_class_type_construct (GType object_type,
-                                          ValaClass* class_symbol);
+                                          ValaClass* class_symbol,
+                                          ValaSourceReference* source_reference);
 VALA_EXTERN gboolean vala_code_context_get_assert (ValaCodeContext* self);
 VALA_EXTERN void vala_code_context_set_assert (ValaCodeContext* self,
                                    gboolean value);
@@ -4697,7 +4723,8 @@ VALA_EXTERN void vala_code_generator_store_field (ValaCodeGenerator* self,
                                       ValaField* field,
                                       ValaTargetValue* instance,
                                       ValaTargetValue* value,
-                                      ValaSourceReference* source_reference);
+                                      ValaSourceReference* source_reference,
+                                      gboolean initializer);
 VALA_EXTERN ValaCodeGenerator* vala_code_generator_construct (GType object_type);
 VALA_EXTERN ValaCodeNode* vala_code_node_get_parent_node (ValaCodeNode* self);
 VALA_EXTERN void vala_code_node_set_parent_node (ValaCodeNode* self,
@@ -4732,6 +4759,10 @@ VALA_EXTERN void vala_code_node_replace_expression (ValaCodeNode* self,
                                         ValaExpression* new_node);
 VALA_EXTERN ValaAttribute* vala_code_node_get_attribute (ValaCodeNode* self,
                                              const gchar* name);
+VALA_EXTERN void vala_code_node_add_attribute (ValaCodeNode* self,
+                                   ValaAttribute* a);
+VALA_EXTERN gboolean vala_code_node_has_attribute (ValaCodeNode* self,
+                                       const gchar* attribute);
 VALA_EXTERN gboolean vala_code_node_has_attribute_argument (ValaCodeNode* self,
                                                 const gchar* attribute,
                                                 const gchar* argument);
@@ -5034,11 +5065,7 @@ VALA_EXTERN ValaConditionalExpression* vala_conditional_expression_construct (GT
                                                                   ValaExpression* false_expr,
                                                                   ValaSourceReference* source);
 VALA_EXTERN ValaDataType* vala_constant_get_type_reference (ValaConstant* self);
-VALA_EXTERN void vala_constant_set_type_reference (ValaConstant* self,
-                                       ValaDataType* value);
 VALA_EXTERN ValaExpression* vala_constant_get_value (ValaConstant* self);
-VALA_EXTERN void vala_constant_set_value (ValaConstant* self,
-                              ValaExpression* value);
 VALA_EXTERN ValaConstant* vala_constant_new (const gchar* name,
                                  ValaDataType* type_reference,
                                  ValaExpression* value,
@@ -5096,7 +5123,8 @@ VALA_EXTERN gboolean vala_data_type_get_is_dynamic (ValaDataType* self);
 VALA_EXTERN void vala_data_type_set_is_dynamic (ValaDataType* self,
                                     gboolean value);
 VALA_EXTERN ValaDataType* vala_data_type_construct_with_symbol (GType object_type,
-                                                    ValaSymbol* symbol);
+                                                    ValaSymbol* symbol,
+                                                    ValaSourceReference* source_reference);
 VALA_EXTERN void vala_data_type_add_type_argument (ValaDataType* self,
                                        ValaDataType* arg);
 VALA_EXTERN ValaList* vala_data_type_get_type_arguments (ValaDataType* self);
@@ -5191,9 +5219,11 @@ VALA_EXTERN ValaDelegate* vala_delegate_type_get_delegate_symbol (ValaDelegateTy
 VALA_EXTERN gboolean vala_delegate_type_get_is_called_once (ValaDelegateType* self);
 VALA_EXTERN void vala_delegate_type_set_is_called_once (ValaDelegateType* self,
                                             gboolean value);
-VALA_EXTERN ValaDelegateType* vala_delegate_type_new (ValaDelegate* delegate_symbol);
+VALA_EXTERN ValaDelegateType* vala_delegate_type_new (ValaDelegate* delegate_symbol,
+                                          ValaSourceReference* source_reference);
 VALA_EXTERN ValaDelegateType* vala_delegate_type_construct (GType object_type,
-                                                ValaDelegate* delegate_symbol);
+                                                ValaDelegate* delegate_symbol,
+                                                ValaSourceReference* source_reference);
 VALA_EXTERN ValaExpression* vala_delete_statement_get_expression (ValaDeleteStatement* self);
 VALA_EXTERN ValaDeleteStatement* vala_delete_statement_new (ValaExpression* expression,
                                                 ValaSourceReference* source_reference);
@@ -5219,8 +5249,6 @@ VALA_EXTERN ValaDoStatement* vala_do_statement_construct (GType object_type,
 VALA_EXTERN GType vala_dynamic_method_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaDynamicMethod, vala_code_node_unref)
 VALA_EXTERN ValaDataType* vala_dynamic_method_get_dynamic_type (ValaDynamicMethod* self);
-VALA_EXTERN void vala_dynamic_method_set_dynamic_type (ValaDynamicMethod* self,
-                                           ValaDataType* value);
 VALA_EXTERN ValaMethodCall* vala_dynamic_method_get_invocation (ValaDynamicMethod* self);
 VALA_EXTERN void vala_dynamic_method_set_invocation (ValaDynamicMethod* self,
                                          ValaMethodCall* value);
@@ -5238,8 +5266,6 @@ VALA_EXTERN ValaDynamicMethod* vala_dynamic_method_construct (GType object_type,
 VALA_EXTERN GType vala_dynamic_property_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaDynamicProperty, vala_code_node_unref)
 VALA_EXTERN ValaDataType* vala_dynamic_property_get_dynamic_type (ValaDynamicProperty* self);
-VALA_EXTERN void vala_dynamic_property_set_dynamic_type (ValaDynamicProperty* self,
-                                             ValaDataType* value);
 VALA_EXTERN ValaDynamicProperty* vala_dynamic_property_new (ValaDataType* dynamic_type,
                                                 const gchar* name,
                                                 ValaSourceReference* source_reference,
@@ -5252,8 +5278,6 @@ VALA_EXTERN ValaDynamicProperty* vala_dynamic_property_construct (GType object_t
 VALA_EXTERN GType vala_dynamic_signal_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaDynamicSignal, vala_code_node_unref)
 VALA_EXTERN ValaDataType* vala_dynamic_signal_get_dynamic_type (ValaDynamicSignal* self);
-VALA_EXTERN void vala_dynamic_signal_set_dynamic_type (ValaDynamicSignal* self,
-                                           ValaDataType* value);
 VALA_EXTERN ValaExpression* vala_dynamic_signal_get_handler (ValaDynamicSignal* self);
 VALA_EXTERN void vala_dynamic_signal_set_handler (ValaDynamicSignal* self,
                                       ValaExpression* value);
@@ -5310,14 +5334,17 @@ VALA_EXTERN ValaEnumValue* vala_enum_value_construct (GType object_type,
                                           ValaComment* comment);
 VALA_EXTERN GType vala_enum_value_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaEnumValueType, vala_code_node_unref)
-VALA_EXTERN ValaEnumValueType* vala_enum_value_type_new (ValaEnum* type_symbol);
+VALA_EXTERN ValaEnumValueType* vala_enum_value_type_new (ValaEnum* type_symbol,
+                                             ValaSourceReference* source_reference);
 VALA_EXTERN ValaEnumValueType* vala_enum_value_type_construct (GType object_type,
-                                                   ValaEnum* type_symbol);
+                                                   ValaEnum* type_symbol,
+                                                   ValaSourceReference* source_reference);
 VALA_EXTERN ValaMethod* vala_enum_value_type_get_to_string_method (ValaEnumValueType* self);
 VALA_EXTERN ValaExpression* vala_error_code_get_value (ValaErrorCode* self);
 VALA_EXTERN void vala_error_code_set_value (ValaErrorCode* self,
                                 ValaExpression* value);
 VALA_EXTERN ValaConstant* vala_error_code_get_code (ValaErrorCode* self);
+VALA_EXTERN const gchar* vala_error_code_get_nick (ValaErrorCode* self);
 VALA_EXTERN ValaErrorCode* vala_error_code_new (const gchar* name,
                                     ValaSourceReference* source_reference,
                                     ValaComment* comment);
@@ -5418,14 +5445,18 @@ VALA_EXTERN ValaField* vala_field_construct (GType object_type,
 VALA_EXTERN GType vala_field_prototype_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaFieldPrototype, vala_code_node_unref)
 VALA_EXTERN ValaField* vala_field_prototype_get_field_symbol (ValaFieldPrototype* self);
-VALA_EXTERN ValaFieldPrototype* vala_field_prototype_new (ValaField* field_symbol);
+VALA_EXTERN ValaFieldPrototype* vala_field_prototype_new (ValaField* field_symbol,
+                                              ValaSourceReference* source_reference);
 VALA_EXTERN ValaFieldPrototype* vala_field_prototype_construct (GType object_type,
-                                                    ValaField* field_symbol);
+                                                    ValaField* field_symbol,
+                                                    ValaSourceReference* source_reference);
 VALA_EXTERN GType vala_floating_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaFloatingType, vala_code_node_unref)
-VALA_EXTERN ValaFloatingType* vala_floating_type_new (ValaStruct* type_symbol);
+VALA_EXTERN ValaFloatingType* vala_floating_type_new (ValaStruct* type_symbol,
+                                          ValaSourceReference* source_reference);
 VALA_EXTERN ValaFloatingType* vala_floating_type_construct (GType object_type,
-                                                ValaStruct* type_symbol);
+                                                ValaStruct* type_symbol,
+                                                ValaSourceReference* source_reference);
 VALA_EXTERN ValaFlowAnalyzer* vala_flow_analyzer_new (void);
 VALA_EXTERN ValaFlowAnalyzer* vala_flow_analyzer_construct (GType object_type);
 VALA_EXTERN void vala_flow_analyzer_analyze (ValaFlowAnalyzer* self,
@@ -5483,11 +5514,11 @@ VALA_EXTERN ValaGenericDupField* vala_generic_dup_field_construct (GType object_
 VALA_EXTERN GType vala_generic_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaGenericType, vala_code_node_unref)
 VALA_EXTERN ValaTypeParameter* vala_generic_type_get_type_parameter (ValaGenericType* self);
-VALA_EXTERN void vala_generic_type_set_type_parameter (ValaGenericType* self,
-                                           ValaTypeParameter* value);
-VALA_EXTERN ValaGenericType* vala_generic_type_new (ValaTypeParameter* type_parameter);
+VALA_EXTERN ValaGenericType* vala_generic_type_new (ValaTypeParameter* type_parameter,
+                                        ValaSourceReference* source_reference);
 VALA_EXTERN ValaGenericType* vala_generic_type_construct (GType object_type,
-                                              ValaTypeParameter* type_parameter);
+                                              ValaTypeParameter* type_parameter,
+                                              ValaSourceReference* source_reference);
 VALA_EXTERN GType vala_genie_parser_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaGenieParser, vala_code_visitor_unref)
 VALA_EXTERN ValaGenieParser* vala_genie_parser_new (void);
@@ -5567,11 +5598,13 @@ VALA_EXTERN GType vala_integer_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaIntegerType, vala_code_node_unref)
 VALA_EXTERN ValaIntegerType* vala_integer_type_new (ValaStruct* type_symbol,
                                         const gchar* literal_value,
-                                        const gchar* literal_type_name);
+                                        const gchar* literal_type_name,
+                                        ValaSourceReference* source_reference);
 VALA_EXTERN ValaIntegerType* vala_integer_type_construct (GType object_type,
                                               ValaStruct* type_symbol,
                                               const gchar* literal_value,
-                                              const gchar* literal_type_name);
+                                              const gchar* literal_type_name,
+                                              ValaSourceReference* source_reference);
 VALA_EXTERN ValaInterface* vala_interface_new (const gchar* name,
                                    ValaSourceReference* source_reference,
                                    ValaComment* comment);
@@ -5586,9 +5619,11 @@ VALA_EXTERN ValaList* vala_interface_get_virtuals (ValaInterface* self);
 VALA_EXTERN GType vala_interface_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaInterfaceType, vala_code_node_unref)
 VALA_EXTERN ValaInterface* vala_interface_type_get_interface_symbol (ValaInterfaceType* self);
-VALA_EXTERN ValaInterfaceType* vala_interface_type_new (ValaInterface* interface_symbol);
+VALA_EXTERN ValaInterfaceType* vala_interface_type_new (ValaInterface* interface_symbol,
+                                            ValaSourceReference* source_reference);
 VALA_EXTERN ValaInterfaceType* vala_interface_type_construct (GType object_type,
-                                                  ValaInterface* interface_symbol);
+                                                  ValaInterface* interface_symbol,
+                                                  ValaSourceReference* source_reference);
 VALA_EXTERN GType vala_invalid_expression_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaInvalidExpression, vala_code_node_unref)
 VALA_EXTERN ValaInvalidExpression* vala_invalid_expression_new (void);
@@ -5680,6 +5715,8 @@ VALA_EXTERN ValaMarkupReader* vala_markup_reader_new_from_string (const gchar* f
 VALA_EXTERN ValaMarkupReader* vala_markup_reader_construct_from_string (GType object_type,
                                                             const gchar* filename,
                                                             const gchar* content);
+VALA_EXTERN gboolean vala_markup_reader_has_attribute (ValaMarkupReader* self,
+                                           const gchar* attr);
 VALA_EXTERN gchar* vala_markup_reader_get_attribute (ValaMarkupReader* self,
                                          const gchar* attr);
 VALA_EXTERN ValaMap* vala_markup_reader_get_attributes (ValaMarkupReader* self);
@@ -5703,9 +5740,6 @@ VALA_EXTERN void vala_member_access_set_prototype_access (ValaMemberAccess* self
 VALA_EXTERN gboolean vala_member_access_get_tainted_access (ValaMemberAccess* self);
 VALA_EXTERN void vala_member_access_set_tainted_access (ValaMemberAccess* self,
                                             gboolean value);
-VALA_EXTERN gboolean vala_member_access_get_creation_member (ValaMemberAccess* self);
-VALA_EXTERN void vala_member_access_set_creation_member (ValaMemberAccess* self,
-                                             gboolean value);
 VALA_EXTERN gboolean vala_member_access_get_qualified (ValaMemberAccess* self);
 VALA_EXTERN void vala_member_access_set_qualified (ValaMemberAccess* self,
                                        gboolean value);
@@ -5773,6 +5807,7 @@ VALA_EXTERN ValaDataType* vala_method_get_base_interface_type (ValaMethod* self)
 VALA_EXTERN void vala_method_set_base_interface_type (ValaMethod* self,
                                           ValaDataType* value);
 VALA_EXTERN gboolean vala_method_get_entry_point (ValaMethod* self);
+VALA_EXTERN gboolean vala_method_get_is_main_block (ValaMethod* self);
 VALA_EXTERN ValaParameter* vala_method_get_this_parameter (ValaMethod* self);
 VALA_EXTERN void vala_method_set_this_parameter (ValaMethod* self,
                                      ValaParameter* value);
@@ -5809,11 +5844,14 @@ VALA_EXTERN ValaMethod* vala_method_construct (GType object_type,
                                    ValaDataType* return_type,
                                    ValaSourceReference* source_reference,
                                    ValaComment* comment);
+VALA_EXTERN ValaMethod* vala_method_new_main_block (ValaSourceReference* source_reference);
+VALA_EXTERN ValaMethod* vala_method_construct_main_block (GType object_type,
+                                              ValaSourceReference* source_reference);
 VALA_EXTERN void vala_method_clear_parameters (ValaMethod* self);
 VALA_EXTERN gboolean vala_method_is_variadic (ValaMethod* self);
 VALA_EXTERN gboolean vala_method_compatible (ValaMethod* self,
                                  ValaMethod* base_method,
-                                 gchar* * invalid_match);
+                                 gchar** invalid_match);
 VALA_EXTERN gboolean vala_method_compatible_no_error (ValaMethod* self,
                                           ValaMethod* base_method);
 VALA_EXTERN void vala_method_add_type_parameter (ValaMethod* self,
@@ -5841,10 +5879,8 @@ VALA_EXTERN void vala_method_get_captured_variables (ValaMethod* self,
                                          ValaCollection* variables);
 VALA_EXTERN gint vala_method_get_format_arg_index (ValaMethod* self);
 VALA_EXTERN gboolean vala_method_has_error_type_parameter (ValaMethod* self);
-VALA_EXTERN ValaExpression* vala_method_call_get_call (ValaMethodCall* self);
 VALA_EXTERN gboolean vala_method_call_get_is_assert (ValaMethodCall* self);
 VALA_EXTERN gboolean vala_method_call_get_is_constructv_chainup (ValaMethodCall* self);
-VALA_EXTERN gboolean vala_method_call_get_is_chainup (ValaMethodCall* self);
 VALA_EXTERN ValaMethodCall* vala_method_call_new (ValaExpression* call,
                                       ValaSourceReference* source_reference);
 VALA_EXTERN ValaMethodCall* vala_method_call_construct (GType object_type,
@@ -5854,9 +5890,11 @@ VALA_EXTERN ValaStringLiteral* vala_method_call_get_format_literal (ValaMethodCa
 VALA_EXTERN GType vala_method_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaMethodType, vala_code_node_unref)
 VALA_EXTERN ValaMethod* vala_method_type_get_method_symbol (ValaMethodType* self);
-VALA_EXTERN ValaMethodType* vala_method_type_new (ValaMethod* method_symbol);
+VALA_EXTERN ValaMethodType* vala_method_type_new (ValaMethod* method_symbol,
+                                      ValaSourceReference* source_reference);
 VALA_EXTERN ValaMethodType* vala_method_type_construct (GType object_type,
-                                            ValaMethod* method_symbol);
+                                            ValaMethod* method_symbol,
+                                            ValaSourceReference* source_reference);
 VALA_EXTERN const gchar* vala_named_argument_get_name (ValaNamedArgument* self);
 VALA_EXTERN ValaExpression* vala_named_argument_get_inner (ValaNamedArgument* self);
 VALA_EXTERN ValaNamedArgument* vala_named_argument_new (const gchar* name,
@@ -5910,9 +5948,11 @@ VALA_EXTERN ValaList* vala_object_creation_expression_get_object_initializer (Va
 VALA_EXTERN GType vala_object_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaObjectType, vala_code_node_unref)
 VALA_EXTERN ValaObjectTypeSymbol* vala_object_type_get_object_type_symbol (ValaObjectType* self);
-VALA_EXTERN ValaObjectType* vala_object_type_new (ValaObjectTypeSymbol* type_symbol);
+VALA_EXTERN ValaObjectType* vala_object_type_new (ValaObjectTypeSymbol* type_symbol,
+                                      ValaSourceReference* source_reference);
 VALA_EXTERN ValaObjectType* vala_object_type_construct (GType object_type,
-                                            ValaObjectTypeSymbol* type_symbol);
+                                            ValaObjectTypeSymbol* type_symbol,
+                                            ValaSourceReference* source_reference);
 VALA_EXTERN ValaObjectTypeSymbol* vala_object_type_symbol_construct (GType object_type,
                                                          const gchar* name,
                                                          ValaSourceReference* source_reference,
@@ -5971,6 +6011,7 @@ VALA_EXTERN void vala_parser_parse (ValaParser* self,
 VALA_EXTERN void vala_parser_parse_file (ValaParser* self,
                              ValaSourceFile* source_file);
 VALA_EXTERN GQuark vala_parse_error_quark (void);
+VALA_EXTERN GType vala_parse_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN ValaVariable* vala_phi_function_get_original_variable (ValaPhiFunction* self);
 VALA_EXTERN ValaList* vala_phi_function_get_operands (ValaPhiFunction* self);
 VALA_EXTERN ValaPhiFunction* vala_phi_function_new (ValaVariable* variable,
@@ -6077,20 +6118,21 @@ VALA_EXTERN ValaProperty* vala_property_construct (GType object_type,
                                        ValaComment* comment);
 VALA_EXTERN gboolean vala_property_compatible (ValaProperty* self,
                                    ValaProperty* base_property,
-                                   gchar* * invalid_match);
+                                   gchar** invalid_match);
 VALA_EXTERN GType vala_property_prototype_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaPropertyPrototype, vala_code_node_unref)
 VALA_EXTERN ValaProperty* vala_property_prototype_get_property_symbol (ValaPropertyPrototype* self);
-VALA_EXTERN ValaPropertyPrototype* vala_property_prototype_new (ValaProperty* property_symbol);
+VALA_EXTERN ValaPropertyPrototype* vala_property_prototype_new (ValaProperty* property_symbol,
+                                                    ValaSourceReference* source_reference);
 VALA_EXTERN ValaPropertyPrototype* vala_property_prototype_construct (GType object_type,
-                                                          ValaProperty* property_symbol);
+                                                          ValaProperty* property_symbol,
+                                                          ValaSourceReference* source_reference);
 VALA_EXTERN const gchar* vala_real_literal_get_value (ValaRealLiteral* self);
 VALA_EXTERN ValaRealLiteral* vala_real_literal_new (const gchar* r,
                                         ValaSourceReference* source);
 VALA_EXTERN ValaRealLiteral* vala_real_literal_construct (GType object_type,
                                               const gchar* r,
                                               ValaSourceReference* source);
-VALA_EXTERN gchar* vala_real_literal_get_type_name (ValaRealLiteral* self);
 VALA_EXTERN ValaExpression* vala_reference_transfer_expression_get_inner (ValaReferenceTransferExpression* self);
 VALA_EXTERN ValaReferenceTransferExpression* vala_reference_transfer_expression_new (ValaExpression* inner,
                                                                          ValaSourceReference* source_reference);
@@ -6098,7 +6140,8 @@ VALA_EXTERN ValaReferenceTransferExpression* vala_reference_transfer_expression_
                                                                                ValaExpression* inner,
                                                                                ValaSourceReference* source_reference);
 VALA_EXTERN ValaReferenceType* vala_reference_type_construct (GType object_type,
-                                                  ValaSymbol* symbol);
+                                                  ValaSymbol* symbol,
+                                                  ValaSourceReference* source_reference);
 VALA_EXTERN const gchar* vala_regex_literal_get_value (ValaRegexLiteral* self);
 VALA_EXTERN ValaRegexLiteral* vala_regex_literal_new (const gchar* value,
                                           ValaSourceReference* source_reference);
@@ -6224,9 +6267,6 @@ VALA_EXTERN ValaSemanticAnalyzer* vala_semantic_analyzer_new (void);
 VALA_EXTERN ValaSemanticAnalyzer* vala_semantic_analyzer_construct (GType object_type);
 VALA_EXTERN void vala_semantic_analyzer_analyze (ValaSemanticAnalyzer* self,
                                      ValaCodeContext* context);
-VALA_EXTERN gboolean vala_semantic_analyzer_is_type_accessible (ValaSemanticAnalyzer* self,
-                                                    ValaSymbol* sym,
-                                                    ValaDataType* type);
 VALA_EXTERN ValaDataType* vala_semantic_analyzer_get_value_type_for_symbol (ValaSemanticAnalyzer* self,
                                                                 ValaSymbol* sym,
                                                                 gboolean lvalue);
@@ -6304,9 +6344,11 @@ VALA_EXTERN ValaDelegate* vala_signal_get_delegate (ValaSignal* self,
 VALA_EXTERN GType vala_signal_type_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaSignalType, vala_code_node_unref)
 VALA_EXTERN ValaSignal* vala_signal_type_get_signal_symbol (ValaSignalType* self);
-VALA_EXTERN ValaSignalType* vala_signal_type_new (ValaSignal* signal_symbol);
+VALA_EXTERN ValaSignalType* vala_signal_type_new (ValaSignal* signal_symbol,
+                                      ValaSourceReference* source_reference);
 VALA_EXTERN ValaSignalType* vala_signal_type_construct (GType object_type,
-                                            ValaSignal* signal_symbol);
+                                            ValaSignal* signal_symbol,
+                                            ValaSourceReference* source_reference);
 VALA_EXTERN ValaDelegateType* vala_signal_type_get_handler_type (ValaSignalType* self);
 VALA_EXTERN ValaDataType* vala_sizeof_expression_get_type_reference (ValaSizeofExpression* self);
 VALA_EXTERN ValaSizeofExpression* vala_sizeof_expression_new (ValaDataType* type,
@@ -6495,9 +6537,11 @@ VALA_EXTERN gboolean vala_struct_is_simple_type (ValaStruct* self);
 VALA_EXTERN void vala_struct_set_simple_type (ValaStruct* self,
                                   gboolean simple_type);
 VALA_EXTERN gboolean vala_struct_is_disposable (ValaStruct* self);
-VALA_EXTERN ValaStructValueType* vala_struct_value_type_new (ValaStruct* type_symbol);
+VALA_EXTERN ValaStructValueType* vala_struct_value_type_new (ValaStruct* type_symbol,
+                                                 ValaSourceReference* source_reference);
 VALA_EXTERN ValaStructValueType* vala_struct_value_type_construct (GType object_type,
-                                                       ValaStruct* type_symbol);
+                                                       ValaStruct* type_symbol,
+                                                       ValaSourceReference* source_reference);
 VALA_EXTERN ValaBasicBlock* vala_subroutine_get_entry_block (ValaSubroutine* self);
 VALA_EXTERN void vala_subroutine_set_entry_block (ValaSubroutine* self,
                                       ValaBasicBlock* value);
@@ -6771,13 +6815,14 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaUnresolvedType, vala_code_node_unref)
 VALA_EXTERN ValaUnresolvedSymbol* vala_unresolved_type_get_unresolved_symbol (ValaUnresolvedType* self);
 VALA_EXTERN void vala_unresolved_type_set_unresolved_symbol (ValaUnresolvedType* self,
                                                  ValaUnresolvedSymbol* value);
-VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_new (void);
-VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_construct (GType object_type);
+VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_new (ValaSourceReference* source_reference);
+VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_construct (GType object_type,
+                                                    ValaSourceReference* source_reference);
 VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_new_from_symbol (ValaUnresolvedSymbol* symbol,
-                                                          ValaSourceReference* source);
+                                                          ValaSourceReference* source_reference);
 VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_construct_from_symbol (GType object_type,
                                                                 ValaUnresolvedSymbol* symbol,
-                                                                ValaSourceReference* source);
+                                                                ValaSourceReference* source_reference);
 VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_new_from_expression (ValaMemberAccess* expr);
 VALA_EXTERN ValaUnresolvedType* vala_unresolved_type_construct_from_expression (GType object_type,
                                                                     ValaMemberAccess* expr);
@@ -6797,7 +6842,8 @@ VALA_EXTERN ValaUsingDirective* vala_using_directive_construct (GType object_typ
                                                     ValaSymbol* namespace_symbol,
                                                     ValaSourceReference* source_reference);
 VALA_EXTERN ValaValueType* vala_value_type_construct (GType object_type,
-                                          ValaTypeSymbol* type_symbol);
+                                          ValaTypeSymbol* type_symbol,
+                                          ValaSourceReference* source_reference);
 VALA_EXTERN ValaExpression* vala_variable_get_initializer (ValaVariable* self);
 VALA_EXTERN void vala_variable_set_initializer (ValaVariable* self,
                                     ValaExpression* value);
@@ -6807,11 +6853,6 @@ VALA_EXTERN void vala_variable_set_variable_type (ValaVariable* self,
 VALA_EXTERN gboolean vala_variable_get_single_assignment (ValaVariable* self);
 VALA_EXTERN void vala_variable_set_single_assignment (ValaVariable* self,
                                           gboolean value);
-VALA_EXTERN ValaVariable* vala_variable_new (ValaDataType* variable_type,
-                                 const gchar* name,
-                                 ValaExpression* initializer,
-                                 ValaSourceReference* source_reference,
-                                 ValaComment* comment);
 VALA_EXTERN ValaVariable* vala_variable_construct (GType object_type,
                                        ValaDataType* variable_type,
                                        const gchar* name,
@@ -6823,11 +6864,6 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaVarType, vala_code_node_unref)
 VALA_EXTERN ValaVarType* vala_var_type_new (gboolean value_owned);
 VALA_EXTERN ValaVarType* vala_var_type_construct (GType object_type,
                                       gboolean value_owned);
-#define VALA_MAJOR_VERSION 0
-#define VALA_MINOR_VERSION 54
-#define VALA_MICRO_VERSION 3
-#define VALA_API_VERSION "0.54"
-#define VALA_BUILD_VERSION "0.54.3"
 VALA_EXTERN guint vala_get_major_version (void);
 VALA_EXTERN guint vala_get_minor_version (void);
 VALA_EXTERN guint vala_get_micro_version (void);

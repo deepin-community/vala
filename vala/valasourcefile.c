@@ -115,15 +115,201 @@ vala_source_file_set_filename (ValaSourceFile* self,
 	self->priv->_filename = _tmp0_;
 }
 
+static gchar*
+_vala_g_strjoinv (const gchar* separator,
+                  gchar** str_array,
+                  gint str_array_length1)
+{
+	gboolean _tmp0_ = FALSE;
+	gchar* result;
+	if (separator == NULL) {
+		separator = "";
+	}
+	if (str_array != NULL) {
+		gboolean _tmp1_ = FALSE;
+		if (str_array_length1 > 0) {
+			_tmp1_ = TRUE;
+		} else {
+			gboolean _tmp2_ = FALSE;
+			if (str_array_length1 == -1) {
+				const gchar* _tmp3_;
+				_tmp3_ = str_array[0];
+				_tmp2_ = _tmp3_ != NULL;
+			} else {
+				_tmp2_ = FALSE;
+			}
+			_tmp1_ = _tmp2_;
+		}
+		_tmp0_ = _tmp1_;
+	} else {
+		_tmp0_ = FALSE;
+	}
+	if (_tmp0_) {
+		gint i = 0;
+		gsize len = 0UL;
+		gint _tmp16_;
+		gint _tmp17_;
+		const gchar* res = NULL;
+		void* _tmp18_;
+		const gchar* _tmp19_ = NULL;
+		const gchar* _tmp20_;
+		void* ptr = NULL;
+		const gchar* _tmp22_;
+		void* _tmp23_;
+		const gchar* _tmp33_;
+		len = (gsize) 1;
+		{
+			gboolean _tmp4_ = FALSE;
+			i = 0;
+			_tmp4_ = TRUE;
+			while (TRUE) {
+				gboolean _tmp6_ = FALSE;
+				gboolean _tmp7_ = FALSE;
+				gint _tmp10_ = 0;
+				const gchar* _tmp11_;
+				if (!_tmp4_) {
+					gint _tmp5_;
+					_tmp5_ = i;
+					i = _tmp5_ + 1;
+				}
+				_tmp4_ = FALSE;
+				if (str_array_length1 != -1) {
+					_tmp7_ = i < str_array_length1;
+				} else {
+					_tmp7_ = FALSE;
+				}
+				if (_tmp7_) {
+					_tmp6_ = TRUE;
+				} else {
+					gboolean _tmp8_ = FALSE;
+					if (str_array_length1 == -1) {
+						const gchar* _tmp9_;
+						_tmp9_ = str_array[i];
+						_tmp8_ = _tmp9_ != NULL;
+					} else {
+						_tmp8_ = FALSE;
+					}
+					_tmp6_ = _tmp8_;
+				}
+				if (!_tmp6_) {
+					break;
+				}
+				_tmp11_ = str_array[i];
+				if (_tmp11_ != NULL) {
+					const gchar* _tmp12_;
+					gint _tmp13_;
+					gint _tmp14_;
+					_tmp12_ = str_array[i];
+					_tmp13_ = strlen ((const gchar*) _tmp12_);
+					_tmp14_ = _tmp13_;
+					_tmp10_ = _tmp14_;
+				} else {
+					_tmp10_ = 0;
+				}
+				len += (gsize) _tmp10_;
+			}
+		}
+		if (i == 0) {
+			gchar* _tmp15_;
+			_tmp15_ = g_strdup ("");
+			result = _tmp15_;
+			return result;
+		}
+		str_array_length1 = i;
+		_tmp16_ = strlen ((const gchar*) separator);
+		_tmp17_ = _tmp16_;
+		len += (gsize) (_tmp17_ * (i - 1));
+		_tmp18_ = g_malloc (len);
+		res = _tmp18_;
+		_tmp20_ = str_array[0];
+		if (_tmp20_ != NULL) {
+			const gchar* _tmp21_;
+			_tmp21_ = str_array[0];
+			_tmp19_ = (const gchar*) _tmp21_;
+		} else {
+			_tmp19_ = "";
+		}
+		_tmp22_ = res;
+		_tmp23_ = g_stpcpy ((void*) _tmp22_, _tmp19_);
+		ptr = _tmp23_;
+		{
+			gboolean _tmp24_ = FALSE;
+			i = 1;
+			_tmp24_ = TRUE;
+			while (TRUE) {
+				void* _tmp26_;
+				void* _tmp27_;
+				const gchar* _tmp28_ = NULL;
+				const gchar* _tmp29_;
+				void* _tmp31_;
+				void* _tmp32_;
+				if (!_tmp24_) {
+					gint _tmp25_;
+					_tmp25_ = i;
+					i = _tmp25_ + 1;
+				}
+				_tmp24_ = FALSE;
+				if (!(i < str_array_length1)) {
+					break;
+				}
+				_tmp26_ = ptr;
+				_tmp27_ = g_stpcpy (_tmp26_, (const gchar*) separator);
+				ptr = _tmp27_;
+				_tmp29_ = str_array[i];
+				if (_tmp29_ != NULL) {
+					const gchar* _tmp30_;
+					_tmp30_ = str_array[i];
+					_tmp28_ = (const gchar*) _tmp30_;
+				} else {
+					_tmp28_ = "";
+				}
+				_tmp31_ = ptr;
+				_tmp32_ = g_stpcpy (_tmp31_, _tmp28_);
+				ptr = _tmp32_;
+			}
+		}
+		_tmp33_ = res;
+		res = NULL;
+		result = (gchar*) _tmp33_;
+		return result;
+	} else {
+		gchar* _tmp34_;
+		_tmp34_ = g_strdup ("");
+		result = _tmp34_;
+		return result;
+	}
+}
+
 void
 vala_source_file_set_relative_filename (ValaSourceFile* self,
                                         const gchar* value)
 {
-	gchar* _tmp0_;
 	g_return_if_fail (self != NULL);
-	_tmp0_ = g_strdup (value);
-	_g_free0 (self->priv->_relative_filename);
-	self->priv->_relative_filename = _tmp0_;
+	if (G_DIR_SEPARATOR != '/') {
+		gchar** components = NULL;
+		gchar** _tmp0_;
+		gchar** _tmp1_;
+		gint components_length1;
+		gint _components_size_;
+		gchar** _tmp2_;
+		gint _tmp2__length1;
+		gchar* _tmp3_;
+		_tmp1_ = _tmp0_ = g_strsplit (value, "\\", 0);
+		components = _tmp1_;
+		components_length1 = _vala_array_length (_tmp0_);
+		_components_size_ = components_length1;
+		_tmp2_ = components;
+		_tmp2__length1 = components_length1;
+		_tmp3_ = _vala_g_strjoinv ("/", _tmp2_, (gint) _tmp2__length1);
+		_g_free0 (self->priv->_relative_filename);
+		self->priv->_relative_filename = _tmp3_;
+		components = (_vala_array_free (components, components_length1, (GDestroyNotify) g_free), NULL);
+	} else {
+		gchar* _tmp4_;
+		_tmp4_ = g_strdup (value);
+		_g_free0 (self->priv->_relative_filename);
+		self->priv->_relative_filename = _tmp4_;
+	}
 }
 
 static gchar*
@@ -137,7 +323,7 @@ string_slice (const gchar* self,
 	gboolean _tmp2_ = FALSE;
 	gboolean _tmp3_ = FALSE;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = strlen (self);
 	_tmp1_ = _tmp0_;
@@ -174,7 +360,7 @@ string_last_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strrchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -285,10 +471,8 @@ ValaSourceFileType
 vala_source_file_get_file_type (ValaSourceFile* self)
 {
 	ValaSourceFileType result;
-	ValaSourceFileType _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_file_type;
-	result = _tmp0_;
+	result = self->priv->_file_type;
 	return result;
 }
 
@@ -525,7 +709,7 @@ ValaList*
 vala_source_file_get_comments (ValaSourceFile* self)
 {
 	ValaArrayList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->comments;
 	result = (ValaList*) _tmp0_;
@@ -637,7 +821,7 @@ ValaList*
 vala_source_file_get_nodes (ValaSourceFile* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->nodes;
 	result = _tmp0_;
@@ -704,7 +888,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -727,7 +911,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -763,7 +947,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -784,7 +968,7 @@ vala_source_file_get_subdir (ValaSourceFile* self)
 	gchar* _tmp9_;
 	gboolean _tmp10_;
 	gchar* _tmp34_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_context;
 	_tmp1_ = vala_code_context_get_basedir (_tmp0_);
@@ -883,7 +1067,7 @@ vala_source_file_get_destination_directory (ValaSourceFile* self)
 	gchar* _tmp8_;
 	gchar* _tmp9_;
 	gchar* _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_context;
 	_tmp1_ = vala_code_context_get_directory (_tmp0_);
@@ -916,7 +1100,7 @@ vala_source_file_get_basename (ValaSourceFile* self)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_filename;
 	dot = string_last_index_of_char (_tmp0_, (gunichar) '.', 0);
@@ -934,7 +1118,7 @@ gchar*
 vala_source_file_get_relative_filename (ValaSourceFile* self)
 {
 	const gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_relative_filename;
 	if (_tmp0_ != NULL) {
@@ -965,7 +1149,7 @@ vala_source_file_get_csource_filename (ValaSourceFile* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp29_;
 	gchar* _tmp30_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->csource_filename;
 	if (_tmp0_ == NULL) {
@@ -1066,7 +1250,7 @@ vala_source_file_get_cinclude_filename (ValaSourceFile* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp23_;
 	gchar* _tmp24_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cinclude_filename;
 	if (_tmp0_ == NULL) {
@@ -1149,7 +1333,7 @@ vala_source_file_get_source_line (ValaSourceFile* self,
 	gboolean _tmp5_ = FALSE;
 	ValaArrayList* _tmp9_;
 	gpointer _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->source_array;
 	if (_tmp0_ == NULL) {
@@ -1299,7 +1483,7 @@ vala_source_file_get_mapped_contents (ValaSourceFile* self)
 	GMappedFile* _tmp12_;
 	gchar* _tmp13_;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = vala_source_file_get_content (self);
 	_tmp1_ = _tmp0_;
@@ -1371,7 +1555,8 @@ vala_source_file_get_mapped_length (ValaSourceFile* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
 	GMappedFile* _tmp6_;
-	gsize result = 0UL;
+	GMappedFile* _tmp7_;
+	gsize result;
 	g_return_val_if_fail (self != NULL, 0UL);
 	_tmp0_ = vala_source_file_get_content (self);
 	_tmp1_ = _tmp0_;
@@ -1388,7 +1573,12 @@ vala_source_file_get_mapped_length (ValaSourceFile* self)
 		return result;
 	}
 	_tmp6_ = self->priv->mapped_file;
-	result = g_mapped_file_get_length (_tmp6_);
+	if (_tmp6_ == NULL) {
+		result = (gsize) 0;
+		return result;
+	}
+	_tmp7_ = self->priv->mapped_file;
+	result = g_mapped_file_get_length (_tmp7_);
 	return result;
 }
 
@@ -1396,7 +1586,7 @@ gboolean
 vala_source_file_check (ValaSourceFile* self,
                         ValaCodeContext* context)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (context != NULL, FALSE);
 	{
@@ -1651,13 +1841,13 @@ vala_source_file_get_type_once (void)
 GType
 vala_source_file_get_type (void)
 {
-	static volatile gsize vala_source_file_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_source_file_type_id__volatile)) {
+	static volatile gsize vala_source_file_type_id__once = 0;
+	if (g_once_init_enter (&vala_source_file_type_id__once)) {
 		GType vala_source_file_type_id;
 		vala_source_file_type_id = vala_source_file_get_type_once ();
-		g_once_init_leave (&vala_source_file_type_id__volatile, vala_source_file_type_id);
+		g_once_init_leave (&vala_source_file_type_id__once, vala_source_file_type_id);
 	}
-	return vala_source_file_type_id__volatile;
+	return vala_source_file_type_id__once;
 }
 
 gpointer
@@ -1692,13 +1882,13 @@ vala_source_file_type_get_type_once (void)
 GType
 vala_source_file_type_get_type (void)
 {
-	static volatile gsize vala_source_file_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_source_file_type_type_id__volatile)) {
+	static volatile gsize vala_source_file_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_source_file_type_type_id__once)) {
 		GType vala_source_file_type_type_id;
 		vala_source_file_type_type_id = vala_source_file_type_get_type_once ();
-		g_once_init_leave (&vala_source_file_type_type_id__volatile, vala_source_file_type_type_id);
+		g_once_init_leave (&vala_source_file_type_type_id__once, vala_source_file_type_type_id);
 	}
-	return vala_source_file_type_type_id__volatile;
+	return vala_source_file_type_type_id__once;
 }
 
 static void

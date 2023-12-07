@@ -240,7 +240,7 @@ string_strip (const gchar* self)
 {
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_strdup (self);
 	_result_ = _tmp0_;
@@ -1297,13 +1297,13 @@ gtkdoc_comment_converter_get_type_once (void)
 GType
 gtkdoc_comment_converter_get_type (void)
 {
-	static volatile gsize gtkdoc_comment_converter_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_comment_converter_type_id__volatile)) {
+	static volatile gsize gtkdoc_comment_converter_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_comment_converter_type_id__once)) {
 		GType gtkdoc_comment_converter_type_id;
 		gtkdoc_comment_converter_type_id = gtkdoc_comment_converter_get_type_once ();
-		g_once_init_leave (&gtkdoc_comment_converter_type_id__volatile, gtkdoc_comment_converter_type_id);
+		g_once_init_leave (&gtkdoc_comment_converter_type_id__once, gtkdoc_comment_converter_type_id);
 	}
-	return gtkdoc_comment_converter_type_id__volatile;
+	return gtkdoc_comment_converter_type_id__once;
 }
 
 static void

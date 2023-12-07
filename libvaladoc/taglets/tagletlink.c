@@ -145,13 +145,13 @@ valadoc_taglets_link_symbol_context_get_type_once (void)
 static GType
 valadoc_taglets_link_symbol_context_get_type (void)
 {
-	static volatile gsize valadoc_taglets_link_symbol_context_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_link_symbol_context_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_link_symbol_context_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_link_symbol_context_type_id__once)) {
 		GType valadoc_taglets_link_symbol_context_type_id;
 		valadoc_taglets_link_symbol_context_type_id = valadoc_taglets_link_symbol_context_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_link_symbol_context_type_id__volatile, valadoc_taglets_link_symbol_context_type_id);
+		g_once_init_leave (&valadoc_taglets_link_symbol_context_type_id__once, valadoc_taglets_link_symbol_context_type_id);
 	}
-	return valadoc_taglets_link_symbol_context_type_id__volatile;
+	return valadoc_taglets_link_symbol_context_type_id__once;
 }
 
 const gchar*
@@ -348,7 +348,7 @@ valadoc_taglets_link_real_get_parser_rule (ValadocContentInlineTaglet* base,
 	gint _tmp31__length1;
 	ValadocRule* _tmp32_;
 	ValadocRule* _tmp33_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsLink*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	_tmp0_ = valadoc_token_type_SPACE;
@@ -423,7 +423,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -446,7 +446,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -763,9 +763,8 @@ valadoc_taglets_link_real_produce_content (ValadocContentInlineTaglet* base)
 	ValadocContentSymbolLink* _tmp3_;
 	const gchar* _tmp4_;
 	ValadocContentInline* content = NULL;
-	ValadocTagletsLinkSymbolContext _tmp5_;
-	gboolean _tmp43_;
-	ValadocContentContentElement* result = NULL;
+	gboolean _tmp42_;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsLink*) base;
 	_tmp0_ = valadoc_content_symbol_link_new (NULL, NULL);
 	link = _tmp0_;
@@ -775,144 +774,143 @@ valadoc_taglets_link_real_produce_content (ValadocContentInlineTaglet* base)
 	_tmp3_ = link;
 	_tmp4_ = self->priv->_symbol_name;
 	valadoc_content_symbol_link_set_given_symbol_name (_tmp3_, _tmp4_);
-	_tmp5_ = self->priv->_context;
-	switch (_tmp5_) {
+	switch (self->priv->_context) {
 		case VALADOC_TAGLETS_LINK_SYMBOL_CONTEXT_FINISH:
 		{
+			ValadocContentSymbolLink* _tmp5_;
 			ValadocContentSymbolLink* _tmp6_;
-			ValadocContentSymbolLink* _tmp7_;
+			const gchar* _tmp7_;
 			const gchar* _tmp8_;
-			const gchar* _tmp9_;
+			gchar* _tmp9_;
 			gchar* _tmp10_;
-			gchar* _tmp11_;
-			ValadocContentSymbolLink* _tmp12_;
-			ValadocContentInline* _tmp13_;
+			ValadocContentSymbolLink* _tmp11_;
+			ValadocContentInline* _tmp12_;
+			_tmp5_ = link;
 			_tmp6_ = link;
-			_tmp7_ = link;
-			_tmp8_ = valadoc_content_symbol_link_get_given_symbol_name (_tmp7_);
-			_tmp9_ = _tmp8_;
-			_tmp10_ = g_strconcat (_tmp9_, ".end", NULL);
-			_tmp11_ = _tmp10_;
-			valadoc_content_symbol_link_set_given_symbol_name (_tmp7_, _tmp11_);
-			_g_free0 (_tmp11_);
-			_tmp12_ = link;
-			_tmp13_ = _g_object_ref0 ((ValadocContentInline*) _tmp12_);
+			_tmp7_ = valadoc_content_symbol_link_get_given_symbol_name (_tmp6_);
+			_tmp8_ = _tmp7_;
+			_tmp9_ = g_strconcat (_tmp8_, ".end", NULL);
+			_tmp10_ = _tmp9_;
+			valadoc_content_symbol_link_set_given_symbol_name (_tmp6_, _tmp10_);
+			_g_free0 (_tmp10_);
+			_tmp11_ = link;
+			_tmp12_ = _g_object_ref0 ((ValadocContentInline*) _tmp11_);
 			_g_object_unref0 (content);
-			content = _tmp13_;
+			content = _tmp12_;
 			break;
 		}
 		case VALADOC_TAGLETS_LINK_SYMBOL_CONTEXT_TYPE:
 		{
 			ValadocContentRun* run = NULL;
+			ValadocContentRun* _tmp13_;
 			ValadocContentRun* _tmp14_;
-			ValadocContentRun* _tmp15_;
-			ValadocContentInline* _tmp16_;
+			ValadocContentInline* _tmp15_;
 			ValadocContentRun* keyword = NULL;
+			ValadocContentRun* _tmp16_;
 			ValadocContentRun* _tmp17_;
-			ValadocContentRun* _tmp18_;
+			ValaList* _tmp18_;
 			ValaList* _tmp19_;
-			ValaList* _tmp20_;
+			ValadocContentText* _tmp20_;
 			ValadocContentText* _tmp21_;
-			ValadocContentText* _tmp22_;
-			ValadocContentRun* _tmp23_;
+			ValadocContentRun* _tmp22_;
+			ValaList* _tmp23_;
 			ValaList* _tmp24_;
-			ValaList* _tmp25_;
+			ValadocContentRun* _tmp25_;
 			ValadocContentRun* _tmp26_;
-			ValadocContentRun* _tmp27_;
+			ValaList* _tmp27_;
 			ValaList* _tmp28_;
-			ValaList* _tmp29_;
+			ValadocContentText* _tmp29_;
 			ValadocContentText* _tmp30_;
-			ValadocContentText* _tmp31_;
-			ValadocContentRun* _tmp32_;
+			ValadocContentRun* _tmp31_;
+			ValaList* _tmp32_;
 			ValaList* _tmp33_;
-			ValaList* _tmp34_;
-			ValadocContentSymbolLink* _tmp35_;
-			ValadocContentRun* _tmp36_;
+			ValadocContentSymbolLink* _tmp34_;
+			ValadocContentRun* _tmp35_;
+			ValaList* _tmp36_;
 			ValaList* _tmp37_;
-			ValaList* _tmp38_;
+			ValadocContentText* _tmp38_;
 			ValadocContentText* _tmp39_;
-			ValadocContentText* _tmp40_;
-			_tmp14_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_MONOSPACED);
-			run = _tmp14_;
-			_tmp15_ = run;
-			_tmp16_ = _g_object_ref0 ((ValadocContentInline*) _tmp15_);
+			_tmp13_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_MONOSPACED);
+			run = _tmp13_;
+			_tmp14_ = run;
+			_tmp15_ = _g_object_ref0 ((ValadocContentInline*) _tmp14_);
 			_g_object_unref0 (content);
-			content = _tmp16_;
-			_tmp17_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_LANG_KEYWORD);
-			keyword = _tmp17_;
-			_tmp18_ = keyword;
-			_tmp19_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp18_);
-			_tmp20_ = _tmp19_;
-			_tmp21_ = valadoc_content_text_new ("typeof");
-			_tmp22_ = _tmp21_;
-			vala_collection_add ((ValaCollection*) _tmp20_, (ValadocContentInline*) _tmp22_);
-			_g_object_unref0 (_tmp22_);
-			_tmp23_ = run;
-			_tmp24_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp23_);
-			_tmp25_ = _tmp24_;
-			_tmp26_ = keyword;
-			vala_collection_add ((ValaCollection*) _tmp25_, (ValadocContentInline*) _tmp26_);
-			_tmp27_ = run;
-			_tmp28_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp27_);
-			_tmp29_ = _tmp28_;
-			_tmp30_ = valadoc_content_text_new (" (");
-			_tmp31_ = _tmp30_;
-			vala_collection_add ((ValaCollection*) _tmp29_, (ValadocContentInline*) _tmp31_);
-			_g_object_unref0 (_tmp31_);
-			_tmp32_ = run;
-			_tmp33_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp32_);
-			_tmp34_ = _tmp33_;
-			_tmp35_ = link;
-			vala_collection_add ((ValaCollection*) _tmp34_, (ValadocContentInline*) _tmp35_);
-			_tmp36_ = run;
-			_tmp37_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp36_);
-			_tmp38_ = _tmp37_;
-			_tmp39_ = valadoc_content_text_new (")");
-			_tmp40_ = _tmp39_;
-			vala_collection_add ((ValaCollection*) _tmp38_, (ValadocContentInline*) _tmp40_);
-			_g_object_unref0 (_tmp40_);
+			content = _tmp15_;
+			_tmp16_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_LANG_KEYWORD);
+			keyword = _tmp16_;
+			_tmp17_ = keyword;
+			_tmp18_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp17_);
+			_tmp19_ = _tmp18_;
+			_tmp20_ = valadoc_content_text_new ("typeof");
+			_tmp21_ = _tmp20_;
+			vala_collection_add ((ValaCollection*) _tmp19_, (ValadocContentInline*) _tmp21_);
+			_g_object_unref0 (_tmp21_);
+			_tmp22_ = run;
+			_tmp23_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp22_);
+			_tmp24_ = _tmp23_;
+			_tmp25_ = keyword;
+			vala_collection_add ((ValaCollection*) _tmp24_, (ValadocContentInline*) _tmp25_);
+			_tmp26_ = run;
+			_tmp27_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp26_);
+			_tmp28_ = _tmp27_;
+			_tmp29_ = valadoc_content_text_new (" (");
+			_tmp30_ = _tmp29_;
+			vala_collection_add ((ValaCollection*) _tmp28_, (ValadocContentInline*) _tmp30_);
+			_g_object_unref0 (_tmp30_);
+			_tmp31_ = run;
+			_tmp32_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp31_);
+			_tmp33_ = _tmp32_;
+			_tmp34_ = link;
+			vala_collection_add ((ValaCollection*) _tmp33_, (ValadocContentInline*) _tmp34_);
+			_tmp35_ = run;
+			_tmp36_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp35_);
+			_tmp37_ = _tmp36_;
+			_tmp38_ = valadoc_content_text_new (")");
+			_tmp39_ = _tmp38_;
+			vala_collection_add ((ValaCollection*) _tmp37_, (ValadocContentInline*) _tmp39_);
+			_g_object_unref0 (_tmp39_);
 			_g_object_unref0 (keyword);
 			_g_object_unref0 (run);
 			break;
 		}
 		default:
 		{
-			ValadocContentSymbolLink* _tmp41_;
-			ValadocContentInline* _tmp42_;
-			_tmp41_ = link;
-			_tmp42_ = _g_object_ref0 ((ValadocContentInline*) _tmp41_);
+			ValadocContentSymbolLink* _tmp40_;
+			ValadocContentInline* _tmp41_;
+			_tmp40_ = link;
+			_tmp41_ = _g_object_ref0 ((ValadocContentInline*) _tmp40_);
 			_g_object_unref0 (content);
-			content = _tmp42_;
+			content = _tmp41_;
 			break;
 		}
 	}
-	_tmp43_ = self->priv->_c_is_plural;
-	if (_tmp43_ == TRUE) {
+	_tmp42_ = self->priv->_c_is_plural;
+	if (_tmp42_ == TRUE) {
 		ValadocContentRun* run = NULL;
+		ValadocContentRun* _tmp43_;
 		ValadocContentRun* _tmp44_;
-		ValadocContentRun* _tmp45_;
+		ValaList* _tmp45_;
 		ValaList* _tmp46_;
-		ValaList* _tmp47_;
-		ValadocContentInline* _tmp48_;
-		ValadocContentRun* _tmp49_;
+		ValadocContentInline* _tmp47_;
+		ValadocContentRun* _tmp48_;
+		ValaList* _tmp49_;
 		ValaList* _tmp50_;
-		ValaList* _tmp51_;
+		ValadocContentText* _tmp51_;
 		ValadocContentText* _tmp52_;
-		ValadocContentText* _tmp53_;
-		_tmp44_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_NONE);
-		run = _tmp44_;
-		_tmp45_ = run;
-		_tmp46_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp45_);
-		_tmp47_ = _tmp46_;
-		_tmp48_ = content;
-		vala_collection_add ((ValaCollection*) _tmp47_, _tmp48_);
-		_tmp49_ = run;
-		_tmp50_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp49_);
-		_tmp51_ = _tmp50_;
-		_tmp52_ = valadoc_content_text_new ("s");
-		_tmp53_ = _tmp52_;
-		vala_collection_add ((ValaCollection*) _tmp51_, (ValadocContentInline*) _tmp53_);
-		_g_object_unref0 (_tmp53_);
+		_tmp43_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_NONE);
+		run = _tmp43_;
+		_tmp44_ = run;
+		_tmp45_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp44_);
+		_tmp46_ = _tmp45_;
+		_tmp47_ = content;
+		vala_collection_add ((ValaCollection*) _tmp46_, _tmp47_);
+		_tmp48_ = run;
+		_tmp49_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp48_);
+		_tmp50_ = _tmp49_;
+		_tmp51_ = valadoc_content_text_new ("s");
+		_tmp52_ = _tmp51_;
+		vala_collection_add ((ValaCollection*) _tmp50_, (ValadocContentInline*) _tmp52_);
+		_g_object_unref0 (_tmp52_);
 		result = (ValadocContentContentElement*) run;
 		_g_object_unref0 (content);
 		_g_object_unref0 (link);
@@ -927,7 +925,7 @@ static gboolean
 valadoc_taglets_link_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocTagletsLink * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsLink*) base;
 	result = FALSE;
 	return result;
@@ -947,10 +945,9 @@ valadoc_taglets_link_real_copy (ValadocContentContentElement* base,
 	const gchar* _tmp5_;
 	gboolean _tmp6_;
 	gboolean _tmp7_;
-	ValadocTagletsLinkSymbolContext _tmp8_;
+	ValadocApiNode* _tmp8_;
 	ValadocApiNode* _tmp9_;
-	ValadocApiNode* _tmp10_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsLink*) base;
 	_tmp0_ = valadoc_taglets_link_new ();
 	link = _tmp0_;
@@ -969,12 +966,11 @@ valadoc_taglets_link_real_copy (ValadocContentContentElement* base,
 	valadoc_taglets_link_set_c_accept_plural (link, _tmp6_);
 	_tmp7_ = self->priv->_c_is_plural;
 	valadoc_taglets_link_set_c_is_plural (link, _tmp7_);
-	_tmp8_ = self->priv->_context;
-	link->priv->_context = _tmp8_;
-	_tmp9_ = self->priv->_symbol;
-	_tmp10_ = _g_object_ref0 (_tmp9_);
+	link->priv->_context = self->priv->_context;
+	_tmp8_ = self->priv->_symbol;
+	_tmp9_ = _g_object_ref0 (_tmp8_);
 	_g_object_unref0 (link->priv->_symbol);
-	link->priv->_symbol = _tmp10_;
+	link->priv->_symbol = _tmp9_;
 	result = (ValadocContentContentElement*) link;
 	return result;
 }
@@ -1051,13 +1047,13 @@ valadoc_taglets_link_get_type_once (void)
 GType
 valadoc_taglets_link_get_type (void)
 {
-	static volatile gsize valadoc_taglets_link_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_link_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_link_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_link_type_id__once)) {
 		GType valadoc_taglets_link_type_id;
 		valadoc_taglets_link_type_id = valadoc_taglets_link_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_link_type_id__volatile, valadoc_taglets_link_type_id);
+		g_once_init_leave (&valadoc_taglets_link_type_id__once, valadoc_taglets_link_type_id);
 	}
-	return valadoc_taglets_link_type_id__volatile;
+	return valadoc_taglets_link_type_id__once;
 }
 
 static void

@@ -176,7 +176,7 @@ valadoc_api_gir_source_comment_parameter_iterator (ValadocApiGirSourceComment* s
 {
 	ValaMap* _tmp0_;
 	ValaMapIterator* _tmp1_;
-	ValaMapIterator* result = NULL;
+	ValaMapIterator* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->parameters;
 	_tmp1_ = vala_map_map_iterator (_tmp0_);
@@ -204,7 +204,7 @@ valadoc_api_gir_source_comment_get_parameter_comment (ValadocApiGirSourceComment
 	ValaMap* _tmp0_;
 	ValaMap* _tmp1_;
 	gpointer _tmp2_;
-	ValadocApiSourceComment* result = NULL;
+	ValadocApiSourceComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (param_name != NULL, NULL);
 	_tmp0_ = self->priv->parameters;
@@ -300,12 +300,12 @@ valadoc_api_gir_source_comment_get_type_once (void)
 GType
 valadoc_api_gir_source_comment_get_type (void)
 {
-	static volatile gsize valadoc_api_gir_source_comment_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_gir_source_comment_type_id__volatile)) {
+	static volatile gsize valadoc_api_gir_source_comment_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_gir_source_comment_type_id__once)) {
 		GType valadoc_api_gir_source_comment_type_id;
 		valadoc_api_gir_source_comment_type_id = valadoc_api_gir_source_comment_get_type_once ();
-		g_once_init_leave (&valadoc_api_gir_source_comment_type_id__volatile, valadoc_api_gir_source_comment_type_id);
+		g_once_init_leave (&valadoc_api_gir_source_comment_type_id__once, valadoc_api_gir_source_comment_type_id);
 	}
-	return valadoc_api_gir_source_comment_type_id__volatile;
+	return valadoc_api_gir_source_comment_type_id__once;
 }
 

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <stdio.h>
 
 typedef struct _Block7Data Block7Data;
@@ -214,7 +215,7 @@ valadoc_html_markup_writer_add_usemap (ValadocHtmlMarkupWriter* self,
 	gint _tmp0_ = 0;
 	guint8* _tmp1_;
 	const gchar* _tmp2_;
-	ValadocHtmlMarkupWriter* result = NULL;
+	ValadocHtmlMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (chart != NULL, NULL);
 	_tmp1_ = valadoc_charts_chart_write_buffer (chart, "cmapx", &_tmp0_);
@@ -237,7 +238,7 @@ valadoc_html_markup_writer_link (ValadocHtmlMarkupWriter* self,
                                  const gchar* label,
                                  const gchar* css_class)
 {
-	ValadocHtmlMarkupWriter* result = NULL;
+	ValadocHtmlMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (url != NULL, NULL);
 	g_return_val_if_fail (label != NULL, NULL);
@@ -290,7 +291,7 @@ valadoc_html_markup_writer_image (ValadocHtmlMarkupWriter* self,
                                   const gchar* caption,
                                   const gchar* css_class)
 {
-	ValadocHtmlMarkupWriter* result = NULL;
+	ValadocHtmlMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (src != NULL, NULL);
 	if (css_class == NULL) {
@@ -359,7 +360,7 @@ valadoc_html_markup_writer_stylesheet_link (ValadocHtmlMarkupWriter* self,
 	gchar** _tmp6_;
 	gchar** _tmp7_;
 	gint _tmp7__length1;
-	ValadocHtmlMarkupWriter* result = NULL;
+	ValadocHtmlMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (url != NULL, NULL);
 	_tmp0_ = g_strdup ("href");
@@ -394,7 +395,7 @@ valadoc_html_markup_writer_javascript_link (ValadocHtmlMarkupWriter* self,
 	gchar** _tmp4_;
 	gchar** _tmp5_;
 	gint _tmp5__length1;
-	ValadocHtmlMarkupWriter* result = NULL;
+	ValadocHtmlMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (url != NULL, NULL);
 	_tmp0_ = g_strdup ("src");
@@ -440,7 +441,7 @@ valadoc_html_markup_writer_real_inline_element (ValadocMarkupWriter* base,
 	gboolean _tmp17_ = FALSE;
 	gboolean _tmp18_ = FALSE;
 	gboolean _tmp19_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocHtmlMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	if (g_strcmp0 (name, "html") != 0) {
@@ -567,7 +568,7 @@ valadoc_html_markup_writer_real_content_inline_element (ValadocMarkupWriter* bas
 	gboolean _tmp12_ = FALSE;
 	gboolean _tmp13_ = FALSE;
 	gboolean _tmp14_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocHtmlMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	if (g_strcmp0 (name, "title") == 0) {
@@ -676,13 +677,13 @@ valadoc_html_markup_writer_get_type_once (void)
 GType
 valadoc_html_markup_writer_get_type (void)
 {
-	static volatile gsize valadoc_html_markup_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_markup_writer_type_id__volatile)) {
+	static volatile gsize valadoc_html_markup_writer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_markup_writer_type_id__once)) {
 		GType valadoc_html_markup_writer_type_id;
 		valadoc_html_markup_writer_type_id = valadoc_html_markup_writer_get_type_once ();
-		g_once_init_leave (&valadoc_html_markup_writer_type_id__volatile, valadoc_html_markup_writer_type_id);
+		g_once_init_leave (&valadoc_html_markup_writer_type_id__once, valadoc_html_markup_writer_type_id);
 	}
-	return valadoc_html_markup_writer_type_id__volatile;
+	return valadoc_html_markup_writer_type_id__once;
 }
 
 static void

@@ -319,7 +319,7 @@ static GType gtkdoc_dbus_interface_get_type_once (void);
 const gchar*
 gtkdoc_dbus_parameter_direction_to_string (GtkdocDBusParameterDirection self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case GTKDOC_DBUS_PARAMETER_DIRECTION_NONE:
 		{
@@ -355,13 +355,13 @@ gtkdoc_dbus_parameter_direction_get_type_once (void)
 GType
 gtkdoc_dbus_parameter_direction_get_type (void)
 {
-	static volatile gsize gtkdoc_dbus_parameter_direction_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_dbus_parameter_direction_type_id__volatile)) {
+	static volatile gsize gtkdoc_dbus_parameter_direction_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_dbus_parameter_direction_type_id__once)) {
 		GType gtkdoc_dbus_parameter_direction_type_id;
 		gtkdoc_dbus_parameter_direction_type_id = gtkdoc_dbus_parameter_direction_get_type_once ();
-		g_once_init_leave (&gtkdoc_dbus_parameter_direction_type_id__volatile, gtkdoc_dbus_parameter_direction_type_id);
+		g_once_init_leave (&gtkdoc_dbus_parameter_direction_type_id__once, gtkdoc_dbus_parameter_direction_type_id);
 	}
-	return gtkdoc_dbus_parameter_direction_type_id__volatile;
+	return gtkdoc_dbus_parameter_direction_type_id__once;
 }
 
 GtkdocDBusParameter*
@@ -397,31 +397,27 @@ gtkdoc_dbus_parameter_new (const gchar* name,
 gchar*
 gtkdoc_dbus_parameter_to_string (GtkdocDBusParameter* self)
 {
-	GtkdocDBusParameterDirection _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
-	_tmp0_ = self->direction;
-	if (_tmp0_ == GTKDOC_DBUS_PARAMETER_DIRECTION_NONE) {
+	if (self->direction == GTKDOC_DBUS_PARAMETER_DIRECTION_NONE) {
+		const gchar* _tmp0_;
 		const gchar* _tmp1_;
-		const gchar* _tmp2_;
-		gchar* _tmp3_;
-		_tmp1_ = self->signature;
-		_tmp2_ = self->name;
-		_tmp3_ = g_strdup_printf ("<parameter><type>'%s'</type> %s</parameter>", _tmp1_, _tmp2_);
-		result = _tmp3_;
+		gchar* _tmp2_;
+		_tmp0_ = self->signature;
+		_tmp1_ = self->name;
+		_tmp2_ = g_strdup_printf ("<parameter><type>'%s'</type> %s</parameter>", _tmp0_, _tmp1_);
+		result = _tmp2_;
 		return result;
 	} else {
-		GtkdocDBusParameterDirection _tmp4_;
+		const gchar* _tmp3_;
+		const gchar* _tmp4_;
 		const gchar* _tmp5_;
-		const gchar* _tmp6_;
-		const gchar* _tmp7_;
-		gchar* _tmp8_;
-		_tmp4_ = self->direction;
-		_tmp5_ = gtkdoc_dbus_parameter_direction_to_string (_tmp4_);
-		_tmp6_ = self->signature;
-		_tmp7_ = self->name;
-		_tmp8_ = g_strdup_printf ("<parameter>%s <type>'%s'</type> %s</parameter>", _tmp5_, _tmp6_, _tmp7_);
-		result = _tmp8_;
+		gchar* _tmp6_;
+		_tmp3_ = gtkdoc_dbus_parameter_direction_to_string (self->direction);
+		_tmp4_ = self->signature;
+		_tmp5_ = self->name;
+		_tmp6_ = g_strdup_printf ("<parameter>%s <type>'%s'</type> %s</parameter>", _tmp3_, _tmp4_, _tmp5_);
+		result = _tmp6_;
 		return result;
 	}
 }
@@ -598,13 +594,13 @@ gtkdoc_dbus_parameter_get_type_once (void)
 GType
 gtkdoc_dbus_parameter_get_type (void)
 {
-	static volatile gsize gtkdoc_dbus_parameter_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_dbus_parameter_type_id__volatile)) {
+	static volatile gsize gtkdoc_dbus_parameter_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_dbus_parameter_type_id__once)) {
 		GType gtkdoc_dbus_parameter_type_id;
 		gtkdoc_dbus_parameter_type_id = gtkdoc_dbus_parameter_get_type_once ();
-		g_once_init_leave (&gtkdoc_dbus_parameter_type_id__volatile, gtkdoc_dbus_parameter_type_id);
+		g_once_init_leave (&gtkdoc_dbus_parameter_type_id__once, gtkdoc_dbus_parameter_type_id);
 	}
-	return gtkdoc_dbus_parameter_type_id__volatile;
+	return gtkdoc_dbus_parameter_type_id__once;
 }
 
 gpointer
@@ -663,7 +659,7 @@ gtkdoc_dbus_member_get_docbook_id (GtkdocDBusMember* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->name;
 	_tmp1_ = gtkdoc_to_docbook_id (_tmp0_);
@@ -685,7 +681,7 @@ gtkdoc_dbus_member_to_string (GtkdocDBusMember* self,
 	GString* _tmp45_;
 	const gchar* _tmp46_;
 	gchar* _tmp47_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -996,13 +992,13 @@ gtkdoc_dbus_member_get_type_once (void)
 GType
 gtkdoc_dbus_member_get_type (void)
 {
-	static volatile gsize gtkdoc_dbus_member_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_dbus_member_type_id__volatile)) {
+	static volatile gsize gtkdoc_dbus_member_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_dbus_member_type_id__once)) {
 		GType gtkdoc_dbus_member_type_id;
 		gtkdoc_dbus_member_type_id = gtkdoc_dbus_member_get_type_once ();
-		g_once_init_leave (&gtkdoc_dbus_member_type_id__volatile, gtkdoc_dbus_member_type_id);
+		g_once_init_leave (&gtkdoc_dbus_member_type_id__once, gtkdoc_dbus_member_type_id);
 	}
-	return gtkdoc_dbus_member_type_id__volatile;
+	return gtkdoc_dbus_member_type_id__once;
 }
 
 gpointer
@@ -1107,7 +1103,7 @@ gtkdoc_dbus_interface_get_docbook_id (GtkdocDBusInterface* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->name;
 	_tmp1_ = gtkdoc_to_docbook_id (_tmp0_);
@@ -1141,7 +1137,7 @@ gtkdoc_dbus_interface_write (GtkdocDBusInterface* self,
 	gchar* _tmp17_;
 	gchar* _tmp18_;
 	GtkdocTextWriter* _tmp19_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (settings != NULL, FALSE);
 	g_return_val_if_fail (reporter != NULL, FALSE);
@@ -1231,7 +1227,7 @@ gtkdoc_dbus_interface_to_string (GtkdocDBusInterface* self,
 	GString* _tmp139_;
 	const gchar* _tmp140_;
 	gchar* _tmp141_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (reporter != NULL, NULL);
 	method_indent = 0;
@@ -1879,13 +1875,13 @@ gtkdoc_dbus_interface_get_type_once (void)
 GType
 gtkdoc_dbus_interface_get_type (void)
 {
-	static volatile gsize gtkdoc_dbus_interface_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_dbus_interface_type_id__volatile)) {
+	static volatile gsize gtkdoc_dbus_interface_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_dbus_interface_type_id__once)) {
 		GType gtkdoc_dbus_interface_type_id;
 		gtkdoc_dbus_interface_type_id = gtkdoc_dbus_interface_get_type_once ();
-		g_once_init_leave (&gtkdoc_dbus_interface_type_id__volatile, gtkdoc_dbus_interface_type_id);
+		g_once_init_leave (&gtkdoc_dbus_interface_type_id__once, gtkdoc_dbus_interface_type_id);
 	}
-	return gtkdoc_dbus_interface_type_id__volatile;
+	return gtkdoc_dbus_interface_type_id__once;
 }
 
 gpointer

@@ -49,7 +49,7 @@ gchar*
 vala_source_location_to_string (ValaSourceLocation *self)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup_printf ("%d.%d", (*self).line, (*self).column);
 	result = _tmp0_;
 	return result;
@@ -81,12 +81,12 @@ vala_source_location_get_type_once (void)
 GType
 vala_source_location_get_type (void)
 {
-	static volatile gsize vala_source_location_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_source_location_type_id__volatile)) {
+	static volatile gsize vala_source_location_type_id__once = 0;
+	if (g_once_init_enter (&vala_source_location_type_id__once)) {
 		GType vala_source_location_type_id;
 		vala_source_location_type_id = vala_source_location_get_type_once ();
-		g_once_init_leave (&vala_source_location_type_id__volatile, vala_source_location_type_id);
+		g_once_init_leave (&vala_source_location_type_id__once, vala_source_location_type_id);
 	}
-	return vala_source_location_type_id__volatile;
+	return vala_source_location_type_id__once;
 }
 

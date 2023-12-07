@@ -1089,8 +1089,6 @@ namespace Gtk {
 		public bool activate (uint keyval, Gdk.ModifierType modifiers, GLib.Object object);
 		[Version (deprecated = true, deprecated_since = "3.0")]
 		public void add_path (Gtk.PathType path_type, string path_pattern, Gtk.PathPriorityType priority);
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		[Version (replacement = "BindingSet.by_class")]
 		public static unowned Gtk.BindingSet by_class ([CCode (type = "gpointer")] GLib.ObjectClass object_class);
 		public static unowned Gtk.BindingSet? find (string set_name);
 		public static unowned Gtk.BindingSet @new (string name);
@@ -2877,11 +2875,6 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public virtual signal void no_matches ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_icon_accessible_get_type ()")]
-	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected EntryIconAccessible ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_box_get_type ()")]
 	public class EventBox : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -3089,11 +3082,6 @@ namespace Gtk {
 		public signal void search_shortcut ();
 		public signal void show_hidden ();
 		public signal void up_folder ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_file_chooser_widget_accessible_get_type ()")]
-	public class FileChooserWidgetAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected FileChooserWidgetAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_filter_get_type ()")]
 	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
@@ -3793,11 +3781,6 @@ namespace Gtk {
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
 		public string title { get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_header_bar_accessible_get_type ()")]
-	public class HeaderBarAccessible : Gtk.ContainerAccessible, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected HeaderBarAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h", type_id = "gtk_im_context_get_type ()")]
 	public abstract class IMContext : GLib.Object {
@@ -5667,6 +5650,7 @@ namespace Gtk {
 		public signal void on_embedded ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_plug_accessible_get_type ()")]
+	[Version (since = "3.24.30")]
 	public class PlugAccessible : Gtk.WindowAccessible, Atk.Component, Atk.Window {
 		[CCode (has_construct_function = false)]
 		protected PlugAccessible ();
@@ -7115,6 +7099,7 @@ namespace Gtk {
 		public virtual signal bool plug_removed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_socket_accessible_get_type ()")]
+	[Version (since = "3.24.30")]
 	public class SocketAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected SocketAccessible ();
@@ -8683,7 +8668,7 @@ namespace Gtk {
 		public void set_style (Gtk.ToolbarStyle style);
 		public void unset_icon_size ();
 		public void unset_style ();
-		public Gtk.IconSize icon_size { owned get; set; }
+		public Gtk.IconSize icon_size { get; set; }
 		[NoAccessorMethod]
 		public bool icon_size_set { get; set; }
 		[NoAccessorMethod]
@@ -10465,7 +10450,7 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public string? get_current_folder ();
 		[Version (since = "2.14")]
-		public GLib.File get_current_folder_file ();
+		public GLib.File? get_current_folder_file ();
 		[Version (since = "2.4")]
 		public string? get_current_folder_uri ();
 		[Version (since = "3.10")]
@@ -12218,7 +12203,7 @@ namespace Gtk {
 		WORD,
 		WORD_CHAR
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUILDER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUILDER_ERROR_", type_id = "gtk_builder_error_get_type ()")]
 	public errordomain BuilderError {
 		INVALID_TYPE_FUNCTION,
 		UNHANDLED_TAG,
@@ -12236,7 +12221,7 @@ namespace Gtk {
 		INVALID_ID;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_", type_id = "gtk_css_provider_error_get_type ()")]
 	public errordomain CssProviderError {
 		FAILED,
 		SYNTAX,
@@ -12246,7 +12231,7 @@ namespace Gtk {
 		UNKNOWN_VALUE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_", type_id = "gtk_file_chooser_error_get_type ()")]
 	public errordomain FileChooserError {
 		NONEXISTENT,
 		BAD_FILENAME,
@@ -12255,13 +12240,13 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_", type_id = "gtk_icon_theme_error_get_type ()")]
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_", type_id = "gtk_print_error_get_type ()")]
 	public errordomain PrintError {
 		GENERAL,
 		INTERNAL_ERROR,
@@ -12270,14 +12255,14 @@ namespace Gtk {
 		[Version (since = "2.10")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_CHOOSER_ERROR_", type_id = "gtk_recent_chooser_error_get_type ()")]
 	[Version (since = "2.10")]
 	public errordomain RecentChooserError {
 		NOT_FOUND,
 		INVALID_URI;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_", type_id = "gtk_recent_manager_error_get_type ()")]
 	[Version (since = "2.10")]
 	public errordomain RecentManagerError {
 		NOT_FOUND,

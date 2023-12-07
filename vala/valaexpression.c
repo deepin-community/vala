@@ -228,7 +228,7 @@ vala_expression_set_target_value (ValaExpression* self,
 static gboolean
 vala_expression_real_is_constant (ValaExpression* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = FALSE;
 	return result;
 }
@@ -275,7 +275,7 @@ vala_expression_is_pure (ValaExpression* self)
 static gboolean
 vala_expression_real_is_non_null (ValaExpression* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = FALSE;
 	return result;
 }
@@ -300,7 +300,7 @@ static gboolean
 vala_expression_real_is_accessible (ValaExpression* self,
                                     ValaSymbol* sym)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	result = TRUE;
 	return result;
@@ -328,7 +328,7 @@ vala_expression_is_always_true (ValaExpression* self)
 	ValaBooleanLiteral* literal = NULL;
 	gboolean _tmp0_ = FALSE;
 	ValaBooleanLiteral* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	literal = VALA_IS_BOOLEAN_LITERAL (self) ? ((ValaBooleanLiteral*) self) : NULL;
 	_tmp1_ = literal;
@@ -356,7 +356,7 @@ vala_expression_is_always_false (ValaExpression* self)
 	ValaBooleanLiteral* literal = NULL;
 	gboolean _tmp0_ = FALSE;
 	ValaBooleanLiteral* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	literal = VALA_IS_BOOLEAN_LITERAL (self) ? ((ValaBooleanLiteral*) self) : NULL;
 	_tmp1_ = literal;
@@ -537,7 +537,7 @@ vala_expression_real_check (ValaCodeNode* base,
 	ValaDataType* result_type = NULL;
 	ValaMethodCall* _tmp147_;
 	ValaDataType* _tmp172_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	call = VALA_IS_METHOD_CALL (self) ? ((ValaMethodCall*) self) : NULL;
@@ -547,7 +547,7 @@ vala_expression_real_check (ValaCodeNode* base,
 		ValaExpression* _tmp3_;
 		ValaExpression* _tmp4_;
 		_tmp2_ = call;
-		_tmp3_ = vala_method_call_get_call (_tmp2_);
+		_tmp3_ = vala_callable_expression_get_call ((ValaCallableExpression*) _tmp2_);
 		_tmp4_ = _tmp3_;
 		_tmp0_ = _tmp4_;
 	} else {
@@ -1498,12 +1498,12 @@ vala_expression_get_type_once (void)
 GType
 vala_expression_get_type (void)
 {
-	static volatile gsize vala_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_expression_type_id__volatile)) {
+	static volatile gsize vala_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_expression_type_id__once)) {
 		GType vala_expression_type_id;
 		vala_expression_type_id = vala_expression_get_type_once ();
-		g_once_init_leave (&vala_expression_type_id__volatile, vala_expression_type_id);
+		g_once_init_leave (&vala_expression_type_id__once, vala_expression_type_id);
 	}
-	return vala_expression_type_id__volatile;
+	return vala_expression_type_id__once;
 }
 

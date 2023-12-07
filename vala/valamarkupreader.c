@@ -252,13 +252,26 @@ vala_markup_reader_new_from_string (const gchar* filename,
 	return vala_markup_reader_construct_from_string (VALA_TYPE_MARKUP_READER, filename, content);
 }
 
+gboolean
+vala_markup_reader_has_attribute (ValaMarkupReader* self,
+                                  const gchar* attr)
+{
+	ValaMap* _tmp0_;
+	gboolean result;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (attr != NULL, FALSE);
+	_tmp0_ = self->priv->attributes;
+	result = vala_map_contains (_tmp0_, attr);
+	return result;
+}
+
 gchar*
 vala_markup_reader_get_attribute (ValaMarkupReader* self,
                                   const gchar* attr)
 {
 	ValaMap* _tmp0_;
 	gpointer _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (attr != NULL, NULL);
 	_tmp0_ = self->priv->attributes;
@@ -275,7 +288,7 @@ vala_markup_reader_get_attributes (ValaMarkupReader* self)
 	GEqualFunc _tmp1_;
 	GEqualFunc _tmp2_;
 	ValaHashMap* _tmp3_;
-	ValaMap* result = NULL;
+	ValaMap* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_str_hash;
 	_tmp1_ = g_str_equal;
@@ -337,7 +350,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -360,7 +373,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -402,7 +415,7 @@ vala_markup_reader_read_name (ValaMarkupReader* self)
 	gchar* _tmp27_;
 	gchar* _tmp28_;
 	gchar* _tmp29_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->current;
 	begin = _tmp0_;
@@ -514,7 +527,7 @@ vala_markup_reader_read_token (ValaMarkupReader* self,
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp109_;
-	ValaMarkupTokenType result = 0;
+	ValaMarkupTokenType result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->attributes;
 	vala_map_clear (_tmp0_);
@@ -936,7 +949,7 @@ vala_markup_reader_text (ValaMarkupReader* self,
 	GString* _tmp103_;
 	const gchar* _tmp104_;
 	gchar* _tmp105_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	content = _tmp0_;
@@ -976,146 +989,152 @@ vala_markup_reader_text (ValaMarkupReader* self,
 			if (u == ((gunichar) '&')) {
 				gchar* next_pos = NULL;
 				gchar* _tmp11_;
-				gchar* _tmp12_;
+				gchar buffer[16] = {0};
+				gsize _tmp12_ = 0UL;
+				gchar* _tmp13_;
+				gchar* _tmp14_;
+				gchar* _tmp17_;
 				_tmp11_ = self->priv->current;
 				next_pos = _tmp11_ + g_unichar_to_utf8 (u, NULL);
-				_tmp12_ = next_pos;
-				if (g_str_has_prefix ((const gchar*) _tmp12_, "amp;")) {
-					GString* _tmp13_;
-					gchar* _tmp14_;
+				_tmp13_ = self->priv->end;
+				_tmp14_ = next_pos;
+				if ((_tmp13_ - _tmp14_) >= ((gsize) 16)) {
+					_tmp12_ = (gsize) (16 - 1);
+				} else {
 					gchar* _tmp15_;
 					gchar* _tmp16_;
-					gchar* _tmp17_;
-					gchar* _tmp18_;
-					GString* _tmp19_;
+					_tmp15_ = self->priv->end;
+					_tmp16_ = next_pos;
+					_tmp12_ = _tmp15_ - _tmp16_;
+				}
+				_tmp17_ = next_pos;
+				memcpy (buffer, _tmp17_, _tmp12_);
+				if (g_str_has_prefix ((const gchar*) buffer, "amp;")) {
+					GString* _tmp18_;
+					gchar* _tmp19_;
 					gchar* _tmp20_;
 					gchar* _tmp21_;
-					_tmp13_ = content;
-					_tmp14_ = text_begin;
-					_tmp15_ = self->priv->current;
-					_tmp16_ = text_begin;
-					_tmp17_ = string_substring ((const gchar*) _tmp14_, (glong) 0, (glong) ((gint) (_tmp15_ - _tmp16_)));
-					_tmp18_ = _tmp17_;
-					g_string_append (_tmp13_, _tmp18_);
-					_g_free0 (_tmp18_);
-					_tmp19_ = content;
-					g_string_append_c (_tmp19_, '&');
-					_tmp20_ = self->priv->current;
-					self->priv->current = _tmp20_ + 5;
-					_tmp21_ = self->priv->current;
-					text_begin = _tmp21_;
-				} else {
 					gchar* _tmp22_;
-					_tmp22_ = next_pos;
-					if (g_str_has_prefix ((const gchar*) _tmp22_, "quot;")) {
-						GString* _tmp23_;
-						gchar* _tmp24_;
-						gchar* _tmp25_;
-						gchar* _tmp26_;
-						gchar* _tmp27_;
+					gchar* _tmp23_;
+					GString* _tmp24_;
+					gchar* _tmp25_;
+					gchar* _tmp26_;
+					_tmp18_ = content;
+					_tmp19_ = text_begin;
+					_tmp20_ = self->priv->current;
+					_tmp21_ = text_begin;
+					_tmp22_ = string_substring ((const gchar*) _tmp19_, (glong) 0, (glong) ((gint) (_tmp20_ - _tmp21_)));
+					_tmp23_ = _tmp22_;
+					g_string_append (_tmp18_, _tmp23_);
+					_g_free0 (_tmp23_);
+					_tmp24_ = content;
+					g_string_append_c (_tmp24_, '&');
+					_tmp25_ = self->priv->current;
+					self->priv->current = _tmp25_ + 5;
+					_tmp26_ = self->priv->current;
+					text_begin = _tmp26_;
+				} else {
+					if (g_str_has_prefix ((const gchar*) buffer, "quot;")) {
+						GString* _tmp27_;
 						gchar* _tmp28_;
-						GString* _tmp29_;
+						gchar* _tmp29_;
 						gchar* _tmp30_;
 						gchar* _tmp31_;
-						_tmp23_ = content;
-						_tmp24_ = text_begin;
-						_tmp25_ = self->priv->current;
-						_tmp26_ = text_begin;
-						_tmp27_ = string_substring ((const gchar*) _tmp24_, (glong) 0, (glong) ((gint) (_tmp25_ - _tmp26_)));
-						_tmp28_ = _tmp27_;
-						g_string_append (_tmp23_, _tmp28_);
-						_g_free0 (_tmp28_);
-						_tmp29_ = content;
-						g_string_append_c (_tmp29_, '"');
-						_tmp30_ = self->priv->current;
-						self->priv->current = _tmp30_ + 6;
-						_tmp31_ = self->priv->current;
-						text_begin = _tmp31_;
-					} else {
 						gchar* _tmp32_;
-						_tmp32_ = next_pos;
-						if (g_str_has_prefix ((const gchar*) _tmp32_, "apos;")) {
-							GString* _tmp33_;
-							gchar* _tmp34_;
-							gchar* _tmp35_;
-							gchar* _tmp36_;
+						GString* _tmp33_;
+						gchar* _tmp34_;
+						gchar* _tmp35_;
+						_tmp27_ = content;
+						_tmp28_ = text_begin;
+						_tmp29_ = self->priv->current;
+						_tmp30_ = text_begin;
+						_tmp31_ = string_substring ((const gchar*) _tmp28_, (glong) 0, (glong) ((gint) (_tmp29_ - _tmp30_)));
+						_tmp32_ = _tmp31_;
+						g_string_append (_tmp27_, _tmp32_);
+						_g_free0 (_tmp32_);
+						_tmp33_ = content;
+						g_string_append_c (_tmp33_, '"');
+						_tmp34_ = self->priv->current;
+						self->priv->current = _tmp34_ + 6;
+						_tmp35_ = self->priv->current;
+						text_begin = _tmp35_;
+					} else {
+						if (g_str_has_prefix ((const gchar*) buffer, "apos;")) {
+							GString* _tmp36_;
 							gchar* _tmp37_;
 							gchar* _tmp38_;
-							GString* _tmp39_;
+							gchar* _tmp39_;
 							gchar* _tmp40_;
 							gchar* _tmp41_;
-							_tmp33_ = content;
-							_tmp34_ = text_begin;
-							_tmp35_ = self->priv->current;
-							_tmp36_ = text_begin;
-							_tmp37_ = string_substring ((const gchar*) _tmp34_, (glong) 0, (glong) ((gint) (_tmp35_ - _tmp36_)));
-							_tmp38_ = _tmp37_;
-							g_string_append (_tmp33_, _tmp38_);
-							_g_free0 (_tmp38_);
-							_tmp39_ = content;
-							g_string_append_c (_tmp39_, '\'');
-							_tmp40_ = self->priv->current;
-							self->priv->current = _tmp40_ + 6;
-							_tmp41_ = self->priv->current;
-							text_begin = _tmp41_;
+							GString* _tmp42_;
+							gchar* _tmp43_;
+							gchar* _tmp44_;
+							_tmp36_ = content;
+							_tmp37_ = text_begin;
+							_tmp38_ = self->priv->current;
+							_tmp39_ = text_begin;
+							_tmp40_ = string_substring ((const gchar*) _tmp37_, (glong) 0, (glong) ((gint) (_tmp38_ - _tmp39_)));
+							_tmp41_ = _tmp40_;
+							g_string_append (_tmp36_, _tmp41_);
+							_g_free0 (_tmp41_);
+							_tmp42_ = content;
+							g_string_append_c (_tmp42_, '\'');
+							_tmp43_ = self->priv->current;
+							self->priv->current = _tmp43_ + 6;
+							_tmp44_ = self->priv->current;
+							text_begin = _tmp44_;
 						} else {
-							gchar* _tmp42_;
-							_tmp42_ = next_pos;
-							if (g_str_has_prefix ((const gchar*) _tmp42_, "lt;")) {
-								GString* _tmp43_;
-								gchar* _tmp44_;
-								gchar* _tmp45_;
+							if (g_str_has_prefix ((const gchar*) buffer, "lt;")) {
+								GString* _tmp45_;
 								gchar* _tmp46_;
 								gchar* _tmp47_;
 								gchar* _tmp48_;
-								GString* _tmp49_;
+								gchar* _tmp49_;
 								gchar* _tmp50_;
-								gchar* _tmp51_;
-								_tmp43_ = content;
-								_tmp44_ = text_begin;
-								_tmp45_ = self->priv->current;
-								_tmp46_ = text_begin;
-								_tmp47_ = string_substring ((const gchar*) _tmp44_, (glong) 0, (glong) ((gint) (_tmp45_ - _tmp46_)));
-								_tmp48_ = _tmp47_;
-								g_string_append (_tmp43_, _tmp48_);
-								_g_free0 (_tmp48_);
-								_tmp49_ = content;
-								g_string_append_c (_tmp49_, '<');
-								_tmp50_ = self->priv->current;
-								self->priv->current = _tmp50_ + 4;
-								_tmp51_ = self->priv->current;
-								text_begin = _tmp51_;
-							} else {
+								GString* _tmp51_;
 								gchar* _tmp52_;
-								_tmp52_ = next_pos;
-								if (g_str_has_prefix ((const gchar*) _tmp52_, "gt;")) {
-									GString* _tmp53_;
-									gchar* _tmp54_;
+								gchar* _tmp53_;
+								_tmp45_ = content;
+								_tmp46_ = text_begin;
+								_tmp47_ = self->priv->current;
+								_tmp48_ = text_begin;
+								_tmp49_ = string_substring ((const gchar*) _tmp46_, (glong) 0, (glong) ((gint) (_tmp47_ - _tmp48_)));
+								_tmp50_ = _tmp49_;
+								g_string_append (_tmp45_, _tmp50_);
+								_g_free0 (_tmp50_);
+								_tmp51_ = content;
+								g_string_append_c (_tmp51_, '<');
+								_tmp52_ = self->priv->current;
+								self->priv->current = _tmp52_ + 4;
+								_tmp53_ = self->priv->current;
+								text_begin = _tmp53_;
+							} else {
+								if (g_str_has_prefix ((const gchar*) buffer, "gt;")) {
+									GString* _tmp54_;
 									gchar* _tmp55_;
 									gchar* _tmp56_;
 									gchar* _tmp57_;
 									gchar* _tmp58_;
-									GString* _tmp59_;
-									gchar* _tmp60_;
+									gchar* _tmp59_;
+									GString* _tmp60_;
 									gchar* _tmp61_;
-									_tmp53_ = content;
-									_tmp54_ = text_begin;
-									_tmp55_ = self->priv->current;
-									_tmp56_ = text_begin;
-									_tmp57_ = string_substring ((const gchar*) _tmp54_, (glong) 0, (glong) ((gint) (_tmp55_ - _tmp56_)));
-									_tmp58_ = _tmp57_;
-									g_string_append (_tmp53_, _tmp58_);
-									_g_free0 (_tmp58_);
-									_tmp59_ = content;
-									g_string_append_c (_tmp59_, '>');
-									_tmp60_ = self->priv->current;
-									self->priv->current = _tmp60_ + 4;
-									_tmp61_ = self->priv->current;
-									text_begin = _tmp61_;
-								} else {
 									gchar* _tmp62_;
-									_tmp62_ = next_pos;
-									if (g_str_has_prefix ((const gchar*) _tmp62_, "percnt;")) {
+									_tmp54_ = content;
+									_tmp55_ = text_begin;
+									_tmp56_ = self->priv->current;
+									_tmp57_ = text_begin;
+									_tmp58_ = string_substring ((const gchar*) _tmp55_, (glong) 0, (glong) ((gint) (_tmp56_ - _tmp57_)));
+									_tmp59_ = _tmp58_;
+									g_string_append (_tmp54_, _tmp59_);
+									_g_free0 (_tmp59_);
+									_tmp60_ = content;
+									g_string_append_c (_tmp60_, '>');
+									_tmp61_ = self->priv->current;
+									self->priv->current = _tmp61_ + 4;
+									_tmp62_ = self->priv->current;
+									text_begin = _tmp62_;
+								} else {
+									if (g_str_has_prefix ((const gchar*) buffer, "percnt;")) {
 										GString* _tmp63_;
 										gchar* _tmp64_;
 										gchar* _tmp65_;
@@ -1481,13 +1500,13 @@ vala_markup_reader_get_type_once (void)
 GType
 vala_markup_reader_get_type (void)
 {
-	static volatile gsize vala_markup_reader_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_markup_reader_type_id__volatile)) {
+	static volatile gsize vala_markup_reader_type_id__once = 0;
+	if (g_once_init_enter (&vala_markup_reader_type_id__once)) {
 		GType vala_markup_reader_type_id;
 		vala_markup_reader_type_id = vala_markup_reader_get_type_once ();
-		g_once_init_leave (&vala_markup_reader_type_id__volatile, vala_markup_reader_type_id);
+		g_once_init_leave (&vala_markup_reader_type_id__once, vala_markup_reader_type_id);
 	}
-	return vala_markup_reader_type_id__volatile;
+	return vala_markup_reader_type_id__once;
 }
 
 gpointer
@@ -1513,7 +1532,7 @@ vala_markup_reader_unref (gpointer instance)
 const gchar*
 vala_markup_token_type_to_string (ValaMarkupTokenType self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALA_MARKUP_TOKEN_TYPE_START_ELEMENT:
 		{
@@ -1555,12 +1574,12 @@ vala_markup_token_type_get_type_once (void)
 GType
 vala_markup_token_type_get_type (void)
 {
-	static volatile gsize vala_markup_token_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_markup_token_type_type_id__volatile)) {
+	static volatile gsize vala_markup_token_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_markup_token_type_type_id__once)) {
 		GType vala_markup_token_type_type_id;
 		vala_markup_token_type_type_id = vala_markup_token_type_get_type_once ();
-		g_once_init_leave (&vala_markup_token_type_type_id__volatile, vala_markup_token_type_type_id);
+		g_once_init_leave (&vala_markup_token_type_type_id__once, vala_markup_token_type_type_id);
 	}
-	return vala_markup_token_type_type_id__volatile;
+	return vala_markup_token_type_type_id__once;
 }
 

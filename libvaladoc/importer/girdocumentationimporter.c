@@ -32,8 +32,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
+
+#define VALADOC_IMPORTER_GIR_DOCUMENTATION_IMPORTER_GIR_VERSION "1.2"
 
 enum  {
 	VALADOC_IMPORTER_GIR_DOCUMENTATION_IMPORTER_0_PROPERTY,
@@ -71,7 +73,6 @@ struct _ValadocImporterGirDocumentationImporterImplicitParameterPos {
 static gint ValadocImporterGirDocumentationImporter_private_offset;
 static gpointer valadoc_importer_gir_documentation_importer_parent_class = NULL;
 
-#define VALADOC_IMPORTER_GIR_DOCUMENTATION_IMPORTER_GIR_VERSION "1.2"
 static void valadoc_importer_gir_documentation_importer_real_process (ValadocImporterDocumentationImporter* base,
                                                                const gchar* source_file);
 static void valadoc_importer_gir_documentation_importer_next (ValadocImporterGirDocumentationImporter* self);
@@ -142,11 +143,11 @@ static ValadocApiSourceComment* valadoc_importer_gir_documentation_importer_pars
                                                                                 const gchar* element_name);
 static void valadoc_importer_gir_documentation_importer_parse_enumeration_member (ValadocImporterGirDocumentationImporter* self);
 static void valadoc_importer_gir_documentation_importer_parse_return_value (ValadocImporterGirDocumentationImporter* self,
-                                                                     ValadocApiSourceComment* * comment,
+                                                                     ValadocApiSourceComment** comment,
                                                                      gint* array_length_ret);
 static void valadoc_importer_gir_documentation_importer_parse_parameter (ValadocImporterGirDocumentationImporter* self,
-                                                                  ValadocApiSourceComment* * comment,
-                                                                  gchar* * param_name,
+                                                                  ValadocApiSourceComment** comment,
+                                                                  gchar** param_name,
                                                                   gint* destroy_pos,
                                                                   gint* closure_pos,
                                                                   gint* array_length_pos);
@@ -290,19 +291,16 @@ valadoc_importer_gir_documentation_importer_real_process (ValadocImporterDocumen
 		gboolean _tmp14_ = FALSE;
 		_tmp14_ = TRUE;
 		while (TRUE) {
-			ValaMarkupTokenType _tmp20_;
 			if (!_tmp14_) {
 				gboolean _tmp15_ = FALSE;
-				ValaMarkupTokenType _tmp16_;
-				_tmp16_ = self->priv->current_token;
-				if (_tmp16_ != VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-					ValaMarkupReader* _tmp17_;
+				if (self->priv->current_token != VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+					ValaMarkupReader* _tmp16_;
+					const gchar* _tmp17_;
 					const gchar* _tmp18_;
-					const gchar* _tmp19_;
-					_tmp17_ = self->priv->reader;
-					_tmp18_ = vala_markup_reader_get_name (_tmp17_);
-					_tmp19_ = _tmp18_;
-					_tmp15_ = g_strcmp0 (_tmp19_, "repository") != 0;
+					_tmp16_ = self->priv->reader;
+					_tmp17_ = vala_markup_reader_get_name (_tmp16_);
+					_tmp18_ = _tmp17_;
+					_tmp15_ = g_strcmp0 (_tmp18_, "repository") != 0;
 				} else {
 					_tmp15_ = FALSE;
 				}
@@ -312,8 +310,7 @@ valadoc_importer_gir_documentation_importer_real_process (ValadocImporterDocumen
 			}
 			_tmp14_ = FALSE;
 			valadoc_importer_gir_documentation_importer_next (self);
-			_tmp20_ = self->priv->current_token;
-			if (_tmp20_ == VALA_MARKUP_TOKEN_TYPE_EOF) {
+			if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_EOF) {
 				valadoc_importer_gir_documentation_importer_error (self, "unexpected end of file");
 				_vala_source_file_unref0 (data);
 				return;
@@ -335,7 +332,7 @@ valadoc_importer_gir_documentation_importer_find_parameter (ValadocImporterGirDo
 {
 	ValaList* parameters = NULL;
 	ValaList* _tmp0_;
-	ValadocApiParameter* result = NULL;
+	ValadocApiParameter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (node != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
@@ -404,7 +401,7 @@ valadoc_importer_gir_documentation_importer_get_cparameter_name (ValadocImporter
 	gboolean _tmp0_ = FALSE;
 	const gchar* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (length_pos < 0) {
 		_tmp0_ = TRUE;
@@ -669,22 +666,20 @@ valadoc_importer_gir_documentation_importer_next (ValadocImporterGirDocumentatio
 	ValaSourceLocation _tmp2_ = {0};
 	ValaMarkupTokenType _tmp3_;
 	gboolean _tmp4_ = FALSE;
-	ValaMarkupTokenType _tmp5_;
 	g_return_if_fail (self != NULL);
 	_tmp0_ = self->priv->reader;
 	_tmp3_ = vala_markup_reader_read_token (_tmp0_, &_tmp1_, &_tmp2_);
 	self->priv->begin = _tmp1_;
 	self->priv->end = _tmp2_;
 	self->priv->current_token = _tmp3_;
-	_tmp5_ = self->priv->current_token;
-	if (_tmp5_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-		ValaMarkupReader* _tmp6_;
+	if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+		ValaMarkupReader* _tmp5_;
+		const gchar* _tmp6_;
 		const gchar* _tmp7_;
-		const gchar* _tmp8_;
-		_tmp6_ = self->priv->reader;
-		_tmp7_ = vala_markup_reader_get_name (_tmp6_);
-		_tmp8_ = _tmp7_;
-		_tmp4_ = g_strcmp0 (_tmp8_, "annotation") == 0;
+		_tmp5_ = self->priv->reader;
+		_tmp6_ = vala_markup_reader_get_name (_tmp5_);
+		_tmp7_ = _tmp6_;
+		_tmp4_ = g_strcmp0 (_tmp7_, "annotation") == 0;
 	} else {
 		_tmp4_ = FALSE;
 	}
@@ -699,28 +694,26 @@ valadoc_importer_gir_documentation_importer_start_element (ValadocImporterGirDoc
                                                            const gchar* name)
 {
 	gboolean _tmp0_ = FALSE;
-	ValaMarkupTokenType _tmp1_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (name != NULL);
-	_tmp1_ = self->priv->current_token;
-	if (_tmp1_ != VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+	if (self->priv->current_token != VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
 		_tmp0_ = TRUE;
 	} else {
-		ValaMarkupReader* _tmp2_;
+		ValaMarkupReader* _tmp1_;
+		const gchar* _tmp2_;
 		const gchar* _tmp3_;
-		const gchar* _tmp4_;
-		_tmp2_ = self->priv->reader;
-		_tmp3_ = vala_markup_reader_get_name (_tmp2_);
-		_tmp4_ = _tmp3_;
-		_tmp0_ = g_strcmp0 (_tmp4_, name) != 0;
+		_tmp1_ = self->priv->reader;
+		_tmp2_ = vala_markup_reader_get_name (_tmp1_);
+		_tmp3_ = _tmp2_;
+		_tmp0_ = g_strcmp0 (_tmp3_, name) != 0;
 	}
 	if (_tmp0_) {
+		gchar* _tmp4_;
 		gchar* _tmp5_;
-		gchar* _tmp6_;
-		_tmp5_ = g_strdup_printf ("expected start element of `%s'", name);
-		_tmp6_ = _tmp5_;
-		valadoc_importer_gir_documentation_importer_error (self, _tmp6_);
-		_g_free0 (_tmp6_);
+		_tmp4_ = g_strdup_printf ("expected start element of `%s'", name);
+		_tmp5_ = _tmp4_;
+		valadoc_importer_gir_documentation_importer_error (self, _tmp5_);
+		_g_free0 (_tmp5_);
 	}
 }
 
@@ -729,28 +722,26 @@ valadoc_importer_gir_documentation_importer_end_element (ValadocImporterGirDocum
                                                          const gchar* name)
 {
 	gboolean _tmp0_ = FALSE;
-	ValaMarkupTokenType _tmp1_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (name != NULL);
-	_tmp1_ = self->priv->current_token;
-	if (_tmp1_ != VALA_MARKUP_TOKEN_TYPE_END_ELEMENT) {
+	if (self->priv->current_token != VALA_MARKUP_TOKEN_TYPE_END_ELEMENT) {
 		_tmp0_ = TRUE;
 	} else {
-		ValaMarkupReader* _tmp2_;
+		ValaMarkupReader* _tmp1_;
+		const gchar* _tmp2_;
 		const gchar* _tmp3_;
-		const gchar* _tmp4_;
-		_tmp2_ = self->priv->reader;
-		_tmp3_ = vala_markup_reader_get_name (_tmp2_);
-		_tmp4_ = _tmp3_;
-		_tmp0_ = g_strcmp0 (_tmp4_, name) != 0;
+		_tmp1_ = self->priv->reader;
+		_tmp2_ = vala_markup_reader_get_name (_tmp1_);
+		_tmp3_ = _tmp2_;
+		_tmp0_ = g_strcmp0 (_tmp3_, name) != 0;
 	}
 	if (_tmp0_) {
+		gchar* _tmp4_;
 		gchar* _tmp5_;
-		gchar* _tmp6_;
-		_tmp5_ = g_strdup_printf ("expected end element of `%s'", name);
-		_tmp6_ = _tmp5_;
-		valadoc_importer_gir_documentation_importer_error (self, _tmp6_);
-		_g_free0 (_tmp6_);
+		_tmp4_ = g_strdup_printf ("expected end element of `%s'", name);
+		_tmp5_ = _tmp4_;
+		valadoc_importer_gir_documentation_importer_error (self, _tmp5_);
+		_g_free0 (_tmp5_);
 	}
 	valadoc_importer_gir_documentation_importer_next (self);
 }
@@ -787,59 +778,57 @@ valadoc_importer_gir_documentation_importer_parse_repository (ValadocImporterGir
 	}
 	valadoc_importer_gir_documentation_importer_next (self);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp9_;
-		ValaMarkupReader* _tmp10_;
+		ValaMarkupReader* _tmp9_;
+		const gchar* _tmp10_;
 		const gchar* _tmp11_;
-		const gchar* _tmp12_;
-		_tmp9_ = self->priv->current_token;
-		if (!(_tmp9_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp10_ = self->priv->reader;
-		_tmp11_ = vala_markup_reader_get_name (_tmp10_);
-		_tmp12_ = _tmp11_;
-		if (g_strcmp0 (_tmp12_, "namespace") == 0) {
+		_tmp9_ = self->priv->reader;
+		_tmp10_ = vala_markup_reader_get_name (_tmp9_);
+		_tmp11_ = _tmp10_;
+		if (g_strcmp0 (_tmp11_, "namespace") == 0) {
 			valadoc_importer_gir_documentation_importer_parse_namespace (self);
 		} else {
-			ValaMarkupReader* _tmp13_;
+			ValaMarkupReader* _tmp12_;
+			const gchar* _tmp13_;
 			const gchar* _tmp14_;
-			const gchar* _tmp15_;
-			_tmp13_ = self->priv->reader;
-			_tmp14_ = vala_markup_reader_get_name (_tmp13_);
-			_tmp15_ = _tmp14_;
-			if (g_strcmp0 (_tmp15_, "include") == 0) {
+			_tmp12_ = self->priv->reader;
+			_tmp13_ = vala_markup_reader_get_name (_tmp12_);
+			_tmp14_ = _tmp13_;
+			if (g_strcmp0 (_tmp14_, "include") == 0) {
 				valadoc_importer_gir_documentation_importer_parse_include (self);
 			} else {
-				ValaMarkupReader* _tmp16_;
+				ValaMarkupReader* _tmp15_;
+				const gchar* _tmp16_;
 				const gchar* _tmp17_;
-				const gchar* _tmp18_;
-				_tmp16_ = self->priv->reader;
-				_tmp17_ = vala_markup_reader_get_name (_tmp16_);
-				_tmp18_ = _tmp17_;
-				if (g_strcmp0 (_tmp18_, "package") == 0) {
+				_tmp15_ = self->priv->reader;
+				_tmp16_ = vala_markup_reader_get_name (_tmp15_);
+				_tmp17_ = _tmp16_;
+				if (g_strcmp0 (_tmp17_, "package") == 0) {
 					valadoc_importer_gir_documentation_importer_parse_package (self);
 				} else {
-					ValaMarkupReader* _tmp19_;
+					ValaMarkupReader* _tmp18_;
+					const gchar* _tmp19_;
 					const gchar* _tmp20_;
-					const gchar* _tmp21_;
-					_tmp19_ = self->priv->reader;
-					_tmp20_ = vala_markup_reader_get_name (_tmp19_);
-					_tmp21_ = _tmp20_;
-					if (g_strcmp0 (_tmp21_, "c:include") == 0) {
+					_tmp18_ = self->priv->reader;
+					_tmp19_ = vala_markup_reader_get_name (_tmp18_);
+					_tmp20_ = _tmp19_;
+					if (g_strcmp0 (_tmp20_, "c:include") == 0) {
 						valadoc_importer_gir_documentation_importer_parse_c_include (self);
 					} else {
-						ValaMarkupReader* _tmp22_;
+						ValaMarkupReader* _tmp21_;
+						const gchar* _tmp22_;
 						const gchar* _tmp23_;
-						const gchar* _tmp24_;
+						gchar* _tmp24_;
 						gchar* _tmp25_;
-						gchar* _tmp26_;
-						_tmp22_ = self->priv->reader;
-						_tmp23_ = vala_markup_reader_get_name (_tmp22_);
-						_tmp24_ = _tmp23_;
-						_tmp25_ = g_strdup_printf ("unknown child element `%s' in `repository'", _tmp24_);
-						_tmp26_ = _tmp25_;
-						valadoc_importer_gir_documentation_importer_error (self, _tmp26_);
-						_g_free0 (_tmp26_);
+						_tmp21_ = self->priv->reader;
+						_tmp22_ = vala_markup_reader_get_name (_tmp21_);
+						_tmp23_ = _tmp22_;
+						_tmp24_ = g_strdup_printf ("unknown child element `%s' in `repository'", _tmp23_);
+						_tmp25_ = _tmp24_;
+						valadoc_importer_gir_documentation_importer_error (self, _tmp25_);
+						_g_free0 (_tmp25_);
 						valadoc_importer_gir_documentation_importer_skip_element (self);
 					}
 				}
@@ -884,26 +873,20 @@ valadoc_importer_gir_documentation_importer_skip_element (ValadocImporterGirDocu
 	valadoc_importer_gir_documentation_importer_next (self);
 	level = 1;
 	while (TRUE) {
-		ValaMarkupTokenType _tmp0_;
 		if (!(level > 0)) {
 			break;
 		}
-		_tmp0_ = self->priv->current_token;
-		if (_tmp0_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-			gint _tmp1_;
-			_tmp1_ = level;
-			level = _tmp1_ + 1;
+		if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+			gint _tmp0_;
+			_tmp0_ = level;
+			level = _tmp0_ + 1;
 		} else {
-			ValaMarkupTokenType _tmp2_;
-			_tmp2_ = self->priv->current_token;
-			if (_tmp2_ == VALA_MARKUP_TOKEN_TYPE_END_ELEMENT) {
-				gint _tmp3_;
-				_tmp3_ = level;
-				level = _tmp3_ - 1;
+			if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_END_ELEMENT) {
+				gint _tmp1_;
+				_tmp1_ = level;
+				level = _tmp1_ - 1;
 			} else {
-				ValaMarkupTokenType _tmp4_;
-				_tmp4_ = self->priv->current_token;
-				if (_tmp4_ == VALA_MARKUP_TOKEN_TYPE_EOF) {
+				if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_EOF) {
 					valadoc_importer_gir_documentation_importer_error (self, "unexpected end of file");
 					break;
 				}
@@ -920,140 +903,138 @@ valadoc_importer_gir_documentation_importer_parse_namespace (ValadocImporterGirD
 	valadoc_importer_gir_documentation_importer_start_element (self, "namespace");
 	valadoc_importer_gir_documentation_importer_next (self);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp0_;
-		ValaMarkupReader* _tmp1_;
+		ValaMarkupReader* _tmp0_;
+		const gchar* _tmp1_;
 		const gchar* _tmp2_;
-		const gchar* _tmp3_;
-		_tmp0_ = self->priv->current_token;
-		if (!(_tmp0_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp1_ = self->priv->reader;
-		_tmp2_ = vala_markup_reader_get_name (_tmp1_);
-		_tmp3_ = _tmp2_;
-		if (g_strcmp0 (_tmp3_, "alias") == 0) {
+		_tmp0_ = self->priv->reader;
+		_tmp1_ = vala_markup_reader_get_name (_tmp0_);
+		_tmp2_ = _tmp1_;
+		if (g_strcmp0 (_tmp2_, "alias") == 0) {
 			valadoc_importer_gir_documentation_importer_parse_alias (self);
 		} else {
-			ValaMarkupReader* _tmp4_;
+			ValaMarkupReader* _tmp3_;
+			const gchar* _tmp4_;
 			const gchar* _tmp5_;
-			const gchar* _tmp6_;
-			_tmp4_ = self->priv->reader;
-			_tmp5_ = vala_markup_reader_get_name (_tmp4_);
-			_tmp6_ = _tmp5_;
-			if (g_strcmp0 (_tmp6_, "enumeration") == 0) {
+			_tmp3_ = self->priv->reader;
+			_tmp4_ = vala_markup_reader_get_name (_tmp3_);
+			_tmp5_ = _tmp4_;
+			if (g_strcmp0 (_tmp5_, "enumeration") == 0) {
 				valadoc_importer_gir_documentation_importer_parse_enumeration (self, "enumeration");
 			} else {
-				ValaMarkupReader* _tmp7_;
+				ValaMarkupReader* _tmp6_;
+				const gchar* _tmp7_;
 				const gchar* _tmp8_;
-				const gchar* _tmp9_;
-				_tmp7_ = self->priv->reader;
-				_tmp8_ = vala_markup_reader_get_name (_tmp7_);
-				_tmp9_ = _tmp8_;
-				if (g_strcmp0 (_tmp9_, "bitfield") == 0) {
+				_tmp6_ = self->priv->reader;
+				_tmp7_ = vala_markup_reader_get_name (_tmp6_);
+				_tmp8_ = _tmp7_;
+				if (g_strcmp0 (_tmp8_, "bitfield") == 0) {
 					valadoc_importer_gir_documentation_importer_parse_bitfield (self);
 				} else {
-					ValaMarkupReader* _tmp10_;
+					ValaMarkupReader* _tmp9_;
+					const gchar* _tmp10_;
 					const gchar* _tmp11_;
-					const gchar* _tmp12_;
-					_tmp10_ = self->priv->reader;
-					_tmp11_ = vala_markup_reader_get_name (_tmp10_);
-					_tmp12_ = _tmp11_;
-					if (g_strcmp0 (_tmp12_, "function") == 0) {
+					_tmp9_ = self->priv->reader;
+					_tmp10_ = vala_markup_reader_get_name (_tmp9_);
+					_tmp11_ = _tmp10_;
+					if (g_strcmp0 (_tmp11_, "function") == 0) {
 						valadoc_importer_gir_documentation_importer_parse_method (self, "function");
 					} else {
-						ValaMarkupReader* _tmp13_;
+						ValaMarkupReader* _tmp12_;
+						const gchar* _tmp13_;
 						const gchar* _tmp14_;
-						const gchar* _tmp15_;
-						_tmp13_ = self->priv->reader;
-						_tmp14_ = vala_markup_reader_get_name (_tmp13_);
-						_tmp15_ = _tmp14_;
-						if (g_strcmp0 (_tmp15_, "function-macro") == 0) {
+						_tmp12_ = self->priv->reader;
+						_tmp13_ = vala_markup_reader_get_name (_tmp12_);
+						_tmp14_ = _tmp13_;
+						if (g_strcmp0 (_tmp14_, "function-macro") == 0) {
 							valadoc_importer_gir_documentation_importer_skip_element (self);
 						} else {
-							ValaMarkupReader* _tmp16_;
+							ValaMarkupReader* _tmp15_;
+							const gchar* _tmp16_;
 							const gchar* _tmp17_;
-							const gchar* _tmp18_;
-							_tmp16_ = self->priv->reader;
-							_tmp17_ = vala_markup_reader_get_name (_tmp16_);
-							_tmp18_ = _tmp17_;
-							if (g_strcmp0 (_tmp18_, "callback") == 0) {
+							_tmp15_ = self->priv->reader;
+							_tmp16_ = vala_markup_reader_get_name (_tmp15_);
+							_tmp17_ = _tmp16_;
+							if (g_strcmp0 (_tmp17_, "callback") == 0) {
 								valadoc_importer_gir_documentation_importer_parse_callback (self);
 							} else {
-								ValaMarkupReader* _tmp19_;
+								ValaMarkupReader* _tmp18_;
+								const gchar* _tmp19_;
 								const gchar* _tmp20_;
-								const gchar* _tmp21_;
-								_tmp19_ = self->priv->reader;
-								_tmp20_ = vala_markup_reader_get_name (_tmp19_);
-								_tmp21_ = _tmp20_;
-								if (g_strcmp0 (_tmp21_, "record") == 0) {
+								_tmp18_ = self->priv->reader;
+								_tmp19_ = vala_markup_reader_get_name (_tmp18_);
+								_tmp20_ = _tmp19_;
+								if (g_strcmp0 (_tmp20_, "record") == 0) {
 									valadoc_importer_gir_documentation_importer_parse_record (self);
 								} else {
-									ValaMarkupReader* _tmp22_;
+									ValaMarkupReader* _tmp21_;
+									const gchar* _tmp22_;
 									const gchar* _tmp23_;
-									const gchar* _tmp24_;
-									_tmp22_ = self->priv->reader;
-									_tmp23_ = vala_markup_reader_get_name (_tmp22_);
-									_tmp24_ = _tmp23_;
-									if (g_strcmp0 (_tmp24_, "class") == 0) {
+									_tmp21_ = self->priv->reader;
+									_tmp22_ = vala_markup_reader_get_name (_tmp21_);
+									_tmp23_ = _tmp22_;
+									if (g_strcmp0 (_tmp23_, "class") == 0) {
 										valadoc_importer_gir_documentation_importer_parse_class (self);
 									} else {
-										ValaMarkupReader* _tmp25_;
+										ValaMarkupReader* _tmp24_;
+										const gchar* _tmp25_;
 										const gchar* _tmp26_;
-										const gchar* _tmp27_;
-										_tmp25_ = self->priv->reader;
-										_tmp26_ = vala_markup_reader_get_name (_tmp25_);
-										_tmp27_ = _tmp26_;
-										if (g_strcmp0 (_tmp27_, "interface") == 0) {
+										_tmp24_ = self->priv->reader;
+										_tmp25_ = vala_markup_reader_get_name (_tmp24_);
+										_tmp26_ = _tmp25_;
+										if (g_strcmp0 (_tmp26_, "interface") == 0) {
 											valadoc_importer_gir_documentation_importer_parse_interface (self);
 										} else {
-											ValaMarkupReader* _tmp28_;
+											ValaMarkupReader* _tmp27_;
+											const gchar* _tmp28_;
 											const gchar* _tmp29_;
-											const gchar* _tmp30_;
-											_tmp28_ = self->priv->reader;
-											_tmp29_ = vala_markup_reader_get_name (_tmp28_);
-											_tmp30_ = _tmp29_;
-											if (g_strcmp0 (_tmp30_, "glib:boxed") == 0) {
+											_tmp27_ = self->priv->reader;
+											_tmp28_ = vala_markup_reader_get_name (_tmp27_);
+											_tmp29_ = _tmp28_;
+											if (g_strcmp0 (_tmp29_, "glib:boxed") == 0) {
 												valadoc_importer_gir_documentation_importer_parse_boxed (self, "glib:boxed");
 											} else {
-												ValaMarkupReader* _tmp31_;
+												ValaMarkupReader* _tmp30_;
+												const gchar* _tmp31_;
 												const gchar* _tmp32_;
-												const gchar* _tmp33_;
-												_tmp31_ = self->priv->reader;
-												_tmp32_ = vala_markup_reader_get_name (_tmp31_);
-												_tmp33_ = _tmp32_;
-												if (g_strcmp0 (_tmp33_, "union") == 0) {
+												_tmp30_ = self->priv->reader;
+												_tmp31_ = vala_markup_reader_get_name (_tmp30_);
+												_tmp32_ = _tmp31_;
+												if (g_strcmp0 (_tmp32_, "union") == 0) {
 													valadoc_importer_gir_documentation_importer_parse_union (self);
 												} else {
-													ValaMarkupReader* _tmp34_;
+													ValaMarkupReader* _tmp33_;
+													const gchar* _tmp34_;
 													const gchar* _tmp35_;
-													const gchar* _tmp36_;
-													_tmp34_ = self->priv->reader;
-													_tmp35_ = vala_markup_reader_get_name (_tmp34_);
-													_tmp36_ = _tmp35_;
-													if (g_strcmp0 (_tmp36_, "constant") == 0) {
+													_tmp33_ = self->priv->reader;
+													_tmp34_ = vala_markup_reader_get_name (_tmp33_);
+													_tmp35_ = _tmp34_;
+													if (g_strcmp0 (_tmp35_, "constant") == 0) {
 														valadoc_importer_gir_documentation_importer_parse_constant (self);
 													} else {
-														ValaMarkupReader* _tmp37_;
+														ValaMarkupReader* _tmp36_;
+														const gchar* _tmp37_;
 														const gchar* _tmp38_;
-														const gchar* _tmp39_;
-														_tmp37_ = self->priv->reader;
-														_tmp38_ = vala_markup_reader_get_name (_tmp37_);
-														_tmp39_ = _tmp38_;
-														if (g_strcmp0 (_tmp39_, "docsection") == 0) {
+														_tmp36_ = self->priv->reader;
+														_tmp37_ = vala_markup_reader_get_name (_tmp36_);
+														_tmp38_ = _tmp37_;
+														if (g_strcmp0 (_tmp38_, "docsection") == 0) {
 															valadoc_importer_gir_documentation_importer_skip_element (self);
 														} else {
-															ValaMarkupReader* _tmp40_;
+															ValaMarkupReader* _tmp39_;
+															const gchar* _tmp40_;
 															const gchar* _tmp41_;
-															const gchar* _tmp42_;
+															gchar* _tmp42_;
 															gchar* _tmp43_;
-															gchar* _tmp44_;
-															_tmp40_ = self->priv->reader;
-															_tmp41_ = vala_markup_reader_get_name (_tmp40_);
-															_tmp42_ = _tmp41_;
-															_tmp43_ = g_strdup_printf ("unknown child element `%s' in `namespace'", _tmp42_);
-															_tmp44_ = _tmp43_;
-															valadoc_importer_gir_documentation_importer_error (self, _tmp44_);
-															_g_free0 (_tmp44_);
+															_tmp39_ = self->priv->reader;
+															_tmp40_ = vala_markup_reader_get_name (_tmp39_);
+															_tmp41_ = _tmp40_;
+															_tmp42_ = g_strdup_printf ("unknown child element `%s' in `namespace'", _tmp41_);
+															_tmp43_ = _tmp42_;
+															valadoc_importer_gir_documentation_importer_error (self, _tmp43_);
+															_g_free0 (_tmp43_);
 															valadoc_importer_gir_documentation_importer_skip_element (self);
 														}
 													}
@@ -1102,107 +1083,103 @@ valadoc_importer_gir_documentation_importer_parse_symbol_doc (ValadocImporterGir
 	ValadocApiSourceComment* doc_deprecated = NULL;
 	ValadocApiSourceComment* doc_version = NULL;
 	ValadocApiSourceComment* doc_stability = NULL;
-	ValadocApiGirSourceComment* _tmp32_;
-	ValadocApiGirSourceComment* result = NULL;
+	ValadocApiGirSourceComment* _tmp30_;
+	ValadocApiGirSourceComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	comment = NULL;
 	doc_deprecated = NULL;
 	doc_version = NULL;
 	doc_stability = NULL;
 	while (TRUE) {
-		ValaMarkupTokenType _tmp0_;
-		ValaMarkupReader* _tmp1_;
+		ValaMarkupReader* _tmp0_;
+		const gchar* _tmp1_;
 		const gchar* _tmp2_;
-		const gchar* _tmp3_;
-		_tmp0_ = self->priv->current_token;
-		if (!(_tmp0_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp1_ = self->priv->reader;
-		_tmp2_ = vala_markup_reader_get_name (_tmp1_);
-		_tmp3_ = _tmp2_;
-		if (g_strcmp0 (_tmp3_, "doc") == 0) {
-			ValaMarkupTokenType _tmp4_;
+		_tmp0_ = self->priv->reader;
+		_tmp1_ = vala_markup_reader_get_name (_tmp0_);
+		_tmp2_ = _tmp1_;
+		if (g_strcmp0 (_tmp2_, "doc") == 0) {
 			valadoc_importer_gir_documentation_importer_start_element (self, "doc");
 			valadoc_importer_gir_documentation_importer_next (self);
-			_tmp4_ = self->priv->current_token;
-			if (_tmp4_ == VALA_MARKUP_TOKEN_TYPE_TEXT) {
-				ValaMarkupReader* _tmp5_;
-				const gchar* _tmp6_;
-				const gchar* _tmp7_;
-				ValadocApiSourceFile* _tmp8_;
+			if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_TEXT) {
+				ValaMarkupReader* _tmp3_;
+				const gchar* _tmp4_;
+				const gchar* _tmp5_;
+				ValadocApiSourceFile* _tmp6_;
+				ValaSourceLocation _tmp7_;
+				ValaSourceLocation _tmp8_;
 				ValaSourceLocation _tmp9_;
 				ValaSourceLocation _tmp10_;
-				ValaSourceLocation _tmp11_;
-				ValaSourceLocation _tmp12_;
-				ValadocApiGirSourceComment* _tmp13_;
-				_tmp5_ = self->priv->reader;
-				_tmp6_ = vala_markup_reader_get_content (_tmp5_);
-				_tmp7_ = _tmp6_;
-				_tmp8_ = self->priv->file;
-				_tmp9_ = self->priv->begin;
-				_tmp10_ = self->priv->begin;
-				_tmp11_ = self->priv->end;
-				_tmp12_ = self->priv->end;
-				_tmp13_ = valadoc_api_gir_source_comment_new (_tmp7_, _tmp8_, _tmp9_.line, _tmp10_.column, _tmp11_.line, _tmp12_.column);
+				ValadocApiGirSourceComment* _tmp11_;
+				_tmp3_ = self->priv->reader;
+				_tmp4_ = vala_markup_reader_get_content (_tmp3_);
+				_tmp5_ = _tmp4_;
+				_tmp6_ = self->priv->file;
+				_tmp7_ = self->priv->begin;
+				_tmp8_ = self->priv->begin;
+				_tmp9_ = self->priv->end;
+				_tmp10_ = self->priv->end;
+				_tmp11_ = valadoc_api_gir_source_comment_new (_tmp5_, _tmp6_, _tmp7_.line, _tmp8_.column, _tmp9_.line, _tmp10_.column);
 				_valadoc_api_source_comment_unref0 (comment);
-				comment = _tmp13_;
+				comment = _tmp11_;
 				valadoc_importer_gir_documentation_importer_next (self);
 			}
 			valadoc_importer_gir_documentation_importer_end_element (self, "doc");
 		} else {
-			ValaMarkupReader* _tmp14_;
-			const gchar* _tmp15_;
-			const gchar* _tmp16_;
-			_tmp14_ = self->priv->reader;
-			_tmp15_ = vala_markup_reader_get_name (_tmp14_);
-			_tmp16_ = _tmp15_;
-			if (g_strcmp0 (_tmp16_, "doc-deprecated") == 0) {
-				ValadocApiSourceComment* _tmp17_;
-				_tmp17_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-deprecated");
+			ValaMarkupReader* _tmp12_;
+			const gchar* _tmp13_;
+			const gchar* _tmp14_;
+			_tmp12_ = self->priv->reader;
+			_tmp13_ = vala_markup_reader_get_name (_tmp12_);
+			_tmp14_ = _tmp13_;
+			if (g_strcmp0 (_tmp14_, "doc-deprecated") == 0) {
+				ValadocApiSourceComment* _tmp15_;
+				_tmp15_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-deprecated");
 				_valadoc_api_source_comment_unref0 (doc_deprecated);
-				doc_deprecated = _tmp17_;
+				doc_deprecated = _tmp15_;
 			} else {
-				ValaMarkupReader* _tmp18_;
-				const gchar* _tmp19_;
-				const gchar* _tmp20_;
-				_tmp18_ = self->priv->reader;
-				_tmp19_ = vala_markup_reader_get_name (_tmp18_);
-				_tmp20_ = _tmp19_;
-				if (g_strcmp0 (_tmp20_, "doc-version") == 0) {
-					ValadocApiSourceComment* _tmp21_;
-					_tmp21_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-version");
+				ValaMarkupReader* _tmp16_;
+				const gchar* _tmp17_;
+				const gchar* _tmp18_;
+				_tmp16_ = self->priv->reader;
+				_tmp17_ = vala_markup_reader_get_name (_tmp16_);
+				_tmp18_ = _tmp17_;
+				if (g_strcmp0 (_tmp18_, "doc-version") == 0) {
+					ValadocApiSourceComment* _tmp19_;
+					_tmp19_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-version");
 					_valadoc_api_source_comment_unref0 (doc_version);
-					doc_version = _tmp21_;
+					doc_version = _tmp19_;
 				} else {
-					ValaMarkupReader* _tmp22_;
-					const gchar* _tmp23_;
-					const gchar* _tmp24_;
-					_tmp22_ = self->priv->reader;
-					_tmp23_ = vala_markup_reader_get_name (_tmp22_);
-					_tmp24_ = _tmp23_;
-					if (g_strcmp0 (_tmp24_, "doc-stability") == 0) {
-						ValadocApiSourceComment* _tmp25_;
-						_tmp25_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-stability");
+					ValaMarkupReader* _tmp20_;
+					const gchar* _tmp21_;
+					const gchar* _tmp22_;
+					_tmp20_ = self->priv->reader;
+					_tmp21_ = vala_markup_reader_get_name (_tmp20_);
+					_tmp22_ = _tmp21_;
+					if (g_strcmp0 (_tmp22_, "doc-stability") == 0) {
+						ValadocApiSourceComment* _tmp23_;
+						_tmp23_ = valadoc_importer_gir_documentation_importer_parse_doc (self, "doc-stability");
 						_valadoc_api_source_comment_unref0 (doc_stability);
-						doc_stability = _tmp25_;
+						doc_stability = _tmp23_;
 					} else {
-						ValaMarkupReader* _tmp26_;
-						const gchar* _tmp27_;
-						const gchar* _tmp28_;
-						_tmp26_ = self->priv->reader;
-						_tmp27_ = vala_markup_reader_get_name (_tmp26_);
-						_tmp28_ = _tmp27_;
-						if (g_strcmp0 (_tmp28_, "source-position") == 0) {
+						ValaMarkupReader* _tmp24_;
+						const gchar* _tmp25_;
+						const gchar* _tmp26_;
+						_tmp24_ = self->priv->reader;
+						_tmp25_ = vala_markup_reader_get_name (_tmp24_);
+						_tmp26_ = _tmp25_;
+						if (g_strcmp0 (_tmp26_, "source-position") == 0) {
 							valadoc_importer_gir_documentation_importer_skip_element (self);
 						} else {
-							ValaMarkupReader* _tmp29_;
-							const gchar* _tmp30_;
-							const gchar* _tmp31_;
-							_tmp29_ = self->priv->reader;
-							_tmp30_ = vala_markup_reader_get_name (_tmp29_);
-							_tmp31_ = _tmp30_;
-							if (g_strcmp0 (_tmp31_, "attribute") == 0) {
+							ValaMarkupReader* _tmp27_;
+							const gchar* _tmp28_;
+							const gchar* _tmp29_;
+							_tmp27_ = self->priv->reader;
+							_tmp28_ = vala_markup_reader_get_name (_tmp27_);
+							_tmp29_ = _tmp28_;
+							if (g_strcmp0 (_tmp29_, "attribute") == 0) {
 								valadoc_importer_gir_documentation_importer_skip_element (self);
 							} else {
 								break;
@@ -1213,23 +1190,23 @@ valadoc_importer_gir_documentation_importer_parse_symbol_doc (ValadocImporterGir
 			}
 		}
 	}
-	_tmp32_ = comment;
-	if (_tmp32_ != NULL) {
+	_tmp30_ = comment;
+	if (_tmp30_ != NULL) {
+		ValadocApiGirSourceComment* _tmp31_;
+		ValadocApiSourceComment* _tmp32_;
 		ValadocApiGirSourceComment* _tmp33_;
 		ValadocApiSourceComment* _tmp34_;
 		ValadocApiGirSourceComment* _tmp35_;
 		ValadocApiSourceComment* _tmp36_;
-		ValadocApiGirSourceComment* _tmp37_;
-		ValadocApiSourceComment* _tmp38_;
+		_tmp31_ = comment;
+		_tmp32_ = doc_deprecated;
+		valadoc_api_gir_source_comment_set_deprecated_comment (_tmp31_, _tmp32_);
 		_tmp33_ = comment;
-		_tmp34_ = doc_deprecated;
-		valadoc_api_gir_source_comment_set_deprecated_comment (_tmp33_, _tmp34_);
+		_tmp34_ = doc_version;
+		valadoc_api_gir_source_comment_set_version_comment (_tmp33_, _tmp34_);
 		_tmp35_ = comment;
-		_tmp36_ = doc_version;
-		valadoc_api_gir_source_comment_set_version_comment (_tmp35_, _tmp36_);
-		_tmp37_ = comment;
-		_tmp38_ = doc_stability;
-		valadoc_api_gir_source_comment_set_stability_comment (_tmp37_, _tmp38_);
+		_tmp36_ = doc_stability;
+		valadoc_api_gir_source_comment_set_stability_comment (_tmp35_, _tmp36_);
 	}
 	result = comment;
 	_valadoc_api_source_comment_unref0 (doc_stability);
@@ -1246,8 +1223,7 @@ valadoc_importer_gir_documentation_importer_parse_doc (ValadocImporterGirDocumen
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	ValadocApiSourceComment* comment = NULL;
-	ValaMarkupTokenType _tmp3_;
-	ValadocApiSourceComment* result = NULL;
+	ValadocApiSourceComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element_name != NULL, NULL);
 	_tmp0_ = self->priv->reader;
@@ -1260,28 +1236,27 @@ valadoc_importer_gir_documentation_importer_parse_doc (ValadocImporterGirDocumen
 	valadoc_importer_gir_documentation_importer_start_element (self, element_name);
 	valadoc_importer_gir_documentation_importer_next (self);
 	comment = NULL;
-	_tmp3_ = self->priv->current_token;
-	if (_tmp3_ == VALA_MARKUP_TOKEN_TYPE_TEXT) {
-		ValaMarkupReader* _tmp4_;
+	if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_TEXT) {
+		ValaMarkupReader* _tmp3_;
+		const gchar* _tmp4_;
 		const gchar* _tmp5_;
-		const gchar* _tmp6_;
-		ValadocApiSourceFile* _tmp7_;
+		ValadocApiSourceFile* _tmp6_;
+		ValaSourceLocation _tmp7_;
 		ValaSourceLocation _tmp8_;
 		ValaSourceLocation _tmp9_;
 		ValaSourceLocation _tmp10_;
-		ValaSourceLocation _tmp11_;
-		ValadocApiSourceComment* _tmp12_;
-		_tmp4_ = self->priv->reader;
-		_tmp5_ = vala_markup_reader_get_content (_tmp4_);
-		_tmp6_ = _tmp5_;
-		_tmp7_ = self->priv->file;
+		ValadocApiSourceComment* _tmp11_;
+		_tmp3_ = self->priv->reader;
+		_tmp4_ = vala_markup_reader_get_content (_tmp3_);
+		_tmp5_ = _tmp4_;
+		_tmp6_ = self->priv->file;
+		_tmp7_ = self->priv->begin;
 		_tmp8_ = self->priv->begin;
-		_tmp9_ = self->priv->begin;
+		_tmp9_ = self->priv->end;
 		_tmp10_ = self->priv->end;
-		_tmp11_ = self->priv->end;
-		_tmp12_ = valadoc_api_source_comment_new (_tmp6_, _tmp7_, _tmp8_.line, _tmp9_.column, _tmp10_.line, _tmp11_.column);
+		_tmp11_ = valadoc_api_source_comment_new (_tmp5_, _tmp6_, _tmp7_.line, _tmp8_.column, _tmp9_.line, _tmp10_.column);
 		_valadoc_api_source_comment_unref0 (comment);
-		comment = _tmp12_;
+		comment = _tmp11_;
 		valadoc_importer_gir_documentation_importer_next (self);
 	}
 	valadoc_importer_gir_documentation_importer_end_element (self, element_name);
@@ -1313,41 +1288,39 @@ valadoc_importer_gir_documentation_importer_parse_enumeration (ValadocImporterGi
 	_tmp4_ = comment;
 	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp3_, _tmp4_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp5_;
-		ValaMarkupReader* _tmp6_;
+		ValaMarkupReader* _tmp5_;
+		const gchar* _tmp6_;
 		const gchar* _tmp7_;
-		const gchar* _tmp8_;
-		_tmp5_ = self->priv->current_token;
-		if (!(_tmp5_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp6_ = self->priv->reader;
-		_tmp7_ = vala_markup_reader_get_name (_tmp6_);
-		_tmp8_ = _tmp7_;
-		if (g_strcmp0 (_tmp8_, "member") == 0) {
+		_tmp5_ = self->priv->reader;
+		_tmp6_ = vala_markup_reader_get_name (_tmp5_);
+		_tmp7_ = _tmp6_;
+		if (g_strcmp0 (_tmp7_, "member") == 0) {
 			valadoc_importer_gir_documentation_importer_parse_enumeration_member (self);
 		} else {
-			ValaMarkupReader* _tmp9_;
+			ValaMarkupReader* _tmp8_;
+			const gchar* _tmp9_;
 			const gchar* _tmp10_;
-			const gchar* _tmp11_;
-			_tmp9_ = self->priv->reader;
-			_tmp10_ = vala_markup_reader_get_name (_tmp9_);
-			_tmp11_ = _tmp10_;
-			if (g_strcmp0 (_tmp11_, "function") == 0) {
+			_tmp8_ = self->priv->reader;
+			_tmp9_ = vala_markup_reader_get_name (_tmp8_);
+			_tmp10_ = _tmp9_;
+			if (g_strcmp0 (_tmp10_, "function") == 0) {
 				valadoc_importer_gir_documentation_importer_skip_element (self);
 			} else {
-				ValaMarkupReader* _tmp12_;
+				ValaMarkupReader* _tmp11_;
+				const gchar* _tmp12_;
 				const gchar* _tmp13_;
-				const gchar* _tmp14_;
+				gchar* _tmp14_;
 				gchar* _tmp15_;
-				gchar* _tmp16_;
-				_tmp12_ = self->priv->reader;
-				_tmp13_ = vala_markup_reader_get_name (_tmp12_);
-				_tmp14_ = _tmp13_;
-				_tmp15_ = g_strdup_printf ("unknown child element `%s' in `%s'", _tmp14_, element_name);
-				_tmp16_ = _tmp15_;
-				valadoc_importer_gir_documentation_importer_error (self, _tmp16_);
-				_g_free0 (_tmp16_);
+				_tmp11_ = self->priv->reader;
+				_tmp12_ = vala_markup_reader_get_name (_tmp11_);
+				_tmp13_ = _tmp12_;
+				_tmp14_ = g_strdup_printf ("unknown child element `%s' in `%s'", _tmp13_, element_name);
+				_tmp15_ = _tmp14_;
+				valadoc_importer_gir_documentation_importer_error (self, _tmp15_);
+				_g_free0 (_tmp15_);
 				valadoc_importer_gir_documentation_importer_skip_element (self);
 			}
 		}
@@ -1389,7 +1362,7 @@ valadoc_importer_gir_documentation_importer_parse_enumeration_member (ValadocImp
 
 static void
 valadoc_importer_gir_documentation_importer_parse_return_value (ValadocImporterGirDocumentationImporter* self,
-                                                                ValadocApiSourceComment* * comment,
+                                                                ValadocApiSourceComment** comment,
                                                                 gint* array_length_ret)
 {
 	ValadocApiSourceComment* _vala_comment = NULL;
@@ -1417,8 +1390,8 @@ valadoc_importer_gir_documentation_importer_parse_return_value (ValadocImporterG
 
 static void
 valadoc_importer_gir_documentation_importer_parse_parameter (ValadocImporterGirDocumentationImporter* self,
-                                                             ValadocApiSourceComment* * comment,
-                                                             gchar* * param_name,
+                                                             ValadocApiSourceComment** comment,
+                                                             gchar** param_name,
                                                              gint* destroy_pos,
                                                              gint* closure_pos,
                                                              gint* array_length_pos)
@@ -1612,68 +1585,66 @@ valadoc_importer_gir_documentation_importer_parse_record (ValadocImporterGirDocu
 		valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp11_, _tmp12_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
 	}
 	while (TRUE) {
-		ValaMarkupTokenType _tmp13_;
-		ValaMarkupReader* _tmp14_;
+		ValaMarkupReader* _tmp13_;
+		const gchar* _tmp14_;
 		const gchar* _tmp15_;
-		const gchar* _tmp16_;
-		_tmp13_ = self->priv->current_token;
-		if (!(_tmp13_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp14_ = self->priv->reader;
-		_tmp15_ = vala_markup_reader_get_name (_tmp14_);
-		_tmp16_ = _tmp15_;
-		if (g_strcmp0 (_tmp16_, "field") == 0) {
+		_tmp13_ = self->priv->reader;
+		_tmp14_ = vala_markup_reader_get_name (_tmp13_);
+		_tmp15_ = _tmp14_;
+		if (g_strcmp0 (_tmp15_, "field") == 0) {
 			valadoc_importer_gir_documentation_importer_parse_field (self);
 		} else {
-			ValaMarkupReader* _tmp17_;
+			ValaMarkupReader* _tmp16_;
+			const gchar* _tmp17_;
 			const gchar* _tmp18_;
-			const gchar* _tmp19_;
-			_tmp17_ = self->priv->reader;
-			_tmp18_ = vala_markup_reader_get_name (_tmp17_);
-			_tmp19_ = _tmp18_;
-			if (g_strcmp0 (_tmp19_, "constructor") == 0) {
+			_tmp16_ = self->priv->reader;
+			_tmp17_ = vala_markup_reader_get_name (_tmp16_);
+			_tmp18_ = _tmp17_;
+			if (g_strcmp0 (_tmp18_, "constructor") == 0) {
 				valadoc_importer_gir_documentation_importer_parse_constructor (self);
 			} else {
-				ValaMarkupReader* _tmp20_;
+				ValaMarkupReader* _tmp19_;
+				const gchar* _tmp20_;
 				const gchar* _tmp21_;
-				const gchar* _tmp22_;
-				_tmp20_ = self->priv->reader;
-				_tmp21_ = vala_markup_reader_get_name (_tmp20_);
-				_tmp22_ = _tmp21_;
-				if (g_strcmp0 (_tmp22_, "method") == 0) {
+				_tmp19_ = self->priv->reader;
+				_tmp20_ = vala_markup_reader_get_name (_tmp19_);
+				_tmp21_ = _tmp20_;
+				if (g_strcmp0 (_tmp21_, "method") == 0) {
 					valadoc_importer_gir_documentation_importer_parse_method (self, "method");
 				} else {
-					ValaMarkupReader* _tmp23_;
+					ValaMarkupReader* _tmp22_;
+					const gchar* _tmp23_;
 					const gchar* _tmp24_;
-					const gchar* _tmp25_;
-					_tmp23_ = self->priv->reader;
-					_tmp24_ = vala_markup_reader_get_name (_tmp23_);
-					_tmp25_ = _tmp24_;
-					if (g_strcmp0 (_tmp25_, "function") == 0) {
+					_tmp22_ = self->priv->reader;
+					_tmp23_ = vala_markup_reader_get_name (_tmp22_);
+					_tmp24_ = _tmp23_;
+					if (g_strcmp0 (_tmp24_, "function") == 0) {
 						valadoc_importer_gir_documentation_importer_skip_element (self);
 					} else {
-						ValaMarkupReader* _tmp26_;
+						ValaMarkupReader* _tmp25_;
+						const gchar* _tmp26_;
 						const gchar* _tmp27_;
-						const gchar* _tmp28_;
-						_tmp26_ = self->priv->reader;
-						_tmp27_ = vala_markup_reader_get_name (_tmp26_);
-						_tmp28_ = _tmp27_;
-						if (g_strcmp0 (_tmp28_, "union") == 0) {
+						_tmp25_ = self->priv->reader;
+						_tmp26_ = vala_markup_reader_get_name (_tmp25_);
+						_tmp27_ = _tmp26_;
+						if (g_strcmp0 (_tmp27_, "union") == 0) {
 							valadoc_importer_gir_documentation_importer_parse_union (self);
 						} else {
-							ValaMarkupReader* _tmp29_;
+							ValaMarkupReader* _tmp28_;
+							const gchar* _tmp29_;
 							const gchar* _tmp30_;
-							const gchar* _tmp31_;
+							gchar* _tmp31_;
 							gchar* _tmp32_;
-							gchar* _tmp33_;
-							_tmp29_ = self->priv->reader;
-							_tmp30_ = vala_markup_reader_get_name (_tmp29_);
-							_tmp31_ = _tmp30_;
-							_tmp32_ = g_strdup_printf ("unknown child element `%s' in `record'", _tmp31_);
-							_tmp33_ = _tmp32_;
-							valadoc_importer_gir_documentation_importer_error (self, _tmp33_);
-							_g_free0 (_tmp33_);
+							_tmp28_ = self->priv->reader;
+							_tmp29_ = vala_markup_reader_get_name (_tmp28_);
+							_tmp30_ = _tmp29_;
+							_tmp31_ = g_strdup_printf ("unknown child element `%s' in `record'", _tmp30_);
+							_tmp32_ = _tmp31_;
+							valadoc_importer_gir_documentation_importer_error (self, _tmp32_);
+							_g_free0 (_tmp32_);
 							valadoc_importer_gir_documentation_importer_skip_element (self);
 						}
 					}
@@ -1719,113 +1690,111 @@ valadoc_importer_gir_documentation_importer_parse_class (ValadocImporterGirDocum
 	_tmp7_ = comment;
 	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp6_, _tmp7_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp8_;
-		ValaMarkupReader* _tmp9_;
+		ValaMarkupReader* _tmp8_;
+		const gchar* _tmp9_;
 		const gchar* _tmp10_;
-		const gchar* _tmp11_;
-		_tmp8_ = self->priv->current_token;
-		if (!(_tmp8_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp9_ = self->priv->reader;
-		_tmp10_ = vala_markup_reader_get_name (_tmp9_);
-		_tmp11_ = _tmp10_;
-		if (g_strcmp0 (_tmp11_, "implements") == 0) {
+		_tmp8_ = self->priv->reader;
+		_tmp9_ = vala_markup_reader_get_name (_tmp8_);
+		_tmp10_ = _tmp9_;
+		if (g_strcmp0 (_tmp10_, "implements") == 0) {
 			valadoc_importer_gir_documentation_importer_skip_element (self);
 		} else {
-			ValaMarkupReader* _tmp12_;
+			ValaMarkupReader* _tmp11_;
+			const gchar* _tmp12_;
 			const gchar* _tmp13_;
-			const gchar* _tmp14_;
-			_tmp12_ = self->priv->reader;
-			_tmp13_ = vala_markup_reader_get_name (_tmp12_);
-			_tmp14_ = _tmp13_;
-			if (g_strcmp0 (_tmp14_, "constant") == 0) {
+			_tmp11_ = self->priv->reader;
+			_tmp12_ = vala_markup_reader_get_name (_tmp11_);
+			_tmp13_ = _tmp12_;
+			if (g_strcmp0 (_tmp13_, "constant") == 0) {
 				valadoc_importer_gir_documentation_importer_parse_constant (self);
 			} else {
-				ValaMarkupReader* _tmp15_;
+				ValaMarkupReader* _tmp14_;
+				const gchar* _tmp15_;
 				const gchar* _tmp16_;
-				const gchar* _tmp17_;
-				_tmp15_ = self->priv->reader;
-				_tmp16_ = vala_markup_reader_get_name (_tmp15_);
-				_tmp17_ = _tmp16_;
-				if (g_strcmp0 (_tmp17_, "field") == 0) {
+				_tmp14_ = self->priv->reader;
+				_tmp15_ = vala_markup_reader_get_name (_tmp14_);
+				_tmp16_ = _tmp15_;
+				if (g_strcmp0 (_tmp16_, "field") == 0) {
 					valadoc_importer_gir_documentation_importer_parse_field (self);
 				} else {
-					ValaMarkupReader* _tmp18_;
+					ValaMarkupReader* _tmp17_;
+					const gchar* _tmp18_;
 					const gchar* _tmp19_;
-					const gchar* _tmp20_;
-					_tmp18_ = self->priv->reader;
-					_tmp19_ = vala_markup_reader_get_name (_tmp18_);
-					_tmp20_ = _tmp19_;
-					if (g_strcmp0 (_tmp20_, "property") == 0) {
+					_tmp17_ = self->priv->reader;
+					_tmp18_ = vala_markup_reader_get_name (_tmp17_);
+					_tmp19_ = _tmp18_;
+					if (g_strcmp0 (_tmp19_, "property") == 0) {
 						valadoc_importer_gir_documentation_importer_parse_property (self);
 					} else {
-						ValaMarkupReader* _tmp21_;
+						ValaMarkupReader* _tmp20_;
+						const gchar* _tmp21_;
 						const gchar* _tmp22_;
-						const gchar* _tmp23_;
-						_tmp21_ = self->priv->reader;
-						_tmp22_ = vala_markup_reader_get_name (_tmp21_);
-						_tmp23_ = _tmp22_;
-						if (g_strcmp0 (_tmp23_, "constructor") == 0) {
+						_tmp20_ = self->priv->reader;
+						_tmp21_ = vala_markup_reader_get_name (_tmp20_);
+						_tmp22_ = _tmp21_;
+						if (g_strcmp0 (_tmp22_, "constructor") == 0) {
 							valadoc_importer_gir_documentation_importer_parse_constructor (self);
 						} else {
-							ValaMarkupReader* _tmp24_;
+							ValaMarkupReader* _tmp23_;
+							const gchar* _tmp24_;
 							const gchar* _tmp25_;
-							const gchar* _tmp26_;
-							_tmp24_ = self->priv->reader;
-							_tmp25_ = vala_markup_reader_get_name (_tmp24_);
-							_tmp26_ = _tmp25_;
-							if (g_strcmp0 (_tmp26_, "function") == 0) {
+							_tmp23_ = self->priv->reader;
+							_tmp24_ = vala_markup_reader_get_name (_tmp23_);
+							_tmp25_ = _tmp24_;
+							if (g_strcmp0 (_tmp25_, "function") == 0) {
 								valadoc_importer_gir_documentation_importer_parse_method (self, "function");
 							} else {
-								ValaMarkupReader* _tmp27_;
+								ValaMarkupReader* _tmp26_;
+								const gchar* _tmp27_;
 								const gchar* _tmp28_;
-								const gchar* _tmp29_;
-								_tmp27_ = self->priv->reader;
-								_tmp28_ = vala_markup_reader_get_name (_tmp27_);
-								_tmp29_ = _tmp28_;
-								if (g_strcmp0 (_tmp29_, "method") == 0) {
+								_tmp26_ = self->priv->reader;
+								_tmp27_ = vala_markup_reader_get_name (_tmp26_);
+								_tmp28_ = _tmp27_;
+								if (g_strcmp0 (_tmp28_, "method") == 0) {
 									valadoc_importer_gir_documentation_importer_parse_method (self, "method");
 								} else {
-									ValaMarkupReader* _tmp30_;
+									ValaMarkupReader* _tmp29_;
+									const gchar* _tmp30_;
 									const gchar* _tmp31_;
-									const gchar* _tmp32_;
-									_tmp30_ = self->priv->reader;
-									_tmp31_ = vala_markup_reader_get_name (_tmp30_);
-									_tmp32_ = _tmp31_;
-									if (g_strcmp0 (_tmp32_, "virtual-method") == 0) {
+									_tmp29_ = self->priv->reader;
+									_tmp30_ = vala_markup_reader_get_name (_tmp29_);
+									_tmp31_ = _tmp30_;
+									if (g_strcmp0 (_tmp31_, "virtual-method") == 0) {
 										valadoc_importer_gir_documentation_importer_parse_method (self, "virtual-method");
 									} else {
-										ValaMarkupReader* _tmp33_;
+										ValaMarkupReader* _tmp32_;
+										const gchar* _tmp33_;
 										const gchar* _tmp34_;
-										const gchar* _tmp35_;
-										_tmp33_ = self->priv->reader;
-										_tmp34_ = vala_markup_reader_get_name (_tmp33_);
-										_tmp35_ = _tmp34_;
-										if (g_strcmp0 (_tmp35_, "union") == 0) {
+										_tmp32_ = self->priv->reader;
+										_tmp33_ = vala_markup_reader_get_name (_tmp32_);
+										_tmp34_ = _tmp33_;
+										if (g_strcmp0 (_tmp34_, "union") == 0) {
 											valadoc_importer_gir_documentation_importer_parse_union (self);
 										} else {
-											ValaMarkupReader* _tmp36_;
+											ValaMarkupReader* _tmp35_;
+											const gchar* _tmp36_;
 											const gchar* _tmp37_;
-											const gchar* _tmp38_;
-											_tmp36_ = self->priv->reader;
-											_tmp37_ = vala_markup_reader_get_name (_tmp36_);
-											_tmp38_ = _tmp37_;
-											if (g_strcmp0 (_tmp38_, "glib:signal") == 0) {
+											_tmp35_ = self->priv->reader;
+											_tmp36_ = vala_markup_reader_get_name (_tmp35_);
+											_tmp37_ = _tmp36_;
+											if (g_strcmp0 (_tmp37_, "glib:signal") == 0) {
 												valadoc_importer_gir_documentation_importer_parse_signal (self);
 											} else {
-												ValaMarkupReader* _tmp39_;
+												ValaMarkupReader* _tmp38_;
+												const gchar* _tmp39_;
 												const gchar* _tmp40_;
-												const gchar* _tmp41_;
+												gchar* _tmp41_;
 												gchar* _tmp42_;
-												gchar* _tmp43_;
-												_tmp39_ = self->priv->reader;
-												_tmp40_ = vala_markup_reader_get_name (_tmp39_);
-												_tmp41_ = _tmp40_;
-												_tmp42_ = g_strdup_printf ("unknown child element `%s' in `class'", _tmp41_);
-												_tmp43_ = _tmp42_;
-												valadoc_importer_gir_documentation_importer_error (self, _tmp43_);
-												_g_free0 (_tmp43_);
+												_tmp38_ = self->priv->reader;
+												_tmp39_ = vala_markup_reader_get_name (_tmp38_);
+												_tmp40_ = _tmp39_;
+												_tmp41_ = g_strdup_printf ("unknown child element `%s' in `class'", _tmp40_);
+												_tmp42_ = _tmp41_;
+												valadoc_importer_gir_documentation_importer_error (self, _tmp42_);
+												_g_free0 (_tmp42_);
 												valadoc_importer_gir_documentation_importer_skip_element (self);
 											}
 										}
@@ -1876,86 +1845,84 @@ valadoc_importer_gir_documentation_importer_parse_interface (ValadocImporterGirD
 	_tmp7_ = comment;
 	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp6_, _tmp7_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp8_;
-		ValaMarkupReader* _tmp9_;
+		ValaMarkupReader* _tmp8_;
+		const gchar* _tmp9_;
 		const gchar* _tmp10_;
-		const gchar* _tmp11_;
-		_tmp8_ = self->priv->current_token;
-		if (!(_tmp8_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
-		_tmp9_ = self->priv->reader;
-		_tmp10_ = vala_markup_reader_get_name (_tmp9_);
-		_tmp11_ = _tmp10_;
-		if (g_strcmp0 (_tmp11_, "prerequisite") == 0) {
+		_tmp8_ = self->priv->reader;
+		_tmp9_ = vala_markup_reader_get_name (_tmp8_);
+		_tmp10_ = _tmp9_;
+		if (g_strcmp0 (_tmp10_, "prerequisite") == 0) {
 			valadoc_importer_gir_documentation_importer_skip_element (self);
 		} else {
-			ValaMarkupReader* _tmp12_;
+			ValaMarkupReader* _tmp11_;
+			const gchar* _tmp12_;
 			const gchar* _tmp13_;
-			const gchar* _tmp14_;
-			_tmp12_ = self->priv->reader;
-			_tmp13_ = vala_markup_reader_get_name (_tmp12_);
-			_tmp14_ = _tmp13_;
-			if (g_strcmp0 (_tmp14_, "field") == 0) {
+			_tmp11_ = self->priv->reader;
+			_tmp12_ = vala_markup_reader_get_name (_tmp11_);
+			_tmp13_ = _tmp12_;
+			if (g_strcmp0 (_tmp13_, "field") == 0) {
 				valadoc_importer_gir_documentation_importer_parse_field (self);
 			} else {
-				ValaMarkupReader* _tmp15_;
+				ValaMarkupReader* _tmp14_;
+				const gchar* _tmp15_;
 				const gchar* _tmp16_;
-				const gchar* _tmp17_;
-				_tmp15_ = self->priv->reader;
-				_tmp16_ = vala_markup_reader_get_name (_tmp15_);
-				_tmp17_ = _tmp16_;
-				if (g_strcmp0 (_tmp17_, "property") == 0) {
+				_tmp14_ = self->priv->reader;
+				_tmp15_ = vala_markup_reader_get_name (_tmp14_);
+				_tmp16_ = _tmp15_;
+				if (g_strcmp0 (_tmp16_, "property") == 0) {
 					valadoc_importer_gir_documentation_importer_parse_property (self);
 				} else {
-					ValaMarkupReader* _tmp18_;
+					ValaMarkupReader* _tmp17_;
+					const gchar* _tmp18_;
 					const gchar* _tmp19_;
-					const gchar* _tmp20_;
-					_tmp18_ = self->priv->reader;
-					_tmp19_ = vala_markup_reader_get_name (_tmp18_);
-					_tmp20_ = _tmp19_;
-					if (g_strcmp0 (_tmp20_, "virtual-method") == 0) {
+					_tmp17_ = self->priv->reader;
+					_tmp18_ = vala_markup_reader_get_name (_tmp17_);
+					_tmp19_ = _tmp18_;
+					if (g_strcmp0 (_tmp19_, "virtual-method") == 0) {
 						valadoc_importer_gir_documentation_importer_parse_method (self, "virtual-method");
 					} else {
-						ValaMarkupReader* _tmp21_;
+						ValaMarkupReader* _tmp20_;
+						const gchar* _tmp21_;
 						const gchar* _tmp22_;
-						const gchar* _tmp23_;
-						_tmp21_ = self->priv->reader;
-						_tmp22_ = vala_markup_reader_get_name (_tmp21_);
-						_tmp23_ = _tmp22_;
-						if (g_strcmp0 (_tmp23_, "function") == 0) {
+						_tmp20_ = self->priv->reader;
+						_tmp21_ = vala_markup_reader_get_name (_tmp20_);
+						_tmp22_ = _tmp21_;
+						if (g_strcmp0 (_tmp22_, "function") == 0) {
 							valadoc_importer_gir_documentation_importer_parse_method (self, "function");
 						} else {
-							ValaMarkupReader* _tmp24_;
+							ValaMarkupReader* _tmp23_;
+							const gchar* _tmp24_;
 							const gchar* _tmp25_;
-							const gchar* _tmp26_;
-							_tmp24_ = self->priv->reader;
-							_tmp25_ = vala_markup_reader_get_name (_tmp24_);
-							_tmp26_ = _tmp25_;
-							if (g_strcmp0 (_tmp26_, "method") == 0) {
+							_tmp23_ = self->priv->reader;
+							_tmp24_ = vala_markup_reader_get_name (_tmp23_);
+							_tmp25_ = _tmp24_;
+							if (g_strcmp0 (_tmp25_, "method") == 0) {
 								valadoc_importer_gir_documentation_importer_parse_method (self, "method");
 							} else {
-								ValaMarkupReader* _tmp27_;
+								ValaMarkupReader* _tmp26_;
+								const gchar* _tmp27_;
 								const gchar* _tmp28_;
-								const gchar* _tmp29_;
-								_tmp27_ = self->priv->reader;
-								_tmp28_ = vala_markup_reader_get_name (_tmp27_);
-								_tmp29_ = _tmp28_;
-								if (g_strcmp0 (_tmp29_, "glib:signal") == 0) {
+								_tmp26_ = self->priv->reader;
+								_tmp27_ = vala_markup_reader_get_name (_tmp26_);
+								_tmp28_ = _tmp27_;
+								if (g_strcmp0 (_tmp28_, "glib:signal") == 0) {
 									valadoc_importer_gir_documentation_importer_parse_signal (self);
 								} else {
-									ValaMarkupReader* _tmp30_;
+									ValaMarkupReader* _tmp29_;
+									const gchar* _tmp30_;
 									const gchar* _tmp31_;
-									const gchar* _tmp32_;
+									gchar* _tmp32_;
 									gchar* _tmp33_;
-									gchar* _tmp34_;
-									_tmp30_ = self->priv->reader;
-									_tmp31_ = vala_markup_reader_get_name (_tmp30_);
-									_tmp32_ = _tmp31_;
-									_tmp33_ = g_strdup_printf ("unknown child element `%s' in `interface'", _tmp32_);
-									_tmp34_ = _tmp33_;
-									valadoc_importer_gir_documentation_importer_error (self, _tmp34_);
-									_g_free0 (_tmp34_);
+									_tmp29_ = self->priv->reader;
+									_tmp30_ = vala_markup_reader_get_name (_tmp29_);
+									_tmp31_ = _tmp30_;
+									_tmp32_ = g_strdup_printf ("unknown child element `%s' in `interface'", _tmp31_);
+									_tmp33_ = _tmp32_;
+									valadoc_importer_gir_documentation_importer_error (self, _tmp33_);
+									_g_free0 (_tmp33_);
 									valadoc_importer_gir_documentation_importer_skip_element (self);
 								}
 							}
@@ -2018,7 +1985,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -2230,19 +2197,17 @@ valadoc_importer_gir_documentation_importer_parse_function (ValadocImporterGirDo
 	gint _param_names_size_;
 	gint array_length_ret = 0;
 	gboolean _tmp29_ = FALSE;
-	ValaMarkupTokenType _tmp30_;
-	gboolean _tmp46_ = FALSE;
-	ValaMarkupTokenType _tmp47_;
-	const gchar* _tmp99_;
-	ValadocApiGirSourceComment* _tmp100_;
-	gchar** _tmp101_;
-	gint _tmp101__length1;
-	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp102_;
-	gint _tmp102__length1;
-	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp103_;
-	gint _tmp103__length1;
-	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp104_;
-	gint _tmp104__length1;
+	gboolean _tmp45_ = FALSE;
+	const gchar* _tmp95_;
+	ValadocApiGirSourceComment* _tmp96_;
+	gchar** _tmp97_;
+	gint _tmp97__length1;
+	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp98_;
+	gint _tmp98__length1;
+	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp99_;
+	gint _tmp99__length1;
+	ValadocImporterGirDocumentationImporterImplicitParameterPos* _tmp100_;
+	gint _tmp100__length1;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (element_name != NULL);
 	valadoc_importer_gir_documentation_importer_start_element (self, element_name);
@@ -2365,131 +2330,127 @@ valadoc_importer_gir_documentation_importer_parse_function (ValadocImporterGirDo
 	param_names_length1 = 0;
 	_param_names_size_ = param_names_length1;
 	array_length_ret = -1;
-	_tmp30_ = self->priv->current_token;
-	if (_tmp30_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-		ValaMarkupReader* _tmp31_;
+	if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+		ValaMarkupReader* _tmp30_;
+		const gchar* _tmp31_;
 		const gchar* _tmp32_;
-		const gchar* _tmp33_;
-		_tmp31_ = self->priv->reader;
-		_tmp32_ = vala_markup_reader_get_name (_tmp31_);
-		_tmp33_ = _tmp32_;
-		_tmp29_ = g_strcmp0 (_tmp33_, "return-value") == 0;
+		_tmp30_ = self->priv->reader;
+		_tmp31_ = vala_markup_reader_get_name (_tmp30_);
+		_tmp32_ = _tmp31_;
+		_tmp29_ = g_strcmp0 (_tmp32_, "return-value") == 0;
 	} else {
 		_tmp29_ = FALSE;
 	}
 	if (_tmp29_) {
 		ValadocApiSourceComment* return_comment = NULL;
-		ValadocApiSourceComment* _tmp34_ = NULL;
-		gint _tmp35_ = 0;
-		ValadocApiSourceComment* _tmp36_;
-		valadoc_importer_gir_documentation_importer_parse_return_value (self, &_tmp34_, &_tmp35_);
+		ValadocApiSourceComment* _tmp33_ = NULL;
+		gint _tmp34_ = 0;
+		ValadocApiSourceComment* _tmp35_;
+		valadoc_importer_gir_documentation_importer_parse_return_value (self, &_tmp33_, &_tmp34_);
 		_valadoc_api_source_comment_unref0 (return_comment);
-		return_comment = _tmp34_;
-		array_length_ret = _tmp35_;
-		_tmp36_ = return_comment;
-		if (_tmp36_ != NULL) {
-			ValadocApiGirSourceComment* _tmp37_;
-			ValadocApiGirSourceComment* _tmp44_;
-			ValadocApiSourceComment* _tmp45_;
-			_tmp37_ = comment;
-			if (_tmp37_ == NULL) {
-				ValadocApiSourceFile* _tmp38_;
+		return_comment = _tmp33_;
+		array_length_ret = _tmp34_;
+		_tmp35_ = return_comment;
+		if (_tmp35_ != NULL) {
+			ValadocApiGirSourceComment* _tmp36_;
+			ValadocApiGirSourceComment* _tmp43_;
+			ValadocApiSourceComment* _tmp44_;
+			_tmp36_ = comment;
+			if (_tmp36_ == NULL) {
+				ValadocApiSourceFile* _tmp37_;
+				ValaSourceLocation _tmp38_;
 				ValaSourceLocation _tmp39_;
 				ValaSourceLocation _tmp40_;
 				ValaSourceLocation _tmp41_;
-				ValaSourceLocation _tmp42_;
-				ValadocApiGirSourceComment* _tmp43_;
-				_tmp38_ = self->priv->file;
+				ValadocApiGirSourceComment* _tmp42_;
+				_tmp37_ = self->priv->file;
+				_tmp38_ = self->priv->begin;
 				_tmp39_ = self->priv->begin;
-				_tmp40_ = self->priv->begin;
+				_tmp40_ = self->priv->end;
 				_tmp41_ = self->priv->end;
-				_tmp42_ = self->priv->end;
-				_tmp43_ = valadoc_api_gir_source_comment_new ("", _tmp38_, _tmp39_.line, _tmp40_.column, _tmp41_.line, _tmp42_.column);
+				_tmp42_ = valadoc_api_gir_source_comment_new ("", _tmp37_, _tmp38_.line, _tmp39_.column, _tmp40_.line, _tmp41_.column);
 				_valadoc_api_source_comment_unref0 (comment);
-				comment = _tmp43_;
+				comment = _tmp42_;
 			}
-			_tmp44_ = comment;
-			_tmp45_ = return_comment;
-			valadoc_api_gir_source_comment_set_return_comment (_tmp44_, _tmp45_);
+			_tmp43_ = comment;
+			_tmp44_ = return_comment;
+			valadoc_api_gir_source_comment_set_return_comment (_tmp43_, _tmp44_);
 		}
 		_valadoc_api_source_comment_unref0 (return_comment);
 	}
-	_tmp47_ = self->priv->current_token;
-	if (_tmp47_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-		ValaMarkupReader* _tmp48_;
-		const gchar* _tmp49_;
-		const gchar* _tmp50_;
-		_tmp48_ = self->priv->reader;
-		_tmp49_ = vala_markup_reader_get_name (_tmp48_);
-		_tmp50_ = _tmp49_;
-		_tmp46_ = g_strcmp0 (_tmp50_, "parameters") == 0;
+	if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+		ValaMarkupReader* _tmp46_;
+		const gchar* _tmp47_;
+		const gchar* _tmp48_;
+		_tmp46_ = self->priv->reader;
+		_tmp47_ = vala_markup_reader_get_name (_tmp46_);
+		_tmp48_ = _tmp47_;
+		_tmp45_ = g_strcmp0 (_tmp48_, "parameters") == 0;
 	} else {
-		_tmp46_ = FALSE;
+		_tmp45_ = FALSE;
 	}
-	if (_tmp46_) {
-		gboolean _tmp51_ = FALSE;
-		ValaMarkupTokenType _tmp52_;
+	if (_tmp45_) {
+		gboolean _tmp49_ = FALSE;
 		valadoc_importer_gir_documentation_importer_start_element (self, "parameters");
 		valadoc_importer_gir_documentation_importer_next (self);
-		_tmp52_ = self->priv->current_token;
-		if (_tmp52_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-			ValaMarkupReader* _tmp53_;
-			const gchar* _tmp54_;
-			const gchar* _tmp55_;
-			_tmp53_ = self->priv->reader;
-			_tmp54_ = vala_markup_reader_get_name (_tmp53_);
-			_tmp55_ = _tmp54_;
-			_tmp51_ = g_strcmp0 (_tmp55_, "instance-parameter") == 0;
+		if (self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+			ValaMarkupReader* _tmp50_;
+			const gchar* _tmp51_;
+			const gchar* _tmp52_;
+			_tmp50_ = self->priv->reader;
+			_tmp51_ = vala_markup_reader_get_name (_tmp50_);
+			_tmp52_ = _tmp51_;
+			_tmp49_ = g_strcmp0 (_tmp52_, "instance-parameter") == 0;
 		} else {
-			_tmp51_ = FALSE;
+			_tmp49_ = FALSE;
 		}
-		if (_tmp51_) {
+		if (_tmp49_) {
 			gchar* instance_param_name = NULL;
-			ValaMarkupReader* _tmp56_;
-			gchar* _tmp57_;
+			ValaMarkupReader* _tmp53_;
+			gchar* _tmp54_;
 			ValadocApiSourceComment* param_comment = NULL;
-			ValadocApiGirSourceComment* _tmp58_;
-			ValadocApiSourceComment* _tmp59_;
-			_tmp56_ = self->priv->reader;
-			_tmp57_ = vala_markup_reader_get_attribute (_tmp56_, "name");
-			instance_param_name = _tmp57_;
+			ValadocApiGirSourceComment* _tmp55_;
+			ValadocApiSourceComment* _tmp56_;
+			_tmp53_ = self->priv->reader;
+			_tmp54_ = vala_markup_reader_get_attribute (_tmp53_, "name");
+			instance_param_name = _tmp54_;
 			valadoc_importer_gir_documentation_importer_next (self);
-			_tmp58_ = valadoc_importer_gir_documentation_importer_parse_symbol_doc (self);
-			param_comment = (ValadocApiSourceComment*) _tmp58_;
+			_tmp55_ = valadoc_importer_gir_documentation_importer_parse_symbol_doc (self);
+			param_comment = (ValadocApiSourceComment*) _tmp55_;
 			valadoc_importer_gir_documentation_importer_parse_type (self, NULL);
 			valadoc_importer_gir_documentation_importer_end_element (self, "instance-parameter");
-			_tmp59_ = param_comment;
-			if (_tmp59_ != NULL) {
-				ValadocApiGirSourceComment* _tmp60_;
+			_tmp56_ = param_comment;
+			if (_tmp56_ != NULL) {
+				ValadocApiGirSourceComment* _tmp57_;
+				ValadocApiGirSourceComment* _tmp64_;
+				const gchar* _tmp65_;
+				ValadocApiSourceComment* _tmp66_;
 				ValadocApiGirSourceComment* _tmp67_;
 				const gchar* _tmp68_;
-				ValadocApiSourceComment* _tmp69_;
-				ValadocApiGirSourceComment* _tmp70_;
-				const gchar* _tmp71_;
-				_tmp60_ = comment;
-				if (_tmp60_ == NULL) {
-					ValadocApiSourceFile* _tmp61_;
+				_tmp57_ = comment;
+				if (_tmp57_ == NULL) {
+					ValadocApiSourceFile* _tmp58_;
+					ValaSourceLocation _tmp59_;
+					ValaSourceLocation _tmp60_;
+					ValaSourceLocation _tmp61_;
 					ValaSourceLocation _tmp62_;
-					ValaSourceLocation _tmp63_;
-					ValaSourceLocation _tmp64_;
-					ValaSourceLocation _tmp65_;
-					ValadocApiGirSourceComment* _tmp66_;
-					_tmp61_ = self->priv->file;
-					_tmp62_ = self->priv->begin;
-					_tmp63_ = self->priv->begin;
-					_tmp64_ = self->priv->end;
-					_tmp65_ = self->priv->end;
-					_tmp66_ = valadoc_api_gir_source_comment_new ("", _tmp61_, _tmp62_.line, _tmp63_.column, _tmp64_.line, _tmp65_.column);
+					ValadocApiGirSourceComment* _tmp63_;
+					_tmp58_ = self->priv->file;
+					_tmp59_ = self->priv->begin;
+					_tmp60_ = self->priv->begin;
+					_tmp61_ = self->priv->end;
+					_tmp62_ = self->priv->end;
+					_tmp63_ = valadoc_api_gir_source_comment_new ("", _tmp58_, _tmp59_.line, _tmp60_.column, _tmp61_.line, _tmp62_.column);
 					_valadoc_api_source_comment_unref0 (comment);
-					comment = _tmp66_;
+					comment = _tmp63_;
 				}
+				_tmp64_ = comment;
+				_tmp65_ = instance_param_name;
+				_tmp66_ = param_comment;
+				valadoc_api_gir_source_comment_add_parameter_content (_tmp64_, _tmp65_, _tmp66_);
 				_tmp67_ = comment;
 				_tmp68_ = instance_param_name;
-				_tmp69_ = param_comment;
-				valadoc_api_gir_source_comment_add_parameter_content (_tmp67_, _tmp68_, _tmp69_);
-				_tmp70_ = comment;
-				_tmp71_ = instance_param_name;
-				valadoc_api_gir_source_comment_set_instance_param_name (_tmp70_, _tmp71_);
+				valadoc_api_gir_source_comment_set_instance_param_name (_tmp67_, _tmp68_);
 			}
 			_valadoc_api_source_comment_unref0 (param_comment);
 			_g_free0 (instance_param_name);
@@ -2498,104 +2459,102 @@ valadoc_importer_gir_documentation_importer_parse_function (ValadocImporterGirDo
 			gint pcount = 0;
 			pcount = 0;
 			{
-				gboolean _tmp72_ = FALSE;
-				_tmp72_ = TRUE;
+				gboolean _tmp69_ = FALSE;
+				_tmp69_ = TRUE;
 				while (TRUE) {
-					ValaMarkupTokenType _tmp74_;
 					ValadocApiSourceComment* param_comment = NULL;
 					gint array_length_pos = 0;
 					gint destroy_pos = 0;
 					gint closure_pos = 0;
 					gchar* param_name = NULL;
-					ValadocApiSourceComment* _tmp75_ = NULL;
-					gchar* _tmp76_ = NULL;
-					gint _tmp77_ = 0;
-					gint _tmp78_ = 0;
-					gint _tmp79_ = 0;
-					const gchar* _tmp80_;
-					gchar* _tmp81_;
+					ValadocApiSourceComment* _tmp71_ = NULL;
+					gchar* _tmp72_ = NULL;
+					gint _tmp73_ = 0;
+					gint _tmp74_ = 0;
+					gint _tmp75_ = 0;
+					const gchar* _tmp76_;
+					gchar* _tmp77_;
+					gboolean _tmp78_ = FALSE;
+					gboolean _tmp80_ = FALSE;
 					gboolean _tmp82_ = FALSE;
-					gboolean _tmp84_ = FALSE;
-					gboolean _tmp86_ = FALSE;
-					ValadocApiSourceComment* _tmp88_;
-					if (!_tmp72_) {
-						gint _tmp73_;
-						_tmp73_ = pcount;
-						pcount = _tmp73_ + 1;
+					ValadocApiSourceComment* _tmp84_;
+					if (!_tmp69_) {
+						gint _tmp70_;
+						_tmp70_ = pcount;
+						pcount = _tmp70_ + 1;
 					}
-					_tmp72_ = FALSE;
-					_tmp74_ = self->priv->current_token;
-					if (!(_tmp74_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+					_tmp69_ = FALSE;
+					if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 						break;
 					}
-					valadoc_importer_gir_documentation_importer_parse_parameter (self, &_tmp75_, &_tmp76_, &_tmp77_, &_tmp78_, &_tmp79_);
+					valadoc_importer_gir_documentation_importer_parse_parameter (self, &_tmp71_, &_tmp72_, &_tmp73_, &_tmp74_, &_tmp75_);
 					_valadoc_api_source_comment_unref0 (param_comment);
-					param_comment = _tmp75_;
+					param_comment = _tmp71_;
 					_g_free0 (param_name);
-					param_name = _tmp76_;
-					destroy_pos = _tmp77_;
-					closure_pos = _tmp78_;
-					array_length_pos = _tmp79_;
-					_tmp80_ = param_name;
-					_tmp81_ = g_strdup (_tmp80_);
-					_vala_array_add3 (&param_names, &param_names_length1, &_param_names_size_, _tmp81_);
+					param_name = _tmp72_;
+					destroy_pos = _tmp73_;
+					closure_pos = _tmp74_;
+					array_length_pos = _tmp75_;
+					_tmp76_ = param_name;
+					_tmp77_ = g_strdup (_tmp76_);
+					_vala_array_add3 (&param_names, &param_names_length1, &_param_names_size_, _tmp77_);
 					if (destroy_pos >= 0) {
+						_tmp78_ = pcount != destroy_pos;
+					} else {
+						_tmp78_ = FALSE;
+					}
+					if (_tmp78_) {
+						ValadocImporterGirDocumentationImporterImplicitParameterPos _tmp79_ = {0};
+						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp79_, pcount, destroy_pos);
+						_vala_array_add4 (&destroy_notifies, &destroy_notifies_length1, &_destroy_notifies_size_, &_tmp79_);
+					}
+					if (closure_pos >= 0) {
+						_tmp80_ = pcount != closure_pos;
+					} else {
+						_tmp80_ = FALSE;
+					}
+					if (_tmp80_) {
+						ValadocImporterGirDocumentationImporterImplicitParameterPos _tmp81_ = {0};
+						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp81_, pcount, closure_pos);
+						_vala_array_add5 (&closures, &closures_length1, &_closures_size_, &_tmp81_);
+					}
+					if (array_length_pos >= 0) {
 						_tmp82_ = pcount != destroy_pos;
 					} else {
 						_tmp82_ = FALSE;
 					}
 					if (_tmp82_) {
 						ValadocImporterGirDocumentationImporterImplicitParameterPos _tmp83_ = {0};
-						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp83_, pcount, destroy_pos);
-						_vala_array_add4 (&destroy_notifies, &destroy_notifies_length1, &_destroy_notifies_size_, &_tmp83_);
+						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp83_, pcount, array_length_pos);
+						_vala_array_add6 (&array_lengths, &array_lengths_length1, &_array_lengths_size_, &_tmp83_);
 					}
-					if (closure_pos >= 0) {
-						_tmp84_ = pcount != closure_pos;
-					} else {
-						_tmp84_ = FALSE;
-					}
-					if (_tmp84_) {
-						ValadocImporterGirDocumentationImporterImplicitParameterPos _tmp85_ = {0};
-						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp85_, pcount, closure_pos);
-						_vala_array_add5 (&closures, &closures_length1, &_closures_size_, &_tmp85_);
-					}
-					if (array_length_pos >= 0) {
-						_tmp86_ = pcount != destroy_pos;
-					} else {
-						_tmp86_ = FALSE;
-					}
-					if (_tmp86_) {
-						ValadocImporterGirDocumentationImporterImplicitParameterPos _tmp87_ = {0};
-						valadoc_importer_gir_documentation_importer_implicit_parameter_pos_init (&_tmp87_, pcount, array_length_pos);
-						_vala_array_add6 (&array_lengths, &array_lengths_length1, &_array_lengths_size_, &_tmp87_);
-					}
-					_tmp88_ = param_comment;
-					if (_tmp88_ != NULL) {
-						ValadocApiGirSourceComment* _tmp89_;
-						ValadocApiGirSourceComment* _tmp96_;
-						const gchar* _tmp97_;
-						ValadocApiSourceComment* _tmp98_;
-						_tmp89_ = comment;
-						if (_tmp89_ == NULL) {
-							ValadocApiSourceFile* _tmp90_;
-							ValaSourceLocation _tmp91_;
-							ValaSourceLocation _tmp92_;
-							ValaSourceLocation _tmp93_;
-							ValaSourceLocation _tmp94_;
-							ValadocApiGirSourceComment* _tmp95_;
-							_tmp90_ = self->priv->file;
-							_tmp91_ = self->priv->begin;
-							_tmp92_ = self->priv->begin;
-							_tmp93_ = self->priv->end;
-							_tmp94_ = self->priv->end;
-							_tmp95_ = valadoc_api_gir_source_comment_new ("", _tmp90_, _tmp91_.line, _tmp92_.column, _tmp93_.line, _tmp94_.column);
+					_tmp84_ = param_comment;
+					if (_tmp84_ != NULL) {
+						ValadocApiGirSourceComment* _tmp85_;
+						ValadocApiGirSourceComment* _tmp92_;
+						const gchar* _tmp93_;
+						ValadocApiSourceComment* _tmp94_;
+						_tmp85_ = comment;
+						if (_tmp85_ == NULL) {
+							ValadocApiSourceFile* _tmp86_;
+							ValaSourceLocation _tmp87_;
+							ValaSourceLocation _tmp88_;
+							ValaSourceLocation _tmp89_;
+							ValaSourceLocation _tmp90_;
+							ValadocApiGirSourceComment* _tmp91_;
+							_tmp86_ = self->priv->file;
+							_tmp87_ = self->priv->begin;
+							_tmp88_ = self->priv->begin;
+							_tmp89_ = self->priv->end;
+							_tmp90_ = self->priv->end;
+							_tmp91_ = valadoc_api_gir_source_comment_new ("", _tmp86_, _tmp87_.line, _tmp88_.column, _tmp89_.line, _tmp90_.column);
 							_valadoc_api_source_comment_unref0 (comment);
-							comment = _tmp95_;
+							comment = _tmp91_;
 						}
-						_tmp96_ = comment;
-						_tmp97_ = param_name;
-						_tmp98_ = param_comment;
-						valadoc_api_gir_source_comment_add_parameter_content (_tmp96_, _tmp97_, _tmp98_);
+						_tmp92_ = comment;
+						_tmp93_ = param_name;
+						_tmp94_ = param_comment;
+						valadoc_api_gir_source_comment_add_parameter_content (_tmp92_, _tmp93_, _tmp94_);
 					}
 					_g_free0 (param_name);
 					_valadoc_api_source_comment_unref0 (param_comment);
@@ -2604,17 +2563,17 @@ valadoc_importer_gir_documentation_importer_parse_function (ValadocImporterGirDo
 		}
 		valadoc_importer_gir_documentation_importer_end_element (self, "parameters");
 	}
-	_tmp99_ = c_identifier;
-	_tmp100_ = comment;
-	_tmp101_ = param_names;
-	_tmp101__length1 = param_names_length1;
-	_tmp102_ = destroy_notifies;
-	_tmp102__length1 = destroy_notifies_length1;
-	_tmp103_ = closures;
-	_tmp103__length1 = closures_length1;
-	_tmp104_ = array_lengths;
-	_tmp104__length1 = array_lengths_length1;
-	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp99_, _tmp100_, _tmp101_, (gint) _tmp101__length1, _tmp102_, (gint) _tmp102__length1, _tmp103_, (gint) _tmp103__length1, _tmp104_, (gint) _tmp104__length1, array_length_ret);
+	_tmp95_ = c_identifier;
+	_tmp96_ = comment;
+	_tmp97_ = param_names;
+	_tmp97__length1 = param_names_length1;
+	_tmp98_ = destroy_notifies;
+	_tmp98__length1 = destroy_notifies_length1;
+	_tmp99_ = closures;
+	_tmp99__length1 = closures_length1;
+	_tmp100_ = array_lengths;
+	_tmp100__length1 = array_lengths_length1;
+	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp95_, _tmp96_, _tmp97_, (gint) _tmp97__length1, _tmp98_, (gint) _tmp98__length1, _tmp99_, (gint) _tmp99__length1, _tmp100_, (gint) _tmp100__length1, array_length_ret);
 	valadoc_importer_gir_documentation_importer_end_element (self, element_name);
 	param_names = (_vala_array_free (param_names, param_names_length1, (GDestroyNotify) g_free), NULL);
 	closures = (g_free (closures), NULL);
@@ -2670,114 +2629,10 @@ valadoc_importer_gir_documentation_importer_parse_boxed (ValadocImporterGirDocum
 	_tmp6_ = _tmp5_;
 	_valadoc_api_source_comment_unref0 (_tmp6_);
 	while (TRUE) {
-		ValaMarkupTokenType _tmp7_;
-		ValaMarkupReader* _tmp8_;
-		const gchar* _tmp9_;
-		const gchar* _tmp10_;
-		_tmp7_ = self->priv->current_token;
-		if (!(_tmp7_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
-			break;
-		}
-		_tmp8_ = self->priv->reader;
-		_tmp9_ = vala_markup_reader_get_name (_tmp8_);
-		_tmp10_ = _tmp9_;
-		if (g_strcmp0 (_tmp10_, "field") == 0) {
-			valadoc_importer_gir_documentation_importer_parse_field (self);
-		} else {
-			ValaMarkupReader* _tmp11_;
-			const gchar* _tmp12_;
-			const gchar* _tmp13_;
-			_tmp11_ = self->priv->reader;
-			_tmp12_ = vala_markup_reader_get_name (_tmp11_);
-			_tmp13_ = _tmp12_;
-			if (g_strcmp0 (_tmp13_, "constructor") == 0) {
-				valadoc_importer_gir_documentation_importer_parse_constructor (self);
-			} else {
-				ValaMarkupReader* _tmp14_;
-				const gchar* _tmp15_;
-				const gchar* _tmp16_;
-				_tmp14_ = self->priv->reader;
-				_tmp15_ = vala_markup_reader_get_name (_tmp14_);
-				_tmp16_ = _tmp15_;
-				if (g_strcmp0 (_tmp16_, "method") == 0) {
-					valadoc_importer_gir_documentation_importer_parse_method (self, "method");
-				} else {
-					ValaMarkupReader* _tmp17_;
-					const gchar* _tmp18_;
-					const gchar* _tmp19_;
-					_tmp17_ = self->priv->reader;
-					_tmp18_ = vala_markup_reader_get_name (_tmp17_);
-					_tmp19_ = _tmp18_;
-					if (g_strcmp0 (_tmp19_, "function") == 0) {
-						valadoc_importer_gir_documentation_importer_skip_element (self);
-					} else {
-						ValaMarkupReader* _tmp20_;
-						const gchar* _tmp21_;
-						const gchar* _tmp22_;
-						_tmp20_ = self->priv->reader;
-						_tmp21_ = vala_markup_reader_get_name (_tmp20_);
-						_tmp22_ = _tmp21_;
-						if (g_strcmp0 (_tmp22_, "union") == 0) {
-							valadoc_importer_gir_documentation_importer_parse_union (self);
-						} else {
-							ValaMarkupReader* _tmp23_;
-							const gchar* _tmp24_;
-							const gchar* _tmp25_;
-							gchar* _tmp26_;
-							gchar* _tmp27_;
-							_tmp23_ = self->priv->reader;
-							_tmp24_ = vala_markup_reader_get_name (_tmp23_);
-							_tmp25_ = _tmp24_;
-							_tmp26_ = g_strdup_printf ("unknown child element `%s' in `class'", _tmp25_);
-							_tmp27_ = _tmp26_;
-							valadoc_importer_gir_documentation_importer_error (self, _tmp27_);
-							_g_free0 (_tmp27_);
-							valadoc_importer_gir_documentation_importer_skip_element (self);
-						}
-					}
-				}
-			}
-		}
-	}
-	_g_free0 (self->priv->parent_c_identifier);
-	self->priv->parent_c_identifier = NULL;
-	valadoc_importer_gir_documentation_importer_end_element (self, element_name);
-}
-
-static void
-valadoc_importer_gir_documentation_importer_parse_union (ValadocImporterGirDocumentationImporter* self)
-{
-	ValaMarkupReader* _tmp0_;
-	gchar* _tmp1_;
-	const gchar* _tmp2_;
-	ValadocApiGirSourceComment* comment = NULL;
-	ValadocApiGirSourceComment* _tmp3_;
-	const gchar* _tmp4_;
-	ValadocApiGirSourceComment* _tmp5_;
-	g_return_if_fail (self != NULL);
-	valadoc_importer_gir_documentation_importer_start_element (self, "union");
-	_tmp0_ = self->priv->reader;
-	_tmp1_ = vala_markup_reader_get_attribute (_tmp0_, "c:type");
-	_g_free0 (self->priv->parent_c_identifier);
-	self->priv->parent_c_identifier = _tmp1_;
-	_tmp2_ = self->priv->parent_c_identifier;
-	if (_tmp2_ == NULL) {
-		valadoc_importer_gir_documentation_importer_skip_element (self);
-		return;
-	}
-	valadoc_importer_gir_documentation_importer_next (self);
-	_tmp3_ = valadoc_importer_gir_documentation_importer_parse_symbol_doc (self);
-	comment = _tmp3_;
-	_tmp4_ = self->priv->parent_c_identifier;
-	_tmp5_ = comment;
-	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp4_, _tmp5_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
-	while (TRUE) {
-		ValaMarkupTokenType _tmp6_;
 		ValaMarkupReader* _tmp7_;
 		const gchar* _tmp8_;
 		const gchar* _tmp9_;
-		_tmp6_ = self->priv->current_token;
-		if (!(_tmp6_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
 		_tmp7_ = self->priv->reader;
@@ -2819,8 +2674,8 @@ valadoc_importer_gir_documentation_importer_parse_union (ValadocImporterGirDocum
 						_tmp19_ = self->priv->reader;
 						_tmp20_ = vala_markup_reader_get_name (_tmp19_);
 						_tmp21_ = _tmp20_;
-						if (g_strcmp0 (_tmp21_, "record") == 0) {
-							valadoc_importer_gir_documentation_importer_parse_record (self);
+						if (g_strcmp0 (_tmp21_, "union") == 0) {
+							valadoc_importer_gir_documentation_importer_parse_union (self);
 						} else {
 							ValaMarkupReader* _tmp22_;
 							const gchar* _tmp23_;
@@ -2830,10 +2685,110 @@ valadoc_importer_gir_documentation_importer_parse_union (ValadocImporterGirDocum
 							_tmp22_ = self->priv->reader;
 							_tmp23_ = vala_markup_reader_get_name (_tmp22_);
 							_tmp24_ = _tmp23_;
-							_tmp25_ = g_strdup_printf ("unknown child element `%s' in `union'", _tmp24_);
+							_tmp25_ = g_strdup_printf ("unknown child element `%s' in `class'", _tmp24_);
 							_tmp26_ = _tmp25_;
 							valadoc_importer_gir_documentation_importer_error (self, _tmp26_);
 							_g_free0 (_tmp26_);
+							valadoc_importer_gir_documentation_importer_skip_element (self);
+						}
+					}
+				}
+			}
+		}
+	}
+	_g_free0 (self->priv->parent_c_identifier);
+	self->priv->parent_c_identifier = NULL;
+	valadoc_importer_gir_documentation_importer_end_element (self, element_name);
+}
+
+static void
+valadoc_importer_gir_documentation_importer_parse_union (ValadocImporterGirDocumentationImporter* self)
+{
+	ValaMarkupReader* _tmp0_;
+	gchar* _tmp1_;
+	const gchar* _tmp2_;
+	ValadocApiGirSourceComment* comment = NULL;
+	ValadocApiGirSourceComment* _tmp3_;
+	const gchar* _tmp4_;
+	ValadocApiGirSourceComment* _tmp5_;
+	g_return_if_fail (self != NULL);
+	valadoc_importer_gir_documentation_importer_start_element (self, "union");
+	_tmp0_ = self->priv->reader;
+	_tmp1_ = vala_markup_reader_get_attribute (_tmp0_, "c:type");
+	_g_free0 (self->priv->parent_c_identifier);
+	self->priv->parent_c_identifier = _tmp1_;
+	_tmp2_ = self->priv->parent_c_identifier;
+	if (_tmp2_ == NULL) {
+		valadoc_importer_gir_documentation_importer_skip_element (self);
+		return;
+	}
+	valadoc_importer_gir_documentation_importer_next (self);
+	_tmp3_ = valadoc_importer_gir_documentation_importer_parse_symbol_doc (self);
+	comment = _tmp3_;
+	_tmp4_ = self->priv->parent_c_identifier;
+	_tmp5_ = comment;
+	valadoc_importer_gir_documentation_importer_attach_comment (self, _tmp4_, _tmp5_, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, NULL, (gint) 0, -1);
+	while (TRUE) {
+		ValaMarkupReader* _tmp6_;
+		const gchar* _tmp7_;
+		const gchar* _tmp8_;
+		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
+			break;
+		}
+		_tmp6_ = self->priv->reader;
+		_tmp7_ = vala_markup_reader_get_name (_tmp6_);
+		_tmp8_ = _tmp7_;
+		if (g_strcmp0 (_tmp8_, "field") == 0) {
+			valadoc_importer_gir_documentation_importer_parse_field (self);
+		} else {
+			ValaMarkupReader* _tmp9_;
+			const gchar* _tmp10_;
+			const gchar* _tmp11_;
+			_tmp9_ = self->priv->reader;
+			_tmp10_ = vala_markup_reader_get_name (_tmp9_);
+			_tmp11_ = _tmp10_;
+			if (g_strcmp0 (_tmp11_, "constructor") == 0) {
+				valadoc_importer_gir_documentation_importer_parse_constructor (self);
+			} else {
+				ValaMarkupReader* _tmp12_;
+				const gchar* _tmp13_;
+				const gchar* _tmp14_;
+				_tmp12_ = self->priv->reader;
+				_tmp13_ = vala_markup_reader_get_name (_tmp12_);
+				_tmp14_ = _tmp13_;
+				if (g_strcmp0 (_tmp14_, "method") == 0) {
+					valadoc_importer_gir_documentation_importer_parse_method (self, "method");
+				} else {
+					ValaMarkupReader* _tmp15_;
+					const gchar* _tmp16_;
+					const gchar* _tmp17_;
+					_tmp15_ = self->priv->reader;
+					_tmp16_ = vala_markup_reader_get_name (_tmp15_);
+					_tmp17_ = _tmp16_;
+					if (g_strcmp0 (_tmp17_, "function") == 0) {
+						valadoc_importer_gir_documentation_importer_skip_element (self);
+					} else {
+						ValaMarkupReader* _tmp18_;
+						const gchar* _tmp19_;
+						const gchar* _tmp20_;
+						_tmp18_ = self->priv->reader;
+						_tmp19_ = vala_markup_reader_get_name (_tmp18_);
+						_tmp20_ = _tmp19_;
+						if (g_strcmp0 (_tmp20_, "record") == 0) {
+							valadoc_importer_gir_documentation_importer_parse_record (self);
+						} else {
+							ValaMarkupReader* _tmp21_;
+							const gchar* _tmp22_;
+							const gchar* _tmp23_;
+							gchar* _tmp24_;
+							gchar* _tmp25_;
+							_tmp21_ = self->priv->reader;
+							_tmp22_ = vala_markup_reader_get_name (_tmp21_);
+							_tmp23_ = _tmp22_;
+							_tmp24_ = g_strdup_printf ("unknown child element `%s' in `union'", _tmp23_);
+							_tmp25_ = _tmp24_;
+							valadoc_importer_gir_documentation_importer_error (self, _tmp25_);
+							_g_free0 (_tmp25_);
 							valadoc_importer_gir_documentation_importer_skip_element (self);
 						}
 					}
@@ -2927,13 +2882,13 @@ valadoc_importer_gir_documentation_importer_implicit_parameter_pos_get_type_once
 static GType
 valadoc_importer_gir_documentation_importer_implicit_parameter_pos_get_type (void)
 {
-	static volatile gsize valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__volatile)) {
+	static volatile gsize valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__once)) {
 		GType valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id;
 		valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id = valadoc_importer_gir_documentation_importer_implicit_parameter_pos_get_type_once ();
-		g_once_init_leave (&valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__volatile, valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id);
+		g_once_init_leave (&valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__once, valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id);
 	}
-	return valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__volatile;
+	return valadoc_importer_gir_documentation_importer_implicit_parameter_pos_type_id__once;
 }
 
 static void
@@ -2943,7 +2898,7 @@ valadoc_importer_gir_documentation_importer_class_init (ValadocImporterGirDocume
 	valadoc_importer_gir_documentation_importer_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &ValadocImporterGirDocumentationImporter_private_offset);
 	((ValadocImporterDocumentationImporterClass *) klass)->process = (void (*) (ValadocImporterDocumentationImporter*, const gchar*)) valadoc_importer_gir_documentation_importer_real_process;
-	VALADOC_IMPORTER_DOCUMENTATION_IMPORTER_CLASS (klass)->get_file_extension = valadoc_importer_gir_documentation_importer_real_get_file_extension;
+	VALADOC_IMPORTER_DOCUMENTATION_IMPORTER_CLASS (klass)->get_file_extension = (const gchar* (*) (ValadocImporterDocumentationImporter*)) valadoc_importer_gir_documentation_importer_real_get_file_extension;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_importer_gir_documentation_importer_get_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_importer_gir_documentation_importer_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), VALADOC_IMPORTER_GIR_DOCUMENTATION_IMPORTER_FILE_EXTENSION_PROPERTY, valadoc_importer_gir_documentation_importer_properties[VALADOC_IMPORTER_GIR_DOCUMENTATION_IMPORTER_FILE_EXTENSION_PROPERTY] = g_param_spec_string ("file-extension", "file-extension", "file-extension", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
@@ -2981,13 +2936,13 @@ valadoc_importer_gir_documentation_importer_get_type_once (void)
 GType
 valadoc_importer_gir_documentation_importer_get_type (void)
 {
-	static volatile gsize valadoc_importer_gir_documentation_importer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_gir_documentation_importer_type_id__volatile)) {
+	static volatile gsize valadoc_importer_gir_documentation_importer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_gir_documentation_importer_type_id__once)) {
 		GType valadoc_importer_gir_documentation_importer_type_id;
 		valadoc_importer_gir_documentation_importer_type_id = valadoc_importer_gir_documentation_importer_get_type_once ();
-		g_once_init_leave (&valadoc_importer_gir_documentation_importer_type_id__volatile, valadoc_importer_gir_documentation_importer_type_id);
+		g_once_init_leave (&valadoc_importer_gir_documentation_importer_type_id__once, valadoc_importer_gir_documentation_importer_type_id);
 	}
-	return valadoc_importer_gir_documentation_importer_type_id__volatile;
+	return valadoc_importer_gir_documentation_importer_type_id__once;
 }
 
 static void

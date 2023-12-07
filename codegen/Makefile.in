@@ -142,14 +142,14 @@ am__objects_2 = valaccode.lo valaccodearraymodule.lo \
 	valaccodememberaccessmodule.lo valaccodemethodcallmodule.lo \
 	valaccodemethodmodule.lo valaccodestructmodule.lo \
 	valaclassregisterfunction.lo valactype.lo \
-	valaenumregisterfunction.lo valagasyncmodule.lo \
-	valagdbusclientmodule.lo valagdbusmodule.lo \
-	valagdbusservermodule.lo valagerrormodule.lo valagirwriter.lo \
-	valaglibvalue.lo valagobjectmodule.lo valagtkmodule.lo \
-	valagsignalmodule.lo valagtypemodule.lo valagvaluemodule.lo \
-	valagvariantmodule.lo valainterfaceregisterfunction.lo \
-	valastructregisterfunction.lo valatyperegisterfunction.lo \
-	$(am__objects_1)
+	valaenumregisterfunction.lo valaerrordomainregisterfunction.lo \
+	valagasyncmodule.lo valagdbusclientmodule.lo \
+	valagdbusmodule.lo valagdbusservermodule.lo \
+	valagerrormodule.lo valagirwriter.lo valaglibvalue.lo \
+	valagobjectmodule.lo valagtkmodule.lo valagsignalmodule.lo \
+	valagtypemodule.lo valagvaluemodule.lo valagvariantmodule.lo \
+	valainterfaceregisterfunction.lo valastructregisterfunction.lo \
+	valatyperegisterfunction.lo $(am__objects_1)
 am_libvalaccodegen_la_OBJECTS = $(am__objects_2) $(am__objects_1)
 libvalaccodegen_la_OBJECTS = $(am_libvalaccodegen_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -190,6 +190,7 @@ am__depfiles_remade = ./$(DEPDIR)/valaccode.Plo \
 	./$(DEPDIR)/valaclassregisterfunction.Plo \
 	./$(DEPDIR)/valactype.Plo \
 	./$(DEPDIR)/valaenumregisterfunction.Plo \
+	./$(DEPDIR)/valaerrordomainregisterfunction.Plo \
 	./$(DEPDIR)/valagasyncmodule.Plo \
 	./$(DEPDIR)/valagdbusclientmodule.Plo \
 	./$(DEPDIR)/valagdbusmodule.Plo \
@@ -283,6 +284,7 @@ EGREP = @EGREP@
 ETAGS = @ETAGS@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+FILECMD = @FILECMD@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GMODULE_CFLAGS = @GMODULE_CFLAGS@
@@ -442,6 +444,7 @@ libvalaccodegen_la_VALASOURCES = \
 	valaclassregisterfunction.vala \
 	valactype.vala \
 	valaenumregisterfunction.vala \
+	valaerrordomainregisterfunction.vala \
 	valagasyncmodule.vala \
 	valagdbusclientmodule.vala \
 	valagdbusmodule.vala \
@@ -574,6 +577,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaclassregisterfunction.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valactype.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaenumregisterfunction.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaerrordomainregisterfunction.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valagasyncmodule.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valagdbusclientmodule.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valagdbusmodule.Plo@am__quote@ # am--include-marker
@@ -774,6 +778,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/valaclassregisterfunction.Plo
 	-rm -f ./$(DEPDIR)/valactype.Plo
 	-rm -f ./$(DEPDIR)/valaenumregisterfunction.Plo
+	-rm -f ./$(DEPDIR)/valaerrordomainregisterfunction.Plo
 	-rm -f ./$(DEPDIR)/valagasyncmodule.Plo
 	-rm -f ./$(DEPDIR)/valagdbusclientmodule.Plo
 	-rm -f ./$(DEPDIR)/valagdbusmodule.Plo
@@ -850,6 +855,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/valaclassregisterfunction.Plo
 	-rm -f ./$(DEPDIR)/valactype.Plo
 	-rm -f ./$(DEPDIR)/valaenumregisterfunction.Plo
+	-rm -f ./$(DEPDIR)/valaerrordomainregisterfunction.Plo
 	-rm -f ./$(DEPDIR)/valagasyncmodule.Plo
 	-rm -f ./$(DEPDIR)/valagdbusclientmodule.Plo
 	-rm -f ./$(DEPDIR)/valagdbusmodule.Plo

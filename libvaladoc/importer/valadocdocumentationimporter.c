@@ -139,13 +139,13 @@ valadoc_importer_valadoc_documentation_importer_insertion_mode_get_type_once (vo
 static GType
 valadoc_importer_valadoc_documentation_importer_insertion_mode_get_type (void)
 {
-	static volatile gsize valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__volatile)) {
+	static volatile gsize valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__once)) {
 		GType valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id;
 		valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id = valadoc_importer_valadoc_documentation_importer_insertion_mode_get_type_once ();
-		g_once_init_leave (&valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__volatile, valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id);
+		g_once_init_leave (&valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__once, valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id);
 	}
-	return valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__volatile;
+	return valadoc_importer_valadoc_documentation_importer_insertion_mode_type_id__once;
 }
 
 static const gchar*
@@ -577,7 +577,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -600,7 +600,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -756,94 +756,86 @@ valadoc_importer_valadoc_documentation_importer_add_documentation (ValadocImport
 			if (_tmp35_ == NULL) {
 				_tmp32_ = TRUE;
 			} else {
-				ValadocImporterValadocDocumentationImporterInsertionMode _tmp36_;
-				_tmp36_ = insertion_mode;
-				_tmp32_ = _tmp36_ == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_REPLACE;
+				_tmp32_ = insertion_mode == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_REPLACE;
 			}
 			if (_tmp32_) {
-				ValadocImporterValadocDocumentationImporterInsertionMode _tmp37_;
-				ValadocApiNode* _tmp44_;
-				ValadocContentComment* _tmp45_;
-				_tmp37_ = insertion_mode;
-				if (_tmp37_ == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_APPEND) {
-					ValadocContentComment* _tmp38_;
-					ValaList* _tmp39_;
-					ValaList* _tmp40_;
-					ValadocContentContentFactory* _tmp41_;
-					ValadocContentParagraph* _tmp42_;
-					ValadocContentParagraph* _tmp43_;
-					_tmp38_ = docu;
-					_tmp39_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp38_);
-					_tmp40_ = _tmp39_;
-					_tmp41_ = self->factory;
-					_tmp42_ = valadoc_content_content_factory_create_paragraph (_tmp41_);
-					_tmp43_ = _tmp42_;
-					vala_list_insert (_tmp40_, 0, (ValadocContentBlock*) _tmp43_);
-					_g_object_unref0 (_tmp43_);
+				ValadocApiNode* _tmp42_;
+				ValadocContentComment* _tmp43_;
+				if (insertion_mode == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_APPEND) {
+					ValadocContentComment* _tmp36_;
+					ValaList* _tmp37_;
+					ValaList* _tmp38_;
+					ValadocContentContentFactory* _tmp39_;
+					ValadocContentParagraph* _tmp40_;
+					ValadocContentParagraph* _tmp41_;
+					_tmp36_ = docu;
+					_tmp37_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp36_);
+					_tmp38_ = _tmp37_;
+					_tmp39_ = self->factory;
+					_tmp40_ = valadoc_content_content_factory_create_paragraph (_tmp39_);
+					_tmp41_ = _tmp40_;
+					vala_list_insert (_tmp38_, 0, (ValadocContentBlock*) _tmp41_);
+					_g_object_unref0 (_tmp41_);
 				}
-				_tmp44_ = symbol;
-				_tmp45_ = docu;
-				valadoc_api_node_set_documentation (_tmp44_, _tmp45_);
+				_tmp42_ = symbol;
+				_tmp43_ = docu;
+				valadoc_api_node_set_documentation (_tmp42_, _tmp43_);
 			} else {
-				ValadocImporterValadocDocumentationImporterInsertionMode _tmp46_;
-				_tmp46_ = insertion_mode;
-				if (_tmp46_ == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_APPEND) {
-					ValadocApiNode* _tmp47_;
-					ValadocContentComment* _tmp48_;
+				if (insertion_mode == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_APPEND) {
+					ValadocApiNode* _tmp44_;
+					ValadocContentComment* _tmp45_;
+					ValadocContentComment* _tmp46_;
+					ValaList* _tmp47_;
+					ValaList* _tmp48_;
 					ValadocContentComment* _tmp49_;
 					ValaList* _tmp50_;
 					ValaList* _tmp51_;
-					ValadocContentComment* _tmp52_;
-					ValaList* _tmp53_;
-					ValaList* _tmp54_;
-					ValadocApiNode* _tmp55_;
-					ValadocContentComment* _tmp56_;
-					ValadocContentComment* _tmp57_;
-					ValadocContentComment* _tmp58_;
-					_tmp47_ = symbol;
-					_tmp48_ = valadoc_api_node_get_documentation (_tmp47_);
-					_tmp49_ = _tmp48_;
+					ValadocApiNode* _tmp52_;
+					ValadocContentComment* _tmp53_;
+					ValadocContentComment* _tmp54_;
+					ValadocContentComment* _tmp55_;
+					_tmp44_ = symbol;
+					_tmp45_ = valadoc_api_node_get_documentation (_tmp44_);
+					_tmp46_ = _tmp45_;
+					_tmp47_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp46_);
+					_tmp48_ = _tmp47_;
+					_tmp49_ = docu;
 					_tmp50_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp49_);
 					_tmp51_ = _tmp50_;
-					_tmp52_ = docu;
-					_tmp53_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp52_);
+					vala_collection_add_all ((ValaCollection*) _tmp48_, (ValaCollection*) _tmp51_);
+					_tmp52_ = symbol;
+					_tmp53_ = valadoc_api_node_get_documentation (_tmp52_);
 					_tmp54_ = _tmp53_;
-					vala_collection_add_all ((ValaCollection*) _tmp51_, (ValaCollection*) _tmp54_);
-					_tmp55_ = symbol;
-					_tmp56_ = valadoc_api_node_get_documentation (_tmp55_);
-					_tmp57_ = _tmp56_;
-					_tmp58_ = docu;
-					valadoc_importer_valadoc_documentation_importer_merge_taglets (self, _tmp57_, _tmp58_);
+					_tmp55_ = docu;
+					valadoc_importer_valadoc_documentation_importer_merge_taglets (self, _tmp54_, _tmp55_);
 				} else {
-					ValadocImporterValadocDocumentationImporterInsertionMode _tmp59_;
-					_tmp59_ = insertion_mode;
-					if (_tmp59_ == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_PREPEND) {
-						ValadocApiNode* _tmp60_;
+					if (insertion_mode == VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_INSERTION_MODE_PREPEND) {
+						ValadocApiNode* _tmp56_;
+						ValadocContentComment* _tmp57_;
+						ValadocContentComment* _tmp58_;
+						ValaList* _tmp59_;
+						ValaList* _tmp60_;
 						ValadocContentComment* _tmp61_;
-						ValadocContentComment* _tmp62_;
+						ValaList* _tmp62_;
 						ValaList* _tmp63_;
-						ValaList* _tmp64_;
+						ValadocApiNode* _tmp64_;
 						ValadocContentComment* _tmp65_;
-						ValaList* _tmp66_;
-						ValaList* _tmp67_;
-						ValadocApiNode* _tmp68_;
-						ValadocContentComment* _tmp69_;
-						ValadocContentComment* _tmp70_;
-						ValadocContentComment* _tmp71_;
-						_tmp60_ = symbol;
-						_tmp61_ = valadoc_api_node_get_documentation (_tmp60_);
-						_tmp62_ = _tmp61_;
-						_tmp63_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp62_);
-						_tmp64_ = _tmp63_;
-						_tmp65_ = docu;
-						_tmp66_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp65_);
-						_tmp67_ = _tmp66_;
-						vala_list_insert_all (_tmp64_, 0, (ValaCollection*) _tmp67_);
-						_tmp68_ = symbol;
-						_tmp69_ = valadoc_api_node_get_documentation (_tmp68_);
-						_tmp70_ = _tmp69_;
-						_tmp71_ = docu;
-						valadoc_importer_valadoc_documentation_importer_merge_taglets (self, _tmp70_, _tmp71_);
+						ValadocContentComment* _tmp66_;
+						ValadocContentComment* _tmp67_;
+						_tmp56_ = symbol;
+						_tmp57_ = valadoc_api_node_get_documentation (_tmp56_);
+						_tmp58_ = _tmp57_;
+						_tmp59_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp58_);
+						_tmp60_ = _tmp59_;
+						_tmp61_ = docu;
+						_tmp62_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) _tmp61_);
+						_tmp63_ = _tmp62_;
+						vala_list_insert_all (_tmp60_, 0, (ValaCollection*) _tmp63_);
+						_tmp64_ = symbol;
+						_tmp65_ = valadoc_api_node_get_documentation (_tmp64_);
+						_tmp66_ = _tmp65_;
+						_tmp67_ = docu;
+						valadoc_importer_valadoc_documentation_importer_merge_taglets (self, _tmp66_, _tmp67_);
 					}
 				}
 			}
@@ -1003,7 +995,7 @@ valadoc_importer_valadoc_documentation_importer_class_init (ValadocImporterValad
 	valadoc_importer_valadoc_documentation_importer_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &ValadocImporterValadocDocumentationImporter_private_offset);
 	((ValadocImporterDocumentationImporterClass *) klass)->process = (void (*) (ValadocImporterDocumentationImporter*, const gchar*)) valadoc_importer_valadoc_documentation_importer_real_process;
-	VALADOC_IMPORTER_DOCUMENTATION_IMPORTER_CLASS (klass)->get_file_extension = valadoc_importer_valadoc_documentation_importer_real_get_file_extension;
+	VALADOC_IMPORTER_DOCUMENTATION_IMPORTER_CLASS (klass)->get_file_extension = (const gchar* (*) (ValadocImporterDocumentationImporter*)) valadoc_importer_valadoc_documentation_importer_real_get_file_extension;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_importer_valadoc_documentation_importer_get_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_importer_valadoc_documentation_importer_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_FILE_EXTENSION_PROPERTY, valadoc_importer_valadoc_documentation_importer_properties[VALADOC_IMPORTER_VALADOC_DOCUMENTATION_IMPORTER_FILE_EXTENSION_PROPERTY] = g_param_spec_string ("file-extension", "file-extension", "file-extension", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
@@ -1055,13 +1047,13 @@ valadoc_importer_valadoc_documentation_importer_get_type_once (void)
 GType
 valadoc_importer_valadoc_documentation_importer_get_type (void)
 {
-	static volatile gsize valadoc_importer_valadoc_documentation_importer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_importer_type_id__volatile)) {
+	static volatile gsize valadoc_importer_valadoc_documentation_importer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_importer_type_id__once)) {
 		GType valadoc_importer_valadoc_documentation_importer_type_id;
 		valadoc_importer_valadoc_documentation_importer_type_id = valadoc_importer_valadoc_documentation_importer_get_type_once ();
-		g_once_init_leave (&valadoc_importer_valadoc_documentation_importer_type_id__volatile, valadoc_importer_valadoc_documentation_importer_type_id);
+		g_once_init_leave (&valadoc_importer_valadoc_documentation_importer_type_id__once, valadoc_importer_valadoc_documentation_importer_type_id);
 	}
-	return valadoc_importer_valadoc_documentation_importer_type_id__volatile;
+	return valadoc_importer_valadoc_documentation_importer_type_id__once;
 }
 
 static void

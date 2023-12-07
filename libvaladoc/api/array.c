@@ -25,6 +25,7 @@
 
 #include "valadoc.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <vala.h>
 
 enum  {
@@ -126,7 +127,7 @@ valadoc_api_array_element_is_owned (ValadocApiArray* self)
 	ValadocApiTypeReference* _tmp4_;
 	gboolean _tmp5_;
 	gboolean _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->_data_type;
 	_tmp1_ = _g_object_ref0 (VALADOC_API_IS_TYPEREFERENCE (_tmp0_) ? ((ValadocApiTypeReference*) _tmp0_) : NULL);
@@ -168,7 +169,7 @@ valadoc_api_array_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp11_;
 	ValadocApiSignatureBuilder* _tmp12_;
 	ValadocContentRun* _tmp13_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiArray*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	builder = _tmp0_;
@@ -256,13 +257,13 @@ valadoc_api_array_get_type_once (void)
 GType
 valadoc_api_array_get_type (void)
 {
-	static volatile gsize valadoc_api_array_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_array_type_id__volatile)) {
+	static volatile gsize valadoc_api_array_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_array_type_id__once)) {
 		GType valadoc_api_array_type_id;
 		valadoc_api_array_type_id = valadoc_api_array_get_type_once ();
-		g_once_init_leave (&valadoc_api_array_type_id__volatile, valadoc_api_array_type_id);
+		g_once_init_leave (&valadoc_api_array_type_id__once, valadoc_api_array_type_id);
 	}
-	return valadoc_api_array_type_id__volatile;
+	return valadoc_api_array_type_id__once;
 }
 
 static void

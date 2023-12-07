@@ -1,2 +1,0 @@
-# private library only used by valac
-binary-or-shlib-defines-rpath usr/bin/valac-* usr/lib/*/vala-*

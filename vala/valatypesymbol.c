@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 static gpointer vala_typesymbol_parent_class = NULL;
 
@@ -58,7 +59,7 @@ vala_typesymbol_construct (GType object_type,
 static gboolean
 vala_typesymbol_real_is_reference_type (ValaTypeSymbol* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = FALSE;
 	return result;
 }
@@ -86,7 +87,7 @@ static gboolean
 vala_typesymbol_real_is_subtype_of (ValaTypeSymbol* self,
                                     ValaTypeSymbol* t)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (t != NULL, FALSE);
 	result = self == t;
 	return result;
@@ -112,7 +113,7 @@ static gint
 vala_typesymbol_real_get_type_parameter_index (ValaTypeSymbol* self,
                                                const gchar* name)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (name != NULL, 0);
 	result = -1;
 	return result;
@@ -163,12 +164,12 @@ vala_typesymbol_get_type_once (void)
 GType
 vala_typesymbol_get_type (void)
 {
-	static volatile gsize vala_typesymbol_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_typesymbol_type_id__volatile)) {
+	static volatile gsize vala_typesymbol_type_id__once = 0;
+	if (g_once_init_enter (&vala_typesymbol_type_id__once)) {
 		GType vala_typesymbol_type_id;
 		vala_typesymbol_type_id = vala_typesymbol_get_type_once ();
-		g_once_init_leave (&vala_typesymbol_type_id__volatile, vala_typesymbol_type_id);
+		g_once_init_leave (&vala_typesymbol_type_id__once, vala_typesymbol_type_id);
 	}
-	return vala_typesymbol_type_id__volatile;
+	return vala_typesymbol_type_id__once;
 }
 

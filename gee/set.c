@@ -24,6 +24,7 @@
  */
 
 #include "valagee.h"
+#include <glib-object.h>
 
 struct _ValaSetPrivate {
 	GType g_type;
@@ -87,12 +88,12 @@ vala_set_get_type_once (void)
 GType
 vala_set_get_type (void)
 {
-	static volatile gsize vala_set_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_set_type_id__volatile)) {
+	static volatile gsize vala_set_type_id__once = 0;
+	if (g_once_init_enter (&vala_set_type_id__once)) {
 		GType vala_set_type_id;
 		vala_set_type_id = vala_set_get_type_once ();
-		g_once_init_leave (&vala_set_type_id__volatile, vala_set_type_id);
+		g_once_init_leave (&vala_set_type_id__once, vala_set_type_id);
 	}
-	return vala_set_type_id__volatile;
+	return vala_set_type_id__once;
 }
 

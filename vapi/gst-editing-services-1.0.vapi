@@ -77,7 +77,7 @@ namespace GES {
 		[Version (since = "1.18")]
 		public bool register_time_property (string child_property_name);
 		[Version (since = "1.18")]
-		public bool set_time_translation_funcs (GES.BaseEffectTimeTranslationFunc? source_to_sink_func, owned GES.BaseEffectTimeTranslationFunc? sink_to_source_func);
+		public bool set_time_translation_funcs ([CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GES.BaseEffectTimeTranslationFunc? source_to_sink_func, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GES.BaseEffectTimeTranslationFunc? sink_to_source_func);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_base_effect_clip_get_type ()")]
 	public abstract class BaseEffectClip : GES.OperationClip, GES.Extractable, GES.MetaContainer {
@@ -147,7 +147,7 @@ namespace GES {
 		[Version (since = "1.18")]
 		public Gst.ClockTime get_frame_time (GES.FrameNumber frame_number);
 		[Version (since = "1.18")]
-		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
+		public virtual bool get_natural_framerate (out int framerate_n, out int framerate_d);
 		public GES.TrackType get_supported_formats ();
 		public void set_supported_formats (GES.TrackType supportedformats);
 		public GES.TrackType supported_formats { get; set construct; }
@@ -156,8 +156,9 @@ namespace GES {
 	public class CommandLineFormatter : GES.Formatter, GES.Extractable {
 		[CCode (has_construct_function = false)]
 		protected CommandLineFormatter ();
-		public static string get_help (int nargs, string commands);
-		[Version (since = "1.20")]
+		[Version (since = "1.10")]
+		public static string get_help ([CCode (array_length_cname = "nargs", array_length_pos = 0.5)] string[] commands);
+		[Version (since = "1.10")]
 		public static string get_timeline_uri (GES.Timeline timeline);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_container_get_type ()")]
@@ -201,7 +202,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_effect_clip_get_type ()")]
 	public class EffectClip : GES.BaseEffectClip, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
-		public EffectClip (string video_bin_description, string audio_bin_description);
+		public EffectClip (string? video_bin_description, string? audio_bin_description);
 		[NoAccessorMethod]
 		public string audio_bin_description { owned get; construct; }
 		[NoAccessorMethod]
@@ -366,7 +367,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_pitivi_formatter_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.0")]
 	public class PitiviFormatter : GES.Formatter, GES.Extractable {
-		[CCode (has_construct_function = false)]
+		[CCode (cheader_filename = "ges/ges-pitivi-formatter.h", has_construct_function = false)]
 		public PitiviFormatter ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_project_get_type ()")]
@@ -809,7 +810,7 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected TrackElementAsset ();
 		[Version (since = "1.18")]
-		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
+		public virtual bool get_natural_framerate (out int framerate_n, out int framerate_d);
 		public GES.TrackType get_track_type ();
 		public void set_track_type (GES.TrackType type);
 		public GES.TrackType track_type { get; set construct; }
@@ -944,7 +945,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_cname = "GESMetaContainerInterface", type_id = "ges_meta_container_get_type ()")]
 	public interface MetaContainer : GLib.Object {
 		public bool add_metas_from_string (string str);
-		public bool check_meta_registered (string meta_item, out GES.MetaFlag? flags, out GLib.Type? type);
+		public bool check_meta_registered (string meta_item, out GES.MetaFlag flags, out GLib.Type type);
 		public void @foreach (GES.MetaForeachFunc func);
 		public bool get_boolean (string meta_item, out bool dest);
 		public bool get_date (string meta_item, out GLib.Date dest);

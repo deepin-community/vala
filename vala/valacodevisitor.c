@@ -27,6 +27,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <gobject/gvaluecollector.h>
 
 typedef struct _ValaParamSpecCodeVisitor ValaParamSpecCodeVisitor;
@@ -2408,13 +2409,13 @@ vala_code_visitor_get_type_once (void)
 GType
 vala_code_visitor_get_type (void)
 {
-	static volatile gsize vala_code_visitor_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_code_visitor_type_id__volatile)) {
+	static volatile gsize vala_code_visitor_type_id__once = 0;
+	if (g_once_init_enter (&vala_code_visitor_type_id__once)) {
 		GType vala_code_visitor_type_id;
 		vala_code_visitor_type_id = vala_code_visitor_get_type_once ();
-		g_once_init_leave (&vala_code_visitor_type_id__volatile, vala_code_visitor_type_id);
+		g_once_init_leave (&vala_code_visitor_type_id__once, vala_code_visitor_type_id);
 	}
-	return vala_code_visitor_type_id__volatile;
+	return vala_code_visitor_type_id__once;
 }
 
 gpointer

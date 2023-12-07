@@ -28,6 +28,7 @@
 #include <string.h>
 #include <glib.h>
 #include <vala.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 
@@ -121,7 +122,7 @@ vala_ctype_real_copy (ValaDataType* base)
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
 	ValaCType* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaCType*) base;
 	_tmp0_ = self->priv->_ctype_name;
 	_tmp1_ = self->priv->_cdefault_value;
@@ -173,12 +174,12 @@ vala_ctype_get_type_once (void)
 GType
 vala_ctype_get_type (void)
 {
-	static volatile gsize vala_ctype_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ctype_type_id__volatile)) {
+	static volatile gsize vala_ctype_type_id__once = 0;
+	if (g_once_init_enter (&vala_ctype_type_id__once)) {
 		GType vala_ctype_type_id;
 		vala_ctype_type_id = vala_ctype_get_type_once ();
-		g_once_init_leave (&vala_ctype_type_id__volatile, vala_ctype_type_id);
+		g_once_init_leave (&vala_ctype_type_id__once, vala_ctype_type_id);
 	}
-	return vala_ctype_type_id__volatile;
+	return vala_ctype_type_id__once;
 }
 

@@ -111,7 +111,7 @@ valadoc_importer_internal_id_registrar_map_url_id (ValadocImporterInternalIdRegi
 {
 	ValaHashMap* _tmp0_;
 	gpointer _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (id != NULL, NULL);
 	_tmp0_ = self->priv->map;
@@ -126,7 +126,7 @@ valadoc_importer_internal_id_registrar_map_symbol_id (ValadocImporterInternalIdR
 {
 	ValaHashMap* _tmp0_;
 	gpointer _tmp1_;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (id != NULL, NULL);
 	_tmp0_ = self->priv->symbol_map;
@@ -171,105 +171,99 @@ valadoc_importer_internal_id_registrar_read_index_sgml_file (ValadocImporterInte
 		ValaSourceLocation _tmp6_ = {0};
 		ValaSourceLocation _tmp7_ = {0};
 		ValaMarkupTokenType _tmp8_;
-		ValaMarkupTokenType _tmp9_;
-		gboolean _tmp10_ = FALSE;
-		ValaMarkupTokenType _tmp11_;
+		gboolean _tmp9_ = FALSE;
 		_tmp5_ = reader;
 		_tmp8_ = vala_markup_reader_read_token (_tmp5_, &_tmp6_, &_tmp7_);
 		begin = _tmp6_;
 		end = _tmp7_;
 		token = _tmp8_;
-		_tmp9_ = token;
-		if (!(_tmp9_ != VALA_MARKUP_TOKEN_TYPE_EOF)) {
+		if (!(token != VALA_MARKUP_TOKEN_TYPE_EOF)) {
 			break;
 		}
-		_tmp11_ = token;
-		if (_tmp11_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-			ValaMarkupReader* _tmp12_;
-			const gchar* _tmp13_;
-			const gchar* _tmp14_;
-			_tmp12_ = reader;
-			_tmp13_ = vala_markup_reader_get_name (_tmp12_);
-			_tmp14_ = _tmp13_;
-			_tmp10_ = g_strcmp0 (_tmp14_, "ONLINE") == 0;
+		if (token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+			ValaMarkupReader* _tmp10_;
+			const gchar* _tmp11_;
+			const gchar* _tmp12_;
+			_tmp10_ = reader;
+			_tmp11_ = vala_markup_reader_get_name (_tmp10_);
+			_tmp12_ = _tmp11_;
+			_tmp9_ = g_strcmp0 (_tmp12_, "ONLINE") == 0;
 		} else {
-			_tmp10_ = FALSE;
+			_tmp9_ = FALSE;
 		}
-		if (_tmp10_) {
+		if (_tmp9_) {
 			if (index_sgml_online == NULL) {
-				ValaMarkupReader* _tmp15_;
-				gchar* _tmp16_;
-				const gchar* _tmp17_;
-				_tmp15_ = reader;
-				_tmp16_ = vala_markup_reader_get_attribute (_tmp15_, "href");
+				ValaMarkupReader* _tmp13_;
+				gchar* _tmp14_;
+				const gchar* _tmp15_;
+				_tmp13_ = reader;
+				_tmp14_ = vala_markup_reader_get_attribute (_tmp13_, "href");
 				_g_free0 (base_path);
-				base_path = _tmp16_;
-				_tmp17_ = base_path;
-				if (_tmp17_ == NULL) {
+				base_path = _tmp14_;
+				_tmp15_ = base_path;
+				if (_tmp15_ == NULL) {
 					vala_report_error (NULL, "missing attribute `href' in <ONLINE>");
 				}
 			}
 		} else {
-			gboolean _tmp18_ = FALSE;
-			ValaMarkupTokenType _tmp19_;
-			_tmp19_ = token;
-			if (_tmp19_ == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
-				ValaMarkupReader* _tmp20_;
-				const gchar* _tmp21_;
-				const gchar* _tmp22_;
-				_tmp20_ = reader;
-				_tmp21_ = vala_markup_reader_get_name (_tmp20_);
-				_tmp22_ = _tmp21_;
-				_tmp18_ = g_strcmp0 (_tmp22_, "ANCHOR") == 0;
+			gboolean _tmp16_ = FALSE;
+			if (token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT) {
+				ValaMarkupReader* _tmp17_;
+				const gchar* _tmp18_;
+				const gchar* _tmp19_;
+				_tmp17_ = reader;
+				_tmp18_ = vala_markup_reader_get_name (_tmp17_);
+				_tmp19_ = _tmp18_;
+				_tmp16_ = g_strcmp0 (_tmp19_, "ANCHOR") == 0;
 			} else {
-				_tmp18_ = FALSE;
+				_tmp16_ = FALSE;
 			}
-			if (_tmp18_) {
+			if (_tmp16_) {
 				gchar* id = NULL;
+				ValaMarkupReader* _tmp20_;
+				gchar* _tmp21_;
+				const gchar* _tmp22_;
+				gchar* href = NULL;
 				ValaMarkupReader* _tmp23_;
 				gchar* _tmp24_;
 				const gchar* _tmp25_;
-				gchar* href = NULL;
-				ValaMarkupReader* _tmp26_;
-				gchar* _tmp27_;
-				const gchar* _tmp28_;
-				ValaHashMap* _tmp31_;
-				const gchar* _tmp32_;
-				const gchar* _tmp33_;
-				const gchar* _tmp34_;
-				gchar* _tmp35_;
-				gchar* _tmp36_;
-				_tmp23_ = reader;
-				_tmp24_ = vala_markup_reader_get_attribute (_tmp23_, "id");
-				id = _tmp24_;
-				_tmp25_ = id;
-				if (_tmp25_ == NULL) {
+				ValaHashMap* _tmp28_;
+				const gchar* _tmp29_;
+				const gchar* _tmp30_;
+				const gchar* _tmp31_;
+				gchar* _tmp32_;
+				gchar* _tmp33_;
+				_tmp20_ = reader;
+				_tmp21_ = vala_markup_reader_get_attribute (_tmp20_, "id");
+				id = _tmp21_;
+				_tmp22_ = id;
+				if (_tmp22_ == NULL) {
 					vala_report_error (NULL, "missing attribute `id' in <ANCHOR>");
 				}
-				_tmp26_ = reader;
-				_tmp27_ = vala_markup_reader_get_attribute (_tmp26_, "href");
-				href = _tmp27_;
-				_tmp28_ = href;
-				if (_tmp28_ == NULL) {
+				_tmp23_ = reader;
+				_tmp24_ = vala_markup_reader_get_attribute (_tmp23_, "href");
+				href = _tmp24_;
+				_tmp25_ = href;
+				if (_tmp25_ == NULL) {
 					vala_report_error (NULL, "missing attribute `href' in <ANCHOR>");
 				} else {
 					if (index_sgml_online != NULL) {
-						const gchar* _tmp29_;
-						gchar* _tmp30_;
-						_tmp29_ = href;
-						_tmp30_ = g_path_get_basename (_tmp29_);
+						const gchar* _tmp26_;
+						gchar* _tmp27_;
+						_tmp26_ = href;
+						_tmp27_ = g_path_get_basename (_tmp26_);
 						_g_free0 (href);
-						href = _tmp30_;
+						href = _tmp27_;
 					}
 				}
-				_tmp31_ = self->priv->map;
-				_tmp32_ = id;
-				_tmp33_ = base_path;
-				_tmp34_ = href;
-				_tmp35_ = g_build_path ("/", _tmp33_, _tmp34_, NULL);
-				_tmp36_ = _tmp35_;
-				vala_map_set ((ValaMap*) _tmp31_, _tmp32_, _tmp36_);
-				_g_free0 (_tmp36_);
+				_tmp28_ = self->priv->map;
+				_tmp29_ = id;
+				_tmp30_ = base_path;
+				_tmp31_ = href;
+				_tmp32_ = g_build_path ("/", _tmp30_, _tmp31_, NULL);
+				_tmp33_ = _tmp32_;
+				vala_map_set ((ValaMap*) _tmp28_, _tmp29_, _tmp33_);
+				_g_free0 (_tmp33_);
 				_g_free0 (href);
 				_g_free0 (id);
 			} else {
@@ -457,13 +451,13 @@ valadoc_importer_internal_id_registrar_get_type_once (void)
 GType
 valadoc_importer_internal_id_registrar_get_type (void)
 {
-	static volatile gsize valadoc_importer_internal_id_registrar_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_internal_id_registrar_type_id__volatile)) {
+	static volatile gsize valadoc_importer_internal_id_registrar_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_internal_id_registrar_type_id__once)) {
 		GType valadoc_importer_internal_id_registrar_type_id;
 		valadoc_importer_internal_id_registrar_type_id = valadoc_importer_internal_id_registrar_get_type_once ();
-		g_once_init_leave (&valadoc_importer_internal_id_registrar_type_id__volatile, valadoc_importer_internal_id_registrar_type_id);
+		g_once_init_leave (&valadoc_importer_internal_id_registrar_type_id__once, valadoc_importer_internal_id_registrar_type_id);
 	}
-	return valadoc_importer_internal_id_registrar_type_id__volatile;
+	return valadoc_importer_internal_id_registrar_type_id__once;
 }
 
 gpointer

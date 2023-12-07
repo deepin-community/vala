@@ -128,13 +128,13 @@ valadoc_settings_get_type_once (void)
 GType
 valadoc_settings_get_type (void)
 {
-	static volatile gsize valadoc_settings_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_settings_type_id__volatile)) {
+	static volatile gsize valadoc_settings_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_settings_type_id__once)) {
 		GType valadoc_settings_type_id;
 		valadoc_settings_type_id = valadoc_settings_get_type_once ();
-		g_once_init_leave (&valadoc_settings_type_id__volatile, valadoc_settings_type_id);
+		g_once_init_leave (&valadoc_settings_type_id__once, valadoc_settings_type_id);
 	}
-	return valadoc_settings_type_id__volatile;
+	return valadoc_settings_type_id__once;
 }
 
 static void

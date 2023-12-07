@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CONTENT_PARAGRAPH_0_PROPERTY,
@@ -90,10 +90,8 @@ valadoc_content_paragraph_real_get_horizontal_align (ValadocContentStyleAttribut
 {
 	ValadocContentHorizontalAlign result;
 	ValadocContentParagraph* self;
-	ValadocContentHorizontalAlign _tmp0_;
 	self = (ValadocContentParagraph*) base;
-	_tmp0_ = self->priv->_horizontal_align;
-	result = _tmp0_;
+	result = self->priv->_horizontal_align;
 	return result;
 }
 
@@ -116,10 +114,8 @@ valadoc_content_paragraph_real_get_vertical_align (ValadocContentStyleAttributes
 {
 	ValadocContentVerticalAlign result;
 	ValadocContentParagraph* self;
-	ValadocContentVerticalAlign _tmp0_;
 	self = (ValadocContentParagraph*) base;
-	_tmp0_ = self->priv->_vertical_align;
-	result = _tmp0_;
+	result = self->priv->_vertical_align;
 	return result;
 }
 
@@ -225,7 +221,7 @@ valadoc_content_paragraph_real_copy (ValadocContentContentElement* base,
 	ValadocContentParagraph* _tmp8_;
 	const gchar* _tmp9_;
 	const gchar* _tmp10_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentParagraph*) base;
 	_tmp0_ = valadoc_content_paragraph_new ();
 	p = _tmp0_;
@@ -375,13 +371,13 @@ valadoc_content_paragraph_get_type_once (void)
 GType
 valadoc_content_paragraph_get_type (void)
 {
-	static volatile gsize valadoc_content_paragraph_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_paragraph_type_id__volatile)) {
+	static volatile gsize valadoc_content_paragraph_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_paragraph_type_id__once)) {
 		GType valadoc_content_paragraph_type_id;
 		valadoc_content_paragraph_type_id = valadoc_content_paragraph_get_type_once ();
-		g_once_init_leave (&valadoc_content_paragraph_type_id__volatile, valadoc_content_paragraph_type_id);
+		g_once_init_leave (&valadoc_content_paragraph_type_id__once, valadoc_content_paragraph_type_id);
 	}
-	return valadoc_content_paragraph_type_id__volatile;
+	return valadoc_content_paragraph_type_id__once;
 }
 
 static void

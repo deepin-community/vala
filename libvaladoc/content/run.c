@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CONTENT_RUN_0_PROPERTY,
@@ -124,7 +124,7 @@ valadoc_content_run_style_from_string (const gchar* str)
 	static GQuark _tmp1_label16 = 0;
 	static GQuark _tmp1_label17 = 0;
 	static GQuark _tmp1_label18 = 0;
-	ValadocContentRunStyle* result = NULL;
+	ValadocContentRunStyle* result;
 	g_return_val_if_fail (str != NULL, NULL);
 	_tmp0_ = str;
 	_tmp2_ = (NULL == _tmp0_) ? 0 : g_quark_from_string (_tmp0_);
@@ -364,7 +364,7 @@ valadoc_content_run_style_from_string (const gchar* str)
 const gchar*
 valadoc_content_run_style_to_string (ValadocContentRunStyle self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALADOC_CONTENT_RUN_STYLE_NONE:
 		{
@@ -481,23 +481,21 @@ valadoc_content_run_style_get_type_once (void)
 GType
 valadoc_content_run_style_get_type (void)
 {
-	static volatile gsize valadoc_content_run_style_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_run_style_type_id__volatile)) {
+	static volatile gsize valadoc_content_run_style_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_run_style_type_id__once)) {
 		GType valadoc_content_run_style_type_id;
 		valadoc_content_run_style_type_id = valadoc_content_run_style_get_type_once ();
-		g_once_init_leave (&valadoc_content_run_style_type_id__volatile, valadoc_content_run_style_type_id);
+		g_once_init_leave (&valadoc_content_run_style_type_id__once, valadoc_content_run_style_type_id);
 	}
-	return valadoc_content_run_style_type_id__volatile;
+	return valadoc_content_run_style_type_id__once;
 }
 
 ValadocContentRunStyle
 valadoc_content_run_get_style (ValadocContentRun* self)
 {
 	ValadocContentRunStyle result;
-	ValadocContentRunStyle _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_style;
-	result = _tmp0_;
+	result = self->priv->_style;
 	return result;
 }
 
@@ -567,7 +565,7 @@ valadoc_content_run_real_copy (ValadocContentContentElement* base,
 	ValadocContentRunStyle _tmp0_;
 	ValadocContentRun* _tmp1_;
 	ValadocContentRun* _tmp2_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentRun*) base;
 	_tmp0_ = self->priv->_style;
 	_tmp1_ = valadoc_content_run_new (_tmp0_);
@@ -688,13 +686,13 @@ valadoc_content_run_get_type_once (void)
 GType
 valadoc_content_run_get_type (void)
 {
-	static volatile gsize valadoc_content_run_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_run_type_id__volatile)) {
+	static volatile gsize valadoc_content_run_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_run_type_id__once)) {
 		GType valadoc_content_run_type_id;
 		valadoc_content_run_type_id = valadoc_content_run_get_type_once ();
-		g_once_init_leave (&valadoc_content_run_type_id__volatile, valadoc_content_run_type_id);
+		g_once_init_leave (&valadoc_content_run_type_id__once, valadoc_content_run_type_id);
 	}
-	return valadoc_content_run_type_id__volatile;
+	return valadoc_content_run_type_id__once;
 }
 
 static void

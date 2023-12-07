@@ -155,7 +155,7 @@ static const gchar*
 foo_real_foo (AbstractFoo* base)
 {
 	Foo * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Foo*) base;
 	result = "Foo";
 	return result;
@@ -184,8 +184,8 @@ static void
 foo_instance_init (Foo * self)
 {
 	((AbstractFoo *) self)->foo = (const gchar* (*) (AbstractFoo*)) foo_real_foo;
-	((AbstractFoo *) self)->get_prop = foo_real_get_prop;
-	((AbstractFoo *) self)->set_prop = foo_real_set_prop;
+	((AbstractFoo *) self)->get_prop = (gint (*) (AbstractFoo*)) foo_real_get_prop;
+	((AbstractFoo *) self)->set_prop = (void (*) (AbstractFoo*, gint)) foo_real_set_prop;
 }
 
 Bar*
@@ -208,7 +208,7 @@ static const gchar*
 bar_real_foo (AbstractFoo* base)
 {
 	Bar * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Bar*) base;
 	result = "Bar";
 	return result;
@@ -237,14 +237,14 @@ static void
 bar_instance_init (Bar * self)
 {
 	((AbstractFoo *) self)->foo = (const gchar* (*) (AbstractFoo*)) bar_real_foo;
-	((AbstractFoo *) self)->get_prop = bar_real_get_prop;
-	((AbstractFoo *) self)->set_prop = bar_real_set_prop;
+	((AbstractFoo *) self)->get_prop = (gint (*) (AbstractFoo*)) bar_real_get_prop;
+	((AbstractFoo *) self)->set_prop = (void (*) (AbstractFoo*, gint)) bar_real_set_prop;
 }
 
 static const gchar*
 manam_real_foo (Manam* self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	result = "Manam";
 	return result;
 }
@@ -262,7 +262,7 @@ manam_foo (Manam* self)
 static gint
 manam_real_foo_plain (Manam* self)
 {
-	gint result = 0;
+	gint result;
 	result = 13;
 	return result;
 }
@@ -320,8 +320,8 @@ manam_instance_init (Manam * self)
 {
 	((Manam *) self)->foo = (const gchar* (*) (Manam*)) manam_real_foo;
 	((Manam *) self)->foo_plain = (gint (*) (Manam*)) manam_real_foo_plain;
-	((Manam *) self)->get_prop = manam_real_get_prop;
-	((Manam *) self)->set_prop = manam_real_set_prop;
+	((Manam *) self)->get_prop = (gint (*) (Manam*)) manam_real_get_prop;
+	((Manam *) self)->set_prop = (void (*) (Manam*, gint)) manam_real_set_prop;
 	self->field = 23;
 }
 
@@ -335,7 +335,7 @@ static const gchar*
 baz_real_foo (Manam* base)
 {
 	Baz * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Baz*) base;
 	result = "Baz";
 	return result;
@@ -345,7 +345,7 @@ static gint
 baz_real_foo_plain (Manam* base)
 {
 	Baz * self;
-	gint result = 0;
+	gint result;
 	self = (Baz*) base;
 	result = 23;
 	return result;

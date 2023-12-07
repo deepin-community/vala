@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
+#include <valagee.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_comment_unref0(var) ((var == NULL) ? NULL : (var = (vala_comment_unref (var), NULL)))
@@ -219,10 +221,8 @@ ValaSymbolAccessibility
 vala_symbol_get_access (ValaSymbol* self)
 {
 	ValaSymbolAccessibility result;
-	ValaSymbolAccessibility _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_access;
-	result = _tmp0_;
+	result = self->priv->_access;
 	return result;
 }
 
@@ -315,7 +315,7 @@ vala_symbol_is_internal_symbol (ValaSymbol* self)
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp1_ = vala_symbol_get_external (self);
 	_tmp2_ = _tmp1_;
@@ -392,7 +392,7 @@ vala_symbol_is_private_symbol (ValaSymbol* self)
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp1_ = vala_symbol_get_external (self);
 	_tmp2_ = _tmp1_;
@@ -645,7 +645,7 @@ vala_symbol_get_full_name (ValaSymbol* self)
 	gchar* _tmp11_;
 	gboolean _tmp12_;
 	const gchar* _tmp15_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = vala_symbol_get_parent_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -733,7 +733,7 @@ string_contains (const gchar* self,
                  const gchar* needle)
 {
 	gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (needle != NULL, FALSE);
 	_tmp0_ = strstr ((gchar*) self, (gchar*) needle);
@@ -745,7 +745,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -761,7 +761,7 @@ vala_symbol_camel_case_to_lower_case (const gchar* camel_case)
 	GString* _tmp29_;
 	const gchar* _tmp30_;
 	gchar* _tmp31_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (camel_case != NULL, NULL);
 	if (string_contains (camel_case, "_")) {
 		gchar* _tmp0_;
@@ -893,7 +893,7 @@ vala_symbol_lower_case_to_camel_case (const gchar* lower_case)
 	GString* _tmp10_;
 	const gchar* _tmp11_;
 	gchar* _tmp12_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (lower_case != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	result_builder = _tmp0_;
@@ -966,7 +966,7 @@ vala_symbol_equal_func (ValaSymbol* a,
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gboolean _tmp5_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (a != NULL, FALSE);
 	g_return_val_if_fail (b != NULL, FALSE);
 	_tmp0_ = g_str_equal;
@@ -994,7 +994,7 @@ vala_symbol_hash_func (ValaSymbol* s)
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	guint _tmp3_;
-	guint result = 0U;
+	guint result;
 	g_return_val_if_fail (s != NULL, 0U);
 	_tmp0_ = g_str_hash;
 	_tmp1_ = vala_symbol_get_full_name (s);
@@ -1022,7 +1022,7 @@ vala_symbol_get_top_accessible_scope (ValaSymbol* self,
 	ValaSymbol* _tmp10_;
 	ValaSymbol* _tmp11_;
 	ValaScope* _tmp12_;
-	ValaScope* result = NULL;
+	ValaScope* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_access;
 	if (_tmp0_ == VALA_SYMBOL_ACCESSIBILITY_PRIVATE) {
@@ -1067,7 +1067,7 @@ static gboolean
 vala_symbol_real_is_instance_member (ValaSymbol* self)
 {
 	gboolean instance = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	instance = TRUE;
 	if (VALA_IS_FIELD (self)) {
 		ValaField* f = NULL;
@@ -1145,7 +1145,7 @@ static gboolean
 vala_symbol_real_is_class_member (ValaSymbol* self)
 {
 	gboolean isclass = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	isclass = TRUE;
 	if (VALA_IS_FIELD (self)) {
 		ValaField* f = NULL;
@@ -1225,7 +1225,7 @@ vala_symbol_get_hidden_member (ValaSymbol* self)
 	ValaSymbol* sym = NULL;
 	ValaSymbol* _tmp0_;
 	ValaSymbol* _tmp1_;
-	ValaSymbol* result = NULL;
+	ValaSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	sym = NULL;
 	_tmp0_ = vala_symbol_get_parent_symbol (self);
@@ -1373,7 +1373,7 @@ vala_symbol_is_accessible (ValaSymbol* self,
 	gboolean _tmp2_ = FALSE;
 	gboolean _tmp3_ = FALSE;
 	ValaScope* _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp0_ = vala_symbol_get_top_accessible_scope (sym, FALSE);
@@ -1827,11 +1827,123 @@ static gchar*
 vala_symbol_real_to_string (ValaCodeNode* base)
 {
 	ValaSymbol * self;
+	GString* builder = NULL;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* _tmp1_;
+	GString* _tmp2_;
+	GString* _tmp3_;
+	ValaList* type_params = NULL;
+	gboolean _tmp8_ = FALSE;
+	ValaList* _tmp9_;
+	GString* _tmp27_;
+	const gchar* _tmp28_;
+	gchar* _tmp29_;
+	gchar* result;
 	self = (ValaSymbol*) base;
 	_tmp0_ = vala_symbol_get_full_name (self);
-	result = _tmp0_;
+	_tmp1_ = _tmp0_;
+	_tmp2_ = g_string_new (_tmp1_);
+	_tmp3_ = _tmp2_;
+	_g_free0 (_tmp1_);
+	builder = _tmp3_;
+	type_params = NULL;
+	if (VALA_IS_DELEGATE (self)) {
+		ValaList* _tmp4_;
+		_tmp4_ = vala_delegate_get_type_parameters (G_TYPE_CHECK_INSTANCE_CAST (self, VALA_TYPE_DELEGATE, ValaDelegate));
+		type_params = _tmp4_;
+	} else {
+		if (VALA_IS_METHOD (self)) {
+			ValaList* _tmp5_;
+			_tmp5_ = vala_method_get_type_parameters (G_TYPE_CHECK_INSTANCE_CAST (self, VALA_TYPE_METHOD, ValaMethod));
+			type_params = _tmp5_;
+		} else {
+			if (VALA_IS_OBJECT_TYPE_SYMBOL (self)) {
+				ValaList* _tmp6_;
+				_tmp6_ = vala_object_type_symbol_get_type_parameters (G_TYPE_CHECK_INSTANCE_CAST (self, VALA_TYPE_OBJECT_TYPE_SYMBOL, ValaObjectTypeSymbol));
+				type_params = _tmp6_;
+			} else {
+				if (VALA_IS_STRUCT (self)) {
+					ValaList* _tmp7_;
+					_tmp7_ = vala_struct_get_type_parameters (G_TYPE_CHECK_INSTANCE_CAST (self, VALA_TYPE_STRUCT, ValaStruct));
+					type_params = _tmp7_;
+				}
+			}
+		}
+	}
+	_tmp9_ = type_params;
+	if (_tmp9_ != NULL) {
+		ValaList* _tmp10_;
+		gint _tmp11_;
+		gint _tmp12_;
+		_tmp10_ = type_params;
+		_tmp11_ = vala_collection_get_size ((ValaCollection*) _tmp10_);
+		_tmp12_ = _tmp11_;
+		_tmp8_ = _tmp12_ > 0;
+	} else {
+		_tmp8_ = FALSE;
+	}
+	if (_tmp8_) {
+		GString* _tmp13_;
+		gboolean first = FALSE;
+		GString* _tmp26_;
+		_tmp13_ = builder;
+		g_string_append_c (_tmp13_, '<');
+		first = TRUE;
+		{
+			ValaList* _type_param_list = NULL;
+			ValaList* _tmp14_;
+			gint _type_param_size = 0;
+			ValaList* _tmp15_;
+			gint _tmp16_;
+			gint _tmp17_;
+			gint _type_param_index = 0;
+			_tmp14_ = type_params;
+			_type_param_list = _tmp14_;
+			_tmp15_ = _type_param_list;
+			_tmp16_ = vala_collection_get_size ((ValaCollection*) _tmp15_);
+			_tmp17_ = _tmp16_;
+			_type_param_size = _tmp17_;
+			_type_param_index = -1;
+			while (TRUE) {
+				gint _tmp18_;
+				gint _tmp19_;
+				ValaTypeParameter* type_param = NULL;
+				ValaList* _tmp20_;
+				gpointer _tmp21_;
+				GString* _tmp23_;
+				ValaTypeParameter* _tmp24_;
+				const gchar* _tmp25_;
+				_type_param_index = _type_param_index + 1;
+				_tmp18_ = _type_param_index;
+				_tmp19_ = _type_param_size;
+				if (!(_tmp18_ < _tmp19_)) {
+					break;
+				}
+				_tmp20_ = _type_param_list;
+				_tmp21_ = vala_list_get (_tmp20_, _type_param_index);
+				type_param = (ValaTypeParameter*) _tmp21_;
+				if (!first) {
+					GString* _tmp22_;
+					_tmp22_ = builder;
+					g_string_append_c (_tmp22_, ',');
+				} else {
+					first = FALSE;
+				}
+				_tmp23_ = builder;
+				_tmp24_ = type_param;
+				_tmp25_ = ((ValaSymbol*) _tmp24_)->priv->_name;
+				g_string_append (_tmp23_, _tmp25_);
+				_vala_code_node_unref0 (type_param);
+			}
+		}
+		_tmp26_ = builder;
+		g_string_append_c (_tmp26_, '>');
+	}
+	_tmp27_ = builder;
+	_tmp28_ = _tmp27_->str;
+	_tmp29_ = g_strdup (_tmp28_);
+	result = _tmp29_;
+	_g_string_free0 (builder);
 	return result;
 }
 
@@ -1898,19 +2010,19 @@ vala_symbol_get_type_once (void)
 GType
 vala_symbol_get_type (void)
 {
-	static volatile gsize vala_symbol_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_symbol_type_id__volatile)) {
+	static volatile gsize vala_symbol_type_id__once = 0;
+	if (g_once_init_enter (&vala_symbol_type_id__once)) {
 		GType vala_symbol_type_id;
 		vala_symbol_type_id = vala_symbol_get_type_once ();
-		g_once_init_leave (&vala_symbol_type_id__volatile, vala_symbol_type_id);
+		g_once_init_leave (&vala_symbol_type_id__once, vala_symbol_type_id);
 	}
-	return vala_symbol_type_id__volatile;
+	return vala_symbol_type_id__once;
 }
 
 const gchar*
 vala_symbol_accessibility_to_string (ValaSymbolAccessibility self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALA_SYMBOL_ACCESSIBILITY_PROTECTED:
 		{
@@ -1951,13 +2063,13 @@ vala_symbol_accessibility_get_type_once (void)
 GType
 vala_symbol_accessibility_get_type (void)
 {
-	static volatile gsize vala_symbol_accessibility_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_symbol_accessibility_type_id__volatile)) {
+	static volatile gsize vala_symbol_accessibility_type_id__once = 0;
+	if (g_once_init_enter (&vala_symbol_accessibility_type_id__once)) {
 		GType vala_symbol_accessibility_type_id;
 		vala_symbol_accessibility_type_id = vala_symbol_accessibility_get_type_once ();
-		g_once_init_leave (&vala_symbol_accessibility_type_id__volatile, vala_symbol_accessibility_type_id);
+		g_once_init_leave (&vala_symbol_accessibility_type_id__once, vala_symbol_accessibility_type_id);
 	}
-	return vala_symbol_accessibility_type_id__volatile;
+	return vala_symbol_accessibility_type_id__once;
 }
 
 static GType
@@ -1972,12 +2084,12 @@ vala_member_binding_get_type_once (void)
 GType
 vala_member_binding_get_type (void)
 {
-	static volatile gsize vala_member_binding_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_member_binding_type_id__volatile)) {
+	static volatile gsize vala_member_binding_type_id__once = 0;
+	if (g_once_init_enter (&vala_member_binding_type_id__once)) {
 		GType vala_member_binding_type_id;
 		vala_member_binding_type_id = vala_member_binding_get_type_once ();
-		g_once_init_leave (&vala_member_binding_type_id__volatile, vala_member_binding_type_id);
+		g_once_init_leave (&vala_member_binding_type_id__once, vala_member_binding_type_id);
 	}
-	return vala_member_binding_type_id__volatile;
+	return vala_member_binding_type_id__once;
 }
 

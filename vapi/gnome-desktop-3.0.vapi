@@ -40,7 +40,7 @@ namespace Gnome {
 		public static string normalize_locale (string locale);
 		[CCode (cheader_filename = "libgnome-desktop/gnome-languages.h", cname = "gnome_parse_locale")]
 		[Version (since = "3.8")]
-		public static bool parse_locale (string locale, out string language_codep, out string country_codep, out string codesetp, out string modifierp);
+		public static bool parse_locale (string locale, out string language_codep, out string? country_codep, out string? codesetp, out string? modifierp);
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-bg.h", type_id = "gnome_bg_get_type ()")]
 	public class BG : GLib.Object {
@@ -52,9 +52,9 @@ namespace Gnome {
 		public Gdk.Pixbuf create_thumbnail (Gnome.DesktopThumbnailFactory factory, Gdk.Screen screen, int dest_width, int dest_height);
 		public void draw (Gdk.Pixbuf dest);
 		public unowned string get_filename ();
-		public bool get_image_size (Gnome.DesktopThumbnailFactory factory, int best_width, int best_height, int width, int height);
+		public bool get_image_size (Gnome.DesktopThumbnailFactory factory, int best_width, int best_height, out int width, out int height);
 		public GDesktop.BackgroundStyle get_placement ();
-		public void get_rgba (GDesktop.BackgroundShading type, Gdk.RGBA primary, Gdk.RGBA secondary);
+		public void get_rgba (out GDesktop.BackgroundShading type, out Gdk.RGBA primary, out Gdk.RGBA secondary);
 		[Version (deprecated = true, deprecated_since = "3.36")]
 		public static Cairo.Surface get_surface_from_root (Gdk.Screen screen);
 		public bool has_multiple_sizes ();
@@ -117,14 +117,17 @@ namespace Gnome {
 		public bool can_thumbnail (string uri, string mime_type, long mtime);
 		[Version (since = "2.2")]
 		public void create_failed_thumbnail (string uri, long mtime);
+		public async void create_failed_thumbnail_async (string uri, long original_mtime, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.2")]
 		public Gdk.Pixbuf generate_thumbnail (string uri, string mime_type);
+		public async Gdk.Pixbuf generate_thumbnail_async (string uri, string mime_type, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.2")]
 		public bool has_valid_failed_thumbnail (string uri, long mtime);
 		[Version (since = "2.2")]
 		public string lookup (string uri, long mtime);
 		[Version (since = "2.2")]
 		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, long original_mtime);
+		public async void save_thumbnail_async (Gdk.Pixbuf thumbnail, string uri, long original_mtime, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-idle-monitor.h", type_id = "gnome_idle_monitor_get_type ()")]
 	public class IdleMonitor : GLib.Object, GLib.Initable {
@@ -287,6 +290,8 @@ namespace Gnome {
 		public string string_for_datetime (GLib.DateTime now, GDesktop.ClockFormat clock_format, bool show_weekday, bool show_full_date, bool show_seconds);
 		public string clock { get; }
 		[NoAccessorMethod]
+		public bool force_seconds { get; set; }
+		[NoAccessorMethod]
 		public bool time_only { get; set; }
 		public GLib.TimeZone timezone { get; }
 	}
@@ -305,7 +310,7 @@ namespace Gnome {
 		[Version (since = "3.18")]
 		public GLib.List<weak string> get_languages_for_layout (string layout_id);
 		[Version (since = "3.6")]
-		public bool get_layout_info (string id, out unowned string display_name, out unowned string short_name, out unowned string xkb_layout, out unowned string xkb_variant);
+		public bool get_layout_info (string id, out unowned string? display_name, out unowned string? short_name, out unowned string? xkb_layout, out unowned string? xkb_variant);
 		[Version (since = "3.8")]
 		public GLib.List<weak string> get_layouts_for_country (string country_code);
 		[Version (since = "3.8")]
@@ -353,7 +358,7 @@ namespace Gnome {
 		REFLECT_X,
 		REFLECT_Y
 	}
-	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cprefix = "GNOME_RR_ERROR_")]
+	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cprefix = "GNOME_RR_ERROR_", has_type_id = false)]
 	public errordomain RRError {
 		UNKNOWN,
 		NO_RANDR_EXTENSION,
@@ -366,8 +371,13 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-idle-monitor.h", instance_pos = 2.9)]
 	public delegate void IdleMonitorWatchFunc (Gnome.IdleMonitor monitor, uint id);
+	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-version.h", cname = "GNOME_DESKTOP_PLATFORM_VERSION")]
+	public const int DESKTOP_PLATFORM_VERSION;
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cname = "GNOME_RR_CONNECTOR_TYPE_PANEL")]
 	public const string RR_CONNECTOR_TYPE_PANEL;
+	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-version.h")]
+	[Version (since = "43.0")]
+	public static int get_platform_version ();
 	[CCode (cheader_filename = "libgnome-desktop/gnome-systemd.h")]
 	public static async bool start_systemd_scope (string name, int32 pid, string? description, GLib.DBusConnection? connection, GLib.Cancellable? cancellable) throws GLib.Error;
 }

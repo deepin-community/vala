@@ -357,7 +357,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		var old_gir_version = ns.get_attribute_string ("CCode", "gir_version");
 		if ((old_gir_namespace != null && old_gir_namespace != gir_namespace)
 		    || (old_gir_version != null && old_gir_version != gir_version)) {
-			Report.warning (ns.source_reference, "Replace conflicting CCode.gir_* attributes for namespace `%s'".printf (ns.name));
+			Report.warning (ns.source_reference, "Replace conflicting CCode.gir_* attributes for namespace `%s'", ns.name);
 		}
 		ns.set_attribute_string ("CCode", "gir_namespace", gir_namespace);
 		ns.set_attribute_string ("CCode", "gir_version", gir_version);
@@ -776,7 +776,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		foreach (var prop in iface.get_properties ()) {
 			if (prop.is_abstract || prop.is_virtual) {
-				if (prop.get_accessor != null) {
+				if (prop.get_accessor != null && prop.get_accessor.readable) {
 					var m = prop.get_accessor.get_method ();
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\"", m.name);
@@ -932,7 +932,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<enumeration name=\"%s\"", get_gir_name (edomain));
-		write_ctype_attributes (edomain);
+		if (get_ccode_has_type_id (edomain)) {
+			write_gtype_attributes (edomain);
+		} else {
+			write_ctype_attributes (edomain);
+		}
 		buffer.append_printf (" glib:error-domain=\"%s\"", get_ccode_quark_name (edomain));
 		write_symbol_attributes (edomain);
 		buffer.append_printf (">\n");
@@ -1489,14 +1493,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</property>\n");
 		}
 
-		if (prop.get_accessor != null) {
+		if (prop.get_accessor != null && prop.get_accessor.readable) {
 			var m = prop.get_accessor.get_method ();
 			if (m != null) {
 				visit_method (m);
 			}
 		}
 
-		if (prop.set_accessor != null) {
+		if (prop.set_accessor != null && prop.set_accessor.writable) {
 			var m = prop.set_accessor.get_method ();
 			if (m != null) {
 				visit_method (m);
@@ -1623,7 +1627,17 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (has_array_length) {
 				length_param_index = tag == "parameter" ? index + 1 : index;
 			}
-			write_type (type, length_param_index, direction);
+
+			bool additional_indirection = direction != ParameterDirection.IN;
+			if (!additional_indirection && tag == "parameter" && !type.nullable) {
+				// pass non-simple structs always by reference
+				unowned Struct? st = type.type_symbol as Struct;
+				if (st != null && !st.is_simple_type ()) {
+					additional_indirection = true;
+				}
+			}
+
+			write_type (type, length_param_index, additional_indirection);
 		}
 
 		indent--;
@@ -1645,7 +1659,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf (" glib:get-type=\"%sget_type\"", get_ccode_lower_case_prefix (symbol));
 	}
 
-	private void write_type (DataType type, int index = -1, ParameterDirection direction = ParameterDirection.IN) {
+	private void write_type (DataType type, int index = -1, bool additional_indirection = false) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
@@ -1657,7 +1671,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			} else if (index != -1) {
 				buffer.append_printf (" length=\"%i\"", index);
 			}
-			buffer.append_printf (" c:type=\"%s%s\"", get_ccode_name (array_type.element_type), direction == ParameterDirection.IN ? "*" : "**");
+			buffer.append_printf (" c:type=\"%s%s\"", get_ccode_name (array_type.element_type), !additional_indirection ? "*" : "**");
 			buffer.append_printf (">\n");
 			indent++;
 
@@ -1671,11 +1685,15 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<type name=\"none\" c:type=\"void\"/>\n");
 		} else if (type is PointerType) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s%s\"/>\n", get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
+			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s%s\"/>\n", get_ccode_name (type), !additional_indirection ? "" : "*");
+		} else if (type is GenericType) {
+			// generic type parameters not supported in GIR
+			write_indent ();
+			buffer.append ("<type name=\"gpointer\" c:type=\"gpointer\"/>\n");
 		} else if (type is DelegateType) {
 			var deleg_type = (DelegateType) type;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
+			buffer.append_printf ("<type name=\"%s\" c:type=\"%s%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), get_ccode_name (type), !additional_indirection ? "" : "*");
 		} else if (type.type_symbol != null) {
 			write_indent ();
 			string type_name = gi_type_name (type.type_symbol);
@@ -1683,7 +1701,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			if ((type_name == "GLib.Array") || (type_name == "GLib.PtrArray")) {
 				is_array = true;
 			}
-			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s%s\"", is_array ? "array" : "type", gi_type_name (type.type_symbol), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
+			buffer.append_printf ("<%s name=\"%s\" c:type=\"%s%s\"", is_array ? "array" : "type", gi_type_name (type.type_symbol), get_ccode_name (type), !additional_indirection ? "" : "*");
 
 			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {
@@ -1700,10 +1718,6 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_indent ();
 				buffer.append_printf ("</%s>\n", is_array ? "array" : "type");
 			}
-		} else if (type is GenericType) {
-			// generic type parameters not supported in GIR
-			write_indent ();
-			buffer.append ("<type name=\"gpointer\" c:type=\"gpointer\"/>\n");
 		} else {
 			write_indent ();
 			buffer.append_printf ("<type name=\"%s\"/>\n", type.to_string ());

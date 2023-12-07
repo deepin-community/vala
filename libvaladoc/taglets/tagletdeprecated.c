@@ -73,7 +73,7 @@ valadoc_taglets_deprecated_real_get_parser_rule (ValadocContentTaglet* base,
 {
 	ValadocTagletsDeprecated * self;
 	ValadocRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsDeprecated*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	_tmp0_ = _g_object_ref0 (run_rule);
@@ -124,7 +124,7 @@ static gboolean
 valadoc_taglets_deprecated_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocTagletsDeprecated * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsDeprecated*) base;
 	result = FALSE;
 	return result;
@@ -138,7 +138,7 @@ valadoc_taglets_deprecated_real_copy (ValadocContentContentElement* base,
 	ValadocTagletsDeprecated* deprecated = NULL;
 	ValadocTagletsDeprecated* _tmp0_;
 	ValadocTagletsDeprecated* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsDeprecated*) base;
 	_tmp0_ = valadoc_taglets_deprecated_new ();
 	deprecated = _tmp0_;
@@ -268,12 +268,12 @@ valadoc_taglets_deprecated_get_type_once (void)
 GType
 valadoc_taglets_deprecated_get_type (void)
 {
-	static volatile gsize valadoc_taglets_deprecated_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_deprecated_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_deprecated_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_deprecated_type_id__once)) {
 		GType valadoc_taglets_deprecated_type_id;
 		valadoc_taglets_deprecated_type_id = valadoc_taglets_deprecated_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_deprecated_type_id__volatile, valadoc_taglets_deprecated_type_id);
+		g_once_init_leave (&valadoc_taglets_deprecated_type_id__once, valadoc_taglets_deprecated_type_id);
 	}
-	return valadoc_taglets_deprecated_type_id__volatile;
+	return valadoc_taglets_deprecated_type_id__once;
 }
 

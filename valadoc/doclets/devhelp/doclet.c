@@ -33,6 +33,10 @@
 #include <config.h>
 #include <stdio.h>
 
+#define VALADOC_DEVHELP_DOCLET_css_path_wiki "devhelpstyle.css"
+#define VALADOC_DEVHELP_DOCLET_css_path "devhelpstyle.css"
+#define VALADOC_DEVHELP_DOCLET_js_path_wiki "scripts.js"
+#define VALADOC_DEVHELP_DOCLET_js_path "scripts.js"
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -84,10 +88,6 @@ static gpointer valadoc_devhelp_doclet_parent_class = NULL;
 
 VALA_EXTERN GType valadoc_devhelp_doclet_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocDevhelpDoclet, g_object_unref)
-#define VALADOC_DEVHELP_DOCLET_css_path_wiki "devhelpstyle.css"
-#define VALADOC_DEVHELP_DOCLET_css_path "devhelpstyle.css"
-#define VALADOC_DEVHELP_DOCLET_js_path_wiki "scripts.js"
-#define VALADOC_DEVHELP_DOCLET_js_path "scripts.js"
 static gchar* valadoc_devhelp_doclet_get_path (ValadocDevhelpDoclet* self,
                                         ValadocApiNode* element);
 static gchar* valadoc_devhelp_doclet_get_real_path (ValadocDevhelpDoclet* self,
@@ -160,7 +160,7 @@ valadoc_devhelp_doclet_get_path (ValadocDevhelpDoclet* self,
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = valadoc_api_node_get_full_name (element);
@@ -186,7 +186,7 @@ valadoc_devhelp_doclet_get_real_path (ValadocDevhelpDoclet* self,
 	gchar* _tmp7_;
 	gchar* _tmp8_;
 	gchar* _tmp9_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = valadoc_html_basic_doclet_get_settings ((ValadocHtmlBasicDoclet*) self);
@@ -210,7 +210,7 @@ valadoc_devhelp_doclet_real_get_icon_directory (ValadocHtmlBasicDoclet* base)
 {
 	ValadocDevhelpDoclet * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocDevhelpDoclet*) base;
 	_tmp0_ = g_strdup ("");
 	result = _tmp0_;
@@ -963,19 +963,19 @@ valadoc_devhelp_doclet_get_type_once (void)
 GType
 valadoc_devhelp_doclet_get_type (void)
 {
-	static volatile gsize valadoc_devhelp_doclet_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_devhelp_doclet_type_id__volatile)) {
+	static volatile gsize valadoc_devhelp_doclet_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_devhelp_doclet_type_id__once)) {
 		GType valadoc_devhelp_doclet_type_id;
 		valadoc_devhelp_doclet_type_id = valadoc_devhelp_doclet_get_type_once ();
-		g_once_init_leave (&valadoc_devhelp_doclet_type_id__volatile, valadoc_devhelp_doclet_type_id);
+		g_once_init_leave (&valadoc_devhelp_doclet_type_id__once, valadoc_devhelp_doclet_type_id);
 	}
-	return valadoc_devhelp_doclet_type_id__volatile;
+	return valadoc_devhelp_doclet_type_id__once;
 }
 
 GType
 register_plugin (ValadocModuleLoader* module_loader)
 {
-	GType result = 0UL;
+	GType result;
 	g_return_val_if_fail (module_loader != NULL, 0UL);
 	result = VALADOC_DEVHELP_TYPE_DOCLET;
 	return result;

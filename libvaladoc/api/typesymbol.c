@@ -26,6 +26,7 @@
 
 #include "valadoc.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <vala.h>
@@ -121,7 +122,7 @@ valadoc_api_typesymbol_get_type_macro_name (ValadocApiTypeSymbol* self)
 	ValaCodeNode* _tmp13_;
 	ValaCodeNode* _tmp14_;
 	gchar* _tmp15_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp3_ = valadoc_api_item_get_data ((ValadocApiItem*) self);
 	_tmp4_ = _tmp3_;
@@ -177,7 +178,7 @@ valadoc_api_typesymbol_get_type_cast_macro_name (ValadocApiTypeSymbol* self)
 	gboolean _tmp1_ = FALSE;
 	ValaCodeNode* _tmp2_;
 	ValaCodeNode* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp2_ = valadoc_api_item_get_data ((ValadocApiItem*) self);
 	_tmp3_ = _tmp2_;
@@ -228,7 +229,7 @@ valadoc_api_typesymbol_get_is_type_macro_name (ValadocApiTypeSymbol* self)
 	gboolean _tmp1_ = FALSE;
 	ValaCodeNode* _tmp2_;
 	ValaCodeNode* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp2_ = valadoc_api_item_get_data ((ValadocApiItem*) self);
 	_tmp3_ = _tmp2_;
@@ -286,7 +287,7 @@ valadoc_api_typesymbol_get_type_function_name (ValadocApiTypeSymbol* self)
 	gchar* _tmp16_;
 	gchar* _tmp17_;
 	gchar* _tmp18_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp3_ = valadoc_api_item_get_data ((ValadocApiItem*) self);
 	_tmp4_ = _tmp3_;
@@ -382,13 +383,13 @@ valadoc_api_typesymbol_get_type_once (void)
 GType
 valadoc_api_typesymbol_get_type (void)
 {
-	static volatile gsize valadoc_api_typesymbol_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_typesymbol_type_id__volatile)) {
+	static volatile gsize valadoc_api_typesymbol_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_typesymbol_type_id__once)) {
 		GType valadoc_api_typesymbol_type_id;
 		valadoc_api_typesymbol_type_id = valadoc_api_typesymbol_get_type_once ();
-		g_once_init_leave (&valadoc_api_typesymbol_type_id__volatile, valadoc_api_typesymbol_type_id);
+		g_once_init_leave (&valadoc_api_typesymbol_type_id__once, valadoc_api_typesymbol_type_id);
 	}
-	return valadoc_api_typesymbol_type_id__volatile;
+	return valadoc_api_typesymbol_type_id__once;
 }
 
 static void

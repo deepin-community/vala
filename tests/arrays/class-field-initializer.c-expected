@@ -379,6 +379,7 @@ foo_class_init (FooClass * klass,
 	_tmp1__length1 = _tmp0__length1;
 	foo_sf = _tmp1_;
 	foo_sf_length1 = _tmp1__length1;
+	_foo_sf_size_ = foo_sf_length1;
 	_tmp2_ = g_strdup ("baz");
 	_tmp3_ = g_strdup ("foo");
 	_tmp4_ = g_strdup ("bar");
@@ -388,6 +389,7 @@ foo_class_init (FooClass * klass,
 	_tmp5_[2] = _tmp4_;
 	foo_si = _tmp5_;
 	foo_si_length1 = 3;
+	_foo_si_size_ = foo_si_length1;
 	_tmp6_ = g_strdup ("baz");
 	_tmp7_ = manam;
 	_tmp7__length1 = _vala_array_length (manam);
@@ -400,6 +402,7 @@ foo_class_init (FooClass * klass,
 	_tmp11_[2] = _tmp10_;
 	foo_sa = _tmp11_;
 	foo_sa_length1 = 3;
+	_foo_sa_size_ = foo_sa_length1;
 }
 
 static void
@@ -479,13 +482,13 @@ foo_get_type_once (void)
 GType
 foo_get_type (void)
 {
-	static volatile gsize foo_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_type_id__volatile)) {
+	static volatile gsize foo_type_id__once = 0;
+	if (g_once_init_enter (&foo_type_id__once)) {
 		GType foo_type_id;
 		foo_type_id = foo_get_type_once ();
-		g_once_init_leave (&foo_type_id__volatile, foo_type_id);
+		g_once_init_leave (&foo_type_id__once, foo_type_id);
 	}
-	return foo_type_id__volatile;
+	return foo_type_id__once;
 }
 
 gpointer
@@ -707,6 +710,7 @@ bar_class_init (BarClass * klass,
 	_tmp1__length1 = _tmp0__length1;
 	bar_sf = _tmp1_;
 	bar_sf_length1 = _tmp1__length1;
+	_bar_sf_size_ = bar_sf_length1;
 }
 
 static void
@@ -750,13 +754,13 @@ bar_get_type_once (void)
 GType
 bar_get_type (void)
 {
-	static volatile gsize bar_type_id__volatile = 0;
-	if (g_once_init_enter (&bar_type_id__volatile)) {
+	static volatile gsize bar_type_id__once = 0;
+	if (g_once_init_enter (&bar_type_id__once)) {
 		GType bar_type_id;
 		bar_type_id = bar_get_type_once ();
-		g_once_init_leave (&bar_type_id__volatile, bar_type_id);
+		g_once_init_leave (&bar_type_id__once, bar_type_id);
 	}
-	return bar_type_id__volatile;
+	return bar_type_id__once;
 }
 
 gpointer

@@ -26,11 +26,11 @@
  */
 
 #include "valacodegen.h"
+#include <glib-object.h>
 #include <vala.h>
 #include <valaccode.h>
 #include <glib.h>
 #include <valagee.h>
-#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -128,7 +128,7 @@ vala_glib_value_copy (ValaGLibValue* self)
 	ValaGLibValue* _tmp35_;
 	ValaCCodeExpression* _tmp36_;
 	ValaCCodeExpression* _tmp37_;
-	ValaGLibValue* result = NULL;
+	ValaGLibValue* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = vala_target_value_get_value_type ((ValaTargetValue*) self);
 	_tmp1_ = _tmp0_;
@@ -258,13 +258,13 @@ vala_glib_value_get_type_once (void)
 GType
 vala_glib_value_get_type (void)
 {
-	static volatile gsize vala_glib_value_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_glib_value_type_id__volatile)) {
+	static volatile gsize vala_glib_value_type_id__once = 0;
+	if (g_once_init_enter (&vala_glib_value_type_id__once)) {
 		GType vala_glib_value_type_id;
 		vala_glib_value_type_id = vala_glib_value_get_type_once ();
-		g_once_init_leave (&vala_glib_value_type_id__volatile, vala_glib_value_type_id);
+		g_once_init_leave (&vala_glib_value_type_id__once, vala_glib_value_type_id);
 	}
-	return vala_glib_value_type_id__volatile;
+	return vala_glib_value_type_id__once;
 }
 
 ValaCCodeExpression*
@@ -275,7 +275,7 @@ vala_get_cvalue (ValaExpression* expr)
 	ValaTargetValue* _tmp2_;
 	ValaTargetValue* _tmp3_;
 	ValaCCodeExpression* _tmp4_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (expr != NULL, NULL);
 	_tmp0_ = vala_expression_get_target_value (expr);
 	_tmp1_ = _tmp0_;
@@ -294,7 +294,7 @@ ValaCCodeExpression*
 vala_get_cvalue_ (ValaTargetValue* value)
 {
 	ValaCCodeExpression* _tmp0_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->cvalue;
 	result = _tmp0_;
@@ -343,7 +343,7 @@ ValaCCodeExpression*
 vala_get_array_size_cvalue (ValaTargetValue* value)
 {
 	ValaCCodeExpression* _tmp0_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->array_size_cvalue;
 	result = _tmp0_;
@@ -369,7 +369,7 @@ vala_get_delegate_target (ValaExpression* expr)
 	ValaTargetValue* _tmp2_;
 	ValaTargetValue* _tmp3_;
 	ValaCCodeExpression* _tmp4_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (expr != NULL, NULL);
 	_tmp0_ = vala_expression_get_target_value (expr);
 	_tmp1_ = _tmp0_;
@@ -431,7 +431,7 @@ vala_get_delegate_target_destroy_notify (ValaExpression* expr)
 	ValaGLibValue* _tmp2_;
 	ValaGLibValue* _tmp3_;
 	ValaCCodeExpression* _tmp4_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (expr != NULL, NULL);
 	_tmp0_ = vala_expression_get_target_value (expr);
 	_tmp1_ = _tmp0_;
@@ -521,6 +521,47 @@ vala_append_array_length (ValaExpression* expr,
 	vala_glib_value_append_array_length_cvalue (_tmp9_, size);
 }
 
+void
+vala_set_array_length (ValaExpression* expr,
+                       ValaCCodeExpression* size)
+{
+	ValaGLibValue* glib_value = NULL;
+	ValaTargetValue* _tmp0_;
+	ValaTargetValue* _tmp1_;
+	ValaGLibValue* _tmp2_;
+	ValaGLibValue* _tmp10_;
+	g_return_if_fail (expr != NULL);
+	g_return_if_fail (size != NULL);
+	_tmp0_ = vala_expression_get_target_value (expr);
+	_tmp1_ = _tmp0_;
+	glib_value = G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_GLIB_VALUE, ValaGLibValue);
+	_tmp2_ = glib_value;
+	if (_tmp2_ == NULL) {
+		ValaDataType* _tmp3_;
+		ValaDataType* _tmp4_;
+		ValaGLibValue* _tmp5_;
+		ValaGLibValue* _tmp6_;
+		ValaTargetValue* _tmp7_;
+		ValaTargetValue* _tmp8_;
+		_tmp3_ = vala_expression_get_value_type (expr);
+		_tmp4_ = _tmp3_;
+		_tmp5_ = vala_glib_value_new (_tmp4_, NULL, FALSE);
+		_tmp6_ = _tmp5_;
+		vala_expression_set_target_value (expr, (ValaTargetValue*) _tmp6_);
+		_vala_target_value_unref0 (_tmp6_);
+		_tmp7_ = vala_expression_get_target_value (expr);
+		_tmp8_ = _tmp7_;
+		glib_value = G_TYPE_CHECK_INSTANCE_CAST (_tmp8_, VALA_TYPE_GLIB_VALUE, ValaGLibValue);
+	} else {
+		ValaGLibValue* _tmp9_;
+		_tmp9_ = glib_value;
+		_vala_iterable_unref0 (_tmp9_->array_length_cvalues);
+		_tmp9_->array_length_cvalues = NULL;
+	}
+	_tmp10_ = glib_value;
+	vala_glib_value_append_array_length_cvalue (_tmp10_, size);
+}
+
 ValaList*
 vala_get_array_lengths (ValaExpression* expr)
 {
@@ -530,7 +571,7 @@ vala_get_array_lengths (ValaExpression* expr)
 	ValaGLibValue* _tmp2_;
 	ValaGLibValue* _tmp3_;
 	ValaList* _tmp4_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (expr != NULL, NULL);
 	_tmp0_ = vala_expression_get_target_value (expr);
 	_tmp1_ = _tmp0_;
@@ -549,7 +590,7 @@ vala_get_array_lengths (ValaExpression* expr)
 gboolean
 vala_get_lvalue (ValaTargetValue* value)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (value != NULL, FALSE);
 	result = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->lvalue;
 	return result;
@@ -558,7 +599,7 @@ vala_get_lvalue (ValaTargetValue* value)
 gboolean
 vala_get_non_null (ValaTargetValue* value)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (value != NULL, FALSE);
 	result = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->non_null;
 	return result;
@@ -568,7 +609,7 @@ const gchar*
 vala_get_ctype (ValaTargetValue* value)
 {
 	const gchar* _tmp0_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->ctype;
 	result = _tmp0_;
@@ -578,7 +619,7 @@ vala_get_ctype (ValaTargetValue* value)
 gboolean
 vala_get_array_null_terminated (ValaTargetValue* value)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (value != NULL, FALSE);
 	result = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->array_null_terminated;
 	return result;
@@ -588,7 +629,7 @@ ValaCCodeExpression*
 vala_get_array_length_cexpr (ValaTargetValue* value)
 {
 	ValaCCodeExpression* _tmp0_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->array_length_cexpr;
 	result = _tmp0_;

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -80,7 +81,7 @@ vala_null_literal_real_to_string (ValaCodeNode* base)
 {
 	ValaNullLiteral * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaNullLiteral*) base;
 	_tmp0_ = g_strdup ("null");
 	result = _tmp0_;
@@ -91,7 +92,7 @@ static gboolean
 vala_null_literal_real_is_pure (ValaExpression* base)
 {
 	ValaNullLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNullLiteral*) base;
 	result = TRUE;
 	return result;
@@ -110,7 +111,7 @@ vala_null_literal_real_check (ValaCodeNode* base,
 	ValaNullType* _tmp7_;
 	gboolean _tmp8_;
 	gboolean _tmp9_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNullLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -180,12 +181,12 @@ vala_null_literal_get_type_once (void)
 GType
 vala_null_literal_get_type (void)
 {
-	static volatile gsize vala_null_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_null_literal_type_id__volatile)) {
+	static volatile gsize vala_null_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_null_literal_type_id__once)) {
 		GType vala_null_literal_type_id;
 		vala_null_literal_type_id = vala_null_literal_get_type_once ();
-		g_once_init_leave (&vala_null_literal_type_id__volatile, vala_null_literal_type_id);
+		g_once_init_leave (&vala_null_literal_type_id__once, vala_null_literal_type_id);
 	}
-	return vala_null_literal_type_id__volatile;
+	return vala_null_literal_type_id__once;
 }
 

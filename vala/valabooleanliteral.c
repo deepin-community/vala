@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 struct _ValaBooleanLiteralPrivate {
 	gboolean _value;
@@ -113,7 +114,7 @@ vala_boolean_literal_real_to_string (ValaCodeNode* base)
 {
 	ValaBooleanLiteral * self;
 	gboolean _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaBooleanLiteral*) base;
 	_tmp0_ = self->priv->_value;
 	if (_tmp0_) {
@@ -133,7 +134,7 @@ static gboolean
 vala_boolean_literal_real_is_pure (ValaExpression* base)
 {
 	ValaBooleanLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaBooleanLiteral*) base;
 	result = TRUE;
 	return result;
@@ -151,7 +152,7 @@ vala_boolean_literal_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp6_;
 	gboolean _tmp7_;
 	gboolean _tmp8_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaBooleanLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -231,12 +232,12 @@ vala_boolean_literal_get_type_once (void)
 GType
 vala_boolean_literal_get_type (void)
 {
-	static volatile gsize vala_boolean_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_boolean_literal_type_id__volatile)) {
+	static volatile gsize vala_boolean_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_boolean_literal_type_id__once)) {
 		GType vala_boolean_literal_type_id;
 		vala_boolean_literal_type_id = vala_boolean_literal_get_type_once ();
-		g_once_init_leave (&vala_boolean_literal_type_id__volatile, vala_boolean_literal_type_id);
+		g_once_init_leave (&vala_boolean_literal_type_id__once, vala_boolean_literal_type_id);
 	}
-	return vala_boolean_literal_type_id__volatile;
+	return vala_boolean_literal_type_id__once;
 }
 

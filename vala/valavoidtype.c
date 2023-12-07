@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 static gpointer vala_void_type_parent_class = NULL;
 
@@ -60,7 +61,7 @@ vala_void_type_real_stricter (ValaDataType* base,
                               ValaDataType* type2)
 {
 	ValaVoidType * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaVoidType*) base;
 	g_return_val_if_fail (type2 != NULL, FALSE);
 	result = VALA_IS_VOID_TYPE (type2);
@@ -72,7 +73,7 @@ vala_void_type_real_compatible (ValaDataType* base,
                                 ValaDataType* type2)
 {
 	ValaVoidType * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaVoidType*) base;
 	g_return_val_if_fail (type2 != NULL, FALSE);
 	result = VALA_IS_VOID_TYPE (type2);
@@ -85,7 +86,7 @@ vala_void_type_real_to_qualified_string (ValaDataType* base,
 {
 	ValaVoidType * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaVoidType*) base;
 	_tmp0_ = g_strdup ("void");
 	result = _tmp0_;
@@ -99,7 +100,7 @@ vala_void_type_real_copy (ValaDataType* base)
 	ValaSourceReference* _tmp0_;
 	ValaSourceReference* _tmp1_;
 	ValaVoidType* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaVoidType*) base;
 	_tmp0_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
 	_tmp1_ = _tmp0_;
@@ -140,12 +141,12 @@ vala_void_type_get_type_once (void)
 GType
 vala_void_type_get_type (void)
 {
-	static volatile gsize vala_void_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_void_type_type_id__volatile)) {
+	static volatile gsize vala_void_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_void_type_type_id__once)) {
 		GType vala_void_type_type_id;
 		vala_void_type_type_id = vala_void_type_get_type_once ();
-		g_once_init_leave (&vala_void_type_type_id__volatile, vala_void_type_type_id);
+		g_once_init_leave (&vala_void_type_type_id__once, vala_void_type_type_id);
 	}
-	return vala_void_type_type_id__volatile;
+	return vala_void_type_type_id__once;
 }
 

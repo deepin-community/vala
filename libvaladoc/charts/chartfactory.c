@@ -23,7 +23,7 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-#include <graphviz/gvc.h>
+#include <gvc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
@@ -81,7 +81,7 @@ valadoc_charts_factory_create_type (ValadocChartsFactory* self,
 	gchar* _tmp1_;
 	Agnode_t* _tmp2_;
 	Agnode_t* _tmp3_;
-	Agnode_t* result = NULL;
+	Agnode_t* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (graph != NULL, NULL);
 	g_return_val_if_fail (item != NULL, NULL);
@@ -365,12 +365,12 @@ valadoc_charts_factory_get_type_once (void)
 GType
 valadoc_charts_factory_get_type (void)
 {
-	static volatile gsize valadoc_charts_factory_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_charts_factory_type_id__volatile)) {
+	static volatile gsize valadoc_charts_factory_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_charts_factory_type_id__once)) {
 		GType valadoc_charts_factory_type_id;
 		valadoc_charts_factory_type_id = valadoc_charts_factory_get_type_once ();
-		g_once_init_leave (&valadoc_charts_factory_type_id__volatile, valadoc_charts_factory_type_id);
+		g_once_init_leave (&valadoc_charts_factory_type_id__once, valadoc_charts_factory_type_id);
 	}
-	return valadoc_charts_factory_type_id__volatile;
+	return valadoc_charts_factory_type_id__once;
 }
 

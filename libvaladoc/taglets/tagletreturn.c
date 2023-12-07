@@ -75,7 +75,7 @@ valadoc_taglets_return_real_get_parser_rule (ValadocContentTaglet* base,
 {
 	ValadocTagletsReturn * self;
 	ValadocRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsReturn*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	_tmp0_ = _g_object_ref0 (run_rule);
@@ -200,7 +200,7 @@ valadoc_taglets_return_real_get_inheritable_documentation (ValadocContentTaglet*
 	ValaList* _tmp0_;
 	ValaList* _tmp1_;
 	ValaList* _tmp2_;
-	ValaList* result = NULL;
+	ValaList* result;
 	self = (ValadocTagletsReturn*) base;
 	_tmp0_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) self);
 	_tmp1_ = _tmp0_;
@@ -214,7 +214,7 @@ valadoc_taglets_return_real_inheritable (ValadocContentTaglet* base,
                                          ValadocContentTaglet* taglet)
 {
 	ValadocTagletsReturn * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsReturn*) base;
 	g_return_val_if_fail (taglet != NULL, FALSE);
 	result = VALADOC_TAGLETS_IS_RETURN (taglet);
@@ -229,7 +229,7 @@ valadoc_taglets_return_real_copy (ValadocContentContentElement* base,
 	ValadocTagletsReturn* ret = NULL;
 	ValadocTagletsReturn* _tmp0_;
 	ValadocTagletsReturn* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsReturn*) base;
 	_tmp0_ = valadoc_taglets_return_new ();
 	ret = _tmp0_;
@@ -360,12 +360,12 @@ valadoc_taglets_return_get_type_once (void)
 GType
 valadoc_taglets_return_get_type (void)
 {
-	static volatile gsize valadoc_taglets_return_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_return_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_return_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_return_type_id__once)) {
 		GType valadoc_taglets_return_type_id;
 		valadoc_taglets_return_type_id = valadoc_taglets_return_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_return_type_id__volatile, valadoc_taglets_return_type_id);
+		g_once_init_leave (&valadoc_taglets_return_type_id__once, valadoc_taglets_return_type_id);
 	}
-	return valadoc_taglets_return_type_id__volatile;
+	return valadoc_taglets_return_type_id__once;
 }
 

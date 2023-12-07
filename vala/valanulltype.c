@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 #define _vala_code_context_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_context_unref (var), NULL)))
 
@@ -45,9 +46,8 @@ vala_null_type_construct (GType object_type,
                           ValaSourceReference* source_reference)
 {
 	ValaNullType* self = NULL;
-	self = (ValaNullType*) vala_reference_type_construct (object_type, NULL);
+	self = (ValaNullType*) vala_reference_type_construct (object_type, NULL, source_reference);
 	vala_data_type_set_nullable ((ValaDataType*) self, TRUE);
-	vala_code_node_set_source_reference ((ValaCodeNode*) self, source_reference);
 	return self;
 }
 
@@ -71,11 +71,11 @@ vala_null_type_real_compatible (ValaDataType* base,
 	gboolean _tmp12_ = FALSE;
 	gboolean _tmp13_ = FALSE;
 	gboolean _tmp14_ = FALSE;
+	gboolean _tmp19_ = FALSE;
 	gboolean _tmp20_ = FALSE;
-	gboolean _tmp21_ = FALSE;
+	ValaTypeSymbol* _tmp21_;
 	ValaTypeSymbol* _tmp22_;
-	ValaTypeSymbol* _tmp23_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNullType*) base;
 	g_return_val_if_fail (target_type != NULL, FALSE);
 	_tmp0_ = vala_code_context_get ();
@@ -136,29 +136,27 @@ vala_null_type_real_compatible (ValaDataType* base,
 	} else {
 		ValaTypeSymbol* _tmp17_;
 		ValaTypeSymbol* _tmp18_;
-		ValaAttribute* _tmp19_;
 		_tmp17_ = vala_data_type_get_type_symbol (target_type);
 		_tmp18_ = _tmp17_;
-		_tmp19_ = vala_code_node_get_attribute ((ValaCodeNode*) _tmp18_, "PointerType");
-		_tmp12_ = _tmp19_ != NULL;
+		_tmp12_ = vala_code_node_has_attribute ((ValaCodeNode*) _tmp18_, "PointerType");
 	}
 	if (_tmp12_) {
 		result = TRUE;
 		return result;
 	}
-	_tmp22_ = vala_data_type_get_type_symbol (target_type);
-	_tmp23_ = _tmp22_;
-	if (vala_typesymbol_is_reference_type (_tmp23_)) {
-		_tmp21_ = TRUE;
-	} else {
-		_tmp21_ = VALA_IS_ARRAY_TYPE (target_type);
-	}
-	if (_tmp21_) {
+	_tmp21_ = vala_data_type_get_type_symbol (target_type);
+	_tmp22_ = _tmp21_;
+	if (vala_typesymbol_is_reference_type (_tmp22_)) {
 		_tmp20_ = TRUE;
 	} else {
-		_tmp20_ = VALA_IS_DELEGATE_TYPE (target_type);
+		_tmp20_ = VALA_IS_ARRAY_TYPE (target_type);
 	}
 	if (_tmp20_) {
+		_tmp19_ = TRUE;
+	} else {
+		_tmp19_ = VALA_IS_DELEGATE_TYPE (target_type);
+	}
+	if (_tmp19_) {
 		result = TRUE;
 		return result;
 	}
@@ -173,7 +171,7 @@ vala_null_type_real_copy (ValaDataType* base)
 	ValaSourceReference* _tmp0_;
 	ValaSourceReference* _tmp1_;
 	ValaNullType* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaNullType*) base;
 	_tmp0_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
 	_tmp1_ = _tmp0_;
@@ -186,7 +184,7 @@ static gboolean
 vala_null_type_real_is_disposable (ValaDataType* base)
 {
 	ValaNullType * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNullType*) base;
 	result = FALSE;
 	return result;
@@ -198,7 +196,7 @@ vala_null_type_real_to_qualified_string (ValaDataType* base,
 {
 	ValaNullType * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaNullType*) base;
 	_tmp0_ = g_strdup ("null");
 	result = _tmp0_;
@@ -237,12 +235,12 @@ vala_null_type_get_type_once (void)
 GType
 vala_null_type_get_type (void)
 {
-	static volatile gsize vala_null_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_null_type_type_id__volatile)) {
+	static volatile gsize vala_null_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_null_type_type_id__once)) {
 		GType vala_null_type_type_id;
 		vala_null_type_type_id = vala_null_type_get_type_once ();
-		g_once_init_leave (&vala_null_type_type_id__volatile, vala_null_type_type_id);
+		g_once_init_leave (&vala_null_type_type_id__once, vala_null_type_type_id);
 	}
-	return vala_null_type_type_id__volatile;
+	return vala_null_type_type_id__once;
 }
 

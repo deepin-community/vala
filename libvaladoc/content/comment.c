@@ -52,6 +52,8 @@ struct _ValadocContentCommentPrivate {
 static gint ValadocContentComment_private_offset;
 static gpointer valadoc_content_comment_parent_class = NULL;
 
+static void valadoc_content_comment_set_taglets (ValadocContentComment* self,
+                                          ValaList* value);
  G_GNUC_INTERNAL ValadocContentComment* valadoc_content_comment_new (void);
  G_GNUC_INTERNAL ValadocContentComment* valadoc_content_comment_construct (GType object_type);
  G_GNUC_INTERNAL ValadocContentBlockContent* valadoc_content_block_content_construct (GType object_type);
@@ -78,6 +80,10 @@ static void _vala_valadoc_content_comment_get_property (GObject * object,
                                                  guint property_id,
                                                  GValue * value,
                                                  GParamSpec * pspec);
+static void _vala_valadoc_content_comment_set_property (GObject * object,
+                                                 guint property_id,
+                                                 const GValue * value,
+                                                 GParamSpec * pspec);
 
 static inline gpointer
 valadoc_content_comment_get_instance_private (ValadocContentComment* self)
@@ -96,17 +102,41 @@ valadoc_content_comment_get_taglets (ValadocContentComment* self)
 	return result;
 }
 
+static gpointer
+_vala_iterable_ref0 (gpointer self)
+{
+	return self ? vala_iterable_ref (self) : NULL;
+}
+
+static void
+valadoc_content_comment_set_taglets (ValadocContentComment* self,
+                                     ValaList* value)
+{
+	ValaList* old_value;
+	g_return_if_fail (self != NULL);
+	old_value = valadoc_content_comment_get_taglets (self);
+	if (old_value != value) {
+		ValaList* _tmp0_;
+		_tmp0_ = _vala_iterable_ref0 (value);
+		_vala_iterable_unref0 (self->priv->_taglets);
+		self->priv->_taglets = _tmp0_;
+		g_object_notify_by_pspec ((GObject *) self, valadoc_content_comment_properties[VALADOC_CONTENT_COMMENT_TAGLETS_PROPERTY]);
+	}
+}
+
  G_GNUC_INTERNAL ValadocContentComment*
 valadoc_content_comment_construct (GType object_type)
 {
 	ValadocContentComment * self = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
+	ValaArrayList* _tmp2_;
 	self = (ValadocContentComment*) valadoc_content_block_content_construct (object_type);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_CONTENT_TYPE_TAGLET, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
-	_vala_iterable_unref0 (self->priv->_taglets);
-	self->priv->_taglets = (ValaList*) _tmp1_;
+	_tmp2_ = _tmp1_;
+	valadoc_content_comment_set_taglets (self, (ValaList*) _tmp2_);
+	_vala_iterable_unref0 (_tmp2_);
 	return self;
 }
 
@@ -252,7 +282,7 @@ valadoc_content_comment_find_taglets (ValadocContentComment* self,
 	ValaList* selected_taglets = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_CONTENT_TYPE_TAGLET, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
@@ -311,7 +341,7 @@ valadoc_content_comment_real_copy (ValadocContentContentElement* base,
 	ValadocContentComment* comment = NULL;
 	ValadocContentComment* _tmp0_;
 	ValadocContentComment* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentComment*) base;
 	_vala_assert (new_parent == NULL, "new_parent == null");
 	_tmp0_ = valadoc_content_comment_new ();
@@ -404,8 +434,7 @@ valadoc_content_comment_real_copy (ValadocContentContentElement* base,
 			ValadocContentTaglet* _tmp30_;
 			ValadocContentComment* _tmp31_;
 			ValaList* _tmp32_;
-			ValaList* _tmp33_;
-			ValadocContentTaglet* _tmp34_;
+			ValadocContentTaglet* _tmp33_;
 			_taglet_index = _taglet_index + 1;
 			_tmp23_ = _taglet_index;
 			_tmp24_ = _taglet_size;
@@ -424,10 +453,9 @@ valadoc_content_comment_real_copy (ValadocContentContentElement* base,
 			}
 			copy = _tmp30_;
 			_tmp31_ = comment;
-			_tmp32_ = valadoc_content_comment_get_taglets (_tmp31_);
-			_tmp33_ = _tmp32_;
-			_tmp34_ = copy;
-			vala_collection_add ((ValaCollection*) _tmp33_, _tmp34_);
+			_tmp32_ = _tmp31_->priv->_taglets;
+			_tmp33_ = copy;
+			vala_collection_add ((ValaCollection*) _tmp32_, _tmp33_);
 			_g_object_unref0 (copy);
 			_g_object_unref0 (taglet);
 		}
@@ -448,6 +476,7 @@ valadoc_content_comment_class_init (ValadocContentCommentClass * klass,
 	((ValadocContentContentElementClass *) klass)->accept_children = (void (*) (ValadocContentContentElement*, ValadocContentContentVisitor*)) valadoc_content_comment_real_accept_children;
 	((ValadocContentContentElementClass *) klass)->copy = (ValadocContentContentElement* (*) (ValadocContentContentElement*, ValadocContentContentElement*)) valadoc_content_comment_real_copy;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_content_comment_get_property;
+	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_content_comment_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_content_comment_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), VALADOC_CONTENT_COMMENT_TAGLETS_PROPERTY, valadoc_content_comment_properties[VALADOC_CONTENT_COMMENT_TAGLETS_PROPERTY] = vala_param_spec_iterable ("taglets", "taglets", "taglets", VALA_TYPE_LIST, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
@@ -482,13 +511,13 @@ valadoc_content_comment_get_type_once (void)
 GType
 valadoc_content_comment_get_type (void)
 {
-	static volatile gsize valadoc_content_comment_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_comment_type_id__volatile)) {
+	static volatile gsize valadoc_content_comment_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_comment_type_id__once)) {
 		GType valadoc_content_comment_type_id;
 		valadoc_content_comment_type_id = valadoc_content_comment_get_type_once ();
-		g_once_init_leave (&valadoc_content_comment_type_id__volatile, valadoc_content_comment_type_id);
+		g_once_init_leave (&valadoc_content_comment_type_id__once, valadoc_content_comment_type_id);
 	}
-	return valadoc_content_comment_type_id__volatile;
+	return valadoc_content_comment_type_id__once;
 }
 
 static void
@@ -502,6 +531,24 @@ _vala_valadoc_content_comment_get_property (GObject * object,
 	switch (property_id) {
 		case VALADOC_CONTENT_COMMENT_TAGLETS_PROPERTY:
 		vala_value_set_iterable (value, valadoc_content_comment_get_taglets (self));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+static void
+_vala_valadoc_content_comment_set_property (GObject * object,
+                                            guint property_id,
+                                            const GValue * value,
+                                            GParamSpec * pspec)
+{
+	ValadocContentComment * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, VALADOC_CONTENT_TYPE_COMMENT, ValadocContentComment);
+	switch (property_id) {
+		case VALADOC_CONTENT_COMMENT_TAGLETS_PROPERTY:
+		valadoc_content_comment_set_taglets (self, vala_value_get_iterable (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

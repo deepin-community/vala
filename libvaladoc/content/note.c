@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CONTENT_NOTE_0_PROPERTY,
@@ -108,7 +108,7 @@ valadoc_content_note_real_copy (ValadocContentContentElement* base,
 	ValadocContentNote* note = NULL;
 	ValadocContentNote* _tmp0_;
 	ValadocContentNote* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentNote*) base;
 	_tmp0_ = valadoc_content_note_new ();
 	note = _tmp0_;
@@ -213,12 +213,12 @@ valadoc_content_note_get_type_once (void)
 GType
 valadoc_content_note_get_type (void)
 {
-	static volatile gsize valadoc_content_note_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_note_type_id__volatile)) {
+	static volatile gsize valadoc_content_note_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_note_type_id__once)) {
 		GType valadoc_content_note_type_id;
 		valadoc_content_note_type_id = valadoc_content_note_get_type_once ();
-		g_once_init_leave (&valadoc_content_note_type_id__volatile, valadoc_content_note_type_id);
+		g_once_init_leave (&valadoc_content_note_type_id__once, valadoc_content_note_type_id);
 	}
-	return valadoc_content_note_type_id__volatile;
+	return valadoc_content_note_type_id__once;
 }
 

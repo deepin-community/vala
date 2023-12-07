@@ -54,6 +54,42 @@ vala_callable_expression_set_is_yield_expression (ValaCallableExpression* self,
 	}
 }
 
+gboolean
+vala_callable_expression_get_is_chainup (ValaCallableExpression* self)
+{
+	ValaCallableExpressionIface* _iface_;
+	g_return_val_if_fail (self != NULL, FALSE);
+	_iface_ = VALA_CALLABLE_EXPRESSION_GET_INTERFACE (self);
+	if (_iface_->get_is_chainup) {
+		return _iface_->get_is_chainup (self);
+	}
+	return FALSE;
+}
+
+void
+vala_callable_expression_set_is_chainup (ValaCallableExpression* self,
+                                         gboolean value)
+{
+	ValaCallableExpressionIface* _iface_;
+	g_return_if_fail (self != NULL);
+	_iface_ = VALA_CALLABLE_EXPRESSION_GET_INTERFACE (self);
+	if (_iface_->set_is_chainup) {
+		_iface_->set_is_chainup (self, value);
+	}
+}
+
+ValaExpression*
+vala_callable_expression_get_call (ValaCallableExpression* self)
+{
+	ValaCallableExpressionIface* _iface_;
+	g_return_val_if_fail (self != NULL, NULL);
+	_iface_ = VALA_CALLABLE_EXPRESSION_GET_INTERFACE (self);
+	if (_iface_->get_call) {
+		return _iface_->get_call (self);
+	}
+	return NULL;
+}
+
 /**
  * Appends the specified expression to the list of arguments.
  *
@@ -110,12 +146,12 @@ vala_callable_expression_get_type_once (void)
 GType
 vala_callable_expression_get_type (void)
 {
-	static volatile gsize vala_callable_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_callable_expression_type_id__volatile)) {
+	static volatile gsize vala_callable_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_callable_expression_type_id__once)) {
 		GType vala_callable_expression_type_id;
 		vala_callable_expression_type_id = vala_callable_expression_get_type_once ();
-		g_once_init_leave (&vala_callable_expression_type_id__volatile, vala_callable_expression_type_id);
+		g_once_init_leave (&vala_callable_expression_type_id__once, vala_callable_expression_type_id);
 	}
-	return vala_callable_expression_type_id__volatile;
+	return vala_callable_expression_type_id__once;
 }
 

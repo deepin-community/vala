@@ -71,8 +71,9 @@ public abstract class Vala.DataType : CodeNode {
 	private List<DataType> type_argument_list;
 	private static List<DataType> _empty_type_list;
 
-	protected DataType.with_symbol (Symbol? symbol) {
+	protected DataType.with_symbol (Symbol? symbol, SourceReference? source_reference = null) {
 		this.symbol = symbol;
+		this.source_reference = source_reference;
 	}
 
 	/**
@@ -323,6 +324,9 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (type_symbol is Enum && target_type.type_symbol is Struct && ((Struct) target_type.type_symbol).is_integer_type ()) {
 			return true;
+		} else if (target_type.type_symbol is Enum && type_symbol is Struct && ((Struct) type_symbol).is_integer_type ()) {
+			//FIXME Drop this unsafe direction in the future?
+			return true;
 		}
 
 		// check for matching ownership of type-arguments
@@ -470,6 +474,9 @@ public abstract class Vala.DataType : CodeNode {
 		if (s != null && s.is_simple_type ()) {
 			return !nullable;
 		}
+		if (type_symbol is Enum) {
+			return !nullable;
+		}
 		return false;
 	}
 
@@ -524,9 +531,8 @@ public abstract class Vala.DataType : CodeNode {
 
 	public void replace_type_parameter (TypeParameter old_type_param, TypeParameter new_type_param) {
 		if (this is GenericType) {
-			unowned GenericType generic_type = (GenericType) this;
-			if (generic_type.type_parameter == old_type_param) {
-				generic_type.type_parameter = new_type_param;
+			if (symbol == old_type_param) {
+				symbol = new_type_param;
 			}
 			return;
 		}
@@ -687,11 +693,11 @@ public abstract class Vala.DataType : CodeNode {
 
 		if ((!allow_none || n_type_args > 0) && n_type_args < expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.get_full_name ());
+			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
 			return false;
 		} else if ((!allow_none || n_type_args > 0) && n_type_args > expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.get_full_name ());
+			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.to_string ());
 			return false;
 		}
 

@@ -25,8 +25,8 @@
 
 #include "vala.h"
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -50,18 +50,20 @@ vala_interface_type_get_interface_symbol (ValaInterfaceType* self)
 
 ValaInterfaceType*
 vala_interface_type_construct (GType object_type,
-                               ValaInterface* interface_symbol)
+                               ValaInterface* interface_symbol,
+                               ValaSourceReference* source_reference)
 {
 	ValaInterfaceType* self = NULL;
 	g_return_val_if_fail (interface_symbol != NULL, NULL);
-	self = (ValaInterfaceType*) vala_reference_type_construct (object_type, (ValaSymbol*) interface_symbol);
+	self = (ValaInterfaceType*) vala_reference_type_construct (object_type, (ValaSymbol*) interface_symbol, source_reference);
 	return self;
 }
 
 ValaInterfaceType*
-vala_interface_type_new (ValaInterface* interface_symbol)
+vala_interface_type_new (ValaInterface* interface_symbol,
+                         ValaSourceReference* source_reference)
 {
-	return vala_interface_type_construct (VALA_TYPE_INTERFACE_TYPE, interface_symbol);
+	return vala_interface_type_construct (VALA_TYPE_INTERFACE_TYPE, interface_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -71,88 +73,92 @@ vala_interface_type_real_copy (ValaDataType* base)
 	ValaInterfaceType* _result_ = NULL;
 	ValaInterface* _tmp0_;
 	ValaInterface* _tmp1_;
-	ValaInterfaceType* _tmp2_;
-	ValaInterfaceType* _tmp3_;
-	ValaSourceReference* _tmp4_;
-	ValaSourceReference* _tmp5_;
-	ValaInterfaceType* _tmp6_;
-	gboolean _tmp7_;
-	gboolean _tmp8_;
-	ValaInterfaceType* _tmp9_;
+	ValaSourceReference* _tmp2_;
+	ValaSourceReference* _tmp3_;
+	ValaInterfaceType* _tmp4_;
+	ValaInterfaceType* _tmp5_;
+	ValaSourceReference* _tmp6_;
+	ValaSourceReference* _tmp7_;
+	ValaInterfaceType* _tmp8_;
+	gboolean _tmp9_;
 	gboolean _tmp10_;
-	gboolean _tmp11_;
-	ValaInterfaceType* _tmp12_;
+	ValaInterfaceType* _tmp11_;
+	gboolean _tmp12_;
 	gboolean _tmp13_;
-	gboolean _tmp14_;
-	ValaInterfaceType* _tmp15_;
+	ValaInterfaceType* _tmp14_;
+	gboolean _tmp15_;
 	gboolean _tmp16_;
-	gboolean _tmp17_;
-	ValaDataType* result = NULL;
+	ValaInterfaceType* _tmp17_;
+	gboolean _tmp18_;
+	gboolean _tmp19_;
+	ValaDataType* result;
 	self = (ValaInterfaceType*) base;
 	_tmp0_ = vala_interface_type_get_interface_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_interface_type_new (_tmp1_);
-	_result_ = _tmp2_;
-	_tmp3_ = _result_;
-	_tmp4_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-	_tmp5_ = _tmp4_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _tmp3_, _tmp5_);
-	_tmp6_ = _result_;
-	_tmp7_ = vala_data_type_get_value_owned ((ValaDataType*) self);
-	_tmp8_ = _tmp7_;
-	vala_data_type_set_value_owned ((ValaDataType*) _tmp6_, _tmp8_);
-	_tmp9_ = _result_;
-	_tmp10_ = vala_data_type_get_nullable ((ValaDataType*) self);
-	_tmp11_ = _tmp10_;
-	vala_data_type_set_nullable ((ValaDataType*) _tmp9_, _tmp11_);
-	_tmp12_ = _result_;
-	_tmp13_ = vala_data_type_get_is_dynamic ((ValaDataType*) self);
-	_tmp14_ = _tmp13_;
-	vala_data_type_set_is_dynamic ((ValaDataType*) _tmp12_, _tmp14_);
-	_tmp15_ = _result_;
-	_tmp16_ = vala_data_type_get_floating_reference ((ValaDataType*) self);
-	_tmp17_ = _tmp16_;
-	vala_data_type_set_floating_reference ((ValaDataType*) _tmp15_, _tmp17_);
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_interface_type_new (_tmp1_, _tmp3_);
+	_result_ = _tmp4_;
+	_tmp5_ = _result_;
+	_tmp6_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp7_ = _tmp6_;
+	vala_code_node_set_source_reference ((ValaCodeNode*) _tmp5_, _tmp7_);
+	_tmp8_ = _result_;
+	_tmp9_ = vala_data_type_get_value_owned ((ValaDataType*) self);
+	_tmp10_ = _tmp9_;
+	vala_data_type_set_value_owned ((ValaDataType*) _tmp8_, _tmp10_);
+	_tmp11_ = _result_;
+	_tmp12_ = vala_data_type_get_nullable ((ValaDataType*) self);
+	_tmp13_ = _tmp12_;
+	vala_data_type_set_nullable ((ValaDataType*) _tmp11_, _tmp13_);
+	_tmp14_ = _result_;
+	_tmp15_ = vala_data_type_get_is_dynamic ((ValaDataType*) self);
+	_tmp16_ = _tmp15_;
+	vala_data_type_set_is_dynamic ((ValaDataType*) _tmp14_, _tmp16_);
+	_tmp17_ = _result_;
+	_tmp18_ = vala_data_type_get_floating_reference ((ValaDataType*) self);
+	_tmp19_ = _tmp18_;
+	vala_data_type_set_floating_reference ((ValaDataType*) _tmp17_, _tmp19_);
 	{
 		ValaList* _arg_list = NULL;
-		ValaList* _tmp18_;
+		ValaList* _tmp20_;
 		gint _arg_size = 0;
-		ValaList* _tmp19_;
-		gint _tmp20_;
-		gint _tmp21_;
+		ValaList* _tmp21_;
+		gint _tmp22_;
+		gint _tmp23_;
 		gint _arg_index = 0;
-		_tmp18_ = vala_data_type_get_type_arguments ((ValaDataType*) self);
-		_arg_list = _tmp18_;
-		_tmp19_ = _arg_list;
-		_tmp20_ = vala_collection_get_size ((ValaCollection*) _tmp19_);
-		_tmp21_ = _tmp20_;
-		_arg_size = _tmp21_;
+		_tmp20_ = vala_data_type_get_type_arguments ((ValaDataType*) self);
+		_arg_list = _tmp20_;
+		_tmp21_ = _arg_list;
+		_tmp22_ = vala_collection_get_size ((ValaCollection*) _tmp21_);
+		_tmp23_ = _tmp22_;
+		_arg_size = _tmp23_;
 		_arg_index = -1;
 		while (TRUE) {
-			gint _tmp22_;
-			gint _tmp23_;
+			gint _tmp24_;
+			gint _tmp25_;
 			ValaDataType* arg = NULL;
-			ValaList* _tmp24_;
-			gpointer _tmp25_;
-			ValaInterfaceType* _tmp26_;
-			ValaDataType* _tmp27_;
-			ValaDataType* _tmp28_;
+			ValaList* _tmp26_;
+			gpointer _tmp27_;
+			ValaInterfaceType* _tmp28_;
 			ValaDataType* _tmp29_;
+			ValaDataType* _tmp30_;
+			ValaDataType* _tmp31_;
 			_arg_index = _arg_index + 1;
-			_tmp22_ = _arg_index;
-			_tmp23_ = _arg_size;
-			if (!(_tmp22_ < _tmp23_)) {
+			_tmp24_ = _arg_index;
+			_tmp25_ = _arg_size;
+			if (!(_tmp24_ < _tmp25_)) {
 				break;
 			}
-			_tmp24_ = _arg_list;
-			_tmp25_ = vala_list_get (_tmp24_, _arg_index);
-			arg = (ValaDataType*) _tmp25_;
-			_tmp26_ = _result_;
-			_tmp27_ = arg;
-			_tmp28_ = vala_data_type_copy (_tmp27_);
-			_tmp29_ = _tmp28_;
-			vala_data_type_add_type_argument ((ValaDataType*) _tmp26_, _tmp29_);
-			_vala_code_node_unref0 (_tmp29_);
+			_tmp26_ = _arg_list;
+			_tmp27_ = vala_list_get (_tmp26_, _arg_index);
+			arg = (ValaDataType*) _tmp27_;
+			_tmp28_ = _result_;
+			_tmp29_ = arg;
+			_tmp30_ = vala_data_type_copy (_tmp29_);
+			_tmp31_ = _tmp30_;
+			vala_data_type_add_type_argument ((ValaDataType*) _tmp28_, _tmp31_);
+			_vala_code_node_unref0 (_tmp31_);
 			_vala_code_node_unref0 (arg);
 		}
 	}
@@ -189,12 +195,12 @@ vala_interface_type_get_type_once (void)
 GType
 vala_interface_type_get_type (void)
 {
-	static volatile gsize vala_interface_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_interface_type_type_id__volatile)) {
+	static volatile gsize vala_interface_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_interface_type_type_id__once)) {
 		GType vala_interface_type_type_id;
 		vala_interface_type_type_id = vala_interface_type_get_type_once ();
-		g_once_init_leave (&vala_interface_type_type_id__volatile, vala_interface_type_type_id);
+		g_once_init_leave (&vala_interface_type_type_id__once, vala_interface_type_type_id);
 	}
-	return vala_interface_type_type_id__volatile;
+	return vala_interface_type_type_id__once;
 }
 

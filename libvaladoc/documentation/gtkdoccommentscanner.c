@@ -24,11 +24,11 @@
  */
 
 #include "valadoc.h"
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <valagee.h>
-#include <glib-object.h>
 #include <gobject/gvaluecollector.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -108,13 +108,13 @@ valadoc_gtkdoc_token_type_get_type_once (void)
 GType
 valadoc_gtkdoc_token_type_get_type (void)
 {
-	static volatile gsize valadoc_gtkdoc_token_type_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtkdoc_token_type_type_id__volatile)) {
+	static volatile gsize valadoc_gtkdoc_token_type_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_token_type_type_id__once)) {
 		GType valadoc_gtkdoc_token_type_type_id;
 		valadoc_gtkdoc_token_type_type_id = valadoc_gtkdoc_token_type_get_type_once ();
-		g_once_init_leave (&valadoc_gtkdoc_token_type_type_id__volatile, valadoc_gtkdoc_token_type_type_id);
+		g_once_init_leave (&valadoc_gtkdoc_token_type_type_id__once, valadoc_gtkdoc_token_type_type_id);
 	}
-	return valadoc_gtkdoc_token_type_type_id__volatile;
+	return valadoc_gtkdoc_token_type_type_id__once;
 }
 
 static gpointer
@@ -171,137 +171,135 @@ valadoc_gtkdoc_token_new (ValadocGtkdocTokenType type,
 gchar*
 valadoc_gtkdoc_token_to_string (ValadocGtkdocToken* self)
 {
-	ValadocGtkdocTokenType _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
-	_tmp0_ = self->type;
-	switch (_tmp0_) {
+	switch (self->type) {
 		case VALADOC_GTKDOC_TOKEN_TYPE_XML_OPEN:
 		{
-			const gchar* _tmp1_;
-			gchar* _tmp2_;
-			_tmp1_ = self->content;
-			_tmp2_ = g_strdup_printf ("`<%s>'", _tmp1_);
-			result = _tmp2_;
+			const gchar* _tmp0_;
+			gchar* _tmp1_;
+			_tmp0_ = self->content;
+			_tmp1_ = g_strdup_printf ("`<%s>'", _tmp0_);
+			result = _tmp1_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_XML_CLOSE:
 		{
-			const gchar* _tmp3_;
-			gchar* _tmp4_;
-			_tmp3_ = self->content;
-			_tmp4_ = g_strdup_printf ("`</%s>'", _tmp3_);
-			result = _tmp4_;
+			const gchar* _tmp2_;
+			gchar* _tmp3_;
+			_tmp2_ = self->content;
+			_tmp3_ = g_strdup_printf ("`</%s>'", _tmp2_);
+			result = _tmp3_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_XML_COMMENT:
 		{
-			gchar* _tmp5_;
-			_tmp5_ = g_strdup ("<XML-COMMENT>");
-			result = _tmp5_;
+			gchar* _tmp4_;
+			_tmp4_ = g_strdup ("<XML-COMMENT>");
+			result = _tmp4_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_FUNCTION:
 		{
-			const gchar* _tmp6_;
-			gchar* _tmp7_;
-			_tmp6_ = self->content;
-			_tmp7_ = g_strdup_printf ("`%s ()'", _tmp6_);
-			result = _tmp7_;
+			const gchar* _tmp5_;
+			gchar* _tmp6_;
+			_tmp5_ = self->content;
+			_tmp6_ = g_strdup_printf ("`%s ()'", _tmp5_);
+			result = _tmp6_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_CONST:
 		{
-			const gchar* _tmp8_;
-			gchar* _tmp9_;
-			_tmp8_ = self->content;
-			_tmp9_ = g_strdup_printf ("`%%%s'", _tmp8_);
-			result = _tmp9_;
+			const gchar* _tmp7_;
+			gchar* _tmp8_;
+			_tmp7_ = self->content;
+			_tmp8_ = g_strdup_printf ("`%%%s'", _tmp7_);
+			result = _tmp8_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_TYPE:
 		{
-			const gchar* _tmp10_;
-			gchar* _tmp11_;
-			_tmp10_ = self->content;
-			_tmp11_ = g_strdup_printf ("`#%s'", _tmp10_);
-			result = _tmp11_;
+			const gchar* _tmp9_;
+			gchar* _tmp10_;
+			_tmp9_ = self->content;
+			_tmp10_ = g_strdup_printf ("`#%s'", _tmp9_);
+			result = _tmp10_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_PARAM:
 		{
-			gchar* _tmp12_;
-			_tmp12_ = g_strdup ("<GTKDOC-PARAM>");
-			result = _tmp12_;
+			gchar* _tmp11_;
+			_tmp11_ = g_strdup ("<GTKDOC-PARAM>");
+			result = _tmp11_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_SOURCE_OPEN:
 		{
-			gchar* _tmp13_;
-			_tmp13_ = g_strdup ("[|");
-			result = _tmp13_;
+			gchar* _tmp12_;
+			_tmp12_ = g_strdup ("[|");
+			result = _tmp12_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_SOURCE_CLOSE:
 		{
-			gchar* _tmp14_;
-			_tmp14_ = g_strdup ("|]");
-			result = _tmp14_;
+			gchar* _tmp13_;
+			_tmp13_ = g_strdup ("|]");
+			result = _tmp13_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_SIGNAL:
 		{
-			const gchar* _tmp15_;
-			gchar* _tmp16_;
-			_tmp15_ = self->content;
-			_tmp16_ = g_strdup_printf ("`::%s'", _tmp15_);
-			result = _tmp16_;
+			const gchar* _tmp14_;
+			gchar* _tmp15_;
+			_tmp14_ = self->content;
+			_tmp15_ = g_strdup_printf ("`::%s'", _tmp14_);
+			result = _tmp15_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_PROPERTY:
 		{
-			const gchar* _tmp17_;
-			gchar* _tmp18_;
-			_tmp17_ = self->content;
-			_tmp18_ = g_strdup_printf ("`:%s'", _tmp17_);
-			result = _tmp18_;
+			const gchar* _tmp16_;
+			gchar* _tmp17_;
+			_tmp16_ = self->content;
+			_tmp17_ = g_strdup_printf ("`:%s'", _tmp16_);
+			result = _tmp17_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_PARAGRAPH:
 		{
-			gchar* _tmp19_;
-			_tmp19_ = g_strdup ("<GKTDOC-PARAGRAPH>");
-			result = _tmp19_;
+			gchar* _tmp18_;
+			_tmp18_ = g_strdup ("<GKTDOC-PARAGRAPH>");
+			result = _tmp18_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_NEWLINE:
 		{
-			gchar* _tmp20_;
-			_tmp20_ = g_strdup ("<NEWLNIE>");
-			result = _tmp20_;
+			gchar* _tmp19_;
+			_tmp19_ = g_strdup ("<NEWLNIE>");
+			result = _tmp19_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_SPACE:
 		{
-			gchar* _tmp21_;
-			_tmp21_ = g_strdup ("<SPACE>");
-			result = _tmp21_;
+			gchar* _tmp20_;
+			_tmp20_ = g_strdup ("<SPACE>");
+			result = _tmp20_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_WORD:
 		{
-			const gchar* _tmp22_;
-			gchar* _tmp23_;
-			_tmp22_ = self->content;
-			_tmp23_ = g_strdup_printf ("`%s'", _tmp22_);
-			result = _tmp23_;
+			const gchar* _tmp21_;
+			gchar* _tmp22_;
+			_tmp21_ = self->content;
+			_tmp22_ = g_strdup_printf ("`%s'", _tmp21_);
+			result = _tmp22_;
 			return result;
 		}
 		case VALADOC_GTKDOC_TOKEN_TYPE_EOF:
 		{
-			gchar* _tmp24_;
-			_tmp24_ = g_strdup ("<EOF>");
-			result = _tmp24_;
+			gchar* _tmp23_;
+			_tmp23_ = g_strdup ("<EOF>");
+			result = _tmp23_;
 			return result;
 		}
 		default:
@@ -483,13 +481,13 @@ valadoc_gtkdoc_token_get_type_once (void)
 GType
 valadoc_gtkdoc_token_get_type (void)
 {
-	static volatile gsize valadoc_gtkdoc_token_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtkdoc_token_type_id__volatile)) {
+	static volatile gsize valadoc_gtkdoc_token_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_token_type_id__once)) {
 		GType valadoc_gtkdoc_token_type_id;
 		valadoc_gtkdoc_token_type_id = valadoc_gtkdoc_token_get_type_once ();
-		g_once_init_leave (&valadoc_gtkdoc_token_type_id__volatile, valadoc_gtkdoc_token_type_id);
+		g_once_init_leave (&valadoc_gtkdoc_token_type_id__once, valadoc_gtkdoc_token_type_id);
 	}
-	return valadoc_gtkdoc_token_type_id__volatile;
+	return valadoc_gtkdoc_token_type_id__once;
 }
 
 gpointer
@@ -536,7 +534,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -550,7 +548,7 @@ valadoc_gtkdoc_scanner_unescape (const gchar* txt)
 	const gchar* start = NULL;
 	const gchar* pos = NULL;
 	gunichar c = 0U;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (txt != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -947,7 +945,7 @@ valadoc_gtkdoc_scanner_next_char (ValadocGtkdocScanner* self)
 	const gchar* _tmp1_;
 	gint _tmp2_;
 	const gchar* _tmp3_;
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	_tmp0_ = self->priv->pos;
 	_tmp1_ = g_utf8_next_char (_tmp0_);
@@ -963,7 +961,7 @@ static inline gunichar
 valadoc_gtkdoc_scanner_get (ValadocGtkdocScanner* self)
 {
 	const gchar* _tmp0_;
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	_tmp0_ = self->priv->pos;
 	result = string_get_char (_tmp0_, (glong) 0);
@@ -976,7 +974,7 @@ valadoc_gtkdoc_scanner_letter (ValadocGtkdocScanner* self,
 {
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (c >= ((gunichar) 'a')) {
 		_tmp1_ = c <= ((gunichar) 'z');
@@ -1005,7 +1003,7 @@ valadoc_gtkdoc_scanner_letter_or_number (ValadocGtkdocScanner* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	gboolean _tmp2_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (c >= ((gunichar) 'a')) {
 		_tmp2_ = c <= ((gunichar) 'z');
@@ -1043,7 +1041,7 @@ valadoc_gtkdoc_scanner_space (ValadocGtkdocScanner* self,
                               gunichar c)
 {
 	gboolean _tmp0_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (c == ((gunichar) ' ')) {
 		_tmp0_ = TRUE;
@@ -1058,7 +1056,7 @@ static inline gboolean
 valadoc_gtkdoc_scanner_space_or_newline (ValadocGtkdocScanner* self,
                                          gunichar c)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (c == ((gunichar) '\n')) {
 		gint _tmp0_;
@@ -1077,7 +1075,7 @@ valadoc_gtkdoc_scanner_offset (ValadocGtkdocScanner* self,
                                const gchar* a,
                                const gchar* b)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (a != NULL, 0);
 	g_return_val_if_fail (b != NULL, 0);
@@ -1089,7 +1087,7 @@ static inline gint
 valadoc_gtkdoc_scanner_vararg_prefix (ValadocGtkdocScanner* self)
 {
 	const gchar* _tmp0_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->pos;
 	if (g_str_has_prefix (_tmp0_, "...")) {
@@ -1109,7 +1107,7 @@ valadoc_gtkdoc_scanner_id_prefix (ValadocGtkdocScanner* self)
 	gunichar c = 0U;
 	gboolean _tmp0_ = FALSE;
 	gint start = 0;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	c = valadoc_gtkdoc_scanner_get (self);
 	if (!valadoc_gtkdoc_scanner_letter (self, c)) {
@@ -1146,7 +1144,7 @@ valadoc_gtkdoc_scanner_g_id_prefix (ValadocGtkdocScanner* self)
 	gunichar c = 0U;
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->pos;
 	start = _tmp0_;
@@ -1186,7 +1184,7 @@ valadoc_gtkdoc_scanner_skip_spaces_and_newlines (ValadocGtkdocScanner* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->pos;
 	start = _tmp0_;
@@ -1210,7 +1208,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -1233,7 +1231,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -1283,7 +1281,7 @@ valadoc_gtkdoc_scanner_function_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp12_;
 	ValadocGtkdocToken* _tmp13_;
 	ValadocGtkdocToken* _tmp14_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->pos;
 	start = _tmp0_;
@@ -1350,7 +1348,7 @@ valadoc_gtkdoc_scanner_gtkdoc_symbolic_link_prefix (ValadocGtkdocScanner* self,
 	const gchar* _tmp23_;
 	ValadocGtkdocToken* _tmp24_;
 	ValadocGtkdocToken* _tmp25_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != c) {
 		result = NULL;
@@ -1485,7 +1483,7 @@ valadoc_gtkdoc_scanner_gtkdoc_property_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp7_;
 	ValadocGtkdocToken* _tmp8_;
 	ValadocGtkdocToken* _tmp9_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != ((gunichar) ':')) {
 		result = NULL;
@@ -1534,7 +1532,7 @@ valadoc_gtkdoc_scanner_gtkdoc_signal_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp9_;
 	ValadocGtkdocToken* _tmp10_;
 	ValadocGtkdocToken* _tmp11_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != ((gunichar) ':')) {
 		result = NULL;
@@ -1581,7 +1579,7 @@ static inline ValadocGtkdocToken*
 valadoc_gtkdoc_scanner_gtkdoc_const_prefix (ValadocGtkdocScanner* self)
 {
 	ValadocGtkdocToken* _tmp0_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_gtkdoc_scanner_gtkdoc_symbolic_link_prefix (self, (gunichar) '%', VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_CONST);
 	result = _tmp0_;
@@ -1592,7 +1590,7 @@ static inline ValadocGtkdocToken*
 valadoc_gtkdoc_scanner_gtkdoc_param_prefix (ValadocGtkdocScanner* self)
 {
 	ValadocGtkdocToken* _tmp0_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_gtkdoc_scanner_gtkdoc_symbolic_link_prefix (self, (gunichar) '@', VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_PARAM);
 	result = _tmp0_;
@@ -1603,7 +1601,7 @@ static inline ValadocGtkdocToken*
 valadoc_gtkdoc_scanner_gtkdoc_type_prefix (ValadocGtkdocScanner* self)
 {
 	ValadocGtkdocToken* _tmp0_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_gtkdoc_scanner_gtkdoc_symbolic_link_prefix (self, (gunichar) '#', VALADOC_GTKDOC_TOKEN_TYPE_GTKDOC_TYPE);
 	result = _tmp0_;
@@ -1628,7 +1626,7 @@ valadoc_gtkdoc_scanner_xml_prefix (ValadocGtkdocScanner* self)
 	ValaHashMap* _tmp31_;
 	gboolean open_and_close = FALSE;
 	gboolean _tmp47_ = FALSE;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != ((gunichar) '<')) {
 		result = NULL;
@@ -1985,7 +1983,7 @@ valadoc_gtkdoc_scanner_newline_prefix (ValadocGtkdocScanner* self)
 	const gchar* start = NULL;
 	const gchar* _tmp0_;
 	gint _tmp1_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != ((gunichar) '\n')) {
 		result = NULL;
@@ -2054,7 +2052,7 @@ valadoc_gtkdoc_scanner_eof_prefix (ValadocGtkdocScanner* self)
 {
 	const gchar* _tmp0_;
 	ValadocGtkdocToken* _tmp1_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (valadoc_gtkdoc_scanner_get (self) != ((gunichar) '\0')) {
 		result = NULL;
@@ -2083,7 +2081,7 @@ valadoc_gtkdoc_scanner_space_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp11_;
 	ValadocGtkdocToken* _tmp12_;
 	ValadocGtkdocToken* _tmp13_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->pos;
 	start = _tmp0_;
@@ -2156,7 +2154,7 @@ valadoc_gtkdoc_scanner_word_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp18_;
 	ValadocGtkdocToken* _tmp19_;
 	ValadocGtkdocToken* _tmp20_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->pos;
 	start = _tmp0_;
@@ -2252,7 +2250,7 @@ valadoc_gtkdoc_scanner_gtkdoc_source_open_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
 	ValadocGtkdocToken* _tmp5_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->pos;
 	if (!g_str_has_prefix (_tmp0_, "|[")) {
@@ -2283,7 +2281,7 @@ valadoc_gtkdoc_scanner_gtkdoc_source_close_prefix (ValadocGtkdocScanner* self)
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
 	ValadocGtkdocToken* _tmp5_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->pos;
 	if (!g_str_has_prefix (_tmp0_, "]|")) {
@@ -2340,7 +2338,7 @@ valadoc_gtkdoc_scanner_next (ValadocGtkdocScanner* self)
 	ValadocGtkdocToken* _tmp26_;
 	ValadocGtkdocToken* _tmp27_;
 	ValadocGtkdocToken* _tmp28_;
-	ValadocGtkdocToken* result = NULL;
+	ValadocGtkdocToken* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->tmp_token;
 	if (_tmp0_ != NULL) {
@@ -2635,13 +2633,13 @@ valadoc_gtkdoc_scanner_get_type_once (void)
 GType
 valadoc_gtkdoc_scanner_get_type (void)
 {
-	static volatile gsize valadoc_gtkdoc_scanner_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtkdoc_scanner_type_id__volatile)) {
+	static volatile gsize valadoc_gtkdoc_scanner_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_scanner_type_id__once)) {
 		GType valadoc_gtkdoc_scanner_type_id;
 		valadoc_gtkdoc_scanner_type_id = valadoc_gtkdoc_scanner_get_type_once ();
-		g_once_init_leave (&valadoc_gtkdoc_scanner_type_id__volatile, valadoc_gtkdoc_scanner_type_id);
+		g_once_init_leave (&valadoc_gtkdoc_scanner_type_id__once, valadoc_gtkdoc_scanner_type_id);
 	}
-	return valadoc_gtkdoc_scanner_type_id__volatile;
+	return valadoc_gtkdoc_scanner_type_id__once;
 }
 
 gpointer

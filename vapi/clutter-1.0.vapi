@@ -6300,16 +6300,16 @@ namespace Clutter {
 		public void set_state (Clutter.ModifierType state);
 		[Version (since = "1.8")]
 		public void set_time (uint32 time_);
-		public Clutter.AnyEvent any {[CCode (cname = "(ClutterAnyEvent *)")]  get; }
-		public Clutter.ButtonEvent button {[CCode (cname = "(ClutterButtonEvent *)")]  get; }
-		public Clutter.CrossingEvent crossing {[CCode (cname = "(ClutterCrossingEvent *)")]  get; }
-		public Clutter.KeyEvent key {[CCode (cname = "(ClutterKeyEvent *)")]  get; }
-		public Clutter.MotionEvent motion {[CCode (cname = "(ClutterMotionEvent *)")]  get; }
-		public Clutter.ScrollEvent scroll {[CCode (cname = "(ClutterScrollEvent *)")]  get; }
-		public Clutter.StageStateEvent stage_state {[CCode (cname = "(ClutterStageStateEvent *)")]  get; }
-		public Clutter.TouchEvent touch {[CCode (cname = "(ClutterTouchEvent *)")]  get; }
-		public Clutter.TouchpadPinchEvent touchpad_pinch {[CCode (cname = "(ClutterTouchpadPinchEvent *)")]  get; }
-		public Clutter.TouchpadSwipeEvent touchpad_swipe {[CCode (cname = "(ClutterTouchpadSwipeEvent *)")]  get; }
+		public Clutter.AnyEvent any { [CCode (cname = "(ClutterAnyEvent *)")] get; }
+		public Clutter.ButtonEvent button { [CCode (cname = "(ClutterButtonEvent *)")] get; }
+		public Clutter.CrossingEvent crossing { [CCode (cname = "(ClutterCrossingEvent *)")] get; }
+		public Clutter.KeyEvent key { [CCode (cname = "(ClutterKeyEvent *)")] get; }
+		public Clutter.MotionEvent motion { [CCode (cname = "(ClutterMotionEvent *)")] get; }
+		public Clutter.ScrollEvent scroll { [CCode (cname = "(ClutterScrollEvent *)")] get; }
+		public Clutter.StageStateEvent stage_state { [CCode (cname = "(ClutterStageStateEvent *)")] get; }
+		public Clutter.TouchEvent touch { [CCode (cname = "(ClutterTouchEvent *)")] get; }
+		public Clutter.TouchpadPinchEvent touchpad_pinch { [CCode (cname = "(ClutterTouchpadPinchEvent *)")] get; }
+		public Clutter.TouchpadSwipeEvent touchpad_swipe { [CCode (cname = "(ClutterTouchpadSwipeEvent *)")] get; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_sequence_get_type ()")]
 	[Compact]
@@ -6776,7 +6776,7 @@ namespace Clutter {
 		public double period { get; set; }
 		public float radius { get; set; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_paint_node_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", ref_function = "clutter_paint_node_ref", type_id = "clutter_paint_node_get_type ()", unref_function = "clutter_paint_node_unref")]
 	[Version (since = "1.10")]
 	public abstract class PaintNode {
 		[CCode (has_construct_function = false)]
@@ -8965,13 +8965,13 @@ namespace Clutter {
 		Y_AXIS,
 		BOTH
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_IMAGE_ERROR_INVALID_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_IMAGE_ERROR_INVALID_", type_id = "clutter_image_error_get_type ()")]
 	[Version (since = "1.10")]
 	public errordomain ImageError {
 		DATA;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCRIPT_ERROR_INVALID_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SCRIPT_ERROR_INVALID_", type_id = "clutter_script_error_get_type ()")]
 	[Version (since = "0.6")]
 	public errordomain ScriptError {
 		TYPE_FUNCTION,
@@ -8979,7 +8979,7 @@ namespace Clutter {
 		VALUE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_SHADER_ERROR_", type_id = "clutter_shader_error_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 	public errordomain ShaderError {
 		NO_ASM,
@@ -8987,7 +8987,7 @@ namespace Clutter {
 		COMPILE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_ERROR_")]
+	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_TEXTURE_ERROR_", type_id = "clutter_texture_error_get_type ()")]
 	[Version (since = "0.4")]
 	public errordomain TextureError {
 		OUT_OF_MEMORY,

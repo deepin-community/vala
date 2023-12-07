@@ -24,6 +24,7 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
@@ -49,6 +50,7 @@ vala_typeparameter_construct (GType object_type,
 	ValaTypeParameter* self = NULL;
 	g_return_val_if_fail (name != NULL, NULL);
 	self = (ValaTypeParameter*) vala_typesymbol_construct (object_type, name, source_reference, NULL);
+	vala_symbol_set_access ((ValaSymbol*) self, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 	return self;
 }
 
@@ -90,7 +92,7 @@ vala_typeparameter_equals (ValaTypeParameter* self,
 	const gchar* _tmp13_;
 	const gchar* _tmp14_;
 	const gchar* _tmp15_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (param2 != NULL, FALSE);
 	_tmp1_ = vala_symbol_get_owner ((ValaSymbol*) self);
@@ -169,12 +171,12 @@ vala_typeparameter_get_type_once (void)
 GType
 vala_typeparameter_get_type (void)
 {
-	static volatile gsize vala_typeparameter_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_typeparameter_type_id__volatile)) {
+	static volatile gsize vala_typeparameter_type_id__once = 0;
+	if (g_once_init_enter (&vala_typeparameter_type_id__once)) {
 		GType vala_typeparameter_type_id;
 		vala_typeparameter_type_id = vala_typeparameter_get_type_once ();
-		g_once_init_leave (&vala_typeparameter_type_id__volatile, vala_typeparameter_type_id);
+		g_once_init_leave (&vala_typeparameter_type_id__once, vala_typeparameter_type_id);
 	}
-	return vala_typeparameter_type_id__volatile;
+	return vala_typeparameter_type_id__once;
 }
 

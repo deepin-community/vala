@@ -10,7 +10,7 @@
 #include <string.h>
 #include <valagee.h>
 #include <vala.h>
-#include <graphviz/gvc.h>
+#include <gvc.h>
 
 G_BEGIN_DECLS
 
@@ -621,6 +621,8 @@ typedef struct _ValadocScannerIface ValadocScannerIface;
 
 typedef struct _ValadocParser ValadocParser;
 typedef struct _ValadocParserClass ValadocParserClass;
+
+#define VALADOC_TYPE_PARSER_ERROR (valadoc_parser_error_get_type ())
 
 #define VALADOC_TYPE_WIKI_SCANNER (valadoc_wiki_scanner_get_type ())
 #define VALADOC_WIKI_SCANNER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALADOC_TYPE_WIKI_SCANNER, ValadocWikiScanner))
@@ -1656,6 +1658,7 @@ typedef enum  {
 	VALADOC_PARSER_ERROR_UNEXPECTED_TOKEN
 } ValadocParserError;
 #define VALADOC_PARSER_ERROR valadoc_parser_error_quark ()
+
 struct _ValadocScannerIface {
 	GTypeInterface parent_iface;
 	void (*set_parser) (ValadocScanner* self, ValadocParser* parser);
@@ -2730,6 +2733,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocApiTree, valadoc_api_tree_unref)
 VALA_EXTERN GType valadoc_error_reporter_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocErrorReporter, g_object_unref)
 VALA_EXTERN GType valadoc_doclet_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocDoclet, g_object_unref)
 VALA_EXTERN void valadoc_doclet_process (ValadocDoclet* self,
                              ValadocSettings* settings,
                              ValadocApiTree* tree,
@@ -2795,6 +2799,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocContentContentElement, g_object_unref)
 VALA_EXTERN GType valadoc_rule_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocRule, g_object_unref)
 VALA_EXTERN GType valadoc_content_taglet_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocContentTaglet, g_object_unref)
 VALA_EXTERN ValadocContentTaglet* valadoc_module_loader_create_taglet (ValadocModuleLoader* self,
                                                            const gchar* keyword);
 VALA_EXTERN void valadoc_module_loader_register_taglet (ValadocModuleLoader* self,
@@ -3013,7 +3018,9 @@ VALA_EXTERN gpointer valadoc_value_get_parser (const GValue* value);
 VALA_EXTERN GType valadoc_parser_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocParser, valadoc_parser_unref)
 VALA_EXTERN GQuark valadoc_parser_error_quark (void);
+VALA_EXTERN GType valadoc_parser_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType valadoc_scanner_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocScanner, g_object_unref)
 VALA_EXTERN GType valadoc_wiki_scanner_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocWikiScanner, g_object_unref)
 VALA_EXTERN GType valadoc_comment_scanner_get_type (void) G_GNUC_CONST ;
@@ -3022,9 +3029,11 @@ VALA_EXTERN ValadocCommentScanner* valadoc_comment_scanner_new (ValadocSettings*
 VALA_EXTERN ValadocCommentScanner* valadoc_comment_scanner_construct (GType object_type,
                                                           ValadocSettings* settings);
 VALA_EXTERN GType valadoc_documentation_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocDocumentation, g_object_unref)
 VALA_EXTERN ValadocApiPackage* valadoc_documentation_get_package (ValadocDocumentation* self);
 VALA_EXTERN gchar* valadoc_documentation_get_filename (ValadocDocumentation* self);
 VALA_EXTERN GType valadoc_resource_locator_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocResourceLocator, g_object_unref)
 VALA_EXTERN GType valadoc_documentation_parser_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocDocumentationParser, g_object_unref)
 VALA_EXTERN ValadocDocumentationParser* valadoc_documentation_parser_new (ValadocSettings* settings,
@@ -3376,6 +3385,7 @@ VALA_EXTERN ValadocApiGirSourceComment* valadoc_api_gir_source_comment_construct
                                                                       gint last_line,
                                                                       gint last_column);
 VALA_EXTERN GType valadoc_content_inline_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocContentInline, g_object_unref)
 VALA_EXTERN GType valadoc_api_attribute_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocApiAttribute, g_object_unref)
 VALA_EXTERN const gchar* valadoc_api_attribute_get_name (ValadocApiAttribute* self);
@@ -3402,6 +3412,7 @@ VALA_EXTERN ValadocApiArray* valadoc_api_array_construct (GType object_type,
 VALA_EXTERN GType valadoc_api_typereference_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocApiTypeReference, g_object_unref)
 VALA_EXTERN GType valadoc_api_callable_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocApiCallable, g_object_unref)
 VALA_EXTERN ValadocApiTypeReference* valadoc_api_callable_get_return_type (ValadocApiCallable* self);
 VALA_EXTERN void valadoc_api_callable_set_return_type (ValadocApiCallable* self,
                                            ValadocApiTypeReference* value);
@@ -4045,6 +4056,7 @@ VALA_EXTERN void valadoc_api_visitor_visit_enum_value (ValadocApiVisitor* self,
                                            ValadocApiEnumValue* item);
 VALA_EXTERN ValadocApiVisitor* valadoc_api_visitor_construct (GType object_type);
 VALA_EXTERN GType valadoc_content_block_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocContentBlock, g_object_unref)
 VALA_EXTERN ValaList* valadoc_content_block_content_get_content (ValadocContentBlockContent* self);
 VALA_EXTERN ValaList* valadoc_content_comment_get_taglets (ValadocContentComment* self);
 VALA_EXTERN ValaList* valadoc_content_comment_find_taglets (ValadocContentComment* self,
@@ -4082,6 +4094,7 @@ VALA_EXTERN ValadocContentText* valadoc_content_content_factory_create_text (Val
 VALA_EXTERN GType valadoc_content_horizontal_align_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType valadoc_content_vertical_align_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType valadoc_content_style_attributes_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocContentStyleAttributes, g_object_unref)
 VALA_EXTERN ValadocContentContentElement* valadoc_content_content_factory_set_style_attributes (ValadocContentContentFactory* self,
                                                                                     ValadocContentStyleAttributes* element,
                                                                                     ValadocContentVerticalAlign* valign,
@@ -4586,6 +4599,7 @@ VALA_EXTERN gpointer valadoc_highlighter_value_get_code_token (const GValue* val
 VALA_EXTERN GType valadoc_highlighter_code_token_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocHighlighterCodeToken, valadoc_highlighter_code_token_unref)
 VALA_EXTERN GType valadoc_highlighter_scanner_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocHighlighterScanner, g_object_unref)
 VALA_EXTERN ValadocHighlighterCodeToken* valadoc_highlighter_scanner_next (ValadocHighlighterScanner* self);
 VALA_EXTERN GType valadoc_highlighter_code_scanner_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValadocHighlighterCodeScanner, g_object_unref)

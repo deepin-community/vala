@@ -198,7 +198,7 @@ vala_attribute_has_argument (ValaAttribute* self,
                              const gchar* name)
 {
 	ValaMap* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 	_tmp0_ = self->priv->_args;
@@ -219,7 +219,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -242,7 +242,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -290,7 +290,7 @@ vala_attribute_get_string (ValaAttribute* self,
 	gchar* _tmp8_;
 	const gchar* _tmp9_;
 	gchar* _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->_args;
@@ -334,7 +334,7 @@ vala_attribute_get_integer (ValaAttribute* self,
 	gpointer _tmp1_;
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (name != NULL, 0);
 	_tmp0_ = self->priv->_args;
@@ -361,7 +361,7 @@ vala_attribute_get_integer (ValaAttribute* self,
 static gdouble
 double_parse (const gchar* str)
 {
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (str != NULL, 0.0);
 	result = g_ascii_strtod (str, NULL);
 	return result;
@@ -377,7 +377,7 @@ vala_attribute_get_double (ValaAttribute* self,
 	gpointer _tmp1_;
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (self != NULL, 0.0);
 	g_return_val_if_fail (name != NULL, 0.0);
 	_tmp0_ = self->priv->_args;
@@ -404,7 +404,7 @@ vala_attribute_get_double (ValaAttribute* self,
 static gboolean
 bool_parse (const gchar* str)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	if (g_strcmp0 (str, "true") == 0) {
 		result = TRUE;
@@ -425,7 +425,7 @@ vala_attribute_get_bool (ValaAttribute* self,
 	gpointer _tmp1_;
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 	_tmp0_ = self->priv->_args;
@@ -485,12 +485,12 @@ vala_attribute_get_type_once (void)
 GType
 vala_attribute_get_type (void)
 {
-	static volatile gsize vala_attribute_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_attribute_type_id__volatile)) {
+	static volatile gsize vala_attribute_type_id__once = 0;
+	if (g_once_init_enter (&vala_attribute_type_id__once)) {
 		GType vala_attribute_type_id;
 		vala_attribute_type_id = vala_attribute_get_type_once ();
-		g_once_init_leave (&vala_attribute_type_id__volatile, vala_attribute_type_id);
+		g_once_init_leave (&vala_attribute_type_id__once, vala_attribute_type_id);
 	}
-	return vala_attribute_type_id__volatile;
+	return vala_attribute_type_id__once;
 }
 

@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -145,7 +146,7 @@ static gboolean
 vala_typeof_expression_real_is_pure (ValaExpression* base)
 {
 	ValaTypeofExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTypeofExpression*) base;
 	result = TRUE;
 	return result;
@@ -188,7 +189,7 @@ vala_typeof_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp18_;
 	gboolean _tmp32_;
 	gboolean _tmp33_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTypeofExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -328,12 +329,12 @@ vala_typeof_expression_get_type_once (void)
 GType
 vala_typeof_expression_get_type (void)
 {
-	static volatile gsize vala_typeof_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_typeof_expression_type_id__volatile)) {
+	static volatile gsize vala_typeof_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_typeof_expression_type_id__once)) {
 		GType vala_typeof_expression_type_id;
 		vala_typeof_expression_type_id = vala_typeof_expression_get_type_once ();
-		g_once_init_leave (&vala_typeof_expression_type_id__volatile, vala_typeof_expression_type_id);
+		g_once_init_leave (&vala_typeof_expression_type_id__once, vala_typeof_expression_type_id);
 	}
-	return vala_typeof_expression_type_id__volatile;
+	return vala_typeof_expression_type_id__once;
 }
 

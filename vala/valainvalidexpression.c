@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_invalid_expression_parent_class = NULL;
 
@@ -52,7 +53,7 @@ static gboolean
 vala_invalid_expression_real_is_pure (ValaExpression* base)
 {
 	ValaInvalidExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaInvalidExpression*) base;
 	result = FALSE;
 	return result;
@@ -63,7 +64,7 @@ vala_invalid_expression_real_check (ValaCodeNode* base,
                                     ValaCodeContext* context)
 {
 	ValaInvalidExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaInvalidExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	result = FALSE;
@@ -100,12 +101,12 @@ vala_invalid_expression_get_type_once (void)
 GType
 vala_invalid_expression_get_type (void)
 {
-	static volatile gsize vala_invalid_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_invalid_expression_type_id__volatile)) {
+	static volatile gsize vala_invalid_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_invalid_expression_type_id__once)) {
 		GType vala_invalid_expression_type_id;
 		vala_invalid_expression_type_id = vala_invalid_expression_get_type_once ();
-		g_once_init_leave (&vala_invalid_expression_type_id__volatile, vala_invalid_expression_type_id);
+		g_once_init_leave (&vala_invalid_expression_type_id__once, vala_invalid_expression_type_id);
 	}
-	return vala_invalid_expression_type_id__volatile;
+	return vala_invalid_expression_type_id__once;
 }
 

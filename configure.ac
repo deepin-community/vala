@@ -10,7 +10,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
-API_VERSION=0.54
+API_VERSION=0.56
 PACKAGE_SUFFIX="-$API_VERSION"
 
 VALA_MAJOR_VERSION=`echo $PACKAGE_VERSION | cut -d. -f1 | sed s/[[a-zA-Z\-]].*//g`
@@ -70,12 +70,13 @@ if test "$YACC" = :; then
 	AC_MSG_ERROR([bison not found but required])
 fi
 
-AC_PATH_PROG(VALAC, valac, valac)
+AC_PATH_PROG([VALAC], [valac], :)
 AC_SUBST(VALAC)
 
 VALAC_BOOTSTRAP_REQUIRED=0.39.5.8
+VALAC_VALADOC_REQUIRED=0.18.1
 
-AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
+AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
 	AS_VERSION_COMPARE(["$VALAC_BOOTSTRAP_REQUIRED"], ["$FOUND_VALAC_VERION"],
 		[enable_boostrap=yes], [enable_boostrap=yes], [enable_boostrap=no])])
 
@@ -126,13 +127,20 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=return-type \
 -Werror=sequence-point \
 -Werror=uninitialized \
+-Werror=init-self \
+-Werror=int-in-bool-context \
 -Werror=int-to-pointer-cast \
 -Werror=pointer-to-int-cast \
 -Werror=compare-distinct-pointer-types \
 -Werror=empty-body \
+-Werror=comment \
+-Werror=strict-overflow \
+-Werror=shift-overflow \
 -Wformat=2 \
 -Werror=format-security \
 -Werror=format-nonliteral \
+-Werror=format-overflow=2 \
+-Werror=format-truncation=2 \
 -Werror=int-conversion \
 -Werror=duplicated-branches \
 -Werror=duplicated-cond \
@@ -142,9 +150,13 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=missing-declarations \
 -Werror=missing-prototypes \
 -Werror=strict-prototypes \
+-Werror=bool-compare \
 -Werror=tautological-pointer-compare \
+-Werror=logical-not-parentheses \
 -Werror=address \
 -Werror=array-bounds \
+-Werror=array-parameter \
+-Werror=array-parameter=2 \
 -Werror=enum-conversion"
 
 TEST_CFLAGS=
@@ -184,6 +196,12 @@ AC_SUBST(GMODULE_LIBS)
 
 AC_ARG_WITH(cgraph, AS_HELP_STRING([--with-cgraph], [Required flag for cross-compilation to define capability of graphviz]), [], with_cgraph=check)
 AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)
+AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
+	AS_VERSION_COMPARE(["$FOUND_VALAC_VERION"], ["$VALAC_VALADOC_REQUIRED"], [
+		AC_MSG_WARN([Force disable build of valadoc, valac >= $VALAC_VALADOC_REQUIRED is required])
+		enable_valadoc=no
+	])
+])
 if test x$enable_valadoc = xyes; then
 	PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
 	AC_MSG_CHECKING([for CGRAPH])
@@ -274,6 +292,7 @@ AC_CONFIG_FILES([Makefile
            valadoc/doclets/gtkdoc/Makefile
            valadoc/icons/Makefile
            valadoc/tests/Makefile
+           valadoc/tests/girwriter/Makefile
 ])
 
 AC_OUTPUT

@@ -152,7 +152,7 @@ ValaList*
 vala_switch_statement_get_sections (ValaSwitchStatement* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->sections;
 	result = _tmp0_;
@@ -320,7 +320,7 @@ vala_switch_statement_real_check (ValaCodeNode* base,
 	ValaHashSet* _tmp46_;
 	gboolean _tmp98_;
 	gboolean _tmp99_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaSwitchStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -678,12 +678,12 @@ vala_switch_statement_get_type_once (void)
 GType
 vala_switch_statement_get_type (void)
 {
-	static volatile gsize vala_switch_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_switch_statement_type_id__volatile)) {
+	static volatile gsize vala_switch_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_switch_statement_type_id__once)) {
 		GType vala_switch_statement_type_id;
 		vala_switch_statement_type_id = vala_switch_statement_get_type_once ();
-		g_once_init_leave (&vala_switch_statement_type_id__volatile, vala_switch_statement_type_id);
+		g_once_init_leave (&vala_switch_statement_type_id__once, vala_switch_statement_type_id);
 	}
-	return vala_switch_statement_type_id__volatile;
+	return vala_switch_statement_type_id__once;
 }
 

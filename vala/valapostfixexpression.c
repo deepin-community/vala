@@ -181,7 +181,7 @@ static gboolean
 vala_postfix_expression_real_is_pure (ValaExpression* base)
 {
 	ValaPostfixExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaPostfixExpression*) base;
 	result = FALSE;
 	return result;
@@ -194,7 +194,7 @@ vala_postfix_expression_real_is_accessible (ValaExpression* base,
 	ValaPostfixExpression * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaPostfixExpression*) base;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp0_ = vala_postfix_expression_get_inner (self);
@@ -323,7 +323,7 @@ vala_postfix_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp87_;
 	gboolean _tmp88_;
 	gboolean _tmp89_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaPostfixExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -597,7 +597,7 @@ vala_postfix_expression_real_to_string (ValaCodeNode* base)
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp7_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaPostfixExpression*) base;
 	_tmp1_ = self->priv->_increment;
 	if (_tmp1_) {
@@ -667,12 +667,12 @@ vala_postfix_expression_get_type_once (void)
 GType
 vala_postfix_expression_get_type (void)
 {
-	static volatile gsize vala_postfix_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_postfix_expression_type_id__volatile)) {
+	static volatile gsize vala_postfix_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_postfix_expression_type_id__once)) {
 		GType vala_postfix_expression_type_id;
 		vala_postfix_expression_type_id = vala_postfix_expression_get_type_once ();
-		g_once_init_leave (&vala_postfix_expression_type_id__volatile, vala_postfix_expression_type_id);
+		g_once_init_leave (&vala_postfix_expression_type_id__once, vala_postfix_expression_type_id);
 	}
-	return vala_postfix_expression_type_id__volatile;
+	return vala_postfix_expression_type_id__once;
 }
 

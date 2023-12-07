@@ -237,7 +237,7 @@ valadoc_wiki_page_real_get_filename (ValadocDocumentation* base)
 	ValadocWikiPage * self;
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocWikiPage*) base;
 	_tmp0_ = self->priv->_path;
 	_tmp1_ = g_path_get_basename (_tmp0_);
@@ -399,13 +399,13 @@ valadoc_wiki_page_get_type_once (void)
 GType
 valadoc_wiki_page_get_type (void)
 {
-	static volatile gsize valadoc_wiki_page_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_wiki_page_type_id__volatile)) {
+	static volatile gsize valadoc_wiki_page_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_wiki_page_type_id__once)) {
 		GType valadoc_wiki_page_type_id;
 		valadoc_wiki_page_type_id = valadoc_wiki_page_get_type_once ();
-		g_once_init_leave (&valadoc_wiki_page_type_id__volatile, valadoc_wiki_page_type_id);
+		g_once_init_leave (&valadoc_wiki_page_type_id__once, valadoc_wiki_page_type_id);
 	}
-	return valadoc_wiki_page_type_id__volatile;
+	return valadoc_wiki_page_type_id__once;
 }
 
 static void
@@ -496,7 +496,7 @@ valadoc_wiki_page_tree_get_pages (ValadocWikiPageTree* self)
 {
 	ValaArrayList* _tmp0_ = NULL;
 	ValaArrayList* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp1_ = self->priv->wikipages;
 	if (_tmp1_ == NULL) {
@@ -523,7 +523,7 @@ valadoc_wiki_page_tree_search (ValadocWikiPageTree* self,
                                const gchar* name)
 {
 	ValaArrayList* _tmp0_;
-	ValadocWikiPage* result = NULL;
+	ValadocWikiPage* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->wikipages;
@@ -896,12 +896,12 @@ valadoc_wiki_page_tree_get_type_once (void)
 GType
 valadoc_wiki_page_tree_get_type (void)
 {
-	static volatile gsize valadoc_wiki_page_tree_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_wiki_page_tree_type_id__volatile)) {
+	static volatile gsize valadoc_wiki_page_tree_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_wiki_page_tree_type_id__once)) {
 		GType valadoc_wiki_page_tree_type_id;
 		valadoc_wiki_page_tree_type_id = valadoc_wiki_page_tree_get_type_once ();
-		g_once_init_leave (&valadoc_wiki_page_tree_type_id__volatile, valadoc_wiki_page_tree_type_id);
+		g_once_init_leave (&valadoc_wiki_page_tree_type_id__once, valadoc_wiki_page_tree_type_id);
 	}
-	return valadoc_wiki_page_tree_type_id__volatile;
+	return valadoc_wiki_page_tree_type_id__once;
 }
 

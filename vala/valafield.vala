@@ -104,7 +104,7 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
-		if (get_attribute ("GtkChild") != null && variable_type.value_owned) {
+		if (has_attribute ("GtkChild") && variable_type.value_owned) {
 			Report.warning (source_reference, "[GtkChild] fields must be declared as `unowned'");
 			variable_type.value_owned = false;
 		}
@@ -120,7 +120,7 @@ public class Vala.Field : Variable, Lockable {
 		}
 
 		// check whether field type is at least as accessible as the field
-		if (!context.analyzer.is_type_accessible (this, variable_type)) {
+		if (!variable_type.is_accessible (this)) {
 			error = true;
 			Report.error (source_reference, "field type `%s' is less accessible than field `%s'", variable_type.to_string (), get_full_name ());
 			return false;

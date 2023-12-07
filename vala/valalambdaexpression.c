@@ -238,7 +238,7 @@ ValaList*
 vala_lambda_expression_get_parameters (ValaLambdaExpression* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->parameters;
 	result = _tmp0_;
@@ -305,7 +305,7 @@ static gboolean
 vala_lambda_expression_real_is_pure (ValaExpression* base)
 {
 	ValaLambdaExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaLambdaExpression*) base;
 	result = FALSE;
 	return result;
@@ -395,21 +395,19 @@ vala_lambda_expression_real_check (ValaCodeNode* base,
 	ValaMethod* _tmp249_;
 	ValaMethod* _tmp250_;
 	ValaMethod* _tmp251_;
-	ValaMethodType* _tmp252_;
-	ValaMethodType* _tmp253_;
-	ValaDataType* _tmp254_;
-	ValaDataType* _tmp255_;
-	ValaSourceReference* _tmp256_;
-	ValaSourceReference* _tmp257_;
+	ValaSourceReference* _tmp252_;
+	ValaSourceReference* _tmp253_;
+	ValaMethodType* _tmp254_;
+	ValaMethodType* _tmp255_;
+	ValaDataType* _tmp256_;
+	ValaDataType* _tmp257_;
 	ValaDataType* _tmp258_;
 	ValaDataType* _tmp259_;
-	ValaDataType* _tmp260_;
-	ValaDataType* _tmp261_;
+	gboolean _tmp260_;
+	gboolean _tmp261_;
 	gboolean _tmp262_;
 	gboolean _tmp263_;
-	gboolean _tmp264_;
-	gboolean _tmp265_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaLambdaExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -1048,25 +1046,22 @@ vala_lambda_expression_real_check (ValaCodeNode* base,
 	_tmp250_ = self->priv->_method;
 	vala_code_node_check ((ValaCodeNode*) _tmp250_, context);
 	_tmp251_ = self->priv->_method;
-	_tmp252_ = vala_method_type_new (_tmp251_);
+	_tmp252_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
 	_tmp253_ = _tmp252_;
-	vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp253_);
-	_vala_code_node_unref0 (_tmp253_);
-	_tmp254_ = vala_expression_get_value_type ((ValaExpression*) self);
+	_tmp254_ = vala_method_type_new (_tmp251_, _tmp253_);
 	_tmp255_ = _tmp254_;
-	_tmp256_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp255_);
+	_vala_code_node_unref0 (_tmp255_);
+	_tmp256_ = vala_expression_get_value_type ((ValaExpression*) self);
 	_tmp257_ = _tmp256_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _tmp255_, _tmp257_);
-	_tmp258_ = vala_expression_get_value_type ((ValaExpression*) self);
+	_tmp258_ = vala_expression_get_target_type ((ValaExpression*) self);
 	_tmp259_ = _tmp258_;
-	_tmp260_ = vala_expression_get_target_type ((ValaExpression*) self);
+	_tmp260_ = vala_data_type_get_value_owned (_tmp259_);
 	_tmp261_ = _tmp260_;
-	_tmp262_ = vala_data_type_get_value_owned (_tmp261_);
+	vala_data_type_set_value_owned (_tmp257_, _tmp261_);
+	_tmp262_ = vala_code_node_get_error ((ValaCodeNode*) self);
 	_tmp263_ = _tmp262_;
-	vala_data_type_set_value_owned (_tmp259_, _tmp263_);
-	_tmp264_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp265_ = _tmp264_;
-	result = !_tmp265_;
+	result = !_tmp263_;
 	_vala_iterable_unref0 (error_types);
 	_vala_iterator_unref0 (lambda_param_it);
 	_vala_iterable_unref0 (lambda_params);
@@ -1171,12 +1166,12 @@ vala_lambda_expression_get_type_once (void)
 GType
 vala_lambda_expression_get_type (void)
 {
-	static volatile gsize vala_lambda_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_lambda_expression_type_id__volatile)) {
+	static volatile gsize vala_lambda_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_lambda_expression_type_id__once)) {
 		GType vala_lambda_expression_type_id;
 		vala_lambda_expression_type_id = vala_lambda_expression_get_type_once ();
-		g_once_init_leave (&vala_lambda_expression_type_id__volatile, vala_lambda_expression_type_id);
+		g_once_init_leave (&vala_lambda_expression_type_id__once, vala_lambda_expression_type_id);
 	}
-	return vala_lambda_expression_type_id__volatile;
+	return vala_lambda_expression_type_id__once;
 }
 

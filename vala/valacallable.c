@@ -108,12 +108,12 @@ vala_callable_get_type_once (void)
 GType
 vala_callable_get_type (void)
 {
-	static volatile gsize vala_callable_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_callable_type_id__volatile)) {
+	static volatile gsize vala_callable_type_id__once = 0;
+	if (g_once_init_enter (&vala_callable_type_id__once)) {
 		GType vala_callable_type_id;
 		vala_callable_type_id = vala_callable_get_type_once ();
-		g_once_init_leave (&vala_callable_type_id__volatile, vala_callable_type_id);
+		g_once_init_leave (&vala_callable_type_id__once, vala_callable_type_id);
 	}
-	return vala_callable_type_id__volatile;
+	return vala_callable_type_id__once;
 }
 

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_var_type_parent_class = NULL;
 
@@ -57,7 +58,7 @@ vala_var_type_real_to_qualified_string (ValaDataType* base,
 {
 	ValaVarType * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaVarType*) base;
 	_tmp0_ = g_strdup ("var");
 	result = _tmp0_;
@@ -74,7 +75,9 @@ vala_var_type_real_copy (ValaDataType* base)
 	ValaVarType* _tmp2_;
 	gboolean _tmp3_;
 	gboolean _tmp4_;
-	ValaDataType* result = NULL;
+	gboolean _tmp5_;
+	gboolean _tmp6_;
+	ValaDataType* result;
 	self = (ValaVarType*) base;
 	_tmp0_ = vala_data_type_get_value_owned ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
@@ -83,6 +86,9 @@ vala_var_type_real_copy (ValaDataType* base)
 	_tmp3_ = vala_data_type_get_nullable ((ValaDataType*) self);
 	_tmp4_ = _tmp3_;
 	vala_data_type_set_nullable ((ValaDataType*) _result_, _tmp4_);
+	_tmp5_ = vala_data_type_get_is_dynamic ((ValaDataType*) self);
+	_tmp6_ = _tmp5_;
+	vala_data_type_set_is_dynamic ((ValaDataType*) _result_, _tmp6_);
 	result = (ValaDataType*) _result_;
 	return result;
 }
@@ -117,12 +123,12 @@ vala_var_type_get_type_once (void)
 GType
 vala_var_type_get_type (void)
 {
-	static volatile gsize vala_var_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_var_type_type_id__volatile)) {
+	static volatile gsize vala_var_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_var_type_type_id__once)) {
 		GType vala_var_type_type_id;
 		vala_var_type_type_id = vala_var_type_get_type_once ();
-		g_once_init_leave (&vala_var_type_type_id__volatile, vala_var_type_type_id);
+		g_once_init_leave (&vala_var_type_type_id__once, vala_var_type_type_id);
 	}
-	return vala_var_type_type_id__volatile;
+	return vala_var_type_type_id__once;
 }
 

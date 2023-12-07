@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 struct _ValaTraverseVisitorPrivate {
 	ValaTraverseFunc func;
@@ -75,6 +76,8 @@ static void vala_traverse_visitor_real_visit_destructor (ValaCodeVisitor* base,
                                                   ValaDestructor* d);
 static void vala_traverse_visitor_real_visit_block (ValaCodeVisitor* base,
                                              ValaBlock* b);
+static void vala_traverse_visitor_real_visit_data_type (ValaCodeVisitor* base,
+                                                 ValaDataType* data_type);
 static void vala_traverse_visitor_real_visit_declaration_statement (ValaCodeVisitor* base,
                                                              ValaDeclarationStatement* stmt);
 static void vala_traverse_visitor_real_visit_local_variable (ValaCodeVisitor* base,
@@ -520,6 +523,22 @@ vala_traverse_visitor_real_visit_block (ValaCodeVisitor* base,
 	_tmp0__target = self->priv->func_target;
 	if (_tmp0_ ((ValaCodeNode*) b, _tmp0__target) == VALA_TRAVERSE_STATUS_CONTINUE) {
 		vala_code_node_accept_children ((ValaCodeNode*) b, (ValaCodeVisitor*) self);
+	}
+}
+
+static void
+vala_traverse_visitor_real_visit_data_type (ValaCodeVisitor* base,
+                                            ValaDataType* data_type)
+{
+	ValaTraverseVisitor * self;
+	ValaTraverseFunc _tmp0_;
+	gpointer _tmp0__target;
+	self = (ValaTraverseVisitor*) base;
+	g_return_if_fail (data_type != NULL);
+	_tmp0_ = self->priv->func;
+	_tmp0__target = self->priv->func_target;
+	if (_tmp0_ ((ValaCodeNode*) data_type, _tmp0__target) == VALA_TRAVERSE_STATUS_CONTINUE) {
+		vala_code_node_accept_children ((ValaCodeNode*) data_type, (ValaCodeVisitor*) self);
 	}
 }
 
@@ -1190,6 +1209,7 @@ vala_traverse_visitor_class_init (ValaTraverseVisitorClass * klass,
 	((ValaCodeVisitorClass *) klass)->visit_constructor = (void (*) (ValaCodeVisitor*, ValaConstructor*)) vala_traverse_visitor_real_visit_constructor;
 	((ValaCodeVisitorClass *) klass)->visit_destructor = (void (*) (ValaCodeVisitor*, ValaDestructor*)) vala_traverse_visitor_real_visit_destructor;
 	((ValaCodeVisitorClass *) klass)->visit_block = (void (*) (ValaCodeVisitor*, ValaBlock*)) vala_traverse_visitor_real_visit_block;
+	((ValaCodeVisitorClass *) klass)->visit_data_type = (void (*) (ValaCodeVisitor*, ValaDataType*)) vala_traverse_visitor_real_visit_data_type;
 	((ValaCodeVisitorClass *) klass)->visit_declaration_statement = (void (*) (ValaCodeVisitor*, ValaDeclarationStatement*)) vala_traverse_visitor_real_visit_declaration_statement;
 	((ValaCodeVisitorClass *) klass)->visit_local_variable = (void (*) (ValaCodeVisitor*, ValaLocalVariable*)) vala_traverse_visitor_real_visit_local_variable;
 	((ValaCodeVisitorClass *) klass)->visit_initializer_list = (void (*) (ValaCodeVisitor*, ValaInitializerList*)) vala_traverse_visitor_real_visit_initializer_list;
@@ -1267,13 +1287,13 @@ vala_traverse_visitor_get_type_once (void)
 GType
 vala_traverse_visitor_get_type (void)
 {
-	static volatile gsize vala_traverse_visitor_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_traverse_visitor_type_id__volatile)) {
+	static volatile gsize vala_traverse_visitor_type_id__once = 0;
+	if (g_once_init_enter (&vala_traverse_visitor_type_id__once)) {
 		GType vala_traverse_visitor_type_id;
 		vala_traverse_visitor_type_id = vala_traverse_visitor_get_type_once ();
-		g_once_init_leave (&vala_traverse_visitor_type_id__volatile, vala_traverse_visitor_type_id);
+		g_once_init_leave (&vala_traverse_visitor_type_id__once, vala_traverse_visitor_type_id);
 	}
-	return vala_traverse_visitor_type_id__volatile;
+	return vala_traverse_visitor_type_id__once;
 }
 
 static GType
@@ -1288,12 +1308,12 @@ vala_traverse_status_get_type_once (void)
 GType
 vala_traverse_status_get_type (void)
 {
-	static volatile gsize vala_traverse_status_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_traverse_status_type_id__volatile)) {
+	static volatile gsize vala_traverse_status_type_id__once = 0;
+	if (g_once_init_enter (&vala_traverse_status_type_id__once)) {
 		GType vala_traverse_status_type_id;
 		vala_traverse_status_type_id = vala_traverse_status_get_type_once ();
-		g_once_init_leave (&vala_traverse_status_type_id__volatile, vala_traverse_status_type_id);
+		g_once_init_leave (&vala_traverse_status_type_id__once, vala_traverse_status_type_id);
 	}
-	return vala_traverse_status_type_id__volatile;
+	return vala_traverse_status_type_id__once;
 }
 

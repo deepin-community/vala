@@ -644,7 +644,7 @@ valadoc_documentation_parser_parse (ValadocDocumentationParser* self,
                                     ValadocApiNode* element,
                                     ValadocApiSourceComment* comment)
 {
-	ValadocContentComment* result = NULL;
+	ValadocContentComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (comment != NULL, NULL);
@@ -742,7 +742,7 @@ valadoc_documentation_parser_parse_comment_str (ValadocDocumentationParser* self
                                                 gint first_column)
 {
 	GError* _inner_error0_ = NULL;
-	ValadocContentComment* result = NULL;
+	ValadocContentComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (content != NULL, NULL);
@@ -786,7 +786,7 @@ valadoc_documentation_parser_parse_wikipage (ValadocDocumentationParser* self,
 	const gchar* _tmp5_;
 	const gchar* _tmp6_;
 	GError* _inner_error0_ = NULL;
-	ValadocContentPage* result = NULL;
+	ValadocContentPage* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (pkg != NULL, NULL);
 	g_return_val_if_fail (page != NULL, NULL);
@@ -870,7 +870,7 @@ valadoc_documentation_parser_parse_comment (ValadocDocumentationParser* self,
 	ValadocParser* _tmp5_;
 	GObject* _tmp6_;
 	GError* _inner_error0_ = NULL;
-	ValadocContentComment* result = NULL;
+	ValadocContentComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (content != NULL, NULL);
 	g_return_val_if_fail (filename != NULL, NULL);
@@ -915,7 +915,7 @@ valadoc_documentation_parser_parse_wiki (ValadocDocumentationParser* self,
 	ValadocParser* _tmp5_;
 	GObject* _tmp6_;
 	GError* _inner_error0_ = NULL;
-	ValadocContentPage* result = NULL;
+	ValadocContentPage* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (content != NULL, NULL);
 	g_return_val_if_fail (filename != NULL, NULL);
@@ -1082,7 +1082,7 @@ valadoc_documentation_parser_get_metadata_for_comment (ValadocDocumentationParse
 	ValadocApiSourceFile* _tmp25_;
 	ValadocApiSourceFile* _tmp26_;
 	ValadocGirMetaData* _tmp27_;
-	ValadocGirMetaData* result = NULL;
+	ValadocGirMetaData* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (gir_comment != NULL, NULL);
 	_tmp0_ = self->priv->metadata;
@@ -1143,7 +1143,7 @@ valadoc_documentation_parser_real_resolve (ValadocResourceLocator* base,
 {
 	ValadocDocumentationParser * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocDocumentationParser*) base;
 	g_return_val_if_fail (path != NULL, NULL);
 	_tmp0_ = g_strdup (path);
@@ -1174,7 +1174,7 @@ valadoc_documentation_parser_peek (ValadocDocumentationParser* self,
 	gint _tmp5_;
 	gint _tmp6_;
 	gpointer _tmp7_;
-	GObject* result = NULL;
+	GObject* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_stack;
 	_tmp1_ = vala_collection_get_size ((ValaCollection*) _tmp0_);
@@ -1200,7 +1200,7 @@ valadoc_documentation_parser_pop (ValadocDocumentationParser* self)
 	gint _tmp4_;
 	gpointer _tmp5_;
 	GObject* _tmp6_;
-	GObject* result = NULL;
+	GObject* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_documentation_parser_peek (self, -1);
 	node = _tmp0_;
@@ -1499,7 +1499,7 @@ valadoc_documentation_parser_bullet_type_string (ValadocDocumentationParser* sel
                                                  ValadocContentListBullet bullet)
 {
 	gchar* _tmp8_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	switch (bullet) {
 		case VALADOC_CONTENT_LIST_BULLET_NONE:
@@ -6210,13 +6210,13 @@ valadoc_documentation_parser_get_type_once (void)
 GType
 valadoc_documentation_parser_get_type (void)
 {
-	static volatile gsize valadoc_documentation_parser_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_documentation_parser_type_id__volatile)) {
+	static volatile gsize valadoc_documentation_parser_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_documentation_parser_type_id__once)) {
 		GType valadoc_documentation_parser_type_id;
 		valadoc_documentation_parser_type_id = valadoc_documentation_parser_get_type_once ();
-		g_once_init_leave (&valadoc_documentation_parser_type_id__volatile, valadoc_documentation_parser_type_id);
+		g_once_init_leave (&valadoc_documentation_parser_type_id__once, valadoc_documentation_parser_type_id);
 	}
-	return valadoc_documentation_parser_type_id__volatile;
+	return valadoc_documentation_parser_type_id__once;
 }
 
 static void

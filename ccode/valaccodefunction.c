@@ -260,7 +260,7 @@ vala_ccode_function_get_parameter_count (ValaCCodeFunction* self)
 	ValaList* _tmp0_;
 	gint _tmp1_;
 	gint _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->parameters;
 	_tmp1_ = vala_collection_get_size ((ValaCollection*) _tmp0_);
@@ -275,7 +275,7 @@ vala_ccode_function_get_parameter (ValaCCodeFunction* self,
 {
 	ValaList* _tmp0_;
 	gpointer _tmp1_;
-	ValaCCodeParameter* result = NULL;
+	ValaCCodeParameter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->parameters;
 	_tmp1_ = vala_list_get (_tmp0_, position);
@@ -302,7 +302,7 @@ vala_ccode_function_copy (ValaCCodeFunction* self)
 	gboolean _tmp18_;
 	ValaCCodeFunction* _tmp19_;
 	ValaCCodeBlock* _tmp20_;
-	ValaCCodeFunction* result = NULL;
+	ValaCCodeFunction* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_name;
 	_tmp1_ = self->priv->_return_type;
@@ -1203,12 +1203,12 @@ vala_ccode_function_get_type_once (void)
 GType
 vala_ccode_function_get_type (void)
 {
-	static volatile gsize vala_ccode_function_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_function_type_id__volatile)) {
+	static volatile gsize vala_ccode_function_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_function_type_id__once)) {
 		GType vala_ccode_function_type_id;
 		vala_ccode_function_type_id = vala_ccode_function_get_type_once ();
-		g_once_init_leave (&vala_ccode_function_type_id__volatile, vala_ccode_function_type_id);
+		g_once_init_leave (&vala_ccode_function_type_id__once, vala_ccode_function_type_id);
 	}
-	return vala_ccode_function_type_id__volatile;
+	return vala_ccode_function_type_id__once;
 }
 

@@ -165,7 +165,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -317,7 +317,7 @@ valadoc_token_to_string (ValadocToken* self)
 {
 	const gchar* _tmp0_ = NULL;
 	const gchar* _tmp1_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp1_ = self->priv->_word;
 	if (_tmp1_ == NULL) {
@@ -340,7 +340,7 @@ valadoc_token_to_pretty_string (ValadocToken* self)
 {
 	const gchar* _tmp0_ = NULL;
 	const gchar* _tmp1_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp1_ = self->priv->_word;
 	if (_tmp1_ == NULL) {
@@ -364,7 +364,7 @@ valadoc_token_to_int (ValadocToken* self)
 	gboolean _tmp0_;
 	gboolean _tmp1_;
 	const gchar* _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = valadoc_token_get_is_number (self);
 	_tmp1_ = _tmp0_;
@@ -438,13 +438,13 @@ valadoc_token_get_type_once (void)
 GType
 valadoc_token_get_type (void)
 {
-	static volatile gsize valadoc_token_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_token_type_id__volatile)) {
+	static volatile gsize valadoc_token_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_token_type_id__once)) {
 		GType valadoc_token_type_id;
 		valadoc_token_type_id = valadoc_token_get_type_once ();
-		g_once_init_leave (&valadoc_token_type_id__volatile, valadoc_token_type_id);
+		g_once_init_leave (&valadoc_token_type_id__once, valadoc_token_type_id);
 	}
-	return valadoc_token_type_id__volatile;
+	return valadoc_token_type_id__once;
 }
 
 static void

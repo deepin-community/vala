@@ -150,7 +150,7 @@ ValaList*
 vala_namespace_get_comments (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->comments;
 	result = _tmp0_;
@@ -715,20 +715,18 @@ vala_namespace_real_add_namespace (ValaSymbol* base,
 					ValaAttribute* _tmp150_;
 					const gchar* _tmp151_;
 					const gchar* _tmp152_;
-					ValaAttribute* _tmp153_;
 					_tmp149_ = old_ns;
 					_tmp150_ = a;
 					_tmp151_ = vala_attribute_get_name (_tmp150_);
 					_tmp152_ = _tmp151_;
-					_tmp153_ = vala_code_node_get_attribute ((ValaCodeNode*) _tmp149_, _tmp152_);
-					if (_tmp153_ == NULL) {
-						ValaNamespace* _tmp154_;
+					if (!vala_code_node_has_attribute ((ValaCodeNode*) _tmp149_, _tmp152_)) {
+						ValaNamespace* _tmp153_;
+						ValaAttribute* _tmp154_;
 						ValaAttribute* _tmp155_;
-						ValaAttribute* _tmp156_;
-						_tmp154_ = old_ns;
-						_tmp155_ = a;
-						_tmp156_ = _vala_code_node_ref0 (_tmp155_);
-						((ValaCodeNode*) _tmp154_)->attributes = g_list_append (((ValaCodeNode*) _tmp154_)->attributes, _tmp156_);
+						_tmp153_ = old_ns;
+						_tmp154_ = a;
+						_tmp155_ = _vala_code_node_ref0 (_tmp154_);
+						((ValaCodeNode*) _tmp153_)->attributes = g_list_append (((ValaCodeNode*) _tmp153_)->attributes, _tmp155_);
 					}
 					_vala_code_node_unref0 (a);
 				}
@@ -736,18 +734,18 @@ vala_namespace_real_add_namespace (ValaSymbol* base,
 		}
 		_vala_code_node_unref0 (old_ns);
 	} else {
-		ValaList* _tmp157_;
+		ValaList* _tmp156_;
+		ValaScope* _tmp157_;
 		ValaScope* _tmp158_;
-		ValaScope* _tmp159_;
+		const gchar* _tmp159_;
 		const gchar* _tmp160_;
-		const gchar* _tmp161_;
-		_tmp157_ = self->priv->namespaces;
-		vala_collection_add ((ValaCollection*) _tmp157_, ns);
-		_tmp158_ = vala_symbol_get_scope ((ValaSymbol*) self);
-		_tmp159_ = _tmp158_;
-		_tmp160_ = vala_symbol_get_name ((ValaSymbol*) ns);
-		_tmp161_ = _tmp160_;
-		vala_scope_add (_tmp159_, _tmp161_, (ValaSymbol*) ns);
+		_tmp156_ = self->priv->namespaces;
+		vala_collection_add ((ValaCollection*) _tmp156_, ns);
+		_tmp157_ = vala_symbol_get_scope ((ValaSymbol*) self);
+		_tmp158_ = _tmp157_;
+		_tmp159_ = vala_symbol_get_name ((ValaSymbol*) ns);
+		_tmp160_ = _tmp159_;
+		vala_scope_add (_tmp158_, _tmp160_, (ValaSymbol*) ns);
 	}
 }
 
@@ -760,7 +758,7 @@ ValaList*
 vala_namespace_get_namespaces (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->namespaces;
 	result = _tmp0_;
@@ -1064,7 +1062,7 @@ ValaList*
 vala_namespace_get_structs (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->structs;
 	result = _tmp0_;
@@ -1080,7 +1078,7 @@ ValaList*
 vala_namespace_get_classes (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->classes;
 	result = _tmp0_;
@@ -1096,7 +1094,7 @@ ValaList*
 vala_namespace_get_interfaces (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->interfaces;
 	result = _tmp0_;
@@ -1112,7 +1110,7 @@ ValaList*
 vala_namespace_get_enums (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->enums;
 	result = _tmp0_;
@@ -1128,7 +1126,7 @@ ValaList*
 vala_namespace_get_error_domains (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->error_domains;
 	result = _tmp0_;
@@ -1144,7 +1142,7 @@ ValaList*
 vala_namespace_get_fields (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->fields;
 	result = _tmp0_;
@@ -1160,7 +1158,7 @@ ValaList*
 vala_namespace_get_constants (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->constants;
 	result = _tmp0_;
@@ -1176,7 +1174,7 @@ ValaList*
 vala_namespace_get_delegates (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->delegates;
 	result = _tmp0_;
@@ -1192,7 +1190,7 @@ ValaList*
 vala_namespace_get_methods (ValaNamespace* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->methods;
 	result = _tmp0_;
@@ -1816,7 +1814,7 @@ vala_namespace_real_check (ValaCodeNode* base,
 	ValaAttribute* _tmp32_;
 	gboolean _tmp99_;
 	gboolean _tmp100_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNamespace*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -2135,7 +2133,7 @@ vala_namespace_real_to_string (ValaCodeNode* base)
 	ValaNamespace * self;
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaNamespace*) base;
 	_tmp0_ = vala_symbol_get_name ((ValaSymbol*) self);
 	_tmp1_ = _tmp0_;
@@ -2282,12 +2280,12 @@ vala_namespace_get_type_once (void)
 GType
 vala_namespace_get_type (void)
 {
-	static volatile gsize vala_namespace_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_namespace_type_id__volatile)) {
+	static volatile gsize vala_namespace_type_id__once = 0;
+	if (g_once_init_enter (&vala_namespace_type_id__once)) {
 		GType vala_namespace_type_id;
 		vala_namespace_type_id = vala_namespace_get_type_once ();
-		g_once_init_leave (&vala_namespace_type_id__volatile, vala_namespace_type_id);
+		g_once_init_leave (&vala_namespace_type_id__once, vala_namespace_type_id);
 	}
-	return vala_namespace_type_id__volatile;
+	return vala_namespace_type_id__once;
 }
 

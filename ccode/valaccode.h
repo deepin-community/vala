@@ -113,6 +113,17 @@ typedef enum  {
 
 #define VALA_TYPE_CCODE_BINARY_OPERATOR (vala_ccode_binary_operator_get_type ())
 
+#define VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION (vala_ccode_binary_compare_expression_get_type ())
+#define VALA_CCODE_BINARY_COMPARE_EXPRESSION(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION, ValaCCodeBinaryCompareExpression))
+#define VALA_CCODE_BINARY_COMPARE_EXPRESSION_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION, ValaCCodeBinaryCompareExpressionClass))
+#define VALA_IS_CCODE_BINARY_COMPARE_EXPRESSION(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION))
+#define VALA_IS_CCODE_BINARY_COMPARE_EXPRESSION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION))
+#define VALA_CCODE_BINARY_COMPARE_EXPRESSION_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_CCODE_BINARY_COMPARE_EXPRESSION, ValaCCodeBinaryCompareExpressionClass))
+
+typedef struct _ValaCCodeBinaryCompareExpression ValaCCodeBinaryCompareExpression;
+typedef struct _ValaCCodeBinaryCompareExpressionClass ValaCCodeBinaryCompareExpressionClass;
+typedef struct _ValaCCodeBinaryCompareExpressionPrivate ValaCCodeBinaryCompareExpressionPrivate;
+
 #define VALA_TYPE_CCODE_STATEMENT (vala_ccode_statement_get_type ())
 #define VALA_CCODE_STATEMENT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_STATEMENT, ValaCCodeStatement))
 #define VALA_CCODE_STATEMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_STATEMENT, ValaCCodeStatementClass))
@@ -211,6 +222,28 @@ typedef struct _ValaCCodeConditionalExpressionPrivate ValaCCodeConditionalExpres
 typedef struct _ValaCCodeConstant ValaCCodeConstant;
 typedef struct _ValaCCodeConstantClass ValaCCodeConstantClass;
 typedef struct _ValaCCodeConstantPrivate ValaCCodeConstantPrivate;
+
+#define VALA_TYPE_CCODE_IDENTIFIER (vala_ccode_identifier_get_type ())
+#define VALA_CCODE_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifier))
+#define VALA_CCODE_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifierClass))
+#define VALA_IS_CCODE_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_CCODE_IDENTIFIER))
+#define VALA_IS_CCODE_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_CCODE_IDENTIFIER))
+#define VALA_CCODE_IDENTIFIER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifierClass))
+
+typedef struct _ValaCCodeIdentifier ValaCCodeIdentifier;
+typedef struct _ValaCCodeIdentifierClass ValaCCodeIdentifierClass;
+typedef struct _ValaCCodeIdentifierPrivate ValaCCodeIdentifierPrivate;
+
+#define VALA_TYPE_CCODE_CONSTANT_IDENTIFIER (vala_ccode_constant_identifier_get_type ())
+#define VALA_CCODE_CONSTANT_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_CONSTANT_IDENTIFIER, ValaCCodeConstantIdentifier))
+#define VALA_CCODE_CONSTANT_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_CONSTANT_IDENTIFIER, ValaCCodeConstantIdentifierClass))
+#define VALA_IS_CCODE_CONSTANT_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_CCODE_CONSTANT_IDENTIFIER))
+#define VALA_IS_CCODE_CONSTANT_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_CCODE_CONSTANT_IDENTIFIER))
+#define VALA_CCODE_CONSTANT_IDENTIFIER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_CCODE_CONSTANT_IDENTIFIER, ValaCCodeConstantIdentifierClass))
+
+typedef struct _ValaCCodeConstantIdentifier ValaCCodeConstantIdentifier;
+typedef struct _ValaCCodeConstantIdentifierClass ValaCCodeConstantIdentifierClass;
+typedef struct _ValaCCodeConstantIdentifierPrivate ValaCCodeConstantIdentifierPrivate;
 
 #define VALA_TYPE_CCODE_CONTINUE_STATEMENT (vala_ccode_continue_statement_get_type ())
 #define VALA_CCODE_CONTINUE_STATEMENT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_CONTINUE_STATEMENT, ValaCCodeContinueStatement))
@@ -452,17 +485,6 @@ typedef enum  {
 typedef struct _ValaCCodeGotoStatement ValaCCodeGotoStatement;
 typedef struct _ValaCCodeGotoStatementClass ValaCCodeGotoStatementClass;
 typedef struct _ValaCCodeGotoStatementPrivate ValaCCodeGotoStatementPrivate;
-
-#define VALA_TYPE_CCODE_IDENTIFIER (vala_ccode_identifier_get_type ())
-#define VALA_CCODE_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifier))
-#define VALA_CCODE_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifierClass))
-#define VALA_IS_CCODE_IDENTIFIER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_CCODE_IDENTIFIER))
-#define VALA_IS_CCODE_IDENTIFIER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_CCODE_IDENTIFIER))
-#define VALA_CCODE_IDENTIFIER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_CCODE_IDENTIFIER, ValaCCodeIdentifierClass))
-
-typedef struct _ValaCCodeIdentifier ValaCCodeIdentifier;
-typedef struct _ValaCCodeIdentifierClass ValaCCodeIdentifierClass;
-typedef struct _ValaCCodeIdentifierPrivate ValaCCodeIdentifierPrivate;
 
 #define VALA_TYPE_CCODE_IF_STATEMENT (vala_ccode_if_statement_get_type ())
 #define VALA_CCODE_IF_STATEMENT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_IF_STATEMENT, ValaCCodeIfStatement))
@@ -743,6 +765,15 @@ struct _ValaCCodeBinaryExpressionClass {
 	ValaCCodeExpressionClass parent_class;
 };
 
+struct _ValaCCodeBinaryCompareExpression {
+	ValaCCodeBinaryExpression parent_instance;
+	ValaCCodeBinaryCompareExpressionPrivate * priv;
+};
+
+struct _ValaCCodeBinaryCompareExpressionClass {
+	ValaCCodeBinaryExpressionClass parent_class;
+};
+
 struct _ValaCCodeStatement {
 	ValaCCodeNode parent_instance;
 	ValaCCodeStatementPrivate * priv;
@@ -822,6 +853,24 @@ struct _ValaCCodeConstant {
 
 struct _ValaCCodeConstantClass {
 	ValaCCodeExpressionClass parent_class;
+};
+
+struct _ValaCCodeIdentifier {
+	ValaCCodeExpression parent_instance;
+	ValaCCodeIdentifierPrivate * priv;
+};
+
+struct _ValaCCodeIdentifierClass {
+	ValaCCodeExpressionClass parent_class;
+};
+
+struct _ValaCCodeConstantIdentifier {
+	ValaCCodeIdentifier parent_instance;
+	ValaCCodeConstantIdentifierPrivate * priv;
+};
+
+struct _ValaCCodeConstantIdentifierClass {
+	ValaCCodeIdentifierClass parent_class;
 };
 
 struct _ValaCCodeContinueStatement {
@@ -978,15 +1027,6 @@ struct _ValaCCodeGotoStatement {
 
 struct _ValaCCodeGotoStatementClass {
 	ValaCCodeStatementClass parent_class;
-};
-
-struct _ValaCCodeIdentifier {
-	ValaCCodeExpression parent_instance;
-	ValaCCodeIdentifierPrivate * priv;
-};
-
-struct _ValaCCodeIdentifierClass {
-	ValaCCodeExpressionClass parent_class;
 };
 
 struct _ValaCCodeIfStatement {
@@ -1277,6 +1317,25 @@ VALA_EXTERN ValaCCodeBinaryExpression* vala_ccode_binary_expression_construct (G
                                                                    ValaCCodeBinaryOperator op,
                                                                    ValaCCodeExpression* l,
                                                                    ValaCCodeExpression* r);
+VALA_EXTERN GType vala_ccode_binary_compare_expression_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeBinaryCompareExpression, vala_ccode_node_unref)
+VALA_EXTERN ValaCCodeExpression* vala_ccode_binary_compare_expression_get_call (ValaCCodeBinaryCompareExpression* self);
+VALA_EXTERN void vala_ccode_binary_compare_expression_set_call (ValaCCodeBinaryCompareExpression* self,
+                                                    ValaCCodeExpression* value);
+VALA_EXTERN ValaCCodeExpression* vala_ccode_binary_compare_expression_get_result (ValaCCodeBinaryCompareExpression* self);
+VALA_EXTERN void vala_ccode_binary_compare_expression_set_result (ValaCCodeBinaryCompareExpression* self,
+                                                      ValaCCodeExpression* value);
+VALA_EXTERN ValaCCodeBinaryCompareExpression* vala_ccode_binary_compare_expression_new (ValaCCodeExpression* cmp,
+                                                                            ValaCCodeBinaryOperator op,
+                                                                            ValaCCodeExpression* l,
+                                                                            ValaCCodeExpression* r,
+                                                                            ValaCCodeExpression* res);
+VALA_EXTERN ValaCCodeBinaryCompareExpression* vala_ccode_binary_compare_expression_construct (GType object_type,
+                                                                                  ValaCCodeExpression* cmp,
+                                                                                  ValaCCodeBinaryOperator op,
+                                                                                  ValaCCodeExpression* l,
+                                                                                  ValaCCodeExpression* r,
+                                                                                  ValaCCodeExpression* res);
 VALA_EXTERN GType vala_ccode_statement_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeStatement, vala_ccode_node_unref)
 VALA_EXTERN GType vala_ccode_block_get_type (void) G_GNUC_CONST ;
@@ -1362,6 +1421,13 @@ VALA_EXTERN ValaCCodeConstant* vala_ccode_constant_construct (GType object_type,
 VALA_EXTERN ValaCCodeConstant* vala_ccode_constant_new_string (const gchar* _name);
 VALA_EXTERN ValaCCodeConstant* vala_ccode_constant_construct_string (GType object_type,
                                                          const gchar* _name);
+VALA_EXTERN GType vala_ccode_identifier_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeIdentifier, vala_ccode_node_unref)
+VALA_EXTERN GType vala_ccode_constant_identifier_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeConstantIdentifier, vala_ccode_node_unref)
+VALA_EXTERN ValaCCodeConstantIdentifier* vala_ccode_constant_identifier_new (const gchar* name);
+VALA_EXTERN ValaCCodeConstantIdentifier* vala_ccode_constant_identifier_construct (GType object_type,
+                                                                       const gchar* name);
 VALA_EXTERN GType vala_ccode_continue_statement_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeContinueStatement, vala_ccode_node_unref)
 VALA_EXTERN ValaCCodeContinueStatement* vala_ccode_continue_statement_new (void);
@@ -1651,8 +1717,6 @@ VALA_EXTERN void vala_ccode_goto_statement_set_name (ValaCCodeGotoStatement* sel
 VALA_EXTERN ValaCCodeGotoStatement* vala_ccode_goto_statement_new (const gchar* name);
 VALA_EXTERN ValaCCodeGotoStatement* vala_ccode_goto_statement_construct (GType object_type,
                                                              const gchar* name);
-VALA_EXTERN GType vala_ccode_identifier_get_type (void) G_GNUC_CONST ;
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeIdentifier, vala_ccode_node_unref)
 VALA_EXTERN const gchar* vala_ccode_identifier_get_name (ValaCCodeIdentifier* self);
 VALA_EXTERN void vala_ccode_identifier_set_name (ValaCCodeIdentifier* self,
                                      const gchar* value);
@@ -1808,6 +1872,11 @@ VALA_EXTERN ValaCCodeParameter* vala_ccode_parameter_construct (GType object_typ
                                                     const gchar* type);
 VALA_EXTERN ValaCCodeParameter* vala_ccode_parameter_new_with_ellipsis (void);
 VALA_EXTERN ValaCCodeParameter* vala_ccode_parameter_construct_with_ellipsis (GType object_type);
+VALA_EXTERN ValaCCodeParameter* vala_ccode_parameter_new_with_declarator (const gchar* type,
+                                                              ValaCCodeDeclarator* decl);
+VALA_EXTERN ValaCCodeParameter* vala_ccode_parameter_construct_with_declarator (GType object_type,
+                                                                    const gchar* type,
+                                                                    ValaCCodeDeclarator* decl);
 VALA_EXTERN GType vala_ccode_parenthesized_expression_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeParenthesizedExpression, vala_ccode_node_unref)
 VALA_EXTERN ValaCCodeExpression* vala_ccode_parenthesized_expression_get_inner (ValaCCodeParenthesizedExpression* self);

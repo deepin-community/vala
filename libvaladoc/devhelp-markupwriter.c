@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <stdio.h>
 
 typedef struct _Block2Data Block2Data;
@@ -125,7 +126,7 @@ valadoc_devhelp_markup_writer_real_inline_element (ValadocMarkupWriter* base,
                                                    const gchar* name)
 {
 	ValadocDevhelpMarkupWriter * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocDevhelpMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	result = g_strcmp0 (name, "book") != 0;
@@ -138,7 +139,7 @@ valadoc_devhelp_markup_writer_real_content_inline_element (ValadocMarkupWriter* 
 {
 	ValadocDevhelpMarkupWriter * self;
 	gboolean _tmp0_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocDevhelpMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	if (g_strcmp0 (name, "keyword") == 0) {
@@ -176,7 +177,7 @@ valadoc_devhelp_markup_writer_start_book (ValadocDevhelpMarkupWriter* self,
 	gchar** _tmp14_;
 	gchar** _tmp15_;
 	gint _tmp15__length1;
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (title != NULL, NULL);
 	g_return_val_if_fail (lang != NULL, NULL);
@@ -224,7 +225,7 @@ valadoc_devhelp_markup_writer_start_book (ValadocDevhelpMarkupWriter* self,
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_end_book (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_end_tag ((ValadocMarkupWriter*) self, "book");
 	result = self;
@@ -234,7 +235,7 @@ valadoc_devhelp_markup_writer_end_book (ValadocDevhelpMarkupWriter* self)
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_start_functions (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_start_tag ((ValadocMarkupWriter*) self, "functions", NULL, (gint) 0);
 	result = self;
@@ -244,7 +245,7 @@ valadoc_devhelp_markup_writer_start_functions (ValadocDevhelpMarkupWriter* self)
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_end_functions (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_end_tag ((ValadocMarkupWriter*) self, "functions");
 	result = self;
@@ -254,7 +255,7 @@ valadoc_devhelp_markup_writer_end_functions (ValadocDevhelpMarkupWriter* self)
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_start_chapters (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_start_tag ((ValadocMarkupWriter*) self, "chapters", NULL, (gint) 0);
 	result = self;
@@ -264,7 +265,7 @@ valadoc_devhelp_markup_writer_start_chapters (ValadocDevhelpMarkupWriter* self)
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_end_chapters (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_end_tag ((ValadocMarkupWriter*) self, "chapters");
 	result = self;
@@ -283,7 +284,7 @@ valadoc_devhelp_markup_writer_start_sub (ValadocDevhelpMarkupWriter* self,
 	gchar** _tmp4_;
 	gchar** _tmp5_;
 	gint _tmp5__length1;
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	g_return_val_if_fail (link != NULL, NULL);
@@ -307,7 +308,7 @@ valadoc_devhelp_markup_writer_start_sub (ValadocDevhelpMarkupWriter* self,
 ValadocDevhelpMarkupWriter*
 valadoc_devhelp_markup_writer_end_sub (ValadocDevhelpMarkupWriter* self)
 {
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	valadoc_markup_writer_end_tag ((ValadocMarkupWriter*) self, "sub");
 	result = self;
@@ -329,7 +330,7 @@ valadoc_devhelp_markup_writer_keyword (ValadocDevhelpMarkupWriter* self,
 	gchar** _tmp6_;
 	gchar** _tmp7_;
 	gint _tmp7__length1;
-	ValadocDevhelpMarkupWriter* result = NULL;
+	ValadocDevhelpMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	g_return_val_if_fail (type != NULL, NULL);
@@ -383,13 +384,13 @@ valadoc_devhelp_markup_writer_get_type_once (void)
 GType
 valadoc_devhelp_markup_writer_get_type (void)
 {
-	static volatile gsize valadoc_devhelp_markup_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_devhelp_markup_writer_type_id__volatile)) {
+	static volatile gsize valadoc_devhelp_markup_writer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_devhelp_markup_writer_type_id__once)) {
 		GType valadoc_devhelp_markup_writer_type_id;
 		valadoc_devhelp_markup_writer_type_id = valadoc_devhelp_markup_writer_get_type_once ();
-		g_once_init_leave (&valadoc_devhelp_markup_writer_type_id__volatile, valadoc_devhelp_markup_writer_type_id);
+		g_once_init_leave (&valadoc_devhelp_markup_writer_type_id__once, valadoc_devhelp_markup_writer_type_id);
 	}
-	return valadoc_devhelp_markup_writer_type_id__volatile;
+	return valadoc_devhelp_markup_writer_type_id__once;
 }
 
 static void

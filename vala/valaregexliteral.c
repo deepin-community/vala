@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
@@ -124,7 +125,7 @@ static gboolean
 vala_regex_literal_real_is_pure (ValaExpression* base)
 {
 	ValaRegexLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaRegexLiteral*) base;
 	result = TRUE;
 	return result;
@@ -134,7 +135,7 @@ static gboolean
 vala_regex_literal_real_is_non_null (ValaExpression* base)
 {
 	ValaRegexLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaRegexLiteral*) base;
 	result = TRUE;
 	return result;
@@ -146,7 +147,7 @@ vala_regex_literal_real_to_string (ValaCodeNode* base)
 	ValaRegexLiteral * self;
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaRegexLiteral*) base;
 	_tmp0_ = self->priv->_value;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -169,7 +170,7 @@ vala_regex_literal_real_check (ValaCodeNode* base,
 	gboolean _tmp17_;
 	gboolean _tmp18_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaRegexLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -298,12 +299,12 @@ vala_regex_literal_get_type_once (void)
 GType
 vala_regex_literal_get_type (void)
 {
-	static volatile gsize vala_regex_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_regex_literal_type_id__volatile)) {
+	static volatile gsize vala_regex_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_regex_literal_type_id__once)) {
 		GType vala_regex_literal_type_id;
 		vala_regex_literal_type_id = vala_regex_literal_get_type_once ();
-		g_once_init_leave (&vala_regex_literal_type_id__volatile, vala_regex_literal_type_id);
+		g_once_init_leave (&vala_regex_literal_type_id__once, vala_regex_literal_type_id);
 	}
-	return vala_regex_literal_type_id__volatile;
+	return vala_regex_literal_type_id__once;
 }
 

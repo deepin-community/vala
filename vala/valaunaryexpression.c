@@ -85,10 +85,8 @@ ValaUnaryOperator
 vala_unary_expression_get_operator (ValaUnaryExpression* self)
 {
 	ValaUnaryOperator result;
-	ValaUnaryOperator _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_operator;
-	result = _tmp0_;
+	result = self->priv->_operator;
 	return result;
 }
 
@@ -216,7 +214,7 @@ vala_unary_expression_real_to_string (ValaCodeNode* base)
 	gchar* _tmp4_;
 	gchar* _tmp5_;
 	gchar* _tmp6_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaUnaryExpression*) base;
 	_tmp0_ = self->priv->_operator;
 	_tmp1_ = vala_unary_operator_to_string (_tmp0_);
@@ -240,7 +238,7 @@ vala_unary_expression_real_is_constant (ValaExpression* base)
 	ValaUnaryOperator _tmp4_;
 	ValaExpression* _tmp15_;
 	ValaExpression* _tmp16_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaUnaryExpression*) base;
 	_tmp1_ = self->priv->_operator;
 	if (_tmp1_ == VALA_UNARY_OPERATOR_INCREMENT) {
@@ -309,7 +307,7 @@ vala_unary_expression_real_is_pure (ValaExpression* base)
 	ValaUnaryOperator _tmp1_;
 	ValaExpression* _tmp3_;
 	ValaExpression* _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaUnaryExpression*) base;
 	_tmp1_ = self->priv->_operator;
 	if (_tmp1_ == VALA_UNARY_OPERATOR_INCREMENT) {
@@ -336,7 +334,7 @@ vala_unary_expression_real_is_accessible (ValaExpression* base,
 	ValaUnaryExpression * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaUnaryExpression*) base;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp0_ = vala_unary_expression_get_inner (self);
@@ -357,7 +355,7 @@ vala_unary_expression_is_numeric_type (ValaUnaryExpression* self,
 	gboolean _tmp4_;
 	gboolean _tmp6_ = FALSE;
 	ValaStruct* _tmp7_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (type != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol (type);
@@ -399,7 +397,7 @@ vala_unary_expression_is_integer_type (ValaUnaryExpression* self,
 	gboolean _tmp3_;
 	gboolean _tmp4_;
 	ValaStruct* _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (type != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol (type);
@@ -455,11 +453,11 @@ vala_unary_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp31_;
 	ValaDataType* _tmp32_;
 	ValaUnaryOperator _tmp47_;
-	ValaDataType* _tmp181_;
-	ValaDataType* _tmp182_;
-	gboolean _tmp183_;
-	gboolean _tmp184_;
-	gboolean result = FALSE;
+	ValaDataType* _tmp195_;
+	ValaDataType* _tmp196_;
+	gboolean _tmp197_;
+	gboolean _tmp198_;
+	gboolean result;
 	self = (ValaUnaryExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -834,11 +832,11 @@ vala_unary_expression_real_check (ValaCodeNode* base,
 			ValaExpression* _tmp137_;
 			ValaSymbol* _tmp138_;
 			ValaSymbol* _tmp139_;
-			gboolean _tmp161_ = FALSE;
-			ValaExpression* _tmp162_;
-			ValaExpression* _tmp163_;
-			ValaSymbol* _tmp164_;
-			ValaSymbol* _tmp165_;
+			gboolean _tmp176_ = FALSE;
+			ValaExpression* _tmp177_;
+			ValaExpression* _tmp178_;
+			ValaSymbol* _tmp179_;
+			ValaSymbol* _tmp180_;
 			_tmp131_ = vala_unary_expression_get_inner (self);
 			_tmp132_ = _tmp131_;
 			ea = VALA_IS_ELEMENT_ACCESS (_tmp132_) ? ((ValaElementAccess*) _tmp132_) : NULL;
@@ -896,66 +894,103 @@ vala_unary_expression_real_check (ValaCodeNode* base,
 				_tmp133_ = _tmp148_;
 			}
 			if (_tmp133_) {
-				ValaExpression* _tmp155_;
-				ValaExpression* _tmp156_;
-				ValaDataType* _tmp157_;
-				ValaDataType* _tmp158_;
+				gboolean _tmp155_ = FALSE;
+				ValaCodeNode* _tmp156_;
+				ValaCodeNode* _tmp157_;
 				vala_expression_set_lvalue ((ValaExpression*) self, TRUE);
-				_tmp155_ = vala_unary_expression_get_inner (self);
-				_tmp156_ = _tmp155_;
-				_tmp157_ = vala_expression_get_value_type (_tmp156_);
-				_tmp158_ = _tmp157_;
-				vala_expression_set_value_type ((ValaExpression*) self, _tmp158_);
+				_tmp156_ = vala_code_node_get_parent_node ((ValaCodeNode*) self);
+				_tmp157_ = _tmp156_;
+				if (VALA_IS_INITIALIZER_LIST (_tmp157_)) {
+					_tmp155_ = TRUE;
+				} else {
+					ValaCodeNode* _tmp158_;
+					ValaCodeNode* _tmp159_;
+					_tmp158_ = vala_code_node_get_parent_node ((ValaCodeNode*) self);
+					_tmp159_ = _tmp158_;
+					_tmp155_ = VALA_IS_MEMBER_INITIALIZER (_tmp159_);
+				}
+				if (_tmp155_) {
+					ValaExpression* _tmp160_;
+					ValaExpression* _tmp161_;
+					ValaDataType* _tmp162_;
+					ValaDataType* _tmp163_;
+					ValaExpression* _tmp164_;
+					ValaExpression* _tmp165_;
+					ValaSourceReference* _tmp166_;
+					ValaSourceReference* _tmp167_;
+					ValaPointerType* _tmp168_;
+					ValaPointerType* _tmp169_;
+					_tmp160_ = vala_unary_expression_get_inner (self);
+					_tmp161_ = _tmp160_;
+					_tmp162_ = vala_expression_get_value_type (_tmp161_);
+					_tmp163_ = _tmp162_;
+					_tmp164_ = vala_unary_expression_get_inner (self);
+					_tmp165_ = _tmp164_;
+					_tmp166_ = vala_code_node_get_source_reference ((ValaCodeNode*) _tmp165_);
+					_tmp167_ = _tmp166_;
+					_tmp168_ = vala_pointer_type_new (_tmp163_, _tmp167_);
+					_tmp169_ = _tmp168_;
+					vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp169_);
+					_vala_code_node_unref0 (_tmp169_);
+				} else {
+					ValaExpression* _tmp170_;
+					ValaExpression* _tmp171_;
+					ValaDataType* _tmp172_;
+					ValaDataType* _tmp173_;
+					_tmp170_ = vala_unary_expression_get_inner (self);
+					_tmp171_ = _tmp170_;
+					_tmp172_ = vala_expression_get_value_type (_tmp171_);
+					_tmp173_ = _tmp172_;
+					vala_expression_set_value_type ((ValaExpression*) self, _tmp173_);
+				}
 			} else {
-				ValaSourceReference* _tmp159_;
-				ValaSourceReference* _tmp160_;
+				ValaSourceReference* _tmp174_;
+				ValaSourceReference* _tmp175_;
 				vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
-				_tmp159_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-				_tmp160_ = _tmp159_;
-				vala_report_error (_tmp160_, "ref and out method arguments can only be used with fields, parameters," \
+				_tmp174_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+				_tmp175_ = _tmp174_;
+				vala_report_error (_tmp175_, "ref and out method arguments can only be used with fields, parameters," \
 " local variables, and array element access");
 				result = FALSE;
 				return result;
 			}
-			_tmp162_ = vala_unary_expression_get_inner (self);
-			_tmp163_ = _tmp162_;
-			_tmp164_ = vala_expression_get_symbol_reference (_tmp163_);
-			_tmp165_ = _tmp164_;
-			if (_tmp165_ != NULL) {
-				ValaExpression* _tmp166_;
-				ValaExpression* _tmp167_;
-				ValaSymbol* _tmp168_;
-				ValaSymbol* _tmp169_;
-				ValaAttribute* _tmp170_;
-				_tmp166_ = vala_unary_expression_get_inner (self);
-				_tmp167_ = _tmp166_;
-				_tmp168_ = vala_expression_get_symbol_reference (_tmp167_);
-				_tmp169_ = _tmp168_;
-				_tmp170_ = vala_code_node_get_attribute ((ValaCodeNode*) _tmp169_, "GtkChild");
-				_tmp161_ = _tmp170_ != NULL;
+			_tmp177_ = vala_unary_expression_get_inner (self);
+			_tmp178_ = _tmp177_;
+			_tmp179_ = vala_expression_get_symbol_reference (_tmp178_);
+			_tmp180_ = _tmp179_;
+			if (_tmp180_ != NULL) {
+				ValaExpression* _tmp181_;
+				ValaExpression* _tmp182_;
+				ValaSymbol* _tmp183_;
+				ValaSymbol* _tmp184_;
+				_tmp181_ = vala_unary_expression_get_inner (self);
+				_tmp182_ = _tmp181_;
+				_tmp183_ = vala_expression_get_symbol_reference (_tmp182_);
+				_tmp184_ = _tmp183_;
+				_tmp176_ = vala_code_node_has_attribute ((ValaCodeNode*) _tmp184_, "GtkChild");
 			} else {
-				_tmp161_ = FALSE;
+				_tmp176_ = FALSE;
 			}
-			if (_tmp161_) {
-				ValaSourceReference* _tmp171_;
-				ValaSourceReference* _tmp172_;
-				ValaExpression* _tmp173_;
-				ValaExpression* _tmp174_;
-				ValaSymbol* _tmp175_;
-				ValaSymbol* _tmp176_;
-				gchar* _tmp177_;
-				gchar* _tmp178_;
+			if (_tmp176_) {
+				ValaSourceReference* _tmp185_;
+				ValaSourceReference* _tmp186_;
+				ValaExpression* _tmp187_;
+				ValaExpression* _tmp188_;
+				ValaSymbol* _tmp189_;
+				ValaSymbol* _tmp190_;
+				gchar* _tmp191_;
+				gchar* _tmp192_;
 				vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
-				_tmp171_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-				_tmp172_ = _tmp171_;
-				_tmp173_ = vala_unary_expression_get_inner (self);
-				_tmp174_ = _tmp173_;
-				_tmp175_ = vala_expression_get_symbol_reference (_tmp174_);
-				_tmp176_ = _tmp175_;
-				_tmp177_ = vala_symbol_get_full_name (_tmp176_);
-				_tmp178_ = _tmp177_;
-				vala_report_error (_tmp172_, "Assignment of [GtkChild] `%s' is not allowed", _tmp178_);
-				_g_free0 (_tmp178_);
+				_tmp185_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+				_tmp186_ = _tmp185_;
+				_tmp187_ = vala_unary_expression_get_inner (self);
+				_tmp188_ = _tmp187_;
+				_tmp189_ = vala_expression_get_symbol_reference (_tmp188_);
+				_tmp190_ = _tmp189_;
+				_tmp191_ = vala_symbol_get_full_name (_tmp190_);
+				_tmp192_ = _tmp191_;
+				vala_report_error (_tmp186_, "Assignment of [GtkChild] `%s' is not allowed", _tmp192_);
+				_g_free0 (_tmp192_);
 				result = FALSE;
 				return result;
 			}
@@ -963,22 +998,22 @@ vala_unary_expression_real_check (ValaCodeNode* base,
 		}
 		default:
 		{
-			ValaSourceReference* _tmp179_;
-			ValaSourceReference* _tmp180_;
+			ValaSourceReference* _tmp193_;
+			ValaSourceReference* _tmp194_;
 			vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
-			_tmp179_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-			_tmp180_ = _tmp179_;
-			vala_report_error (_tmp180_, "internal error: unsupported unary operator");
+			_tmp193_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+			_tmp194_ = _tmp193_;
+			vala_report_error (_tmp194_, "internal error: unsupported unary operator");
 			result = FALSE;
 			return result;
 		}
 	}
-	_tmp181_ = vala_expression_get_value_type ((ValaExpression*) self);
-	_tmp182_ = _tmp181_;
-	vala_code_node_check ((ValaCodeNode*) _tmp182_, context);
-	_tmp183_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp184_ = _tmp183_;
-	result = !_tmp184_;
+	_tmp195_ = vala_expression_get_value_type ((ValaExpression*) self);
+	_tmp196_ = _tmp195_;
+	vala_code_node_check ((ValaCodeNode*) _tmp196_, context);
+	_tmp197_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp198_ = _tmp197_;
+	result = !_tmp198_;
 	return result;
 }
 
@@ -1143,19 +1178,19 @@ vala_unary_expression_get_type_once (void)
 GType
 vala_unary_expression_get_type (void)
 {
-	static volatile gsize vala_unary_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_unary_expression_type_id__volatile)) {
+	static volatile gsize vala_unary_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_unary_expression_type_id__once)) {
 		GType vala_unary_expression_type_id;
 		vala_unary_expression_type_id = vala_unary_expression_get_type_once ();
-		g_once_init_leave (&vala_unary_expression_type_id__volatile, vala_unary_expression_type_id);
+		g_once_init_leave (&vala_unary_expression_type_id__once, vala_unary_expression_type_id);
 	}
-	return vala_unary_expression_type_id__volatile;
+	return vala_unary_expression_type_id__once;
 }
 
 const gchar*
 vala_unary_operator_to_string (ValaUnaryOperator self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALA_UNARY_OPERATOR_PLUS:
 		{
@@ -1216,12 +1251,12 @@ vala_unary_operator_get_type_once (void)
 GType
 vala_unary_operator_get_type (void)
 {
-	static volatile gsize vala_unary_operator_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_unary_operator_type_id__volatile)) {
+	static volatile gsize vala_unary_operator_type_id__once = 0;
+	if (g_once_init_enter (&vala_unary_operator_type_id__once)) {
 		GType vala_unary_operator_type_id;
 		vala_unary_operator_type_id = vala_unary_operator_get_type_once ();
-		g_once_init_leave (&vala_unary_operator_type_id__volatile, vala_unary_operator_type_id);
+		g_once_init_leave (&vala_unary_operator_type_id__once, vala_unary_operator_type_id);
 	}
-	return vala_unary_operator_type_id__volatile;
+	return vala_unary_operator_type_id__once;
 }
 

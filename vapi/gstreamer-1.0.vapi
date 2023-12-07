@@ -54,6 +54,9 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public static string log_get_line (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.20")]
+		public static void log_literal (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string message_string);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string format, va_list args);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void print_stack_trace ();
@@ -369,6 +372,12 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_list_copy_value")]
 		[Version (replacement = "TagList.copy_value")]
 		public static bool list_copy_value (out GLib.Value dest, Gst.TagList list, string tag);
+		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_list_replace")]
+		[Version (replacement = "TagList.replace", since = "1.16")]
+		public static bool list_replace (ref Gst.TagList? old_taglist, Gst.TagList? new_taglist);
+		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_list_take")]
+		[Version (replacement = "TagList.take", since = "1.16")]
+		public static bool list_take (ref Gst.TagList old_taglist, owned Gst.TagList? new_taglist);
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_merge_strings_with_comma")]
 		public static void merge_strings_with_comma (out GLib.Value dest, GLib.Value src);
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_merge_use_first")]
@@ -791,8 +800,12 @@ namespace Gst {
 		public void insert (int idx, owned Gst.Buffer buffer);
 		public uint length ();
 		public void remove (uint idx, uint length);
+		[Version (since = "1.16")]
+		public static bool replace (ref Gst.BufferList? old_list, Gst.BufferList? new_list);
 		[CCode (has_construct_function = false)]
 		public BufferList.sized (uint size);
+		[Version (since = "1.16")]
+		public static bool take (ref Gst.BufferList old_list, owned Gst.BufferList? new_list);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_buffer_pool_get_type ()")]
 	public class BufferPool : Gst.Object {
@@ -1043,17 +1056,21 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public signal void synced (bool synced);
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_context_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_context_ref", type_id = "gst_context_get_type ()", unref_function = "gst_context_unref")]
 	[Compact]
 	[Version (since = "1.2")]
 	public class Context {
 		[CCode (has_construct_function = false)]
 		public Context (string context_type, bool persistent);
+		public Gst.Context copy ();
 		public unowned string get_context_type ();
 		public unowned Gst.Structure get_structure ();
 		public bool has_context_type (string context_type);
 		public bool is_persistent ();
-		public Gst.Structure writable_structure ();
+		public unowned Gst.Context @ref ();
+		public static bool replace (ref Gst.Context old_context, Gst.Context? new_context);
+		public void unref ();
+		public unowned Gst.Structure writable_structure ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_control_binding_get_type ()")]
 	public abstract class ControlBinding : Gst.Object {
@@ -1381,6 +1398,8 @@ namespace Gst {
 		public virtual void state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public static unowned string state_get_name (Gst.State state);
 		public bool sync_state_with_parent ();
+		[Version (since = "1.20")]
+		public static void type_set_skip_documentation (GLib.Type type);
 		public void unlink (Gst.Element dest);
 		public void unlink_many (params Gst.Element[] elements);
 		public void unlink_pads (string srcpadname, Gst.Element dest, string destpadname);
@@ -1399,16 +1418,23 @@ namespace Gst {
 		public bool can_src_any_caps (Gst.Caps caps);
 		[CCode (returns_floating_reference = true)]
 		public Gst.Element? create (string? name);
+		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public unowned Gst.Element? create_valist (string? first, va_list? properties);
+		public Gst.Element? create_full (string? first, ...);
+		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public unowned Gst.Element? create_with_properties (uint n, string? names, GLib.Value? values);
+		public Gst.Element? create_valist (string? first, va_list? properties);
+		[CCode (returns_floating_reference = true)]
+		[Version (since = "1.20")]
+		public Gst.Element? create_with_properties ([CCode (array_length_cname = "n", array_length_pos = 0.5, array_length_type = "guint")] string[]? names, [CCode (array_length_cname = "n", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[]? values);
 		public static Gst.ElementFactory? find (string name);
 		public GLib.Type get_element_type ();
 		public unowned string? get_metadata (string key);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_metadata_keys ();
 		public uint get_num_pad_templates ();
+		[Version (since = "1.20")]
+		public bool get_skip_documentation ();
 		public unowned GLib.List<Gst.StaticPadTemplate?> get_static_pad_templates ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_uri_protocols ();
@@ -1418,11 +1444,16 @@ namespace Gst {
 		public static GLib.List<Gst.ElementFactory> list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
 		public bool list_is_type (Gst.ElementFactoryListType type);
 		[CCode (returns_floating_reference = true)]
-		public static Gst.Element? make (string factoryname, string? name);
+		public static Gst.Element? make (string factoryname, string? name = null);
+		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public static unowned Gst.Element? make_valist (string factoryname, string? first, va_list? properties);
+		public static Gst.Element? make_full (string factoryname, string? first, ...);
+		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public static unowned Gst.Element? make_with_properties (string factoryname, uint n, string? names, GLib.Value? values);
+		public static Gst.Element? make_valist (string factoryname, string? first, va_list? properties);
+		[CCode (returns_floating_reference = true)]
+		[Version (since = "1.20")]
+		public static Gst.Element? make_with_properties (string factoryname, [CCode (array_length_cname = "n", array_length_pos = 1.5, array_length_type = "guint")] string[]? names, [CCode (array_length_cname = "n", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[]? values);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", type_id = "gst_event_get_type ()", unref_function = "gst_event_unref")]
 	[Compact]
@@ -1811,6 +1842,8 @@ namespace Gst {
 		public Message.structure_change (Gst.Object? src, Gst.StructureChangeType type, Gst.Element owner, bool busy);
 		[CCode (has_construct_function = false)]
 		public Message.tag (Gst.Object? src, owned Gst.TagList tag_list);
+		[Version (since = "1.16")]
+		public static bool take (ref Gst.Message old_message, owned Gst.Message? new_message);
 		[CCode (has_construct_function = false)]
 		public Message.toc (Gst.Object src, Gst.Toc toc, bool updated);
 		[CCode (has_construct_function = false)]
@@ -2190,7 +2223,10 @@ namespace Gst {
 		public void expire ();
 		public unowned Gst.Structure? get_reply ();
 		public void interrupt ();
+		public unowned Gst.Promise @ref ();
 		public void reply (owned Gst.Structure? s);
+		[DestroysInstance]
+		public void unref ();
 		public Gst.PromiseResult wait ();
 		[CCode (has_construct_function = false)]
 		public Promise.with_change_func (owned Gst.PromiseChangeFunc func);
@@ -2277,6 +2313,8 @@ namespace Gst {
 		public void parse_scheduling (out Gst.SchedulingFlags flags, out int minsize, out int maxsize, out int align);
 		public void parse_seeking (out Gst.Format format, out bool seekable, out int64 segment_start, out int64 segment_end);
 		public void parse_segment (out double rate, out Gst.Format format, out int64 start_value, out int64 stop_value);
+		[Version (since = "1.22")]
+		public void parse_selectable (out bool selectable);
 		public void parse_uri (out string uri);
 		[Version (since = "1.2")]
 		public void parse_uri_redirection (out string uri);
@@ -2284,6 +2322,7 @@ namespace Gst {
 		public void parse_uri_redirection_permanent (out bool permanent);
 		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
+		public unowned Gst.Query @ref ();
 		public void remove_nth_allocation_meta (uint index);
 		[Version (since = "1.2")]
 		public void remove_nth_allocation_param (uint index);
@@ -2295,6 +2334,9 @@ namespace Gst {
 		public Query.seeking (Gst.Format format);
 		[CCode (has_construct_function = false)]
 		public Query.segment (Gst.Format format);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.22")]
+		public Query.selectable ();
 		public void set_accept_caps_result (bool result);
 		[Version (since = "1.16")]
 		public void set_bitrate (uint nominal_bitrate);
@@ -2316,11 +2358,15 @@ namespace Gst {
 		public void set_scheduling (Gst.SchedulingFlags flags, int minsize, int maxsize, int align);
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
+		[Version (since = "1.22")]
+		public void set_selectable (bool selectable);
 		public void set_uri (string uri);
 		[Version (since = "1.2")]
 		public void set_uri_redirection (string uri);
 		[Version (since = "1.4")]
 		public void set_uri_redirection_permanent (bool permanent);
+		[Version (since = "1.16")]
+		public static bool take (ref Gst.Query? old_query, owned Gst.Query? new_query);
 		[CCode (has_construct_function = false)]
 		public Query.uri ();
 		public unowned Gst.Structure writable_structure ();
@@ -2612,7 +2658,11 @@ namespace Gst {
 		public unowned string nth_tag_name (uint index);
 		public bool peek_string_index (string tag, uint index, out unowned string value);
 		public void remove_tag (string tag);
+		[Version (since = "1.16")]
+		public static bool replace (ref Gst.TagList? old_taglist, Gst.TagList? new_taglist);
 		public void set_scope (Gst.TagScope scope);
+		[Version (since = "1.16")]
+		public static bool take (ref Gst.TagList old_taglist, owned Gst.TagList? new_taglist);
 		public string? to_string ();
 		[CCode (has_construct_function = false)]
 		public TagList.valist (va_list var_args);
@@ -2725,9 +2775,8 @@ namespace Gst {
 		public static GLib.List<Gst.TypeFindFactory> get_list ();
 		public bool has_function ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_uri_get_type ()")]
-	[Compact]
-	public class Uri {
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_uri_ref", type_id = "gst_uri_get_type ()", unref_function = "gst_uri_unref")]
+	public sealed class Uri {
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.6")]
 		public Uri (string? scheme, string? userinfo, string? host, uint port, string? path, string? query, string? fragment);
@@ -2737,6 +2786,8 @@ namespace Gst {
 		public bool append_path_segment (string path_segment);
 		[Version (deprecated = true)]
 		public static string @construct (string protocol, string location);
+		[Version (since = "1.6")]
+		public Gst.Uri copy ();
 		[Version (since = "1.6")]
 		public bool equal (Gst.Uri second);
 		[Version (since = "1.6")]
@@ -2795,6 +2846,8 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public bool query_has_key (string query_key);
 		[Version (since = "1.6")]
+		public unowned Gst.Uri @ref ();
+		[Version (since = "1.6")]
 		public bool remove_query_key (string query_key);
 		[Version (since = "1.6")]
 		public bool set_fragment (string? fragment);
@@ -2820,6 +2873,9 @@ namespace Gst {
 		public bool set_userinfo (string userinfo);
 		[Version (since = "1.6")]
 		public string to_string ();
+		[DestroysInstance]
+		[Version (since = "1.6")]
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_array_get_type ()")]
 	public class ValueArray {
@@ -3684,7 +3740,9 @@ namespace Gst {
 		CAPS,
 		DRAIN,
 		CONTEXT,
-		BITRATE;
+		BITRATE,
+		[Version (since = "1.22")]
+		SELECTABLE;
 		public Gst.QueryTypeFlags get_flags ();
 		public unowned string get_name ();
 		public GLib.Quark to_quark ();
@@ -3915,7 +3973,7 @@ namespace Gst {
 		SINK,
 		SRC
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_CORE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_CORE_ERROR_", type_id = "gst_core_error_get_type ()")]
 	public errordomain CoreError {
 		FAILED,
 		TOO_LAZY,
@@ -3934,7 +3992,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_LIBRARY_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_LIBRARY_ERROR_", type_id = "gst_library_error_get_type ()")]
 	public errordomain LibraryError {
 		FAILED,
 		TOO_LAZY,
@@ -3945,7 +4003,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PARSE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PARSE_ERROR_", type_id = "gst_parse_error_get_type ()")]
 	public errordomain ParseError {
 		SYNTAX,
 		NO_SUCH_ELEMENT,
@@ -3957,14 +4015,14 @@ namespace Gst {
 		DELAYED_LINK;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_ERROR_", type_id = "gst_plugin_error_get_type ()")]
 	public errordomain PluginError {
 		MODULE,
 		DEPENDENCIES,
 		NAME_MISMATCH;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_RESOURCE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_RESOURCE_ERROR_", type_id = "gst_resource_error_get_type ()")]
 	public errordomain ResourceError {
 		FAILED,
 		TOO_LAZY,
@@ -3984,7 +4042,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_ERROR_", type_id = "gst_stream_error_get_type ()")]
 	public errordomain StreamError {
 		FAILED,
 		TOO_LAZY,
@@ -4002,7 +4060,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_URI_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_URI_ERROR_", type_id = "gst_uri_error_get_type ()")]
 	public errordomain URIError {
 		UNSUPPORTED_PROTOCOL,
 		BAD_URI,
@@ -4292,11 +4350,20 @@ namespace Gst {
 	[Version (replacement = "Buffer.get_max_memory", since = "1.2")]
 	public static uint buffer_get_max_memory ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "BufferList.replace", since = "1.16")]
+	public static bool buffer_list_replace (ref Gst.BufferList? old_list, Gst.BufferList? new_list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "BufferList.take", since = "1.16")]
+	public static bool buffer_list_take (ref Gst.BufferList old_list, owned Gst.BufferList? new_list);
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "CapsFeatures.from_string", since = "1.2")]
 	public static Gst.CapsFeatures? caps_features_from_string (string features);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "Caps.from_string")]
 	public static Gst.Caps? caps_from_string (string string);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Context.replace", since = "1.2")]
+	public static bool context_replace (ref Gst.Context old_context, Gst.Context? new_context);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "CoreError.quark")]
 	public static GLib.Quark core_error_quark ();
@@ -4354,6 +4421,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "LibraryError.quark")]
 	public static GLib.Quark library_error_quark ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Message.take", since = "1.16")]
+	public static bool message_take (ref Gst.Message old_message, owned Gst.Message? new_message);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "MessageType.get_name")]
 	public static unowned string message_type_get_name (Gst.MessageType type);
@@ -4422,6 +4492,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.6")]
 	public static unowned string? protection_select_system ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Query.take", since = "1.16")]
+	public static bool query_take (ref Gst.Query? old_query, owned Gst.Query? new_query);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (replacement = "QueryType.get_flags")]
 	public static Gst.QueryTypeFlags query_type_get_flags (Gst.QueryType type);

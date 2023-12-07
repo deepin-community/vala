@@ -286,6 +286,11 @@ public class Vala.CodeContext {
 		}
 
 		context_stack->remove_at (context_stack->size - 1);
+
+		if (context_stack->size == 0) {
+			delete context_stack;
+			context_stack_key.set (null, null);
+		}
 	}
 
 	/**
@@ -404,7 +409,7 @@ public class Vala.CodeContext {
 		}
 
 		if (verbose_mode) {
-			stdout.printf ("Loaded package `%s'\n", path);
+			print ("Loaded package `%s'\n", path);
 		}
 
 		var deps_filename = Path.build_path ("/", Path.get_dirname (path), pkg + ".deps");

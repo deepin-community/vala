@@ -252,7 +252,7 @@ ValaCollection*
 valadoc_api_symbol_get_attributes (ValadocApiSymbol* self)
 {
 	ValaArrayList* _tmp0_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->attributes;
 	if (_tmp0_ == NULL) {
@@ -277,7 +277,7 @@ valadoc_api_symbol_get_attribute (ValadocApiSymbol* self,
                                   const gchar* name)
 {
 	ValaArrayList* _tmp0_;
-	ValadocApiAttribute* result = NULL;
+	ValadocApiAttribute* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->attributes;
@@ -351,7 +351,7 @@ valadoc_api_symbol_real_is_browsable (ValadocApiNode* base,
 	ValadocApiItem* _tmp9_;
 	ValadocApiItem* _tmp10_;
 	ValadocApiItem* _tmp11_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocApiSymbol*) base;
 	g_return_val_if_fail (settings != NULL, FALSE);
 	if (!settings->_private) {
@@ -446,10 +446,8 @@ ValaSymbolAccessibility
 valadoc_api_symbol_get_accessibility (ValadocApiSymbol* self)
 {
 	ValaSymbolAccessibility result;
-	ValaSymbolAccessibility _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_accessibility;
-	result = _tmp0_;
+	result = self->priv->_accessibility;
 	return result;
 }
 
@@ -636,13 +634,13 @@ valadoc_api_symbol_get_type_once (void)
 GType
 valadoc_api_symbol_get_type (void)
 {
-	static volatile gsize valadoc_api_symbol_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_symbol_type_id__volatile)) {
+	static volatile gsize valadoc_api_symbol_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_symbol_type_id__once)) {
 		GType valadoc_api_symbol_type_id;
 		valadoc_api_symbol_type_id = valadoc_api_symbol_get_type_once ();
-		g_once_init_leave (&valadoc_api_symbol_type_id__volatile, valadoc_api_symbol_type_id);
+		g_once_init_leave (&valadoc_api_symbol_type_id__once, valadoc_api_symbol_type_id);
 	}
-	return valadoc_api_symbol_type_id__volatile;
+	return valadoc_api_symbol_type_id__once;
 }
 
 static void

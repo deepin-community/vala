@@ -184,7 +184,7 @@ valadoc_gir_meta_data_get_resource_path (ValadocGirMetaData* self,
 	const gchar* _tmp10_;
 	gchar* _tmp11_;
 	gchar* _tmp12_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (resource != NULL, NULL);
 	_tmp1_ = self->priv->resource_dir;
@@ -229,7 +229,7 @@ string_last_index_of (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (needle != NULL, 0);
 	_tmp0_ = g_strrstr (((gchar*) self) + start_index, (gchar*) needle);
@@ -253,7 +253,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -276,7 +276,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -319,7 +319,7 @@ valadoc_gir_meta_data_get_metadata_file_name (ValadocGirMetaData* self,
 	gchar* _tmp3_;
 	const gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (gir_file_path != NULL, NULL);
 	_tmp0_ = g_path_get_basename (gir_file_path);
@@ -358,7 +358,7 @@ valadoc_gir_meta_data_get_metadata_path (ValadocGirMetaData* self,
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	const gchar* _tmp7_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (gir_file_path != NULL, NULL);
 	_tmp0_ = valadoc_gir_meta_data_get_metadata_file_name (self, gir_file_path);
@@ -860,13 +860,13 @@ valadoc_gir_meta_data_get_type_once (void)
 GType
 valadoc_gir_meta_data_get_type (void)
 {
-	static volatile gsize valadoc_gir_meta_data_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gir_meta_data_type_id__volatile)) {
+	static volatile gsize valadoc_gir_meta_data_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gir_meta_data_type_id__once)) {
 		GType valadoc_gir_meta_data_type_id;
 		valadoc_gir_meta_data_type_id = valadoc_gir_meta_data_get_type_once ();
-		g_once_init_leave (&valadoc_gir_meta_data_type_id__volatile, valadoc_gir_meta_data_type_id);
+		g_once_init_leave (&valadoc_gir_meta_data_type_id__once, valadoc_gir_meta_data_type_id);
 	}
-	return valadoc_gir_meta_data_type_id__volatile;
+	return valadoc_gir_meta_data_type_id__once;
 }
 
 static void

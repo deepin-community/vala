@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 enum  {
 	VALADOC_HTML_CSS_CLASS_RESOLVER_0_PROPERTY,
@@ -86,7 +87,7 @@ valadoc_html_css_class_resolver_resolve (ValadocHtmlCssClassResolver* self,
                                          ValadocApiNode* node)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (node != NULL, NULL);
 	valadoc_api_node_accept (node, (ValadocApiVisitor*) self);
@@ -456,12 +457,12 @@ valadoc_html_css_class_resolver_get_type_once (void)
 GType
 valadoc_html_css_class_resolver_get_type (void)
 {
-	static volatile gsize valadoc_html_css_class_resolver_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_css_class_resolver_type_id__volatile)) {
+	static volatile gsize valadoc_html_css_class_resolver_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_css_class_resolver_type_id__once)) {
 		GType valadoc_html_css_class_resolver_type_id;
 		valadoc_html_css_class_resolver_type_id = valadoc_html_css_class_resolver_get_type_once ();
-		g_once_init_leave (&valadoc_html_css_class_resolver_type_id__volatile, valadoc_html_css_class_resolver_type_id);
+		g_once_init_leave (&valadoc_html_css_class_resolver_type_id__once, valadoc_html_css_class_resolver_type_id);
 	}
-	return valadoc_html_css_class_resolver_type_id__volatile;
+	return valadoc_html_css_class_resolver_type_id__once;
 }
 

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_field_prototype_parent_class = NULL;
 
@@ -50,18 +51,20 @@ vala_field_prototype_get_field_symbol (ValaFieldPrototype* self)
 
 ValaFieldPrototype*
 vala_field_prototype_construct (GType object_type,
-                                ValaField* field_symbol)
+                                ValaField* field_symbol,
+                                ValaSourceReference* source_reference)
 {
 	ValaFieldPrototype* self = NULL;
 	g_return_val_if_fail (field_symbol != NULL, NULL);
-	self = (ValaFieldPrototype*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) field_symbol);
+	self = (ValaFieldPrototype*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) field_symbol, source_reference);
 	return self;
 }
 
 ValaFieldPrototype*
-vala_field_prototype_new (ValaField* field_symbol)
+vala_field_prototype_new (ValaField* field_symbol,
+                          ValaSourceReference* source_reference)
 {
-	return vala_field_prototype_construct (VALA_TYPE_FIELD_PROTOTYPE, field_symbol);
+	return vala_field_prototype_construct (VALA_TYPE_FIELD_PROTOTYPE, field_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -71,13 +74,17 @@ vala_field_prototype_real_copy (ValaDataType* base)
 	ValaFieldPrototype* _result_ = NULL;
 	ValaField* _tmp0_;
 	ValaField* _tmp1_;
-	ValaFieldPrototype* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaSourceReference* _tmp2_;
+	ValaSourceReference* _tmp3_;
+	ValaFieldPrototype* _tmp4_;
+	ValaDataType* result;
 	self = (ValaFieldPrototype*) base;
 	_tmp0_ = vala_field_prototype_get_field_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_field_prototype_new (_tmp1_);
-	_result_ = _tmp2_;
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_field_prototype_new (_tmp1_, _tmp3_);
+	_result_ = _tmp4_;
 	result = (ValaDataType*) _result_;
 	return result;
 }
@@ -90,7 +97,7 @@ vala_field_prototype_real_to_qualified_string (ValaDataType* base,
 	ValaField* _tmp0_;
 	ValaField* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaFieldPrototype*) base;
 	_tmp0_ = vala_field_prototype_get_field_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -129,12 +136,12 @@ vala_field_prototype_get_type_once (void)
 GType
 vala_field_prototype_get_type (void)
 {
-	static volatile gsize vala_field_prototype_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_field_prototype_type_id__volatile)) {
+	static volatile gsize vala_field_prototype_type_id__once = 0;
+	if (g_once_init_enter (&vala_field_prototype_type_id__once)) {
 		GType vala_field_prototype_type_id;
 		vala_field_prototype_type_id = vala_field_prototype_get_type_once ();
-		g_once_init_leave (&vala_field_prototype_type_id__volatile, vala_field_prototype_type_id);
+		g_once_init_leave (&vala_field_prototype_type_id__once, vala_field_prototype_type_id);
 	}
-	return vala_field_prototype_type_id__volatile;
+	return vala_field_prototype_type_id__once;
 }
 

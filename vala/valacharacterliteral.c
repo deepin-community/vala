@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
@@ -132,7 +133,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -144,7 +145,7 @@ vala_character_literal_get_char (ValaCharacterLiteral* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	_tmp0_ = vala_character_literal_get_value (self);
 	_tmp1_ = _tmp0_;
@@ -157,7 +158,7 @@ static gboolean
 vala_character_literal_real_is_pure (ValaExpression* base)
 {
 	ValaCharacterLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaCharacterLiteral*) base;
 	result = TRUE;
 	return result;
@@ -170,7 +171,7 @@ vala_character_literal_real_to_string (ValaCodeNode* base)
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaCharacterLiteral*) base;
 	_tmp0_ = vala_character_literal_get_value (self);
 	_tmp1_ = _tmp0_;
@@ -188,7 +189,7 @@ vala_character_literal_real_check (ValaCodeNode* base,
 	gboolean _tmp1_;
 	gboolean _tmp14_;
 	gboolean _tmp15_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaCharacterLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -292,12 +293,12 @@ vala_character_literal_get_type_once (void)
 GType
 vala_character_literal_get_type (void)
 {
-	static volatile gsize vala_character_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_character_literal_type_id__volatile)) {
+	static volatile gsize vala_character_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_character_literal_type_id__once)) {
 		GType vala_character_literal_type_id;
 		vala_character_literal_type_id = vala_character_literal_get_type_once ();
-		g_once_init_leave (&vala_character_literal_type_id__volatile, vala_character_literal_type_id);
+		g_once_init_leave (&vala_character_literal_type_id__once, vala_character_literal_type_id);
 	}
-	return vala_character_literal_type_id__volatile;
+	return vala_character_literal_type_id__once;
 }
 

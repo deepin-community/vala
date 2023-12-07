@@ -24,6 +24,7 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
 
 static gpointer vala_reference_type_parent_class = NULL;
 
@@ -31,10 +32,11 @@ static GType vala_reference_type_get_type_once (void);
 
 ValaReferenceType*
 vala_reference_type_construct (GType object_type,
-                               ValaSymbol* symbol)
+                               ValaSymbol* symbol,
+                               ValaSourceReference* source_reference)
 {
 	ValaReferenceType* self = NULL;
-	self = (ValaReferenceType*) vala_data_type_construct_with_symbol (object_type, symbol);
+	self = (ValaReferenceType*) vala_data_type_construct_with_symbol (object_type, symbol, source_reference);
 	return self;
 }
 
@@ -66,12 +68,12 @@ vala_reference_type_get_type_once (void)
 GType
 vala_reference_type_get_type (void)
 {
-	static volatile gsize vala_reference_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_reference_type_type_id__volatile)) {
+	static volatile gsize vala_reference_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_reference_type_type_id__once)) {
 		GType vala_reference_type_type_id;
 		vala_reference_type_type_id = vala_reference_type_get_type_once ();
-		g_once_init_leave (&vala_reference_type_type_id__volatile, vala_reference_type_type_id);
+		g_once_init_leave (&vala_reference_type_type_id__once, vala_reference_type_type_id);
 	}
-	return vala_reference_type_type_id__volatile;
+	return vala_reference_type_type_id__once;
 }
 

@@ -91,7 +91,7 @@ valadoc_highlighter_highlighter_highlight_vala (ValadocHighlighterHighlighter* s
 	ValaHashMap* _tmp195_;
 	ValadocHighlighterCodeScanner* _tmp196_;
 	ValadocContentRun* _tmp197_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (source_code != NULL, NULL);
 	_tmp0_ = self->priv->vala_keywords;
@@ -613,7 +613,7 @@ valadoc_highlighter_highlighter_highlight_c (ValadocHighlighterHighlighter* self
 	ValaHashMap* _tmp129_;
 	ValadocHighlighterCodeScanner* _tmp130_;
 	ValadocContentRun* _tmp131_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (source_code != NULL, NULL);
 	_tmp0_ = self->priv->c_keywords;
@@ -963,7 +963,7 @@ valadoc_highlighter_highlighter_highlight_xml (ValadocHighlighterHighlighter* se
 	ValadocHighlighterXmlScanner* scanner = NULL;
 	ValadocHighlighterXmlScanner* _tmp0_;
 	ValadocContentRun* _tmp1_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (source_code != NULL, NULL);
 	_tmp0_ = valadoc_highlighter_xml_scanner_new (source_code);
@@ -983,7 +983,7 @@ valadoc_highlighter_highlighter_highlight_code (ValadocHighlighterHighlighter* s
 {
 	ValadocContentRun* code = NULL;
 	ValadocContentRun* _tmp0_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (scanner != NULL, NULL);
 	_tmp0_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_MONOSPACED);
@@ -1536,12 +1536,12 @@ valadoc_highlighter_highlighter_get_type_once (void)
 GType
 valadoc_highlighter_highlighter_get_type (void)
 {
-	static volatile gsize valadoc_highlighter_highlighter_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_highlighter_highlighter_type_id__volatile)) {
+	static volatile gsize valadoc_highlighter_highlighter_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_highlighter_highlighter_type_id__once)) {
 		GType valadoc_highlighter_highlighter_type_id;
 		valadoc_highlighter_highlighter_type_id = valadoc_highlighter_highlighter_get_type_once ();
-		g_once_init_leave (&valadoc_highlighter_highlighter_type_id__volatile, valadoc_highlighter_highlighter_type_id);
+		g_once_init_leave (&valadoc_highlighter_highlighter_type_id__once, valadoc_highlighter_highlighter_type_id);
 	}
-	return valadoc_highlighter_highlighter_type_id__volatile;
+	return valadoc_highlighter_highlighter_type_id__once;
 }
 

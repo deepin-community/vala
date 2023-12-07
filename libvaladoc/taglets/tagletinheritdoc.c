@@ -153,7 +153,7 @@ valadoc_taglets_inherit_doc_real_get_parser_rule (ValadocContentInlineTaglet* ba
                                                   ValadocRule* run_rule)
 {
 	ValadocTagletsInheritDoc * self;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsInheritDoc*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	result = NULL;
@@ -167,7 +167,7 @@ valadoc_taglets_inherit_doc_find_parent_taglet (ValadocTagletsInheritDoc* self)
 	ValadocApiNode* _tmp1_;
 	ValadocContentContentElement* pos = NULL;
 	ValadocContentContentElement* _tmp16_;
-	ValadocContentTaglet* result = NULL;
+	ValadocContentTaglet* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp1_ = self->priv->_inherited;
 	if (_tmp1_ == NULL) {
@@ -366,7 +366,7 @@ valadoc_taglets_inherit_doc_split_run (ValadocTagletsInheritDoc* self,
 	ValaList* _tmp18_;
 	ValadocContentRun** _tmp48_;
 	gint _tmp48__length1;
-	ValadocContentRun** result = NULL;
+	ValadocContentRun** result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (separator == NULL) {
 		ValadocContentRun** _tmp0_;
@@ -978,7 +978,7 @@ valadoc_taglets_inherit_doc_content_copy (ValadocTagletsInheritDoc* self,
 	ValadocContentRun* run = NULL;
 	ValadocContentRun* _tmp0_;
 	ValadocContentRun* _tmp1_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_NONE);
 	run = _tmp0_;
@@ -1048,7 +1048,7 @@ valadoc_taglets_inherit_doc_real_produce_content (ValadocContentInlineTaglet* ba
 	gboolean _tmp1_ = FALSE;
 	ValadocApiNode* _tmp2_;
 	ValadocContentText* _tmp27_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsInheritDoc*) base;
 	_tmp2_ = self->priv->_inherited;
 	if (_tmp2_ != NULL) {
@@ -1147,7 +1147,7 @@ static gboolean
 valadoc_taglets_inherit_doc_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocTagletsInheritDoc * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsInheritDoc*) base;
 	result = FALSE;
 	return result;
@@ -1166,7 +1166,7 @@ valadoc_taglets_inherit_doc_real_copy (ValadocContentContentElement* base,
 	ValadocResourceLocator* _tmp4_;
 	ValadocApiNode* _tmp5_;
 	ValadocApiNode* _tmp6_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsInheritDoc*) base;
 	_tmp0_ = valadoc_taglets_inherit_doc_new ();
 	doc = _tmp0_;
@@ -1249,13 +1249,13 @@ valadoc_taglets_inherit_doc_get_type_once (void)
 GType
 valadoc_taglets_inherit_doc_get_type (void)
 {
-	static volatile gsize valadoc_taglets_inherit_doc_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_inherit_doc_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_inherit_doc_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_inherit_doc_type_id__once)) {
 		GType valadoc_taglets_inherit_doc_type_id;
 		valadoc_taglets_inherit_doc_type_id = valadoc_taglets_inherit_doc_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_inherit_doc_type_id__volatile, valadoc_taglets_inherit_doc_type_id);
+		g_once_init_leave (&valadoc_taglets_inherit_doc_type_id__once, valadoc_taglets_inherit_doc_type_id);
 	}
-	return valadoc_taglets_inherit_doc_type_id__volatile;
+	return valadoc_taglets_inherit_doc_type_id__once;
 }
 
 static void

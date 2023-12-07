@@ -191,7 +191,7 @@ static GType
 vala_array_list_real_get_element_type (ValaIterable* base)
 {
 	ValaArrayList * self;
-	GType result = 0UL;
+	GType result;
 	self = (ValaArrayList*) base;
 	result = self->priv->g_type;
 	return result;
@@ -202,7 +202,7 @@ vala_array_list_real_iterator (ValaIterable* base)
 {
 	ValaArrayList * self;
 	ValaArrayListIterator* _tmp0_;
-	ValaIterator* result = NULL;
+	ValaIterator* result;
 	self = (ValaArrayList*) base;
 	_tmp0_ = vala_array_list_iterator_new (self->priv->g_type, (GBoxedCopyFunc) self->priv->g_dup_func, (GDestroyNotify) self->priv->g_destroy_func, self);
 	result = (ValaIterator*) _tmp0_;
@@ -214,7 +214,7 @@ vala_array_list_real_contains (ValaCollection* base,
                                gconstpointer item)
 {
 	ValaArrayList * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayList*) base;
 	result = vala_list_index_of ((ValaList*) self, item) != -1;
 	return result;
@@ -225,7 +225,7 @@ vala_array_list_real_index_of (ValaList* base,
                                gconstpointer item)
 {
 	ValaArrayList * self;
-	gint result = 0;
+	gint result;
 	self = (ValaArrayList*) base;
 	{
 		gint index = 0;
@@ -272,7 +272,7 @@ vala_array_list_real_get (ValaList* base,
 	gint _tmp1__length1;
 	gconstpointer _tmp2_;
 	gpointer _tmp3_;
-	gpointer result = NULL;
+	gpointer result;
 	self = (ValaArrayList*) base;
 	if (index >= 0) {
 		_tmp0_ = index < self->_size;
@@ -325,7 +325,7 @@ vala_array_list_real_add (ValaCollection* base,
 	gconstpointer _tmp3_;
 	gpointer _tmp4_;
 	gint _tmp5_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayList*) base;
 	_tmp0_ = self->_items;
 	_tmp0__length1 = self->_items_length1;
@@ -386,7 +386,7 @@ vala_array_list_real_remove (ValaCollection* base,
                              gconstpointer item)
 {
 	ValaArrayList * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayList*) base;
 	{
 		gint index = 0;
@@ -442,7 +442,7 @@ vala_array_list_real_remove_at (ValaList* base,
 	gpointer* _tmp4_;
 	gint _tmp4__length1;
 	gint _tmp5_;
-	gpointer result = NULL;
+	gpointer result;
 	self = (ValaArrayList*) base;
 	if (index >= 0) {
 		_tmp0_ = index < self->_size;
@@ -629,7 +629,7 @@ vala_array_list_iterator_real_next (ValaIterator* base)
 	ValaArrayList* _tmp0_;
 	ValaArrayList* _tmp1_;
 	ValaArrayList* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayListIterator*) base;
 	_tmp0_ = self->priv->_list;
 	_vala_assert (self->_stamp == _tmp0_->priv->_stamp, "_stamp == _list._stamp");
@@ -651,7 +651,7 @@ vala_array_list_iterator_real_has_next (ValaIterator* base)
 	ValaArrayListIterator * self;
 	ValaArrayList* _tmp0_;
 	ValaArrayList* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayListIterator*) base;
 	_tmp0_ = self->priv->_list;
 	_vala_assert (self->_stamp == _tmp0_->priv->_stamp, "_stamp == _list._stamp");
@@ -668,7 +668,7 @@ vala_array_list_iterator_real_get (ValaIterator* base)
 	gboolean _tmp1_ = FALSE;
 	ValaArrayList* _tmp3_;
 	gpointer _tmp4_;
-	gpointer result = NULL;
+	gpointer result;
 	self = (ValaArrayListIterator*) base;
 	_tmp0_ = self->priv->_list;
 	_vala_assert (self->_stamp == _tmp0_->priv->_stamp, "_stamp == _list._stamp");
@@ -759,7 +759,7 @@ vala_array_list_iterator_class_init (ValaArrayListIteratorClass * klass,
 	((ValaIteratorClass *) klass)->has_next = (gboolean (*) (ValaIterator*)) vala_array_list_iterator_real_has_next;
 	((ValaIteratorClass *) klass)->get = (gpointer (*) (ValaIterator*)) vala_array_list_iterator_real_get;
 	((ValaIteratorClass *) klass)->remove = (void (*) (ValaIterator*)) vala_array_list_iterator_real_remove;
-	VALA_ITERATOR_CLASS (klass)->get_valid = vala_array_list_iterator_real_get_valid;
+	VALA_ITERATOR_CLASS (klass)->get_valid = (gboolean (*) (ValaIterator*)) vala_array_list_iterator_real_get_valid;
 }
 
 static void
@@ -794,13 +794,13 @@ vala_array_list_iterator_get_type_once (void)
 static GType
 vala_array_list_iterator_get_type (void)
 {
-	static volatile gsize vala_array_list_iterator_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_array_list_iterator_type_id__volatile)) {
+	static volatile gsize vala_array_list_iterator_type_id__once = 0;
+	if (g_once_init_enter (&vala_array_list_iterator_type_id__once)) {
 		GType vala_array_list_iterator_type_id;
 		vala_array_list_iterator_type_id = vala_array_list_iterator_get_type_once ();
-		g_once_init_leave (&vala_array_list_iterator_type_id__volatile, vala_array_list_iterator_type_id);
+		g_once_init_leave (&vala_array_list_iterator_type_id__once, vala_array_list_iterator_type_id);
 	}
-	return vala_array_list_iterator_type_id__volatile;
+	return vala_array_list_iterator_type_id__once;
 }
 
 static void
@@ -821,7 +821,7 @@ vala_array_list_class_init (ValaArrayListClass * klass,
 	((ValaCollectionClass *) klass)->remove = (gboolean (*) (ValaCollection*, gconstpointer)) vala_array_list_real_remove;
 	((ValaListClass *) klass)->remove_at = (gpointer (*) (ValaList*, gint)) vala_array_list_real_remove_at;
 	((ValaCollectionClass *) klass)->clear = (void (*) (ValaCollection*)) vala_array_list_real_clear;
-	VALA_COLLECTION_CLASS (klass)->get_size = vala_array_list_real_get_size;
+	VALA_COLLECTION_CLASS (klass)->get_size = (gint (*) (ValaCollection*)) vala_array_list_real_get_size;
 }
 
 static void
@@ -862,13 +862,13 @@ vala_array_list_get_type_once (void)
 GType
 vala_array_list_get_type (void)
 {
-	static volatile gsize vala_array_list_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_array_list_type_id__volatile)) {
+	static volatile gsize vala_array_list_type_id__once = 0;
+	if (g_once_init_enter (&vala_array_list_type_id__once)) {
 		GType vala_array_list_type_id;
 		vala_array_list_type_id = vala_array_list_get_type_once ();
-		g_once_init_leave (&vala_array_list_type_id__volatile, vala_array_list_type_id);
+		g_once_init_leave (&vala_array_list_type_id__once, vala_array_list_type_id);
 	}
-	return vala_array_list_type_id__volatile;
+	return vala_array_list_type_id__once;
 }
 
 static void

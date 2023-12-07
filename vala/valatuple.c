@@ -147,7 +147,7 @@ ValaList*
 vala_tuple_get_expressions (ValaTuple* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->expression_list;
 	result = _tmp0_;
@@ -158,7 +158,7 @@ static gboolean
 vala_tuple_real_is_pure (ValaExpression* base)
 {
 	ValaTuple * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTuple*) base;
 	result = FALSE;
 	return result;
@@ -224,7 +224,7 @@ vala_tuple_real_check (ValaCodeNode* base,
 	gboolean _tmp1_;
 	ValaSourceReference* _tmp4_;
 	ValaSourceReference* _tmp5_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTuple*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -345,12 +345,12 @@ vala_tuple_get_type_once (void)
 GType
 vala_tuple_get_type (void)
 {
-	static volatile gsize vala_tuple_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_tuple_type_id__volatile)) {
+	static volatile gsize vala_tuple_type_id__once = 0;
+	if (g_once_init_enter (&vala_tuple_type_id__once)) {
 		GType vala_tuple_type_id;
 		vala_tuple_type_id = vala_tuple_get_type_once ();
-		g_once_init_leave (&vala_tuple_type_id__volatile, vala_tuple_type_id);
+		g_once_init_leave (&vala_tuple_type_id__once, vala_tuple_type_id);
 	}
-	return vala_tuple_type_id__volatile;
+	return vala_tuple_type_id__once;
 }
 

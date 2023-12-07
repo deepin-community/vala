@@ -115,7 +115,7 @@ ValaList*
 vala_for_statement_get_initializer (ValaForStatement* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->initializer;
 	result = _tmp0_;
@@ -148,7 +148,7 @@ ValaList*
 vala_for_statement_get_iterator (ValaForStatement* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->iterator;
 	result = _tmp0_;
@@ -461,7 +461,7 @@ vala_for_statement_real_check (ValaCodeNode* base,
 	ValaBlock* _tmp156_;
 	gboolean _tmp157_;
 	gboolean _tmp158_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaForStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -860,12 +860,12 @@ vala_for_statement_get_type_once (void)
 GType
 vala_for_statement_get_type (void)
 {
-	static volatile gsize vala_for_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_for_statement_type_id__volatile)) {
+	static volatile gsize vala_for_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_for_statement_type_id__once)) {
 		GType vala_for_statement_type_id;
 		vala_for_statement_type_id = vala_for_statement_get_type_once ();
-		g_once_init_leave (&vala_for_statement_type_id__volatile, vala_for_statement_type_id);
+		g_once_init_leave (&vala_for_statement_type_id__once, vala_for_statement_type_id);
 	}
-	return vala_for_statement_type_id__volatile;
+	return vala_for_statement_type_id__once;
 }
 

@@ -33,7 +33,6 @@
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
 struct _ValaGenericTypePrivate {
-	ValaTypeParameter* _type_parameter;
 	ValaGenericDupField* dup_field;
 	ValaGenericDestroyField* destroy_field;
 };
@@ -68,37 +67,32 @@ ValaTypeParameter*
 vala_generic_type_get_type_parameter (ValaGenericType* self)
 {
 	ValaTypeParameter* result;
-	ValaTypeParameter* _tmp0_;
+	ValaTypeSymbol* _tmp0_;
+	ValaTypeSymbol* _tmp1_;
 	g_return_val_if_fail (self != NULL, NULL);
-	_tmp0_ = self->priv->_type_parameter;
-	result = _tmp0_;
+	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
+	_tmp1_ = _tmp0_;
+	result = G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_TYPEPARAMETER, ValaTypeParameter);
 	return result;
-}
-
-void
-vala_generic_type_set_type_parameter (ValaGenericType* self,
-                                      ValaTypeParameter* value)
-{
-	g_return_if_fail (self != NULL);
-	self->priv->_type_parameter = value;
 }
 
 ValaGenericType*
 vala_generic_type_construct (GType object_type,
-                             ValaTypeParameter* type_parameter)
+                             ValaTypeParameter* type_parameter,
+                             ValaSourceReference* source_reference)
 {
 	ValaGenericType* self = NULL;
 	g_return_val_if_fail (type_parameter != NULL, NULL);
-	self = (ValaGenericType*) vala_data_type_construct (object_type);
-	vala_generic_type_set_type_parameter (self, type_parameter);
+	self = (ValaGenericType*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) type_parameter, source_reference);
 	vala_data_type_set_nullable ((ValaDataType*) self, TRUE);
 	return self;
 }
 
 ValaGenericType*
-vala_generic_type_new (ValaTypeParameter* type_parameter)
+vala_generic_type_new (ValaTypeParameter* type_parameter,
+                       ValaSourceReference* source_reference)
 {
-	return vala_generic_type_construct (VALA_TYPE_GENERIC_TYPE, type_parameter);
+	return vala_generic_type_construct (VALA_TYPE_GENERIC_TYPE, type_parameter, source_reference);
 }
 
 static ValaDataType*
@@ -107,32 +101,34 @@ vala_generic_type_real_copy (ValaDataType* base)
 	ValaGenericType * self;
 	ValaGenericType* _result_ = NULL;
 	ValaTypeParameter* _tmp0_;
-	ValaGenericType* _tmp1_;
-	ValaSourceReference* _tmp2_;
+	ValaTypeParameter* _tmp1_;
+	ValaGenericType* _tmp2_;
 	ValaSourceReference* _tmp3_;
-	gboolean _tmp4_;
+	ValaSourceReference* _tmp4_;
 	gboolean _tmp5_;
 	gboolean _tmp6_;
 	gboolean _tmp7_;
 	gboolean _tmp8_;
 	gboolean _tmp9_;
-	ValaDataType* result = NULL;
+	gboolean _tmp10_;
+	ValaDataType* result;
 	self = (ValaGenericType*) base;
-	_tmp0_ = self->priv->_type_parameter;
-	_tmp1_ = vala_generic_type_new (_tmp0_);
-	_result_ = _tmp1_;
-	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-	_tmp3_ = _tmp2_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _result_, _tmp3_);
-	_tmp4_ = vala_data_type_get_value_owned ((ValaDataType*) self);
-	_tmp5_ = _tmp4_;
-	vala_data_type_set_value_owned ((ValaDataType*) _result_, _tmp5_);
-	_tmp6_ = vala_data_type_get_nullable ((ValaDataType*) self);
-	_tmp7_ = _tmp6_;
-	vala_data_type_set_nullable ((ValaDataType*) _result_, _tmp7_);
-	_tmp8_ = vala_data_type_get_floating_reference ((ValaDataType*) self);
-	_tmp9_ = _tmp8_;
-	vala_data_type_set_floating_reference ((ValaDataType*) _result_, _tmp9_);
+	_tmp0_ = vala_generic_type_get_type_parameter (self);
+	_tmp1_ = _tmp0_;
+	_tmp2_ = vala_generic_type_new (_tmp1_, NULL);
+	_result_ = _tmp2_;
+	_tmp3_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp4_ = _tmp3_;
+	vala_code_node_set_source_reference ((ValaCodeNode*) _result_, _tmp4_);
+	_tmp5_ = vala_data_type_get_value_owned ((ValaDataType*) self);
+	_tmp6_ = _tmp5_;
+	vala_data_type_set_value_owned ((ValaDataType*) _result_, _tmp6_);
+	_tmp7_ = vala_data_type_get_nullable ((ValaDataType*) self);
+	_tmp8_ = _tmp7_;
+	vala_data_type_set_nullable ((ValaDataType*) _result_, _tmp8_);
+	_tmp9_ = vala_data_type_get_floating_reference ((ValaDataType*) self);
+	_tmp10_ = _tmp9_;
+	vala_data_type_set_floating_reference ((ValaDataType*) _result_, _tmp10_);
 	result = (ValaDataType*) _result_;
 	return result;
 }
@@ -149,7 +145,7 @@ vala_generic_type_real_get_actual_type (ValaDataType* base,
 	gboolean _tmp1_ = FALSE;
 	ValaDataType* _tmp2_;
 	ValaDataType* _tmp3_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaGenericType*) base;
 	_tmp0_ = vala_data_type_copy ((ValaDataType*) self);
 	_result_ = _tmp0_;
@@ -177,19 +173,21 @@ vala_generic_type_real_infer_type_argument (ValaDataType* base,
 {
 	ValaGenericType * self;
 	ValaTypeParameter* _tmp0_;
-	ValaDataType* result = NULL;
+	ValaTypeParameter* _tmp1_;
+	ValaDataType* result;
 	self = (ValaGenericType*) base;
 	g_return_val_if_fail (type_param != NULL, NULL);
 	g_return_val_if_fail (value_type != NULL, NULL);
-	_tmp0_ = self->priv->_type_parameter;
-	if (_tmp0_ == type_param) {
+	_tmp0_ = vala_generic_type_get_type_parameter (self);
+	_tmp1_ = _tmp0_;
+	if (_tmp1_ == type_param) {
 		ValaDataType* ret = NULL;
-		ValaDataType* _tmp1_;
 		ValaDataType* _tmp2_;
-		_tmp1_ = vala_data_type_copy (value_type);
-		ret = _tmp1_;
-		_tmp2_ = ret;
-		vala_data_type_set_value_owned (_tmp2_, TRUE);
+		ValaDataType* _tmp3_;
+		_tmp2_ = vala_data_type_copy (value_type);
+		ret = _tmp2_;
+		_tmp3_ = ret;
+		vala_data_type_set_value_owned (_tmp3_, TRUE);
 		result = ret;
 		return result;
 	}
@@ -203,16 +201,18 @@ vala_generic_type_real_to_qualified_string (ValaDataType* base,
 {
 	ValaGenericType * self;
 	ValaTypeParameter* _tmp0_;
-	const gchar* _tmp1_;
+	ValaTypeParameter* _tmp1_;
 	const gchar* _tmp2_;
-	gchar* _tmp3_;
-	gchar* result = NULL;
+	const gchar* _tmp3_;
+	gchar* _tmp4_;
+	gchar* result;
 	self = (ValaGenericType*) base;
-	_tmp0_ = self->priv->_type_parameter;
-	_tmp1_ = vala_symbol_get_name ((ValaSymbol*) _tmp0_);
-	_tmp2_ = _tmp1_;
-	_tmp3_ = g_strdup (_tmp2_);
-	result = _tmp3_;
+	_tmp0_ = vala_generic_type_get_type_parameter (self);
+	_tmp1_ = _tmp0_;
+	_tmp2_ = vala_symbol_get_name ((ValaSymbol*) _tmp1_);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = g_strdup (_tmp3_);
+	result = _tmp4_;
 	return result;
 }
 
@@ -227,7 +227,7 @@ vala_generic_type_real_get_member (ValaDataType* base,
                                    const gchar* member_name)
 {
 	ValaGenericType * self;
-	ValaSymbol* result = NULL;
+	ValaSymbol* result;
 	self = (ValaGenericType*) base;
 	g_return_val_if_fail (member_name != NULL, NULL);
 	if (g_strcmp0 (member_name, "dup") == 0) {
@@ -256,7 +256,7 @@ vala_generic_type_get_dup_field (ValaGenericType* self)
 {
 	ValaGenericDupField* _tmp0_;
 	ValaGenericDupField* _tmp5_;
-	ValaGenericDupField* result = NULL;
+	ValaGenericDupField* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dup_field;
 	if (_tmp0_ == NULL) {
@@ -282,7 +282,7 @@ vala_generic_type_get_destroy_field (ValaGenericType* self)
 {
 	ValaGenericDestroyField* _tmp0_;
 	ValaGenericDestroyField* _tmp5_;
-	ValaGenericDestroyField* result = NULL;
+	ValaGenericDestroyField* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->destroy_field;
 	if (_tmp0_ == NULL) {
@@ -350,12 +350,12 @@ vala_generic_type_get_type_once (void)
 GType
 vala_generic_type_get_type (void)
 {
-	static volatile gsize vala_generic_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_generic_type_type_id__volatile)) {
+	static volatile gsize vala_generic_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_generic_type_type_id__once)) {
 		GType vala_generic_type_type_id;
 		vala_generic_type_type_id = vala_generic_type_get_type_once ();
-		g_once_init_leave (&vala_generic_type_type_id__volatile, vala_generic_type_type_id);
+		g_once_init_leave (&vala_generic_type_type_id__once, vala_generic_type_type_id);
 	}
-	return vala_generic_type_type_id__volatile;
+	return vala_generic_type_type_id__once;
 }
 

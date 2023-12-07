@@ -166,7 +166,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -272,7 +272,7 @@ valadoc_importer_valadoc_documentation_scanner_stop (ValadocImporterValadocDocum
 gint
 valadoc_importer_valadoc_documentation_scanner_get_line (ValadocImporterValadocDocumentationScanner* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = self->priv->_line;
 	return result;
@@ -289,7 +289,7 @@ valadoc_importer_valadoc_documentation_scanner_real_get_line_content (ValadocImp
 	GString* _tmp15_;
 	const gchar* _tmp16_;
 	gchar* _tmp17_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
 	_tmp1_ = self->priv->_index;
@@ -371,7 +371,7 @@ string_index_of_nth_char (const gchar* self,
                           glong c)
 {
 	gchar* _tmp0_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_offset_to_pointer (self, c);
 	result = (gint) (_tmp0_ - ((gchar*) self));
@@ -384,7 +384,7 @@ valadoc_importer_valadoc_documentation_scanner_get_next_char (ValadocImporterVal
 {
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	_tmp0_ = self->priv->_index;
 	_tmp1_ = self->priv->_index;
@@ -531,7 +531,7 @@ valadoc_importer_valadoc_documentation_scanner_append_char (ValadocImporterValad
 static gint
 valadoc_importer_valadoc_documentation_scanner_real_get_line_start_column (ValadocImporterValadocDocumentationScanner* self)
 {
-	gint result = 0;
+	gint result;
 	result = 0;
 	return result;
 }
@@ -726,12 +726,12 @@ valadoc_importer_valadoc_documentation_scanner_get_type_once (void)
 GType
 valadoc_importer_valadoc_documentation_scanner_get_type (void)
 {
-	static volatile gsize valadoc_importer_valadoc_documentation_scanner_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_scanner_type_id__volatile)) {
+	static volatile gsize valadoc_importer_valadoc_documentation_scanner_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_importer_valadoc_documentation_scanner_type_id__once)) {
 		GType valadoc_importer_valadoc_documentation_scanner_type_id;
 		valadoc_importer_valadoc_documentation_scanner_type_id = valadoc_importer_valadoc_documentation_scanner_get_type_once ();
-		g_once_init_leave (&valadoc_importer_valadoc_documentation_scanner_type_id__volatile, valadoc_importer_valadoc_documentation_scanner_type_id);
+		g_once_init_leave (&valadoc_importer_valadoc_documentation_scanner_type_id__once, valadoc_importer_valadoc_documentation_scanner_type_id);
 	}
-	return valadoc_importer_valadoc_documentation_scanner_type_id__volatile;
+	return valadoc_importer_valadoc_documentation_scanner_type_id__once;
 }
 

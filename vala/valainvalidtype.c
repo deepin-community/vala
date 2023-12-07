@@ -24,6 +24,8 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
+#include <glib.h>
 
 static gpointer vala_invalid_type_parent_class = NULL;
 
@@ -50,7 +52,7 @@ vala_invalid_type_real_copy (ValaDataType* base)
 {
 	ValaInvalidType * self;
 	ValaInvalidType* _tmp0_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaInvalidType*) base;
 	_tmp0_ = vala_invalid_type_new ();
 	result = (ValaDataType*) _tmp0_;
@@ -86,12 +88,12 @@ vala_invalid_type_get_type_once (void)
 GType
 vala_invalid_type_get_type (void)
 {
-	static volatile gsize vala_invalid_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_invalid_type_type_id__volatile)) {
+	static volatile gsize vala_invalid_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_invalid_type_type_id__once)) {
 		GType vala_invalid_type_type_id;
 		vala_invalid_type_type_id = vala_invalid_type_get_type_once ();
-		g_once_init_leave (&vala_invalid_type_type_id__volatile, vala_invalid_type_type_id);
+		g_once_init_leave (&vala_invalid_type_type_id__once, vala_invalid_type_type_id);
 	}
-	return vala_invalid_type_type_id__volatile;
+	return vala_invalid_type_type_id__once;
 }
 
