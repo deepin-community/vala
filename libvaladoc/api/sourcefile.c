@@ -170,7 +170,7 @@ valadoc_api_source_file_get_name (ValadocApiSourceFile* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_relative_path;
 	_tmp1_ = g_path_get_basename (_tmp0_);
@@ -288,13 +288,13 @@ valadoc_api_source_file_get_type_once (void)
 GType
 valadoc_api_source_file_get_type (void)
 {
-	static volatile gsize valadoc_api_source_file_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_source_file_type_id__volatile)) {
+	static volatile gsize valadoc_api_source_file_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_source_file_type_id__once)) {
 		GType valadoc_api_source_file_type_id;
 		valadoc_api_source_file_type_id = valadoc_api_source_file_get_type_once ();
-		g_once_init_leave (&valadoc_api_source_file_type_id__volatile, valadoc_api_source_file_type_id);
+		g_once_init_leave (&valadoc_api_source_file_type_id__once, valadoc_api_source_file_type_id);
 	}
-	return valadoc_api_source_file_type_id__volatile;
+	return valadoc_api_source_file_type_id__once;
 }
 
 static void

@@ -24,7 +24,6 @@
 
 
 public class Vala.GObjectModule : GTypeModule {
-	int dynamic_property_id;
 	int signal_wrapper_id;
 
 	public override void visit_class (Class cl) {
@@ -143,12 +142,28 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_statement (new CCodeComment (prop.comment.content));
 			}
 
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			var cinst = new CCodeFunctionCall ();
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
-			cinst.add_argument (get_param_spec (prop));
 
-			ccode.add_expression (cinst);
+			//TODO g_object_class_override_property should be used more regulary
+			unowned Property? base_prop = prop.base_interface_property;
+			if (base_prop != null && base_prop.property_type is GenericType) {
+				cinst.call = new CCodeIdentifier ("g_object_class_override_property");
+				cinst.add_argument (get_property_canonical_cconstant (prop));
+
+				ccode.add_expression (cinst);
+
+				var cfind = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_find_property"));
+				cfind.add_argument (ccall);
+				cfind.add_argument (get_property_canonical_cconstant (prop));
+				ccode.add_expression (new CCodeAssignment (get_param_spec_cexpression (prop), cfind));
+			} else {
+				cinst.call = new CCodeIdentifier ("g_object_class_install_property");
+				cinst.add_argument (get_param_spec (prop));
+
+				ccode.add_expression (cinst);
+			}
 		}
 	}
 
@@ -274,7 +289,11 @@ public class Vala.GObjectModule : GTypeModule {
 					csetcall.call = get_value_setter_function (prop.property_type);
 				}
 				csetcall.add_argument (new CCodeIdentifier ("value"));
-				csetcall.add_argument (ccall);
+				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+					csetcall.add_argument (convert_from_generic_pointer (ccall, prop.property_type));
+				} else {
+					csetcall.add_argument (ccall);
+				}
 				add_guarded_expression (prop, csetcall);
 				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
 					ccode.close ();
@@ -408,7 +427,11 @@ public class Vala.GObjectModule : GTypeModule {
 					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 				}
 				cgetcall.add_argument (new CCodeIdentifier ("value"));
-				ccall.add_argument (cgetcall);
+				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+					ccall.add_argument (convert_to_generic_pointer (cgetcall, prop.property_type));
+				} else {
+					ccall.add_argument (cgetcall);
+				}
 				add_guarded_expression (prop, ccall);
 			}
 			ccode.add_break ();
@@ -499,7 +522,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (cl.is_singleton) {
 				var singleton_ref_name = "%s_singleton__ref".printf (get_ccode_name (cl));
 				var singleton_lock_name = "%s_singleton__lock".printf (get_ccode_name (cl));
-				var singleton_once_name = "%s_singleton__volatile".printf (get_ccode_name (cl));
+				var singleton_once_name = "%s_singleton__once".printf (get_ccode_name (cl));
 
 				var singleton_ref = new CCodeDeclaration("GObject *");
 				singleton_ref.add_declarator (new CCodeVariableDeclarator (singleton_ref_name, new CCodeConstant ("NULL")));
@@ -654,152 +677,8 @@ public class Vala.GObjectModule : GTypeModule {
 		pop_line ();
 	}
 
-	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.type_symbol == null
-		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_property_getter_cname (prop);
-		}
-
-		string getter_cname = "_dynamic_get_%s%d".printf (prop.name, dynamic_property_id++);
-
-		var func = new CCodeFunction (getter_cname, get_ccode_name (prop.property_type));
-		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
-
-		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
-
-		push_function (func);
-
-		ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("result"));
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
-		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (get_property_canonical_cconstant (prop));
-		call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
-		call.add_argument (new CCodeConstant ("NULL"));
-
-		ccode.add_expression (call);
-
-		ccode.add_return (new CCodeIdentifier ("result"));
-
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return getter_cname;
-	}
-
-	public override string get_dynamic_property_setter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.type_symbol == null
-		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_property_setter_cname (prop);
-		}
-
-		string setter_cname = "_dynamic_set_%s%d".printf (prop.name, dynamic_property_id++);
-
-		var func = new CCodeFunction (setter_cname, "void");
-		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
-		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
-		func.add_parameter (new CCodeParameter ("value", get_ccode_name (prop.property_type)));
-
-		push_function (func);
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
-		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (get_property_canonical_cconstant (prop));
-		call.add_argument (new CCodeIdentifier ("value"));
-		call.add_argument (new CCodeConstant ("NULL"));
-
-		ccode.add_expression (call);
-
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return setter_cname;
-	}
-
 	public override string get_dynamic_signal_cname (DynamicSignal node) {
 		return "dynamic_%s%d_".printf (node.name, signal_wrapper_id++);
-	}
-
-	public override string get_dynamic_signal_connect_wrapper_name (DynamicSignal sig) {
-		if (sig.dynamic_type.type_symbol == null
-		    || !sig.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_signal_connect_wrapper_name (sig);
-		}
-
-		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (sig));
-		var func = new CCodeFunction (connect_wrapper_name, "gulong");
-		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeParameter ("data", "gpointer"));
-		push_function (func);
-		generate_gobject_connect_wrapper (sig, false);
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return connect_wrapper_name;
-	}
-
-	public override string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal sig) {
-		if (sig.dynamic_type.type_symbol == null
-		    || !sig.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_signal_connect_wrapper_name (sig);
-		}
-
-		string connect_wrapper_name = "_%sconnect_after".printf (get_dynamic_signal_cname (sig));
-		var func = new CCodeFunction (connect_wrapper_name, "gulong");
-		func.add_parameter (new CCodeParameter ("obj", "gpointer"));
-		func.add_parameter (new CCodeParameter ("signal_name", "const char *"));
-		func.add_parameter (new CCodeParameter ("handler", "GCallback"));
-		func.add_parameter (new CCodeParameter ("data", "gpointer"));
-		push_function (func);
-		generate_gobject_connect_wrapper (sig, true);
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return connect_wrapper_name;
-	}
-
-	void generate_gobject_connect_wrapper (DynamicSignal sig, bool after) {
-		var m = (Method) sig.handler.symbol_reference;
-
-		sig.accept (this);
-
-		string connect_func = "g_signal_connect_object";
-		if (m.binding != MemberBinding.INSTANCE) {
-			if (!after)
-				connect_func = "g_signal_connect";
-			else
-				connect_func = "g_signal_connect_after";
-		}
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
-		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (new CCodeIdentifier ("signal_name"));
-		call.add_argument (new CCodeIdentifier ("handler"));
-		call.add_argument (new CCodeIdentifier ("data"));
-
-		if (m.binding == MemberBinding.INSTANCE) {
-			if (!after) {
-				call.add_argument (new CCodeConstant ("0"));
-			} else {
-				call.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
-			}
-		}
-
-		ccode.add_return (call);
 	}
 
 	public override void visit_property (Property prop) {

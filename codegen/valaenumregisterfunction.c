@@ -27,6 +27,7 @@
 #include "valacodegen.h"
 #include <vala.h>
 #include <glib.h>
+#include <glib-object.h>
 
 struct _ValaEnumRegisterFunctionPrivate {
 	ValaEnum* _enum_reference;
@@ -100,7 +101,7 @@ vala_enum_register_function_real_get_type_declaration (ValaTypeRegisterFunction*
 	ValaEnumRegisterFunction * self;
 	ValaEnum* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
-	ValaTypeSymbol* result = NULL;
+	ValaTypeSymbol* result;
 	self = (ValaEnumRegisterFunction*) base;
 	_tmp0_ = self->priv->_enum_reference;
 	_tmp1_ = _vala_code_node_ref0 ((ValaTypeSymbol*) _tmp0_);
@@ -115,7 +116,7 @@ vala_enum_register_function_real_get_accessibility (ValaTypeRegisterFunction* ba
 	ValaEnum* _tmp0_;
 	ValaSymbolAccessibility _tmp1_;
 	ValaSymbolAccessibility _tmp2_;
-	ValaSymbolAccessibility result = 0;
+	ValaSymbolAccessibility result;
 	self = (ValaEnumRegisterFunction*) base;
 	_tmp0_ = self->priv->_enum_reference;
 	_tmp1_ = vala_symbol_get_access ((ValaSymbol*) _tmp0_);
@@ -166,12 +167,12 @@ vala_enum_register_function_get_type_once (void)
 GType
 vala_enum_register_function_get_type (void)
 {
-	static volatile gsize vala_enum_register_function_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_enum_register_function_type_id__volatile)) {
+	static volatile gsize vala_enum_register_function_type_id__once = 0;
+	if (g_once_init_enter (&vala_enum_register_function_type_id__once)) {
 		GType vala_enum_register_function_type_id;
 		vala_enum_register_function_type_id = vala_enum_register_function_get_type_once ();
-		g_once_init_leave (&vala_enum_register_function_type_id__volatile, vala_enum_register_function_type_id);
+		g_once_init_leave (&vala_enum_register_function_type_id__once, vala_enum_register_function_type_id);
 	}
-	return vala_enum_register_function_type_id__volatile;
+	return vala_enum_register_function_type_id__once;
 }
 

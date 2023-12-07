@@ -94,7 +94,7 @@ vala_statement_list_get (ValaStatementList* self,
 {
 	ValaList* _tmp0_;
 	gpointer _tmp1_;
-	ValaStatement* result = NULL;
+	ValaStatement* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->list;
 	_tmp1_ = vala_list_get (_tmp0_, index);
@@ -233,7 +233,7 @@ vala_statement_list_real_check (ValaCodeNode* base,
                                 ValaCodeContext* context)
 {
 	ValaStatementList * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaStatementList*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	{
@@ -381,12 +381,12 @@ vala_statement_list_get_type_once (void)
 GType
 vala_statement_list_get_type (void)
 {
-	static volatile gsize vala_statement_list_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_statement_list_type_id__volatile)) {
+	static volatile gsize vala_statement_list_type_id__once = 0;
+	if (g_once_init_enter (&vala_statement_list_type_id__once)) {
 		GType vala_statement_list_type_id;
 		vala_statement_list_type_id = vala_statement_list_get_type_once ();
-		g_once_init_leave (&vala_statement_list_type_id__volatile, vala_statement_list_type_id);
+		g_once_init_leave (&vala_statement_list_type_id__once, vala_statement_list_type_id);
 	}
-	return vala_statement_list_type_id__volatile;
+	return vala_statement_list_type_id__once;
 }
 

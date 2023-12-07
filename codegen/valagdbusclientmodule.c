@@ -116,13 +116,13 @@ vala_gd_bus_client_module_call_type_get_type_once (void)
 static GType
 vala_gd_bus_client_module_call_type_get_type (void)
 {
-	static volatile gsize vala_gd_bus_client_module_call_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_gd_bus_client_module_call_type_type_id__volatile)) {
+	static volatile gsize vala_gd_bus_client_module_call_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_gd_bus_client_module_call_type_type_id__once)) {
 		GType vala_gd_bus_client_module_call_type_type_id;
 		vala_gd_bus_client_module_call_type_type_id = vala_gd_bus_client_module_call_type_get_type_once ();
-		g_once_init_leave (&vala_gd_bus_client_module_call_type_type_id__volatile, vala_gd_bus_client_module_call_type_type_id);
+		g_once_init_leave (&vala_gd_bus_client_module_call_type_type_id__once, vala_gd_bus_client_module_call_type_type_id);
 	}
-	return vala_gd_bus_client_module_call_type_type_id__volatile;
+	return vala_gd_bus_client_module_call_type_type_id__once;
 }
 
 static gpointer
@@ -145,7 +145,7 @@ vala_gd_bus_client_module_get_dbus_timeout (ValaGDBusClientModule* self,
 	gchar* _tmp12_;
 	ValaCCodeConstant* _tmp13_;
 	ValaCCodeConstant* _tmp14_;
-	ValaCCodeConstant* result = NULL;
+	ValaCCodeConstant* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (symbol != NULL, NULL);
 	timeout = -1;
@@ -720,7 +720,7 @@ vala_gd_bus_client_module_implement_interface (ValaGDBusClientModule* self,
 	gchar* _tmp29_;
 	gchar* _tmp30_;
 	gchar* _tmp31_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (define_type != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
@@ -1539,7 +1539,7 @@ vala_gd_bus_client_module_real_visit_method_call (ValaCodeVisitor* base,
 	ValaCCodeExpression* _tmp385_;
 	self = (ValaGDBusClientModule*) base;
 	g_return_if_fail (expr != NULL);
-	_tmp0_ = vala_method_call_get_call (expr);
+	_tmp0_ = vala_callable_expression_get_call ((ValaCallableExpression*) expr);
 	_tmp1_ = _tmp0_;
 	_tmp2_ = vala_expression_get_value_type (_tmp1_);
 	_tmp3_ = _tmp2_;
@@ -1637,7 +1637,7 @@ vala_gd_bus_client_module_real_visit_method_call (ValaCodeVisitor* base,
 		_vala_code_node_unref0 (mtype);
 		return;
 	}
-	_tmp36_ = vala_method_call_get_call (expr);
+	_tmp36_ = vala_callable_expression_get_call ((ValaCallableExpression*) expr);
 	_tmp37_ = _tmp36_;
 	_tmp38_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_CAST (_tmp37_, VALA_TYPE_MEMBER_ACCESS, ValaMemberAccess));
 	ma = _tmp38_;
@@ -2623,7 +2623,7 @@ vala_gd_bus_client_module_generate_dbus_signal_handler (ValaGDBusClientModule* s
 	ValaCCodeFunction* _tmp162_;
 	ValaCCodeFile* _tmp163_;
 	ValaCCodeFunction* _tmp164_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (sig != NULL, NULL);
 	g_return_val_if_fail (sym != NULL, NULL);
@@ -5522,7 +5522,7 @@ vala_gd_bus_client_module_generate_dbus_proxy_method (ValaGDBusClientModule* sel
 	ValaCCodeFunction* _tmp23_;
 	ValaCCodeFile* _tmp24_;
 	ValaCCodeFunction* _tmp25_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
 	g_return_val_if_fail (iface != NULL, NULL);
@@ -5609,7 +5609,7 @@ vala_gd_bus_client_module_generate_async_dbus_proxy_method (ValaGDBusClientModul
 	gchar* _tmp18_;
 	ValaCCodeFile* _tmp19_;
 	ValaCCodeFile* _tmp20_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
 	g_return_val_if_fail (iface != NULL, NULL);
@@ -5684,7 +5684,7 @@ vala_gd_bus_client_module_generate_finish_dbus_proxy_method (ValaGDBusClientModu
 	ValaCCodeFile* _tmp13_;
 	ValaCCodeFile* _tmp14_;
 	ValaCCodeFile* _tmp15_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
 	g_return_val_if_fail (iface != NULL, NULL);
@@ -5944,7 +5944,7 @@ vala_gd_bus_client_module_generate_dbus_proxy_property_get (ValaGDBusClientModul
 	ValaCCodeFunction* _tmp351_;
 	ValaCCodeFile* _tmp352_;
 	ValaCCodeFunction* _tmp353_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
 	g_return_val_if_fail (iface != NULL, NULL);
@@ -6874,7 +6874,7 @@ vala_gd_bus_client_module_generate_dbus_proxy_property_set (ValaGDBusClientModul
 	ValaCCodeFunction* _tmp203_;
 	ValaCCodeFile* _tmp204_;
 	ValaCCodeFunction* _tmp205_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (main_iface != NULL, NULL);
 	g_return_val_if_fail (iface != NULL, NULL);
@@ -7586,12 +7586,12 @@ vala_gd_bus_client_module_get_type_once (void)
 GType
 vala_gd_bus_client_module_get_type (void)
 {
-	static volatile gsize vala_gd_bus_client_module_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_gd_bus_client_module_type_id__volatile)) {
+	static volatile gsize vala_gd_bus_client_module_type_id__once = 0;
+	if (g_once_init_enter (&vala_gd_bus_client_module_type_id__once)) {
 		GType vala_gd_bus_client_module_type_id;
 		vala_gd_bus_client_module_type_id = vala_gd_bus_client_module_get_type_once ();
-		g_once_init_leave (&vala_gd_bus_client_module_type_id__volatile, vala_gd_bus_client_module_type_id);
+		g_once_init_leave (&vala_gd_bus_client_module_type_id__once, vala_gd_bus_client_module_type_id);
 	}
-	return vala_gd_bus_client_module_type_id__volatile;
+	return vala_gd_bus_client_module_type_id__once;
 }
 

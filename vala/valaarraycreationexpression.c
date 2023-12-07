@@ -218,7 +218,7 @@ ValaList*
 vala_array_creation_expression_get_sizes (ValaArrayCreationExpression* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->sizes;
 	result = _tmp0_;
@@ -344,7 +344,7 @@ static gboolean
 vala_array_creation_expression_real_is_pure (ValaExpression* base)
 {
 	ValaArrayCreationExpression * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayCreationExpression*) base;
 	result = FALSE;
 	return result;
@@ -363,7 +363,7 @@ vala_array_creation_expression_real_is_accessible (ValaExpression* base,
 	ValaDataType* _tmp7_;
 	ValaInitializerList* _tmp19_;
 	ValaInitializerList* _tmp20_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayCreationExpression*) base;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp1_ = vala_array_creation_expression_get_element_type (self);
@@ -462,13 +462,18 @@ vala_array_creation_expression_real_to_string (ValaCodeNode* base)
 	gchar* _tmp4_;
 	gchar* _tmp5_;
 	gboolean first = FALSE;
-	GString* _tmp22_;
-	ValaInitializerList* _tmp23_;
-	ValaInitializerList* _tmp24_;
-	GString* _tmp30_;
-	const gchar* _tmp31_;
-	gchar* _tmp32_;
-	gchar* result = NULL;
+	gchar* length_str = NULL;
+	ValaDataType* _tmp22_;
+	ValaDataType* _tmp23_;
+	gchar* _tmp24_;
+	const gchar* _tmp25_;
+	GString* _tmp28_;
+	ValaInitializerList* _tmp29_;
+	ValaInitializerList* _tmp30_;
+	GString* _tmp36_;
+	const gchar* _tmp37_;
+	gchar* _tmp38_;
+	gchar* result;
 	self = (ValaArrayCreationExpression*) base;
 	_tmp0_ = g_string_new ("new ");
 	builder = _tmp0_;
@@ -537,28 +542,41 @@ vala_array_creation_expression_real_to_string (ValaCodeNode* base)
 			_vala_code_node_unref0 (size);
 		}
 	}
-	_tmp22_ = builder;
-	g_string_append_c (_tmp22_, ']');
-	_tmp23_ = vala_array_creation_expression_get_initializer_list (self);
-	_tmp24_ = _tmp23_;
-	if (_tmp24_ != NULL) {
-		GString* _tmp25_;
-		ValaInitializerList* _tmp26_;
-		ValaInitializerList* _tmp27_;
-		gchar* _tmp28_;
-		gchar* _tmp29_;
-		_tmp25_ = builder;
-		_tmp26_ = vala_array_creation_expression_get_initializer_list (self);
-		_tmp27_ = _tmp26_;
-		_tmp28_ = vala_code_node_to_string ((ValaCodeNode*) _tmp27_);
-		_tmp29_ = _tmp28_;
-		g_string_append (_tmp25_, _tmp29_);
-		_g_free0 (_tmp29_);
+	_tmp22_ = vala_array_creation_expression_get_length_type (self);
+	_tmp23_ = _tmp22_;
+	_tmp24_ = vala_code_node_to_string ((ValaCodeNode*) _tmp23_);
+	length_str = _tmp24_;
+	_tmp25_ = length_str;
+	if (g_strcmp0 (_tmp25_, "int") != 0) {
+		GString* _tmp26_;
+		const gchar* _tmp27_;
+		_tmp26_ = builder;
+		_tmp27_ = length_str;
+		g_string_append_printf (_tmp26_, ":%s", _tmp27_);
 	}
-	_tmp30_ = builder;
-	_tmp31_ = _tmp30_->str;
-	_tmp32_ = g_strdup (_tmp31_);
-	result = _tmp32_;
+	_tmp28_ = builder;
+	g_string_append_c (_tmp28_, ']');
+	_tmp29_ = vala_array_creation_expression_get_initializer_list (self);
+	_tmp30_ = _tmp29_;
+	if (_tmp30_ != NULL) {
+		GString* _tmp31_;
+		ValaInitializerList* _tmp32_;
+		ValaInitializerList* _tmp33_;
+		gchar* _tmp34_;
+		gchar* _tmp35_;
+		_tmp31_ = builder;
+		_tmp32_ = vala_array_creation_expression_get_initializer_list (self);
+		_tmp33_ = _tmp32_;
+		_tmp34_ = vala_code_node_to_string ((ValaCodeNode*) _tmp33_);
+		_tmp35_ = _tmp34_;
+		g_string_append (_tmp31_, _tmp35_);
+		_g_free0 (_tmp35_);
+	}
+	_tmp36_ = builder;
+	_tmp37_ = _tmp36_->str;
+	_tmp38_ = g_strdup (_tmp37_);
+	result = _tmp38_;
+	_g_free0 (length_str);
 	_g_string_free0 (builder);
 	return result;
 }
@@ -653,7 +671,7 @@ vala_array_creation_expression_create_sizes_from_initializer_list (ValaArrayCrea
 	gint subsize = 0;
 	gint _tmp38_;
 	gint _tmp39_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (context != NULL, 0);
 	g_return_val_if_fail (il != NULL, 0);
@@ -865,7 +883,7 @@ vala_array_creation_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp170_;
 	gboolean _tmp171_;
 	gboolean _tmp172_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaArrayCreationExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -1528,12 +1546,12 @@ vala_array_creation_expression_get_type_once (void)
 GType
 vala_array_creation_expression_get_type (void)
 {
-	static volatile gsize vala_array_creation_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_array_creation_expression_type_id__volatile)) {
+	static volatile gsize vala_array_creation_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_array_creation_expression_type_id__once)) {
 		GType vala_array_creation_expression_type_id;
 		vala_array_creation_expression_type_id = vala_array_creation_expression_get_type_once ();
-		g_once_init_leave (&vala_array_creation_expression_type_id__volatile, vala_array_creation_expression_type_id);
+		g_once_init_leave (&vala_array_creation_expression_type_id__once, vala_array_creation_expression_type_id);
 	}
-	return vala_array_creation_expression_type_id__volatile;
+	return vala_array_creation_expression_type_id__once;
 }
 

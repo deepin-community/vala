@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 typedef struct _Block1Data Block1Data;
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
@@ -169,7 +170,7 @@ valadoc_gtk_doc_markup_writer_real_inline_element (ValadocMarkupWriter* base,
 	gboolean _tmp10_ = FALSE;
 	gboolean _tmp11_ = FALSE;
 	gboolean _tmp12_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocGtkDocMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	if (g_strcmp0 (name, "para") != 0) {
@@ -252,7 +253,7 @@ valadoc_gtk_doc_markup_writer_real_content_inline_element (ValadocMarkupWriter* 
 	gboolean _tmp3_ = FALSE;
 	gboolean _tmp4_ = FALSE;
 	gboolean _tmp5_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocGtkDocMarkupWriter*) base;
 	g_return_val_if_fail (name != NULL, FALSE);
 	if (g_strcmp0 (name, "para") == 0) {
@@ -328,12 +329,12 @@ valadoc_gtk_doc_markup_writer_get_type_once (void)
 GType
 valadoc_gtk_doc_markup_writer_get_type (void)
 {
-	static volatile gsize valadoc_gtk_doc_markup_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtk_doc_markup_writer_type_id__volatile)) {
+	static volatile gsize valadoc_gtk_doc_markup_writer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtk_doc_markup_writer_type_id__once)) {
 		GType valadoc_gtk_doc_markup_writer_type_id;
 		valadoc_gtk_doc_markup_writer_type_id = valadoc_gtk_doc_markup_writer_get_type_once ();
-		g_once_init_leave (&valadoc_gtk_doc_markup_writer_type_id__volatile, valadoc_gtk_doc_markup_writer_type_id);
+		g_once_init_leave (&valadoc_gtk_doc_markup_writer_type_id__once, valadoc_gtk_doc_markup_writer_type_id);
 	}
-	return valadoc_gtk_doc_markup_writer_type_id__volatile;
+	return valadoc_gtk_doc_markup_writer_type_id__once;
 }
 

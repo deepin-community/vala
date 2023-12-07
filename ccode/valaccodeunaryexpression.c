@@ -25,6 +25,7 @@
 
 #include "valaccode.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_ccode_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_ccode_node_unref (var), NULL)))
 
@@ -53,10 +54,8 @@ ValaCCodeUnaryOperator
 vala_ccode_unary_expression_get_operator (ValaCCodeUnaryExpression* self)
 {
 	ValaCCodeUnaryOperator result;
-	ValaCCodeUnaryOperator _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_operator;
-	result = _tmp0_;
+	result = self->priv->_operator;
 	return result;
 }
 
@@ -232,27 +231,33 @@ vala_ccode_unary_expression_real_write (ValaCCodeNode* base,
 		}
 		case VALA_CCODE_UNARY_OPERATOR_PREFIX_INCREMENT:
 		{
+			ValaCCodeExpression* _tmp23_;
 			vala_ccode_writer_write_string (writer, "++");
+			_tmp23_ = self->priv->_inner;
+			vala_ccode_expression_write_inner (_tmp23_, writer);
 			break;
 		}
 		case VALA_CCODE_UNARY_OPERATOR_PREFIX_DECREMENT:
 		{
+			ValaCCodeExpression* _tmp24_;
 			vala_ccode_writer_write_string (writer, "--");
+			_tmp24_ = self->priv->_inner;
+			vala_ccode_expression_write_inner (_tmp24_, writer);
 			break;
 		}
 		case VALA_CCODE_UNARY_OPERATOR_POSTFIX_INCREMENT:
 		{
-			ValaCCodeExpression* _tmp23_;
-			_tmp23_ = self->priv->_inner;
-			vala_ccode_expression_write_inner (_tmp23_, writer);
+			ValaCCodeExpression* _tmp25_;
+			_tmp25_ = self->priv->_inner;
+			vala_ccode_expression_write_inner (_tmp25_, writer);
 			vala_ccode_writer_write_string (writer, "++");
 			break;
 		}
 		case VALA_CCODE_UNARY_OPERATOR_POSTFIX_DECREMENT:
 		{
-			ValaCCodeExpression* _tmp24_;
-			_tmp24_ = self->priv->_inner;
-			vala_ccode_expression_write_inner (_tmp24_, writer);
+			ValaCCodeExpression* _tmp26_;
+			_tmp26_ = self->priv->_inner;
+			vala_ccode_expression_write_inner (_tmp26_, writer);
 			vala_ccode_writer_write_string (writer, "--");
 			break;
 		}
@@ -318,13 +323,13 @@ vala_ccode_unary_expression_get_type_once (void)
 GType
 vala_ccode_unary_expression_get_type (void)
 {
-	static volatile gsize vala_ccode_unary_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_unary_expression_type_id__volatile)) {
+	static volatile gsize vala_ccode_unary_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_unary_expression_type_id__once)) {
 		GType vala_ccode_unary_expression_type_id;
 		vala_ccode_unary_expression_type_id = vala_ccode_unary_expression_get_type_once ();
-		g_once_init_leave (&vala_ccode_unary_expression_type_id__volatile, vala_ccode_unary_expression_type_id);
+		g_once_init_leave (&vala_ccode_unary_expression_type_id__once, vala_ccode_unary_expression_type_id);
 	}
-	return vala_ccode_unary_expression_type_id__volatile;
+	return vala_ccode_unary_expression_type_id__once;
 }
 
 static GType
@@ -339,12 +344,12 @@ vala_ccode_unary_operator_get_type_once (void)
 GType
 vala_ccode_unary_operator_get_type (void)
 {
-	static volatile gsize vala_ccode_unary_operator_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_unary_operator_type_id__volatile)) {
+	static volatile gsize vala_ccode_unary_operator_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_unary_operator_type_id__once)) {
 		GType vala_ccode_unary_operator_type_id;
 		vala_ccode_unary_operator_type_id = vala_ccode_unary_operator_get_type_once ();
-		g_once_init_leave (&vala_ccode_unary_operator_type_id__volatile, vala_ccode_unary_operator_type_id);
+		g_once_init_leave (&vala_ccode_unary_operator_type_id__once, vala_ccode_unary_operator_type_id);
 	}
-	return vala_ccode_unary_operator_type_id__volatile;
+	return vala_ccode_unary_operator_type_id__once;
 }
 

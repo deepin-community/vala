@@ -90,6 +90,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m)));
 			}
 
+			delegate_type = expr.target_type as DelegateType;
+			if (delegate_type != null) {
+				generate_type_declaration (delegate_type, cfile);
+				set_cvalue (expr, new CCodeCastExpression (get_cvalue (expr), get_ccode_name (delegate_type.delegate_symbol)));
+			}
+
 			set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 			if (m.binding == MemberBinding.STATIC) {
 				set_delegate_target (expr, new CCodeConstant ("NULL"));
@@ -113,23 +119,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_delegate_target (expr, delegate_target);
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
-			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
-				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
-			}
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is DelegateTargetField) {
-			if (!((DelegateType) expr.inner.value_type).delegate_symbol.has_target) {
-				Report.error (expr.source_reference, "unsupported use of target field of delegate without target");
-			}
 			CCodeExpression delegate_target_destroy_notify;
-			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify));
+			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify) ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is DelegateDestroyField) {
-			if (!((DelegateType) expr.inner.value_type).delegate_symbol.has_target) {
-				Report.error (expr.source_reference, "unsupported use of destroy field of delegate without target");
-			}
 			CCodeExpression delegate_target_destroy_notify;
 			get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify);
-			set_cvalue (expr, delegate_target_destroy_notify);
+			set_cvalue (expr, delegate_target_destroy_notify ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is GenericDupField) {
 			set_cvalue (expr, get_dup_func_expression (expr.inner.value_type, expr.source_reference));
 		} else if (expr.symbol_reference is GenericDestroyField) {
@@ -167,8 +164,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					s = current_method.get_full_name ();
 				}
 				set_cvalue (expr, new CCodeConstant ("\"%s\"".printf (s)));
+			} else if (c.type_reference.is_non_null_simple_type ()) {
+				set_cvalue (expr, new CCodeConstant (get_ccode_name (c)));
 			} else {
-				set_cvalue (expr, new CCodeIdentifier (get_ccode_name (c)));
+				set_cvalue (expr, new CCodeConstantIdentifier (get_ccode_name (c)));
 			}
 
 			if (array_type != null) {
@@ -253,14 +252,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					inst = new CCodeMemberAccess.pointer (inst, "priv");
 				}
 				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, get_ccode_name (prop.field)));
-			} else if (!get_ccode_no_accessor_method (prop)) {
-				string getter_cname;
-				if (prop is DynamicProperty) {
-					getter_cname = get_dynamic_property_getter_cname ((DynamicProperty) prop);
-				} else {
-					getter_cname = get_ccode_name (prop.get_accessor);
-				}
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
+			} else if (!get_ccode_no_accessor_method (prop) && !(prop is DynamicProperty)) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (prop.get_accessor)));
 
 				if (prop.binding == MemberBinding.INSTANCE) {
 					if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {
@@ -340,7 +333,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// g_object_get always returns owned values
 				// therefore, property getters of properties
 				// without accessor methods need to be marked as owned
-				if (!prop.get_accessor.value_type.value_owned) {
+				if (!(prop is DynamicProperty) && !prop.get_accessor.value_type.value_owned) {
 					// only report error for types where there actually
 					// is a difference between `owned' and `unowned'
 					var owned_value_type = prop.get_accessor.value_type.copy ();
@@ -361,7 +354,19 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccode.add_expression (ccall);
+
 				set_cvalue (expr, ctemp);
+
+				if (get_ccode_array_null_terminated (prop)) {
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+					len_call.add_argument (ctemp);
+
+					var glib_value = (GLibValue) expr.target_value;
+					glib_value.array_length_cvalues = null;
+					glib_value.append_array_length_cvalue (len_call);
+					glib_value.lvalue = false;
+				}
 			}
 
 			if (prop.get_accessor.value_type is GenericType) {
@@ -415,7 +420,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		// Add cast for narrowed type access of variables if needed
 		if (expr.symbol_reference is Variable) {
 			unowned GLibValue cvalue = (GLibValue) expr.target_value;
-			if (cvalue.value_type.type_symbol != null && cvalue.value_type.type_symbol != expr.value_type.type_symbol) {
+			if (!(cvalue.value_type is GenericType) && cvalue.value_type.type_symbol != null
+			    && cvalue.value_type.type_symbol != expr.value_type.type_symbol) {
 				cvalue.cvalue = new CCodeCastExpression (cvalue.cvalue, get_ccode_name (expr.value_type));
 			}
 		}

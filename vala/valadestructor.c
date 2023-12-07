@@ -25,8 +25,8 @@
 
 #include "vala.h"
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -89,10 +89,8 @@ ValaMemberBinding
 vala_destructor_get_binding (ValaDestructor* self)
 {
 	ValaMemberBinding result;
-	ValaMemberBinding _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_binding;
-	result = _tmp0_;
+	result = self->priv->_binding;
 	return result;
 }
 
@@ -191,7 +189,7 @@ vala_destructor_real_check (ValaCodeNode* base,
 	ValaSymbol* _tmp48_;
 	gboolean _tmp49_;
 	gboolean _tmp50_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaDestructor*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -336,7 +334,7 @@ vala_destructor_class_init (ValaDestructorClass * klass,
 	((ValaCodeNodeClass *) klass)->accept = (void (*) (ValaCodeNode*, ValaCodeVisitor*)) vala_destructor_real_accept;
 	((ValaCodeNodeClass *) klass)->accept_children = (void (*) (ValaCodeNode*, ValaCodeVisitor*)) vala_destructor_real_accept_children;
 	((ValaCodeNodeClass *) klass)->check = (gboolean (*) (ValaCodeNode*, ValaCodeContext*)) vala_destructor_real_check;
-	VALA_SUBROUTINE_CLASS (klass)->get_has_result = vala_destructor_real_get_has_result;
+	VALA_SUBROUTINE_CLASS (klass)->get_has_result = (gboolean (*) (ValaSubroutine*)) vala_destructor_real_get_has_result;
 }
 
 static void
@@ -372,12 +370,12 @@ vala_destructor_get_type_once (void)
 GType
 vala_destructor_get_type (void)
 {
-	static volatile gsize vala_destructor_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_destructor_type_id__volatile)) {
+	static volatile gsize vala_destructor_type_id__once = 0;
+	if (g_once_init_enter (&vala_destructor_type_id__once)) {
 		GType vala_destructor_type_id;
 		vala_destructor_type_id = vala_destructor_get_type_once ();
-		g_once_init_leave (&vala_destructor_type_id__volatile, vala_destructor_type_id);
+		g_once_init_leave (&vala_destructor_type_id__once, vala_destructor_type_id);
 	}
-	return vala_destructor_type_id__volatile;
+	return vala_destructor_type_id__once;
 }
 

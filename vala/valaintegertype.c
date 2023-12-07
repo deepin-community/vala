@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
@@ -55,13 +56,14 @@ ValaIntegerType*
 vala_integer_type_construct (GType object_type,
                              ValaStruct* type_symbol,
                              const gchar* literal_value,
-                             const gchar* literal_type_name)
+                             const gchar* literal_type_name,
+                             ValaSourceReference* source_reference)
 {
 	ValaIntegerType* self = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
 	g_return_val_if_fail (type_symbol != NULL, NULL);
-	self = (ValaIntegerType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol);
+	self = (ValaIntegerType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol, source_reference);
 	_tmp0_ = g_strdup (literal_value);
 	_g_free0 (self->priv->literal_value);
 	self->priv->literal_value = _tmp0_;
@@ -74,9 +76,10 @@ vala_integer_type_construct (GType object_type,
 ValaIntegerType*
 vala_integer_type_new (ValaStruct* type_symbol,
                        const gchar* literal_value,
-                       const gchar* literal_type_name)
+                       const gchar* literal_type_name,
+                       ValaSourceReference* source_reference)
 {
-	return vala_integer_type_construct (VALA_TYPE_INTEGER_TYPE, type_symbol, literal_value, literal_type_name);
+	return vala_integer_type_construct (VALA_TYPE_INTEGER_TYPE, type_symbol, literal_value, literal_type_name, source_reference);
 }
 
 static ValaDataType*
@@ -88,24 +91,23 @@ vala_integer_type_real_copy (ValaDataType* base)
 	ValaTypeSymbol* _tmp1_;
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
-	ValaIntegerType* _tmp4_;
+	ValaSourceReference* _tmp4_;
 	ValaSourceReference* _tmp5_;
-	ValaSourceReference* _tmp6_;
+	ValaIntegerType* _tmp6_;
 	gboolean _tmp7_;
 	gboolean _tmp8_;
 	gboolean _tmp9_;
 	gboolean _tmp10_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaIntegerType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
 	_tmp2_ = self->priv->literal_value;
 	_tmp3_ = self->priv->literal_type_name;
-	_tmp4_ = vala_integer_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_STRUCT, ValaStruct), _tmp2_, _tmp3_);
-	_result_ = _tmp4_;
-	_tmp5_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-	_tmp6_ = _tmp5_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _result_, _tmp6_);
+	_tmp4_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp5_ = _tmp4_;
+	_tmp6_ = vala_integer_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_STRUCT, ValaStruct), _tmp2_, _tmp3_, _tmp5_);
+	_result_ = _tmp6_;
 	_tmp7_ = vala_data_type_get_value_owned ((ValaDataType*) self);
 	_tmp8_ = _tmp7_;
 	vala_data_type_set_value_owned ((ValaDataType*) _result_, _tmp8_);
@@ -130,7 +132,7 @@ vala_integer_type_real_compatible (ValaDataType* base,
 	gboolean _tmp0_ = FALSE;
 	ValaTypeSymbol* _tmp1_;
 	ValaTypeSymbol* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaIntegerType*) base;
 	g_return_val_if_fail (target_type != NULL, FALSE);
 	_tmp1_ = vala_data_type_get_type_symbol (target_type);
@@ -286,12 +288,12 @@ vala_integer_type_get_type_once (void)
 GType
 vala_integer_type_get_type (void)
 {
-	static volatile gsize vala_integer_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_integer_type_type_id__volatile)) {
+	static volatile gsize vala_integer_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_integer_type_type_id__once)) {
 		GType vala_integer_type_type_id;
 		vala_integer_type_type_id = vala_integer_type_get_type_once ();
-		g_once_init_leave (&vala_integer_type_type_id__volatile, vala_integer_type_type_id);
+		g_once_init_leave (&vala_integer_type_type_id__once, vala_integer_type_type_id);
 	}
-	return vala_integer_type_type_id__volatile;
+	return vala_integer_type_type_id__once;
 }
 

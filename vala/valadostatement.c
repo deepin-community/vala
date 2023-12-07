@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -233,7 +234,7 @@ vala_do_statement_real_check (ValaCodeNode* base,
 	ValaBlock* _tmp126_;
 	gboolean _tmp127_;
 	gboolean _tmp128_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaDoStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -478,12 +479,12 @@ vala_do_statement_get_type_once (void)
 GType
 vala_do_statement_get_type (void)
 {
-	static volatile gsize vala_do_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_do_statement_type_id__volatile)) {
+	static volatile gsize vala_do_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_do_statement_type_id__once)) {
 		GType vala_do_statement_type_id;
 		vala_do_statement_type_id = vala_do_statement_get_type_once ();
-		g_once_init_leave (&vala_do_statement_type_id__volatile, vala_do_statement_type_id);
+		g_once_init_leave (&vala_do_statement_type_id__once, vala_do_statement_type_id);
 	}
-	return vala_do_statement_type_id__volatile;
+	return vala_do_statement_type_id__once;
 }
 

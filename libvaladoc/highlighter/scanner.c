@@ -62,12 +62,12 @@ valadoc_highlighter_scanner_get_type_once (void)
 GType
 valadoc_highlighter_scanner_get_type (void)
 {
-	static volatile gsize valadoc_highlighter_scanner_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_highlighter_scanner_type_id__volatile)) {
+	static volatile gsize valadoc_highlighter_scanner_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_highlighter_scanner_type_id__once)) {
 		GType valadoc_highlighter_scanner_type_id;
 		valadoc_highlighter_scanner_type_id = valadoc_highlighter_scanner_get_type_once ();
-		g_once_init_leave (&valadoc_highlighter_scanner_type_id__volatile, valadoc_highlighter_scanner_type_id);
+		g_once_init_leave (&valadoc_highlighter_scanner_type_id__once, valadoc_highlighter_scanner_type_id);
 	}
-	return valadoc_highlighter_scanner_type_id__volatile;
+	return valadoc_highlighter_scanner_type_id__once;
 }
 

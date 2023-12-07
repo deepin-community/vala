@@ -24,6 +24,7 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
 #include <glib.h>
 
 static gpointer vala_floating_type_parent_class = NULL;
@@ -33,18 +34,20 @@ static GType vala_floating_type_get_type_once (void);
 
 ValaFloatingType*
 vala_floating_type_construct (GType object_type,
-                              ValaStruct* type_symbol)
+                              ValaStruct* type_symbol,
+                              ValaSourceReference* source_reference)
 {
 	ValaFloatingType* self = NULL;
 	g_return_val_if_fail (type_symbol != NULL, NULL);
-	self = (ValaFloatingType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol);
+	self = (ValaFloatingType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol, source_reference);
 	return self;
 }
 
 ValaFloatingType*
-vala_floating_type_new (ValaStruct* type_symbol)
+vala_floating_type_new (ValaStruct* type_symbol,
+                        ValaSourceReference* source_reference)
 {
-	return vala_floating_type_construct (VALA_TYPE_FLOATING_TYPE, type_symbol);
+	return vala_floating_type_construct (VALA_TYPE_FLOATING_TYPE, type_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -54,22 +57,21 @@ vala_floating_type_real_copy (ValaDataType* base)
 	ValaFloatingType* _result_ = NULL;
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
-	ValaFloatingType* _tmp2_;
+	ValaSourceReference* _tmp2_;
 	ValaSourceReference* _tmp3_;
-	ValaSourceReference* _tmp4_;
+	ValaFloatingType* _tmp4_;
 	gboolean _tmp5_;
 	gboolean _tmp6_;
 	gboolean _tmp7_;
 	gboolean _tmp8_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaFloatingType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_floating_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_STRUCT, ValaStruct));
-	_result_ = _tmp2_;
-	_tmp3_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-	_tmp4_ = _tmp3_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _result_, _tmp4_);
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_floating_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_STRUCT, ValaStruct), _tmp3_);
+	_result_ = _tmp4_;
 	_tmp5_ = vala_data_type_get_value_owned ((ValaDataType*) self);
 	_tmp6_ = _tmp5_;
 	vala_data_type_set_value_owned ((ValaDataType*) _result_, _tmp6_);
@@ -109,12 +111,12 @@ vala_floating_type_get_type_once (void)
 GType
 vala_floating_type_get_type (void)
 {
-	static volatile gsize vala_floating_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_floating_type_type_id__volatile)) {
+	static volatile gsize vala_floating_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_floating_type_type_id__once)) {
 		GType vala_floating_type_type_id;
 		vala_floating_type_type_id = vala_floating_type_get_type_once ();
-		g_once_init_leave (&vala_floating_type_type_id__volatile, vala_floating_type_type_id);
+		g_once_init_leave (&vala_floating_type_type_id__once, vala_floating_type_type_id);
 	}
-	return vala_floating_type_type_id__volatile;
+	return vala_floating_type_type_id__once;
 }
 

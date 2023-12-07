@@ -28,6 +28,7 @@
 #include <string.h>
 #include <glib.h>
 #include <stdio.h>
+#include <glib-object.h>
 #include <glib/gstdio.h>
 #include <vala.h>
 #include <sys/types.h>
@@ -171,7 +172,7 @@ vala_ccode_writer_open (ValaCCodeWriter* self,
 	gchar* _tmp20_;
 	const gchar* _tmp21_;
 	const gchar* _tmp22_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->_filename;
 	self->priv->file_exists = g_file_test (_tmp0_, G_FILE_TEST_EXISTS);
@@ -878,13 +879,13 @@ vala_ccode_writer_get_type_once (void)
 GType
 vala_ccode_writer_get_type (void)
 {
-	static volatile gsize vala_ccode_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_writer_type_id__volatile)) {
+	static volatile gsize vala_ccode_writer_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_writer_type_id__once)) {
 		GType vala_ccode_writer_type_id;
 		vala_ccode_writer_type_id = vala_ccode_writer_get_type_once ();
-		g_once_init_leave (&vala_ccode_writer_type_id__volatile, vala_ccode_writer_type_id);
+		g_once_init_leave (&vala_ccode_writer_type_id__once, vala_ccode_writer_type_id);
 	}
-	return vala_ccode_writer_type_id__volatile;
+	return vala_ccode_writer_type_id__once;
 }
 
 gpointer

@@ -1,3 +1,0 @@
-# private library only used by valadoc
-binary-or-shlib-defines-rpath usr/bin/valadoc-* usr/lib/*/vala-*
-

@@ -38,8 +38,8 @@
  G_GNUC_INTERNAL gchar* valadoc_importer_helper_resolve_parameter_ctype (ValadocApiTree* tree,
                                                         ValadocApiNode* element,
                                                         const gchar* parameter_name,
-                                                        gchar* * param_name,
-                                                        gchar* * param_array_name,
+                                                        gchar** param_name,
+                                                        gchar** param_array_name,
                                                         gboolean* is_return_type_len);
  G_GNUC_INTERNAL gchar** valadoc_importer_helper_split_type_name (const gchar* id,
                                                  gint* result_length1);
@@ -72,8 +72,8 @@ _g_object_ref0 (gpointer self)
 valadoc_importer_helper_resolve_parameter_ctype (ValadocApiTree* tree,
                                                  ValadocApiNode* element,
                                                  const gchar* parameter_name,
-                                                 gchar* * param_name,
-                                                 gchar* * param_array_name,
+                                                 gchar** param_name,
+                                                 gchar** param_array_name,
                                                  gboolean* is_return_type_len)
 {
 	gchar* _vala_param_name = NULL;
@@ -110,7 +110,7 @@ valadoc_importer_helper_resolve_parameter_ctype (ValadocApiTree* tree,
 	const gchar* _tmp81_;
 	gchar* _tmp82_;
 	gchar* _tmp83_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (tree != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (parameter_name != NULL, NULL);
@@ -444,7 +444,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -457,7 +457,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -480,7 +480,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -520,7 +520,7 @@ valadoc_importer_helper_split_type_name (const gchar* id,
 	gchar** _tmp34_;
 	gchar** _tmp35_;
 	gint _tmp35__length1;
-	gchar** result = NULL;
+	gchar** result;
 	g_return_val_if_fail (id != NULL, NULL);
 	{
 		const gchar* pos = NULL;
@@ -759,7 +759,7 @@ string_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -780,7 +780,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -792,7 +792,7 @@ valadoc_importer_helper_split_text (ValadocContentText* text,
                                     ValadocContentContentFactory* factory)
 {
 	gint offset = 0;
-	ValadocContentText* result = NULL;
+	ValadocContentText* result;
 	g_return_val_if_fail (text != NULL, NULL);
 	g_return_val_if_fail (factory != NULL, NULL);
 	offset = 0;
@@ -902,7 +902,7 @@ valadoc_importer_helper_split_run (ValadocContentRun* run,
 	ValaList* _tmp2_;
 	ValaList* _tmp3_;
 	ValaIterator* _tmp4_;
-	ValadocContentRun* result = NULL;
+	ValadocContentRun* result;
 	g_return_val_if_fail (run != NULL, NULL);
 	g_return_val_if_fail (factory != NULL, NULL);
 	_tmp0_ = valadoc_content_run_get_style (run);
@@ -998,7 +998,7 @@ valadoc_importer_helper_split_run (ValadocContentRun* run,
 valadoc_importer_helper_split_inline (ValadocContentInline* item,
                                       ValadocContentContentFactory* factory)
 {
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	g_return_val_if_fail (item != NULL, NULL);
 	g_return_val_if_fail (factory != NULL, NULL);
 	if (VALADOC_CONTENT_IS_TEXT (item)) {
@@ -1027,7 +1027,7 @@ valadoc_importer_helper_split_paragraph (ValadocContentParagraph* p,
 	ValaList* _tmp0_;
 	ValaList* _tmp1_;
 	ValaIterator* _tmp2_;
-	ValadocContentParagraph* result = NULL;
+	ValadocContentParagraph* result;
 	g_return_val_if_fail (p != NULL, NULL);
 	g_return_val_if_fail (factory != NULL, NULL);
 	sec = NULL;

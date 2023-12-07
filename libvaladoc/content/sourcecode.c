@@ -28,9 +28,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <glib/gstdio.h>
 #include <valagee.h>
-#include <glib-object.h>
 
 enum  {
 	VALADOC_CONTENT_SOURCE_CODE_0_PROPERTY,
@@ -125,7 +125,7 @@ string_last_index_of (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (needle != NULL, 0);
 	_tmp0_ = g_strrstr (((gchar*) self) + start_index, (gchar*) needle);
@@ -149,7 +149,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -172,7 +172,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -210,7 +210,7 @@ valadoc_content_source_code_language_from_path (const gchar* path)
 	gchar* ext = NULL;
 	gchar* _tmp0_;
 	const gchar* _tmp1_;
-	ValadocContentSourceCodeLanguage result = 0;
+	ValadocContentSourceCodeLanguage result;
 	g_return_val_if_fail (path != NULL, 0);
 	pos = string_last_index_of (path, ".", 0);
 	if (pos < 0) {
@@ -237,7 +237,7 @@ valadoc_content_source_code_language_from_string (const gchar* str,
 	static GQuark _tmp1_label3 = 0;
 	static GQuark _tmp1_label4 = 0;
 	static GQuark _tmp1_label5 = 0;
-	ValadocContentSourceCodeLanguage result = 0;
+	ValadocContentSourceCodeLanguage result;
 	g_return_val_if_fail (str != NULL, 0);
 	_tmp0_ = str;
 	_tmp2_ = (NULL == _tmp0_) ? 0 : g_quark_from_string (_tmp0_);
@@ -293,7 +293,7 @@ valadoc_content_source_code_language_from_string (const gchar* str,
 const gchar*
 valadoc_content_source_code_language_to_string (ValadocContentSourceCodeLanguage self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_GENIE:
 		{
@@ -333,13 +333,13 @@ valadoc_content_source_code_language_get_type_once (void)
 GType
 valadoc_content_source_code_language_get_type (void)
 {
-	static volatile gsize valadoc_content_source_code_language_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_source_code_language_type_id__volatile)) {
+	static volatile gsize valadoc_content_source_code_language_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_source_code_language_type_id__once)) {
 		GType valadoc_content_source_code_language_type_id;
 		valadoc_content_source_code_language_type_id = valadoc_content_source_code_language_get_type_once ();
-		g_once_init_leave (&valadoc_content_source_code_language_type_id__volatile, valadoc_content_source_code_language_type_id);
+		g_once_init_leave (&valadoc_content_source_code_language_type_id__once, valadoc_content_source_code_language_type_id);
 	}
-	return valadoc_content_source_code_language_type_id__volatile;
+	return valadoc_content_source_code_language_type_id__once;
 }
 
 const gchar*
@@ -406,10 +406,8 @@ ValadocContentSourceCodeLanguage
 valadoc_content_source_code_get_language (ValadocContentSourceCode* self)
 {
 	ValadocContentSourceCodeLanguage result;
-	ValadocContentSourceCodeLanguage _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_language;
-	result = _tmp0_;
+	result = self->priv->_language;
 	return result;
 }
 
@@ -449,7 +447,7 @@ valadoc_content_source_code_get_path (ValadocContentSourceCode* self,
                                       ValadocErrorReporter* reporter)
 {
 	gchar* _tmp18_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (path != NULL, NULL);
 	g_return_val_if_fail (container != NULL, NULL);
@@ -641,7 +639,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -652,7 +650,7 @@ static inline gboolean
 valadoc_content_source_code_is_empty_string (ValadocContentSourceCode* self,
                                              const gchar* line)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (line != NULL, FALSE);
 	{
@@ -688,7 +686,7 @@ _vala_g_strjoinv (const gchar* separator,
                   gint str_array_length1)
 {
 	gboolean _tmp0_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	if (separator == NULL) {
 		separator = "";
 	}
@@ -718,11 +716,12 @@ _vala_g_strjoinv (const gchar* separator,
 		gint _tmp17_;
 		const gchar* res = NULL;
 		void* _tmp18_;
-		void* ptr = NULL;
-		const gchar* _tmp19_;
+		const gchar* _tmp19_ = NULL;
 		const gchar* _tmp20_;
-		void* _tmp21_;
-		const gchar* _tmp31_;
+		void* ptr = NULL;
+		const gchar* _tmp22_;
+		void* _tmp23_;
+		const gchar* _tmp33_;
 		len = (gsize) 1;
 		{
 			gboolean _tmp4_ = FALSE;
@@ -787,54 +786,61 @@ _vala_g_strjoinv (const gchar* separator,
 		len += (gsize) (_tmp17_ * (i - 1));
 		_tmp18_ = g_malloc (len);
 		res = _tmp18_;
-		_tmp19_ = res;
 		_tmp20_ = str_array[0];
-		_tmp21_ = g_stpcpy ((void*) _tmp19_, (const gchar*) _tmp20_);
-		ptr = _tmp21_;
+		if (_tmp20_ != NULL) {
+			const gchar* _tmp21_;
+			_tmp21_ = str_array[0];
+			_tmp19_ = (const gchar*) _tmp21_;
+		} else {
+			_tmp19_ = "";
+		}
+		_tmp22_ = res;
+		_tmp23_ = g_stpcpy ((void*) _tmp22_, _tmp19_);
+		ptr = _tmp23_;
 		{
-			gboolean _tmp22_ = FALSE;
+			gboolean _tmp24_ = FALSE;
 			i = 1;
-			_tmp22_ = TRUE;
+			_tmp24_ = TRUE;
 			while (TRUE) {
-				void* _tmp24_;
-				void* _tmp25_;
-				const gchar* _tmp26_ = NULL;
-				const gchar* _tmp27_;
-				void* _tmp29_;
-				void* _tmp30_;
-				if (!_tmp22_) {
-					gint _tmp23_;
-					_tmp23_ = i;
-					i = _tmp23_ + 1;
+				void* _tmp26_;
+				void* _tmp27_;
+				const gchar* _tmp28_ = NULL;
+				const gchar* _tmp29_;
+				void* _tmp31_;
+				void* _tmp32_;
+				if (!_tmp24_) {
+					gint _tmp25_;
+					_tmp25_ = i;
+					i = _tmp25_ + 1;
 				}
-				_tmp22_ = FALSE;
+				_tmp24_ = FALSE;
 				if (!(i < str_array_length1)) {
 					break;
 				}
-				_tmp24_ = ptr;
-				_tmp25_ = g_stpcpy (_tmp24_, (const gchar*) separator);
-				ptr = _tmp25_;
-				_tmp27_ = str_array[i];
-				if (_tmp27_ != NULL) {
-					const gchar* _tmp28_;
-					_tmp28_ = str_array[i];
-					_tmp26_ = (const gchar*) _tmp28_;
+				_tmp26_ = ptr;
+				_tmp27_ = g_stpcpy (_tmp26_, (const gchar*) separator);
+				ptr = _tmp27_;
+				_tmp29_ = str_array[i];
+				if (_tmp29_ != NULL) {
+					const gchar* _tmp30_;
+					_tmp30_ = str_array[i];
+					_tmp28_ = (const gchar*) _tmp30_;
 				} else {
-					_tmp26_ = "";
+					_tmp28_ = "";
 				}
-				_tmp29_ = ptr;
-				_tmp30_ = g_stpcpy (_tmp29_, _tmp26_);
-				ptr = _tmp30_;
+				_tmp31_ = ptr;
+				_tmp32_ = g_stpcpy (_tmp31_, _tmp28_);
+				ptr = _tmp32_;
 			}
 		}
-		_tmp31_ = res;
+		_tmp33_ = res;
 		res = NULL;
-		result = (gchar*) _tmp31_;
+		result = (gchar*) _tmp33_;
 		return result;
 	} else {
-		gchar* _tmp32_;
-		_tmp32_ = g_strdup ("");
-		result = _tmp32_;
+		gchar* _tmp34_;
+		_tmp34_ = g_strdup ("");
+		result = _tmp34_;
 		return result;
 	}
 }
@@ -853,7 +859,7 @@ valadoc_content_source_code_strip_code (ValadocContentSourceCode* self,
 	gint _tmp9__length1;
 	const gchar** _tmp18_;
 	gchar* _tmp19_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (code != NULL, NULL);
 	_tmp1_ = _tmp0_ = g_strsplit (code, "\n", 0);
@@ -958,7 +964,7 @@ string_strip (const gchar* self)
 {
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_strdup (self);
 	_result_ = _tmp0_;
@@ -988,10 +994,9 @@ valadoc_content_source_code_real_check (ValadocContentContentElement* base,
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gboolean _tmp7_;
-	const gchar* _tmp40_;
+	const gchar* _tmp39_;
+	gchar* _tmp40_;
 	gchar* _tmp41_;
-	gchar* _tmp42_;
-	ValadocContentSourceCodeLanguage _tmp43_;
 	self = (ValadocContentSourceCode*) base;
 	g_return_if_fail (api_root != NULL);
 	g_return_if_fail (container != NULL);
@@ -1066,7 +1071,6 @@ valadoc_content_source_code_real_check (ValadocContentContentElement* base,
 				gint _tmp25__length1;
 				const gchar* _tmp26_;
 				gboolean _tmp27_ = FALSE;
-				ValadocContentSourceCodeLanguage _tmp28_;
 				_tmp20_ = start;
 				_tmp21_ = g_strstrip (_tmp20_);
 				_tmp22_ = g_ascii_strdown (_tmp21_, (gssize) -1);
@@ -1081,125 +1085,119 @@ valadoc_content_source_code_real_check (ValadocContentContentElement* base,
 					_tmp24_ = "";
 				}
 				valadoc_content_source_code_set_code (self, _tmp24_);
-				_tmp28_ = self->priv->_language;
-				if (_tmp28_ == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_UNKNOWN) {
-					const gchar* _tmp29_;
-					_tmp29_ = name;
-					_tmp27_ = g_strcmp0 (_tmp29_, "none") != 0;
+				if (self->priv->_language == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_UNKNOWN) {
+					const gchar* _tmp28_;
+					_tmp28_ = name;
+					_tmp27_ = g_strcmp0 (_tmp28_, "none") != 0;
 				} else {
 					_tmp27_ = FALSE;
 				}
 				if (_tmp27_) {
-					gchar* _tmp30_ = NULL;
+					gchar* _tmp29_ = NULL;
 					gchar* node_segment = NULL;
-					gchar* _tmp35_;
-					const gchar* _tmp36_;
+					gchar* _tmp34_;
+					const gchar* _tmp35_;
+					gchar* _tmp36_;
 					gchar* _tmp37_;
-					gchar* _tmp38_;
-					const gchar* _tmp39_;
+					const gchar* _tmp38_;
 					if (VALADOC_API_IS_PACKAGE (container)) {
-						gchar* _tmp31_;
-						_tmp31_ = g_strdup ("");
-						_g_free0 (_tmp30_);
-						_tmp30_ = _tmp31_;
+						gchar* _tmp30_;
+						_tmp30_ = g_strdup ("");
+						_g_free0 (_tmp29_);
+						_tmp29_ = _tmp30_;
 					} else {
+						gchar* _tmp31_;
 						gchar* _tmp32_;
 						gchar* _tmp33_;
-						gchar* _tmp34_;
-						_tmp32_ = valadoc_api_node_get_full_name (container);
-						_tmp33_ = _tmp32_;
-						_tmp34_ = g_strconcat (_tmp33_, ": ", NULL);
-						_g_free0 (_tmp30_);
-						_tmp30_ = _tmp34_;
-						_g_free0 (_tmp33_);
+						_tmp31_ = valadoc_api_node_get_full_name (container);
+						_tmp32_ = _tmp31_;
+						_tmp33_ = g_strconcat (_tmp32_, ": ", NULL);
+						_g_free0 (_tmp29_);
+						_tmp29_ = _tmp33_;
+						_g_free0 (_tmp32_);
 					}
-					_tmp35_ = g_strdup (_tmp30_);
-					node_segment = _tmp35_;
-					_tmp36_ = node_segment;
-					_tmp37_ = g_strdup_printf ("%s: %s{{{", file_path, _tmp36_);
-					_tmp38_ = _tmp37_;
-					_tmp39_ = name;
-					valadoc_error_reporter_simple_warning (reporter, _tmp38_, "Unsupported programming language '%s'", _tmp39_);
-					_g_free0 (_tmp38_);
+					_tmp34_ = g_strdup (_tmp29_);
+					node_segment = _tmp34_;
+					_tmp35_ = node_segment;
+					_tmp36_ = g_strdup_printf ("%s: %s{{{", file_path, _tmp35_);
+					_tmp37_ = _tmp36_;
+					_tmp38_ = name;
+					valadoc_error_reporter_simple_warning (reporter, _tmp37_, "Unsupported programming language '%s'", _tmp38_);
+					_g_free0 (_tmp37_);
 					_g_free0 (node_segment);
-					_g_free0 (_tmp30_);
+					_g_free0 (_tmp29_);
 				}
 				_g_free0 (name);
 			}
 		}
 	}
-	_tmp40_ = self->priv->_code;
-	_tmp41_ = valadoc_content_source_code_strip_code (self, _tmp40_);
-	_tmp42_ = _tmp41_;
-	valadoc_content_source_code_set_code (self, _tmp42_);
-	_g_free0 (_tmp42_);
-	_tmp43_ = self->priv->_language;
-	if (_tmp43_ == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_VALA) {
-		ValadocHighlighterHighlighter* _tmp44_;
-		ValadocHighlighterHighlighter* _tmp45_;
-		const gchar* _tmp46_;
-		ValadocContentRun* _tmp47_;
-		ValadocContentRun* _tmp48_;
-		_tmp44_ = valadoc_api_tree_get_highlighter (api_root);
-		_tmp45_ = _tmp44_;
-		_tmp46_ = self->priv->_code;
-		_tmp47_ = valadoc_highlighter_highlighter_highlight_vala (_tmp45_, _tmp46_);
-		_tmp48_ = _tmp47_;
-		valadoc_content_source_code_set_highlighted_code (self, _tmp48_);
-		_g_object_unref0 (_tmp48_);
+	_tmp39_ = self->priv->_code;
+	_tmp40_ = valadoc_content_source_code_strip_code (self, _tmp39_);
+	_tmp41_ = _tmp40_;
+	valadoc_content_source_code_set_code (self, _tmp41_);
+	_g_free0 (_tmp41_);
+	if (self->priv->_language == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_VALA) {
+		ValadocHighlighterHighlighter* _tmp42_;
+		ValadocHighlighterHighlighter* _tmp43_;
+		const gchar* _tmp44_;
+		ValadocContentRun* _tmp45_;
+		ValadocContentRun* _tmp46_;
+		_tmp42_ = valadoc_api_tree_get_highlighter (api_root);
+		_tmp43_ = _tmp42_;
+		_tmp44_ = self->priv->_code;
+		_tmp45_ = valadoc_highlighter_highlighter_highlight_vala (_tmp43_, _tmp44_);
+		_tmp46_ = _tmp45_;
+		valadoc_content_source_code_set_highlighted_code (self, _tmp46_);
+		_g_object_unref0 (_tmp46_);
 	} else {
-		ValadocContentSourceCodeLanguage _tmp49_;
-		_tmp49_ = self->priv->_language;
-		if (_tmp49_ == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_XML) {
-			ValadocHighlighterHighlighter* _tmp50_;
-			ValadocHighlighterHighlighter* _tmp51_;
-			const gchar* _tmp52_;
-			ValadocContentRun* _tmp53_;
-			ValadocContentRun* _tmp54_;
-			_tmp50_ = valadoc_api_tree_get_highlighter (api_root);
+		if (self->priv->_language == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_XML) {
+			ValadocHighlighterHighlighter* _tmp47_;
+			ValadocHighlighterHighlighter* _tmp48_;
+			const gchar* _tmp49_;
+			ValadocContentRun* _tmp50_;
+			ValadocContentRun* _tmp51_;
+			_tmp47_ = valadoc_api_tree_get_highlighter (api_root);
+			_tmp48_ = _tmp47_;
+			_tmp49_ = self->priv->_code;
+			_tmp50_ = valadoc_highlighter_highlighter_highlight_xml (_tmp48_, _tmp49_);
 			_tmp51_ = _tmp50_;
-			_tmp52_ = self->priv->_code;
-			_tmp53_ = valadoc_highlighter_highlighter_highlight_xml (_tmp51_, _tmp52_);
-			_tmp54_ = _tmp53_;
-			valadoc_content_source_code_set_highlighted_code (self, _tmp54_);
-			_g_object_unref0 (_tmp54_);
+			valadoc_content_source_code_set_highlighted_code (self, _tmp51_);
+			_g_object_unref0 (_tmp51_);
 		} else {
-			ValadocContentSourceCodeLanguage _tmp55_;
-			_tmp55_ = self->priv->_language;
-			if (_tmp55_ == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_C) {
-				ValadocHighlighterHighlighter* _tmp56_;
-				ValadocHighlighterHighlighter* _tmp57_;
-				const gchar* _tmp58_;
-				ValadocContentRun* _tmp59_;
-				ValadocContentRun* _tmp60_;
-				_tmp56_ = valadoc_api_tree_get_highlighter (api_root);
-				_tmp57_ = _tmp56_;
-				_tmp58_ = self->priv->_code;
-				_tmp59_ = valadoc_highlighter_highlighter_highlight_c (_tmp57_, _tmp58_);
-				_tmp60_ = _tmp59_;
-				valadoc_content_source_code_set_highlighted_code (self, _tmp60_);
-				_g_object_unref0 (_tmp60_);
+			if (self->priv->_language == VALADOC_CONTENT_SOURCE_CODE_LANGUAGE_C) {
+				ValadocHighlighterHighlighter* _tmp52_;
+				ValadocHighlighterHighlighter* _tmp53_;
+				const gchar* _tmp54_;
+				ValadocContentRun* _tmp55_;
+				ValadocContentRun* _tmp56_;
+				_tmp52_ = valadoc_api_tree_get_highlighter (api_root);
+				_tmp53_ = _tmp52_;
+				_tmp54_ = self->priv->_code;
+				_tmp55_ = valadoc_highlighter_highlighter_highlight_c (_tmp53_, _tmp54_);
+				_tmp56_ = _tmp55_;
+				valadoc_content_source_code_set_highlighted_code (self, _tmp56_);
+				_g_object_unref0 (_tmp56_);
 			} else {
-				ValadocContentRun* _tmp61_;
-				ValadocContentRun* _tmp62_;
-				ValadocContentRun* _tmp63_;
-				ValaList* _tmp64_;
-				ValaList* _tmp65_;
-				const gchar* _tmp66_;
-				ValadocContentText* _tmp67_;
-				ValadocContentText* _tmp68_;
-				_tmp61_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_MONOSPACED);
-				_tmp62_ = _tmp61_;
-				valadoc_content_source_code_set_highlighted_code (self, _tmp62_);
-				_g_object_unref0 (_tmp62_);
-				_tmp63_ = self->priv->_highlighted_code;
-				_tmp64_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp63_);
-				_tmp65_ = _tmp64_;
-				_tmp66_ = self->priv->_code;
-				_tmp67_ = valadoc_content_text_new (_tmp66_);
-				_tmp68_ = _tmp67_;
-				vala_collection_add ((ValaCollection*) _tmp65_, (ValadocContentInline*) _tmp68_);
-				_g_object_unref0 (_tmp68_);
+				ValadocContentRun* _tmp57_;
+				ValadocContentRun* _tmp58_;
+				ValadocContentRun* _tmp59_;
+				ValaList* _tmp60_;
+				ValaList* _tmp61_;
+				const gchar* _tmp62_;
+				ValadocContentText* _tmp63_;
+				ValadocContentText* _tmp64_;
+				_tmp57_ = valadoc_content_run_new (VALADOC_CONTENT_RUN_STYLE_MONOSPACED);
+				_tmp58_ = _tmp57_;
+				valadoc_content_source_code_set_highlighted_code (self, _tmp58_);
+				_g_object_unref0 (_tmp58_);
+				_tmp59_ = self->priv->_highlighted_code;
+				_tmp60_ = valadoc_content_inline_content_get_content ((ValadocContentInlineContent*) _tmp59_);
+				_tmp61_ = _tmp60_;
+				_tmp62_ = self->priv->_code;
+				_tmp63_ = valadoc_content_text_new (_tmp62_);
+				_tmp64_ = _tmp63_;
+				vala_collection_add ((ValaCollection*) _tmp61_, (ValadocContentInline*) _tmp64_);
+				_g_object_unref0 (_tmp64_);
 			}
 		}
 	}
@@ -1236,7 +1234,7 @@ static gboolean
 valadoc_content_source_code_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentSourceCode * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentSourceCode*) base;
 	result = FALSE;
 	return result;
@@ -1251,7 +1249,7 @@ valadoc_content_source_code_real_copy (ValadocContentContentElement* base,
 	ValadocContentSourceCode* _tmp0_;
 	ValadocContentSourceCodeLanguage _tmp1_;
 	const gchar* _tmp2_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentSourceCode*) base;
 	_tmp0_ = valadoc_content_source_code_new ();
 	source_code = _tmp0_;
@@ -1322,13 +1320,13 @@ valadoc_content_source_code_get_type_once (void)
 GType
 valadoc_content_source_code_get_type (void)
 {
-	static volatile gsize valadoc_content_source_code_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_source_code_type_id__volatile)) {
+	static volatile gsize valadoc_content_source_code_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_source_code_type_id__once)) {
 		GType valadoc_content_source_code_type_id;
 		valadoc_content_source_code_type_id = valadoc_content_source_code_get_type_once ();
-		g_once_init_leave (&valadoc_content_source_code_type_id__volatile, valadoc_content_source_code_type_id);
+		g_once_init_leave (&valadoc_content_source_code_type_id__once, valadoc_content_source_code_type_id);
 	}
-	return valadoc_content_source_code_type_id__volatile;
+	return valadoc_content_source_code_type_id__once;
 }
 
 static void

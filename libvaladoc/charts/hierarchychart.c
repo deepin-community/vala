@@ -24,10 +24,10 @@
  */
 
 #include "valadoc.h"
-#include <glib.h>
-#include <graphviz/gvc.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <glib.h>
+#include <gvc.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CHARTS_HIERARCHY_0_PROPERTY,
@@ -315,12 +315,12 @@ valadoc_charts_hierarchy_get_type_once (void)
 GType
 valadoc_charts_hierarchy_get_type (void)
 {
-	static volatile gsize valadoc_charts_hierarchy_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_charts_hierarchy_type_id__volatile)) {
+	static volatile gsize valadoc_charts_hierarchy_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_charts_hierarchy_type_id__once)) {
 		GType valadoc_charts_hierarchy_type_id;
 		valadoc_charts_hierarchy_type_id = valadoc_charts_hierarchy_get_type_once ();
-		g_once_init_leave (&valadoc_charts_hierarchy_type_id__volatile, valadoc_charts_hierarchy_type_id);
+		g_once_init_leave (&valadoc_charts_hierarchy_type_id__once, valadoc_charts_hierarchy_type_id);
 	}
-	return valadoc_charts_hierarchy_type_id__volatile;
+	return valadoc_charts_hierarchy_type_id__once;
 }
 

@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
@@ -148,7 +149,7 @@ vala_integer_literal_real_to_string (ValaCodeNode* base)
 	ValaIntegerLiteral * self;
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaIntegerLiteral*) base;
 	_tmp0_ = self->priv->_value;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -160,7 +161,7 @@ static gboolean
 vala_integer_literal_real_is_pure (ValaExpression* base)
 {
 	ValaIntegerLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaIntegerLiteral*) base;
 	result = TRUE;
 	return result;
@@ -173,7 +174,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -196,7 +197,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -231,7 +232,7 @@ static gint64
 int64_parse (const gchar* str,
              guint _base)
 {
-	gint64 result = 0LL;
+	gint64 result;
 	g_return_val_if_fail (str != NULL, 0LL);
 	result = g_ascii_strtoll (str, NULL, _base);
 	return result;
@@ -267,7 +268,7 @@ vala_integer_literal_real_check (ValaCodeNode* base,
 	ValaIntegerType* _tmp44_;
 	gboolean _tmp45_;
 	gboolean _tmp46_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaIntegerLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -423,7 +424,7 @@ vala_integer_literal_real_check (ValaCodeNode* base,
 	_tmp40_ = st;
 	_tmp41_ = self->priv->_value;
 	_tmp42_ = type_name;
-	_tmp43_ = vala_integer_type_new (_tmp40_, _tmp41_, _tmp42_);
+	_tmp43_ = vala_integer_type_new (_tmp40_, _tmp41_, _tmp42_, NULL);
 	_tmp44_ = _tmp43_;
 	vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp44_);
 	_vala_code_node_unref0 (_tmp44_);
@@ -493,12 +494,12 @@ vala_integer_literal_get_type_once (void)
 GType
 vala_integer_literal_get_type (void)
 {
-	static volatile gsize vala_integer_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_integer_literal_type_id__volatile)) {
+	static volatile gsize vala_integer_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_integer_literal_type_id__once)) {
 		GType vala_integer_literal_type_id;
 		vala_integer_literal_type_id = vala_integer_literal_get_type_once ();
-		g_once_init_leave (&vala_integer_literal_type_id__volatile, vala_integer_literal_type_id);
+		g_once_init_leave (&vala_integer_literal_type_id__once, vala_integer_literal_type_id);
 	}
-	return vala_integer_literal_type_id__volatile;
+	return vala_integer_literal_type_id__once;
 }
 

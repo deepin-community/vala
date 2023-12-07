@@ -481,7 +481,7 @@ ValadocTokenType*
 valadoc_token_type_str (const gchar* str)
 {
 	ValadocTokenType* _tmp0_;
-	ValadocTokenType* result = NULL;
+	ValadocTokenType* result;
 	g_return_val_if_fail (str != NULL, NULL);
 	_tmp0_ = valadoc_token_type_new (str, valadoc_token_type_EXACT_WORD, NULL, NULL);
 	result = _tmp0_;
@@ -493,7 +493,7 @@ valadoc_token_type_any (void)
 {
 	ValadocTokenType* _tmp0_;
 	ValadocTokenType* _tmp1_;
-	ValadocTokenType* result = NULL;
+	ValadocTokenType* result;
 	_tmp0_ = valadoc_token_type_ANY;
 	_tmp1_ = _g_object_ref0 (_tmp0_);
 	result = _tmp1_;
@@ -505,7 +505,7 @@ valadoc_token_type_any_word (void)
 {
 	ValadocTokenType* _tmp0_;
 	ValadocTokenType* _tmp1_;
-	ValadocTokenType* result = NULL;
+	ValadocTokenType* result;
 	_tmp0_ = valadoc_token_type_ANY_WORD;
 	_tmp1_ = _g_object_ref0 (_tmp0_);
 	result = _tmp1_;
@@ -517,7 +517,7 @@ valadoc_token_type_any_number (void)
 {
 	ValadocTokenType* _tmp0_;
 	ValadocTokenType* _tmp1_;
-	ValadocTokenType* result = NULL;
+	ValadocTokenType* result;
 	_tmp0_ = valadoc_token_type_ANY_NUMBER;
 	_tmp1_ = _g_object_ref0 (_tmp0_);
 	result = _tmp1_;
@@ -663,7 +663,7 @@ valadoc_token_type_action (ValadocTokenType* self,
 {
 	const gchar* _tmp0_;
 	ValadocTokenType* _tmp1_;
-	ValadocTokenType* result = NULL;
+	ValadocTokenType* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_string_value;
 	_tmp1_ = valadoc_token_type_new (_tmp0_, self->priv->_basic_value, action, action_target);
@@ -707,7 +707,7 @@ valadoc_token_type_matches (ValadocTokenType* self,
                             ValadocToken* token)
 {
 	ValadocTokenType* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (token != NULL, FALSE);
 	_tmp0_ = valadoc_token_type_ANY;
@@ -803,7 +803,7 @@ const gchar*
 valadoc_token_type_to_string (ValadocTokenType* self)
 {
 	const gchar* _tmp0_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_string_value;
 	result = _tmp0_;
@@ -815,7 +815,7 @@ valadoc_token_type_to_pretty_string (ValadocTokenType* self)
 {
 	const gchar* _tmp0_;
 	const gchar* _tmp2_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_pretty_string;
 	if (_tmp0_ != NULL) {
@@ -845,7 +845,7 @@ valadoc_token_type_instance_init (ValadocTokenType * self,
 	self->priv = valadoc_token_type_get_instance_private (self);
 	self->priv->_basic_value = -1;
 	self->priv->_action = NULL;
-	self->priv->_action_target = self;
+	self->priv->_action_target = NULL;
 	self->priv->_action_target_destroy_notify = NULL;
 }
 
@@ -876,12 +876,12 @@ valadoc_token_type_get_type_once (void)
 GType
 valadoc_token_type_get_type (void)
 {
-	static volatile gsize valadoc_token_type_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_token_type_type_id__volatile)) {
+	static volatile gsize valadoc_token_type_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_token_type_type_id__once)) {
 		GType valadoc_token_type_type_id;
 		valadoc_token_type_type_id = valadoc_token_type_get_type_once ();
-		g_once_init_leave (&valadoc_token_type_type_id__volatile, valadoc_token_type_type_id);
+		g_once_init_leave (&valadoc_token_type_type_id__once, valadoc_token_type_type_id);
 	}
-	return valadoc_token_type_type_id__volatile;
+	return valadoc_token_type_type_id__once;
 }
 

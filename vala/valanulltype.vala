@@ -27,9 +27,8 @@ using GLib;
  */
 public class Vala.NullType : ReferenceType {
 	public NullType (SourceReference? source_reference = null) {
-		base (null);
+		base (null, source_reference);
 		this.nullable = true;
-		this.source_reference = source_reference;
 	}
 
 	public override bool compatible (DataType target_type) {
@@ -45,7 +44,7 @@ public class Vala.NullType : ReferenceType {
 		if (target_type is GenericType ||
 		    target_type is PointerType ||
 		    target_type.nullable ||
-		    target_type.type_symbol.get_attribute ("PointerType") != null) {
+		    target_type.type_symbol.has_attribute ("PointerType")) {
 			return true;
 		}
 

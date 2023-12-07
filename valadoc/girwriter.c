@@ -177,7 +177,7 @@ valadoc_gir_writer_translate (ValadocGirWriter* self,
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (documentation == NULL) {
 		result = NULL;
@@ -202,7 +202,7 @@ valadoc_gir_writer_translate_taglet (ValadocGirWriter* self,
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (taglet == NULL) {
 		result = NULL;
@@ -230,7 +230,7 @@ valadoc_gir_writer_real_get_interface_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (viface != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -260,7 +260,7 @@ valadoc_gir_writer_real_get_struct_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vst != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -290,7 +290,7 @@ valadoc_gir_writer_real_get_enum_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (ven != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -320,7 +320,7 @@ valadoc_gir_writer_real_get_class_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vc != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -350,7 +350,7 @@ valadoc_gir_writer_real_get_error_code_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vecode != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -380,7 +380,7 @@ valadoc_gir_writer_real_get_enum_value_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vev != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -410,7 +410,7 @@ valadoc_gir_writer_real_get_constant_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vc != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -440,7 +440,7 @@ valadoc_gir_writer_real_get_error_domain_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vedomain != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -470,7 +470,7 @@ valadoc_gir_writer_real_get_field_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vf != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -500,7 +500,7 @@ valadoc_gir_writer_real_get_delegate_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vcb != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -527,10 +527,12 @@ valadoc_gir_writer_real_get_method_comment (ValaGIRWriter* base,
 	ValadocSymbolResolver* _tmp0_;
 	ValadocApiSymbol* _tmp1_;
 	ValadocApiMethod* _tmp2_;
-	ValadocContentComment* _tmp3_;
-	ValadocContentComment* _tmp4_;
-	gchar* _tmp5_;
-	gchar* result = NULL;
+	ValadocApiMethod* _tmp3_;
+	ValadocApiMethod* _tmp4_;
+	ValadocContentComment* _tmp5_;
+	ValadocContentComment* _tmp6_;
+	gchar* _tmp7_;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vm != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -540,10 +542,17 @@ valadoc_gir_writer_real_get_method_comment (ValaGIRWriter* base,
 		_g_object_unref0 (_tmp1_);
 	}
 	m = _tmp2_;
-	_tmp3_ = valadoc_api_node_get_documentation ((ValadocApiNode*) m);
-	_tmp4_ = _tmp3_;
-	_tmp5_ = valadoc_gir_writer_translate (self, _tmp4_);
-	result = _tmp5_;
+	_tmp3_ = m;
+	if (_tmp3_ == NULL) {
+		result = NULL;
+		_g_object_unref0 (m);
+		return result;
+	}
+	_tmp4_ = m;
+	_tmp5_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp4_);
+	_tmp6_ = _tmp5_;
+	_tmp7_ = valadoc_gir_writer_translate (self, _tmp6_);
+	result = _tmp7_;
 	_g_object_unref0 (m);
 	return result;
 }
@@ -560,7 +569,7 @@ valadoc_gir_writer_real_get_property_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vprop != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -588,19 +597,17 @@ valadoc_gir_writer_real_get_delegate_return_comment (ValaGIRWriter* base,
 	ValadocApiSymbol* _tmp1_;
 	ValadocApiDelegate* _tmp2_;
 	ValadocApiDelegate* _tmp3_;
-	ValadocContentComment* _tmp4_;
-	ValadocContentComment* _tmp5_;
 	ValadocContentComment* documentation = NULL;
-	ValadocApiDelegate* _tmp6_;
+	ValadocApiDelegate* _tmp4_;
+	ValadocContentComment* _tmp5_;
+	ValadocContentComment* _tmp6_;
 	ValadocContentComment* _tmp7_;
 	ValadocContentComment* _tmp8_;
-	ValadocContentComment* _tmp9_;
-	ValadocContentComment* _tmp10_;
 	ValaList* taglets = NULL;
-	ValadocContentComment* _tmp11_;
-	ValadocApiDelegate* _tmp12_;
-	ValaList* _tmp13_;
-	gchar* result = NULL;
+	ValadocContentComment* _tmp9_;
+	ValadocApiDelegate* _tmp10_;
+	ValaList* _tmp11_;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vcb != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -611,64 +618,62 @@ valadoc_gir_writer_real_get_delegate_return_comment (ValaGIRWriter* base,
 	}
 	cb = _tmp2_;
 	_tmp3_ = cb;
-	_tmp4_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp3_);
-	_tmp5_ = _tmp4_;
-	if (_tmp5_ == NULL) {
+	if (_tmp3_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (cb);
 		return result;
 	}
-	_tmp6_ = cb;
-	_tmp7_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp6_);
-	_tmp8_ = _tmp7_;
-	_tmp9_ = _g_object_ref0 (_tmp8_);
-	documentation = _tmp9_;
-	_tmp10_ = documentation;
-	if (_tmp10_ == NULL) {
+	_tmp4_ = cb;
+	_tmp5_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp4_);
+	_tmp6_ = _tmp5_;
+	_tmp7_ = _g_object_ref0 (_tmp6_);
+	documentation = _tmp7_;
+	_tmp8_ = documentation;
+	if (_tmp8_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (documentation);
 		_g_object_unref0 (cb);
 		return result;
 	}
-	_tmp11_ = documentation;
-	_tmp12_ = cb;
-	_tmp13_ = valadoc_content_comment_find_taglets (_tmp11_, (ValadocApiNode*) _tmp12_, VALADOC_TAGLETS_TYPE_RETURN);
-	taglets = _tmp13_;
+	_tmp9_ = documentation;
+	_tmp10_ = cb;
+	_tmp11_ = valadoc_content_comment_find_taglets (_tmp9_, (ValadocApiNode*) _tmp10_, VALADOC_TAGLETS_TYPE_RETURN);
+	taglets = _tmp11_;
 	{
 		ValaList* _taglet_list = NULL;
-		ValaList* _tmp14_;
+		ValaList* _tmp12_;
 		gint _taglet_size = 0;
-		ValaList* _tmp15_;
-		gint _tmp16_;
-		gint _tmp17_;
+		ValaList* _tmp13_;
+		gint _tmp14_;
+		gint _tmp15_;
 		gint _taglet_index = 0;
-		_tmp14_ = taglets;
-		_taglet_list = _tmp14_;
-		_tmp15_ = _taglet_list;
-		_tmp16_ = vala_collection_get_size ((ValaCollection*) _tmp15_);
-		_tmp17_ = _tmp16_;
-		_taglet_size = _tmp17_;
+		_tmp12_ = taglets;
+		_taglet_list = _tmp12_;
+		_tmp13_ = _taglet_list;
+		_tmp14_ = vala_collection_get_size ((ValaCollection*) _tmp13_);
+		_tmp15_ = _tmp14_;
+		_taglet_size = _tmp15_;
 		_taglet_index = -1;
 		while (TRUE) {
-			gint _tmp18_;
-			gint _tmp19_;
+			gint _tmp16_;
+			gint _tmp17_;
 			ValadocContentTaglet* taglet = NULL;
-			ValaList* _tmp20_;
-			gpointer _tmp21_;
-			ValadocContentTaglet* _tmp22_;
-			gchar* _tmp23_;
+			ValaList* _tmp18_;
+			gpointer _tmp19_;
+			ValadocContentTaglet* _tmp20_;
+			gchar* _tmp21_;
 			_taglet_index = _taglet_index + 1;
-			_tmp18_ = _taglet_index;
-			_tmp19_ = _taglet_size;
-			if (!(_tmp18_ < _tmp19_)) {
+			_tmp16_ = _taglet_index;
+			_tmp17_ = _taglet_size;
+			if (!(_tmp16_ < _tmp17_)) {
 				break;
 			}
-			_tmp20_ = _taglet_list;
-			_tmp21_ = vala_list_get (_tmp20_, _taglet_index);
-			taglet = (ValadocContentTaglet*) _tmp21_;
-			_tmp22_ = taglet;
-			_tmp23_ = valadoc_gir_writer_translate_taglet (self, _tmp22_);
-			result = _tmp23_;
+			_tmp18_ = _taglet_list;
+			_tmp19_ = vala_list_get (_tmp18_, _taglet_index);
+			taglet = (ValadocContentTaglet*) _tmp19_;
+			_tmp20_ = taglet;
+			_tmp21_ = valadoc_gir_writer_translate_taglet (self, _tmp20_);
+			result = _tmp21_;
 			_g_object_unref0 (taglet);
 			_vala_iterable_unref0 (taglets);
 			_g_object_unref0 (documentation);
@@ -693,19 +698,17 @@ valadoc_gir_writer_real_get_signal_return_comment (ValaGIRWriter* base,
 	ValadocApiSymbol* _tmp1_;
 	ValadocApiSignal* _tmp2_;
 	ValadocApiSignal* _tmp3_;
-	ValadocContentComment* _tmp4_;
-	ValadocContentComment* _tmp5_;
 	ValadocContentComment* documentation = NULL;
-	ValadocApiSignal* _tmp6_;
+	ValadocApiSignal* _tmp4_;
+	ValadocContentComment* _tmp5_;
+	ValadocContentComment* _tmp6_;
 	ValadocContentComment* _tmp7_;
 	ValadocContentComment* _tmp8_;
-	ValadocContentComment* _tmp9_;
-	ValadocContentComment* _tmp10_;
 	ValaList* taglets = NULL;
-	ValadocContentComment* _tmp11_;
-	ValadocApiSignal* _tmp12_;
-	ValaList* _tmp13_;
-	gchar* result = NULL;
+	ValadocContentComment* _tmp9_;
+	ValadocApiSignal* _tmp10_;
+	ValaList* _tmp11_;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vsig != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -716,64 +719,62 @@ valadoc_gir_writer_real_get_signal_return_comment (ValaGIRWriter* base,
 	}
 	sig = _tmp2_;
 	_tmp3_ = sig;
-	_tmp4_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp3_);
-	_tmp5_ = _tmp4_;
-	if (_tmp5_ == NULL) {
+	if (_tmp3_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (sig);
 		return result;
 	}
-	_tmp6_ = sig;
-	_tmp7_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp6_);
-	_tmp8_ = _tmp7_;
-	_tmp9_ = _g_object_ref0 (_tmp8_);
-	documentation = _tmp9_;
-	_tmp10_ = documentation;
-	if (_tmp10_ == NULL) {
+	_tmp4_ = sig;
+	_tmp5_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp4_);
+	_tmp6_ = _tmp5_;
+	_tmp7_ = _g_object_ref0 (_tmp6_);
+	documentation = _tmp7_;
+	_tmp8_ = documentation;
+	if (_tmp8_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (documentation);
 		_g_object_unref0 (sig);
 		return result;
 	}
-	_tmp11_ = documentation;
-	_tmp12_ = sig;
-	_tmp13_ = valadoc_content_comment_find_taglets (_tmp11_, (ValadocApiNode*) _tmp12_, VALADOC_TAGLETS_TYPE_RETURN);
-	taglets = _tmp13_;
+	_tmp9_ = documentation;
+	_tmp10_ = sig;
+	_tmp11_ = valadoc_content_comment_find_taglets (_tmp9_, (ValadocApiNode*) _tmp10_, VALADOC_TAGLETS_TYPE_RETURN);
+	taglets = _tmp11_;
 	{
 		ValaList* _taglet_list = NULL;
-		ValaList* _tmp14_;
+		ValaList* _tmp12_;
 		gint _taglet_size = 0;
-		ValaList* _tmp15_;
-		gint _tmp16_;
-		gint _tmp17_;
+		ValaList* _tmp13_;
+		gint _tmp14_;
+		gint _tmp15_;
 		gint _taglet_index = 0;
-		_tmp14_ = taglets;
-		_taglet_list = _tmp14_;
-		_tmp15_ = _taglet_list;
-		_tmp16_ = vala_collection_get_size ((ValaCollection*) _tmp15_);
-		_tmp17_ = _tmp16_;
-		_taglet_size = _tmp17_;
+		_tmp12_ = taglets;
+		_taglet_list = _tmp12_;
+		_tmp13_ = _taglet_list;
+		_tmp14_ = vala_collection_get_size ((ValaCollection*) _tmp13_);
+		_tmp15_ = _tmp14_;
+		_taglet_size = _tmp15_;
 		_taglet_index = -1;
 		while (TRUE) {
-			gint _tmp18_;
-			gint _tmp19_;
+			gint _tmp16_;
+			gint _tmp17_;
 			ValadocContentTaglet* taglet = NULL;
-			ValaList* _tmp20_;
-			gpointer _tmp21_;
-			ValadocContentTaglet* _tmp22_;
-			gchar* _tmp23_;
+			ValaList* _tmp18_;
+			gpointer _tmp19_;
+			ValadocContentTaglet* _tmp20_;
+			gchar* _tmp21_;
 			_taglet_index = _taglet_index + 1;
-			_tmp18_ = _taglet_index;
-			_tmp19_ = _taglet_size;
-			if (!(_tmp18_ < _tmp19_)) {
+			_tmp16_ = _taglet_index;
+			_tmp17_ = _taglet_size;
+			if (!(_tmp16_ < _tmp17_)) {
 				break;
 			}
-			_tmp20_ = _taglet_list;
-			_tmp21_ = vala_list_get (_tmp20_, _taglet_index);
-			taglet = (ValadocContentTaglet*) _tmp21_;
-			_tmp22_ = taglet;
-			_tmp23_ = valadoc_gir_writer_translate_taglet (self, _tmp22_);
-			result = _tmp23_;
+			_tmp18_ = _taglet_list;
+			_tmp19_ = vala_list_get (_tmp18_, _taglet_index);
+			taglet = (ValadocContentTaglet*) _tmp19_;
+			_tmp20_ = taglet;
+			_tmp21_ = valadoc_gir_writer_translate_taglet (self, _tmp20_);
+			result = _tmp21_;
 			_g_object_unref0 (taglet);
 			_vala_iterable_unref0 (taglets);
 			_g_object_unref0 (documentation);
@@ -798,19 +799,17 @@ valadoc_gir_writer_real_get_method_return_comment (ValaGIRWriter* base,
 	ValadocApiSymbol* _tmp1_;
 	ValadocApiMethod* _tmp2_;
 	ValadocApiMethod* _tmp3_;
-	ValadocContentComment* _tmp4_;
-	ValadocContentComment* _tmp5_;
 	ValadocContentComment* documentation = NULL;
-	ValadocApiMethod* _tmp6_;
+	ValadocApiMethod* _tmp4_;
+	ValadocContentComment* _tmp5_;
+	ValadocContentComment* _tmp6_;
 	ValadocContentComment* _tmp7_;
 	ValadocContentComment* _tmp8_;
-	ValadocContentComment* _tmp9_;
-	ValadocContentComment* _tmp10_;
 	ValaList* taglets = NULL;
-	ValadocContentComment* _tmp11_;
-	ValadocApiMethod* _tmp12_;
-	ValaList* _tmp13_;
-	gchar* result = NULL;
+	ValadocContentComment* _tmp9_;
+	ValadocApiMethod* _tmp10_;
+	ValaList* _tmp11_;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vm != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -821,64 +820,62 @@ valadoc_gir_writer_real_get_method_return_comment (ValaGIRWriter* base,
 	}
 	m = _tmp2_;
 	_tmp3_ = m;
-	_tmp4_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp3_);
-	_tmp5_ = _tmp4_;
-	if (_tmp5_ == NULL) {
+	if (_tmp3_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (m);
 		return result;
 	}
-	_tmp6_ = m;
-	_tmp7_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp6_);
-	_tmp8_ = _tmp7_;
-	_tmp9_ = _g_object_ref0 (_tmp8_);
-	documentation = _tmp9_;
-	_tmp10_ = documentation;
-	if (_tmp10_ == NULL) {
+	_tmp4_ = m;
+	_tmp5_ = valadoc_api_node_get_documentation ((ValadocApiNode*) _tmp4_);
+	_tmp6_ = _tmp5_;
+	_tmp7_ = _g_object_ref0 (_tmp6_);
+	documentation = _tmp7_;
+	_tmp8_ = documentation;
+	if (_tmp8_ == NULL) {
 		result = NULL;
 		_g_object_unref0 (documentation);
 		_g_object_unref0 (m);
 		return result;
 	}
-	_tmp11_ = documentation;
-	_tmp12_ = m;
-	_tmp13_ = valadoc_content_comment_find_taglets (_tmp11_, (ValadocApiNode*) _tmp12_, VALADOC_TAGLETS_TYPE_RETURN);
-	taglets = _tmp13_;
+	_tmp9_ = documentation;
+	_tmp10_ = m;
+	_tmp11_ = valadoc_content_comment_find_taglets (_tmp9_, (ValadocApiNode*) _tmp10_, VALADOC_TAGLETS_TYPE_RETURN);
+	taglets = _tmp11_;
 	{
 		ValaList* _taglet_list = NULL;
-		ValaList* _tmp14_;
+		ValaList* _tmp12_;
 		gint _taglet_size = 0;
-		ValaList* _tmp15_;
-		gint _tmp16_;
-		gint _tmp17_;
+		ValaList* _tmp13_;
+		gint _tmp14_;
+		gint _tmp15_;
 		gint _taglet_index = 0;
-		_tmp14_ = taglets;
-		_taglet_list = _tmp14_;
-		_tmp15_ = _taglet_list;
-		_tmp16_ = vala_collection_get_size ((ValaCollection*) _tmp15_);
-		_tmp17_ = _tmp16_;
-		_taglet_size = _tmp17_;
+		_tmp12_ = taglets;
+		_taglet_list = _tmp12_;
+		_tmp13_ = _taglet_list;
+		_tmp14_ = vala_collection_get_size ((ValaCollection*) _tmp13_);
+		_tmp15_ = _tmp14_;
+		_taglet_size = _tmp15_;
 		_taglet_index = -1;
 		while (TRUE) {
-			gint _tmp18_;
-			gint _tmp19_;
+			gint _tmp16_;
+			gint _tmp17_;
 			ValadocContentTaglet* taglet = NULL;
-			ValaList* _tmp20_;
-			gpointer _tmp21_;
-			ValadocContentTaglet* _tmp22_;
-			gchar* _tmp23_;
+			ValaList* _tmp18_;
+			gpointer _tmp19_;
+			ValadocContentTaglet* _tmp20_;
+			gchar* _tmp21_;
 			_taglet_index = _taglet_index + 1;
-			_tmp18_ = _taglet_index;
-			_tmp19_ = _taglet_size;
-			if (!(_tmp18_ < _tmp19_)) {
+			_tmp16_ = _taglet_index;
+			_tmp17_ = _taglet_size;
+			if (!(_tmp16_ < _tmp17_)) {
 				break;
 			}
-			_tmp20_ = _taglet_list;
-			_tmp21_ = vala_list_get (_tmp20_, _taglet_index);
-			taglet = (ValadocContentTaglet*) _tmp21_;
-			_tmp22_ = taglet;
-			_tmp23_ = valadoc_gir_writer_translate_taglet (self, _tmp22_);
-			result = _tmp23_;
+			_tmp18_ = _taglet_list;
+			_tmp19_ = vala_list_get (_tmp18_, _taglet_index);
+			taglet = (ValadocContentTaglet*) _tmp19_;
+			_tmp20_ = taglet;
+			_tmp21_ = valadoc_gir_writer_translate_taglet (self, _tmp20_);
+			result = _tmp21_;
 			_g_object_unref0 (taglet);
 			_vala_iterable_unref0 (taglets);
 			_g_object_unref0 (documentation);
@@ -905,7 +902,7 @@ valadoc_gir_writer_real_get_signal_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp3_;
 	ValadocContentComment* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (vsig != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -944,7 +941,7 @@ valadoc_gir_writer_real_get_parameter_comment (ValaGIRWriter* base,
 	ValadocContentComment* _tmp10_;
 	ValadocApiSymbol* _tmp11_;
 	ValaList* _tmp12_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGirWriter*) base;
 	g_return_val_if_fail (param != NULL, NULL);
 	_tmp0_ = self->priv->resolver;
@@ -1103,12 +1100,12 @@ valadoc_gir_writer_get_type_once (void)
 GType
 valadoc_gir_writer_get_type (void)
 {
-	static volatile gsize valadoc_gir_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gir_writer_type_id__volatile)) {
+	static volatile gsize valadoc_gir_writer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gir_writer_type_id__once)) {
 		GType valadoc_gir_writer_type_id;
 		valadoc_gir_writer_type_id = valadoc_gir_writer_get_type_once ();
-		g_once_init_leave (&valadoc_gir_writer_type_id__volatile, valadoc_gir_writer_type_id);
+		g_once_init_leave (&valadoc_gir_writer_type_id__once, valadoc_gir_writer_type_id);
 	}
-	return valadoc_gir_writer_type_id__volatile;
+	return valadoc_gir_writer_type_id__once;
 }
 

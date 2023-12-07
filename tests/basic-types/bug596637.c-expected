@@ -17,20 +17,16 @@ _vala_main (void)
 	gint* _tmp0_;
 	gint a_length1;
 	gint _a_size_;
-	gint* _tmp1_;
-	gint _tmp1__length1;
+	gint _tmp1_;
 	gint _tmp2_;
-	gint _tmp3_;
 	_tmp0_ = g_new0 (gint, 1);
 	a = _tmp0_;
 	a_length1 = 1;
 	_a_size_ = a_length1;
-	_tmp1_ = a;
-	_tmp1__length1 = a_length1;
-	_tmp2_ = _tmp1_[0];
-	_tmp1_[0] = _tmp2_ + 1;
-	_tmp3_ = a[0];
-	_vala_assert (_tmp3_ == 1, "a[0] == 1");
+	_tmp1_ = a[0];
+	a[0] = _tmp1_ + 1;
+	_tmp2_ = a[0];
+	_vala_assert (_tmp2_ == 1, "a[0] == 1");
 	a = (g_free (a), NULL);
 }
 

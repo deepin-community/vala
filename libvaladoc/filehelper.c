@@ -50,7 +50,7 @@ valadoc_copy_file (const gchar* src,
 	FILE* fdest = NULL;
 	FILE* _tmp2_;
 	FILE* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (src != NULL, FALSE);
 	g_return_val_if_fail (dest != NULL, FALSE);
 	_tmp0_ = g_fopen (src, "rb");
@@ -113,7 +113,7 @@ valadoc_copy_directory (const gchar* src,
                         const gchar* dest)
 {
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (src != NULL, FALSE);
 	g_return_val_if_fail (dest != NULL, FALSE);
 	{
@@ -234,7 +234,7 @@ gboolean
 valadoc_remove_directory (const gchar* rpath)
 {
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (rpath != NULL, FALSE);
 	{
 		GDir* dir = NULL;

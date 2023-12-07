@@ -677,7 +677,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -696,7 +696,7 @@ gtkdoc_generator_combine_inline_docs (GtkdocGenerator* self,
 	GString* _tmp5_;
 	GString* _tmp12_;
 	gchar* _tmp13_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -808,7 +808,7 @@ gtkdoc_generator_execute (GtkdocGenerator* self,
 	GtkdocTextWriter* _tmp13_;
 	GtkdocTextWriter* _tmp14_;
 	GtkdocTextWriter* _tmp116_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (settings != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
@@ -1190,7 +1190,7 @@ gtkdoc_generator_get_filenames (GtkdocGenerator* self)
 {
 	ValaMap* _tmp0_;
 	ValaSet* _tmp1_;
-	ValaSet* result = NULL;
+	ValaSet* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->files_data;
 	_tmp1_ = vala_map_get_keys (_tmp0_);
@@ -1206,7 +1206,7 @@ gtkdoc_generator_get_file_data (GtkdocGenerator* self,
 	ValaMap* _tmp0_;
 	gpointer _tmp1_;
 	GtkdocGeneratorFileData* _tmp2_;
-	GtkdocGeneratorFileData* result = NULL;
+	GtkdocGeneratorFileData* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (filename != NULL, NULL);
 	_tmp0_ = self->priv->files_data;
@@ -1312,7 +1312,7 @@ gtkdoc_generator_merge_headers (GtkdocGenerator* self,
 	ValaArrayList* headers = NULL;
 	GEqualFunc _tmp1_;
 	ValaArrayList* _tmp2_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (doc_headers != NULL, NULL);
 	if (lang_headers == NULL) {
@@ -1740,7 +1740,7 @@ gtkdoc_generator_create_gcomment (GtkdocGenerator* self,
 	ValaList* _tmp26_;
 	GtkdocCommentConverter* _tmp27_;
 	ValaList* _tmp28_;
-	GtkdocGComment* result = NULL;
+	GtkdocGComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (symbol != NULL, NULL);
 	_tmp0_ = self->priv->reporter;
@@ -1814,7 +1814,7 @@ gtkdoc_generator_add_comment (GtkdocGenerator* self,
 	GtkdocGComment* gcomment = NULL;
 	GtkdocGComment* _tmp1_;
 	ValaList* _tmp2_;
-	GtkdocGComment* result = NULL;
+	GtkdocGComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (filename != NULL, NULL);
 	g_return_val_if_fail (symbol != NULL, NULL);
@@ -1846,7 +1846,7 @@ gtkdoc_generator_add_symbol (GtkdocGenerator* self,
 	GtkdocGComment* _tmp3_;
 	GtkdocGeneratorFileData* _tmp4_;
 	ValaList* _tmp5_;
-	GtkdocGComment* result = NULL;
+	GtkdocGComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (filename != NULL, NULL);
 	g_return_val_if_fail (cname != NULL, NULL);
@@ -1903,7 +1903,7 @@ gtkdoc_generator_add_custom_header (GtkdocGenerator* self,
 	gint _tmp3__length1;
 	ValaList* _tmp4_;
 	GtkdocHeader* _tmp5_;
-	GtkdocHeader* result = NULL;
+	GtkdocHeader* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	if (comment == NULL) {
@@ -1937,7 +1937,7 @@ gtkdoc_generator_remove_custom_header (GtkdocGenerator* self,
 	ValaIterator* it = NULL;
 	ValaList* _tmp0_;
 	ValaIterator* _tmp1_;
-	GtkdocHeader* result = NULL;
+	GtkdocHeader* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->current_headers;
@@ -2014,7 +2014,7 @@ gtkdoc_generator_add_header (GtkdocGenerator* self,
 	gint _tmp23__length1;
 	ValaList* _tmp24_;
 	GtkdocHeader* _tmp25_;
-	GtkdocHeader* result = NULL;
+	GtkdocHeader* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	if (comment == NULL) {
@@ -3587,7 +3587,7 @@ gtkdoc_generator_create_see_function_array (GtkdocGenerator* self,
 	gint _tmp8__length1;
 	gchar** _tmp9_;
 	gint _tmp9__length1;
-	gchar** result = NULL;
+	gchar** result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_new0 (gchar*, 0 + 1);
 	arr = _tmp0_;
@@ -4423,7 +4423,7 @@ string_strip (const gchar* self)
 {
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_strdup (self);
 	_result_ = _tmp0_;
@@ -4447,7 +4447,7 @@ gtkdoc_generator_combine_comments (GtkdocGenerator* self,
 	const gchar* _tmp12_;
 	GString* _tmp15_;
 	gchar* _tmp16_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -5606,7 +5606,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -8129,11 +8129,10 @@ gtkdoc_generator_real_visit_formal_parameter (ValadocApiVisitor* base,
 		ValadocApiTypeReference* _tmp187_;
 		gchar* _tmp188_;
 		gchar* _tmp189_;
-		GtkdocDBusParameterDirection _tmp190_;
+		GtkdocDBusParameter* _tmp190_;
 		GtkdocDBusParameter* _tmp191_;
-		GtkdocDBusParameter* _tmp192_;
-		GtkdocDBusMember* _tmp193_;
-		GtkdocDBusParameter* _tmp194_;
+		GtkdocDBusMember* _tmp192_;
+		GtkdocDBusParameter* _tmp193_;
 		ddirection = GTKDOC_DBUS_PARAMETER_DIRECTION_IN;
 		_tmp182_ = self->priv->current_signal;
 		if (_tmp182_ != NULL) {
@@ -8152,14 +8151,13 @@ gtkdoc_generator_real_visit_formal_parameter (ValadocApiVisitor* base,
 		_tmp187_ = _tmp186_;
 		_tmp188_ = valadoc_api_typereference_get_dbus_type_signature (_tmp187_);
 		_tmp189_ = _tmp188_;
-		_tmp190_ = ddirection;
-		_tmp191_ = gtkdoc_dbus_parameter_new (_tmp185_, _tmp189_, _tmp190_);
-		_tmp192_ = _tmp191_;
+		_tmp190_ = gtkdoc_dbus_parameter_new (_tmp185_, _tmp189_, ddirection);
+		_tmp191_ = _tmp190_;
 		_g_free0 (_tmp189_);
-		dparam = _tmp192_;
-		_tmp193_ = self->priv->current_dbus_member;
-		_tmp194_ = dparam;
-		gtkdoc_dbus_member_add_parameter (_tmp193_, _tmp194_);
+		dparam = _tmp191_;
+		_tmp192_ = self->priv->current_dbus_member;
+		_tmp193_ = dparam;
+		gtkdoc_dbus_member_add_parameter (_tmp192_, _tmp193_);
 		_gtkdoc_dbus_parameter_unref0 (dparam);
 	}
 	valadoc_api_node_accept_all_children ((ValadocApiNode*) param, (ValadocApiVisitor*) self, TRUE);
@@ -8180,7 +8178,7 @@ string_slice (const gchar* self,
 	gboolean _tmp2_ = FALSE;
 	gboolean _tmp3_ = FALSE;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = strlen (self);
 	_tmp1_ = _tmp0_;
@@ -8748,13 +8746,13 @@ gtkdoc_generator_file_data_get_type_once (void)
 static GType
 gtkdoc_generator_file_data_get_type (void)
 {
-	static volatile gsize gtkdoc_generator_file_data_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_generator_file_data_type_id__volatile)) {
+	static volatile gsize gtkdoc_generator_file_data_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_generator_file_data_type_id__once)) {
 		GType gtkdoc_generator_file_data_type_id;
 		gtkdoc_generator_file_data_type_id = gtkdoc_generator_file_data_get_type_once ();
-		g_once_init_leave (&gtkdoc_generator_file_data_type_id__volatile, gtkdoc_generator_file_data_type_id);
+		g_once_init_leave (&gtkdoc_generator_file_data_type_id__once, gtkdoc_generator_file_data_type_id);
 	}
-	return gtkdoc_generator_file_data_type_id__volatile;
+	return gtkdoc_generator_file_data_type_id__once;
 }
 
 static gpointer
@@ -8859,13 +8857,13 @@ gtkdoc_generator_get_type_once (void)
 GType
 gtkdoc_generator_get_type (void)
 {
-	static volatile gsize gtkdoc_generator_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_generator_type_id__volatile)) {
+	static volatile gsize gtkdoc_generator_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_generator_type_id__once)) {
 		GType gtkdoc_generator_type_id;
 		gtkdoc_generator_type_id = gtkdoc_generator_get_type_once ();
-		g_once_init_leave (&gtkdoc_generator_type_id__volatile, gtkdoc_generator_type_id);
+		g_once_init_leave (&gtkdoc_generator_type_id__once, gtkdoc_generator_type_id);
 	}
-	return gtkdoc_generator_type_id__volatile;
+	return gtkdoc_generator_type_id__once;
 }
 
 static void

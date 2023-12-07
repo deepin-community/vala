@@ -27,7 +27,10 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 #include <gobject/gvaluecollector.h>
+
+#define VALADOC_MARKUP_WRITER_MAX_COLUMN 150
 
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -44,7 +47,6 @@ struct _ValadocParamSpecMarkupWriter {
 static gint ValadocMarkupWriter_private_offset;
 static gpointer valadoc_markup_writer_parent_class = NULL;
 
-#define VALADOC_MARKUP_WRITER_MAX_COLUMN 150
 static void valadoc_markup_writer_check_column (ValadocMarkupWriter* self,
                                          const gchar* name,
                                          gboolean end_tag);
@@ -66,7 +68,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -80,7 +82,7 @@ valadoc_markup_writer_escape (const gchar* txt)
 	const gchar* start = NULL;
 	const gchar* pos = NULL;
 	gunichar c = 0U;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (txt != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -314,7 +316,7 @@ valadoc_markup_writer_start_tag (ValadocMarkupWriter* self,
 	GString* _tmp8_;
 	GString* _tmp9_;
 	const gchar* _tmp10_;
-	ValadocMarkupWriter* result = NULL;
+	ValadocMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->indent;
@@ -389,7 +391,7 @@ valadoc_markup_writer_simple_tag (ValadocMarkupWriter* self,
 	GString* _tmp9_;
 	const gchar* _tmp10_;
 	gint _tmp11_;
-	ValadocMarkupWriter* result = NULL;
+	ValadocMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->indent;
@@ -458,7 +460,7 @@ valadoc_markup_writer_end_tag (ValadocMarkupWriter* self,
 	gchar* _tmp0_;
 	gchar* _tmp1_;
 	gint _tmp2_;
-	ValadocMarkupWriter* result = NULL;
+	ValadocMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	valadoc_markup_writer_check_column (self, name, TRUE);
@@ -484,7 +486,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -498,7 +500,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -521,7 +523,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -557,7 +559,7 @@ valadoc_markup_writer_text (ValadocMarkupWriter* self,
                             const gchar* text)
 {
 	gboolean _tmp0_ = FALSE;
-	ValadocMarkupWriter* result = NULL;
+	ValadocMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (text != NULL, NULL);
 	if (self->priv->wrap) {
@@ -666,7 +668,7 @@ ValadocMarkupWriter*
 valadoc_markup_writer_raw_text (ValadocMarkupWriter* self,
                                 const gchar* text)
 {
-	ValadocMarkupWriter* result = NULL;
+	ValadocMarkupWriter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (text != NULL, NULL);
 	valadoc_markup_writer_do_write (self, text);
@@ -783,7 +785,7 @@ static gboolean
 valadoc_markup_writer_real_inline_element (ValadocMarkupWriter* self,
                                            const gchar* name)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (name != NULL, FALSE);
 	result = FALSE;
 	return result;
@@ -806,7 +808,7 @@ static gboolean
 valadoc_markup_writer_real_content_inline_element (ValadocMarkupWriter* self,
                                                    const gchar* name)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (name != NULL, FALSE);
 	result = TRUE;
 	return result;
@@ -1009,13 +1011,13 @@ valadoc_markup_writer_get_type_once (void)
 GType
 valadoc_markup_writer_get_type (void)
 {
-	static volatile gsize valadoc_markup_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_markup_writer_type_id__volatile)) {
+	static volatile gsize valadoc_markup_writer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_markup_writer_type_id__once)) {
 		GType valadoc_markup_writer_type_id;
 		valadoc_markup_writer_type_id = valadoc_markup_writer_get_type_once ();
-		g_once_init_leave (&valadoc_markup_writer_type_id__volatile, valadoc_markup_writer_type_id);
+		g_once_init_leave (&valadoc_markup_writer_type_id__once, valadoc_markup_writer_type_id);
 	}
-	return valadoc_markup_writer_type_id__volatile;
+	return valadoc_markup_writer_type_id__once;
 }
 
 gpointer

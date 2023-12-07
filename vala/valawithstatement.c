@@ -228,7 +228,7 @@ static gboolean
 vala_with_statement_is_object_or_value_type (ValaWithStatement* self,
                                              ValaDataType* type)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (type == NULL) {
 		result = FALSE;
@@ -314,7 +314,7 @@ vala_with_statement_real_check (ValaCodeNode* base,
 	ValaSymbol* _tmp63_;
 	gboolean _tmp64_;
 	gboolean _tmp65_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaWithStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -589,12 +589,12 @@ vala_with_statement_get_type_once (void)
 GType
 vala_with_statement_get_type (void)
 {
-	static volatile gsize vala_with_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_with_statement_type_id__volatile)) {
+	static volatile gsize vala_with_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_with_statement_type_id__once)) {
 		GType vala_with_statement_type_id;
 		vala_with_statement_type_id = vala_with_statement_get_type_once ();
-		g_once_init_leave (&vala_with_statement_type_id__volatile, vala_with_statement_type_id);
+		g_once_init_leave (&vala_with_statement_type_id__once, vala_with_statement_type_id);
 	}
-	return vala_with_statement_type_id__volatile;
+	return vala_with_statement_type_id__once;
 }
 

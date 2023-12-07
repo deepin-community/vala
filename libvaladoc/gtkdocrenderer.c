@@ -122,7 +122,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -201,7 +201,7 @@ static gchar*
 valadoc_gtkdoc_renderer_get_cname (ValadocGtkdocRenderer* self,
                                    ValadocApiItem* item)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (item != NULL, NULL);
 	if (VALADOC_API_IS_METHOD (item)) {
@@ -1264,7 +1264,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -1278,7 +1278,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -1301,7 +1301,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -1914,13 +1914,13 @@ valadoc_gtkdoc_renderer_get_type_once (void)
 GType
 valadoc_gtkdoc_renderer_get_type (void)
 {
-	static volatile gsize valadoc_gtkdoc_renderer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtkdoc_renderer_type_id__volatile)) {
+	static volatile gsize valadoc_gtkdoc_renderer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_renderer_type_id__once)) {
 		GType valadoc_gtkdoc_renderer_type_id;
 		valadoc_gtkdoc_renderer_type_id = valadoc_gtkdoc_renderer_get_type_once ();
-		g_once_init_leave (&valadoc_gtkdoc_renderer_type_id__volatile, valadoc_gtkdoc_renderer_type_id);
+		g_once_init_leave (&valadoc_gtkdoc_renderer_type_id__once, valadoc_gtkdoc_renderer_type_id);
 	}
-	return valadoc_gtkdoc_renderer_type_id__volatile;
+	return valadoc_gtkdoc_renderer_type_id__once;
 }
 
 static void

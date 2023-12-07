@@ -42,11 +42,20 @@ public class Vala.Parser : CodeVisitor {
 	const int BUFFER_SIZE = 32;
 
 	static List<TypeParameter> _empty_type_parameter_list;
+	static int next_local_func_id = 0;
+
+	PartialInfo[] partials;
 
 	struct TokenInfo {
 		public TokenType type;
 		public SourceLocation begin;
 		public SourceLocation end;
+	}
+
+	struct PartialInfo {
+		public Symbol parent;
+		public SourceLocation begin;
+		public List<Attribute>? attributes;
 	}
 
 	[Flags]
@@ -61,7 +70,8 @@ public class Vala.Parser : CodeVisitor {
 		STATIC,
 		VIRTUAL,
 		ASYNC,
-		SEALED
+		SEALED,
+		PARTIAL
 	}
 
 	public Parser () {
@@ -209,6 +219,20 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
+	void jump (SourceLocation location) {
+		while (tokens[index].begin.pos != location.pos) {
+			index = (index + 1) % BUFFER_SIZE;
+			size--;
+			if (size <= 0) {
+				scanner.seek (location);
+				size = 0;
+				index = 0;
+
+				next ();
+			}
+		}
+	}
+
 	void skip_identifier () throws ParseError {
 		// also accept keywords as identifiers where there is no conflict
 		switch (current ()) {
@@ -253,6 +277,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.OVERRIDE:
 		case TokenType.OWNED:
 		case TokenType.PARAMS:
+		case TokenType.PARTIAL:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:
@@ -376,6 +401,7 @@ public class Vala.Parser : CodeVisitor {
 		scanner = new Scanner (source_file);
 		parse_file_comments ();
 
+		tokens = new TokenInfo[BUFFER_SIZE];
 		index = -1;
 		size = 0;
 
@@ -383,6 +409,8 @@ public class Vala.Parser : CodeVisitor {
 
 
 		try {
+			partials = new PartialInfo[] {};
+			var begin = get_location ();
 			parse_using_directives (context.root);
 			parse_declarations (context.root, true);
 			if (accept (TokenType.CLOSE_BRACE)) {
@@ -391,6 +419,14 @@ public class Vala.Parser : CodeVisitor {
 					Report.error (get_last_src (), "unexpected `}'");
 				}
 			}
+			if (partials.length > 0) {
+				rollback (begin);
+				foreach (var info in partials) {
+					jump (info.begin);
+					parse_class_declaration (info.parent, info.attributes, true);
+				}
+			}
+			partials = null;
 		} catch (ParseError e) {
 			report_parse_error (e);
 		}
@@ -456,10 +492,13 @@ public class Vala.Parser : CodeVisitor {
 		while (accept (TokenType.OPEN_BRACKET)) {
 			do {
 				// required for decision between expression and declaration statement
-				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
+				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET && current () != TokenType.COLON) {
 					parse_expression ();
 				}
 			} while (accept (TokenType.COMMA));
+			if (accept (TokenType.COLON)) {
+				skip_symbol_name ();
+			}
 			expect (TokenType.CLOSE_BRACKET);
 			accept (TokenType.INTERR);
 		}
@@ -546,18 +585,22 @@ public class Vala.Parser : CodeVisitor {
 		// array brackets in types are read from right to left,
 		// this is more logical, especially when nullable arrays
 		// or pointers are involved
+		DataType? array_length_type = null;
 		while (accept (TokenType.OPEN_BRACKET)) {
 			bool invalid_array = false;
 			int array_rank = 0;
 			do {
 				array_rank++;
 				// required for decision between expression and declaration statement
-				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
+				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET && current () != TokenType.COLON) {
 					parse_expression ();
 					// only used for parsing, reject use as real type
 					invalid_array = true;
 				}
 			} while (accept (TokenType.COMMA));
+			if (accept (TokenType.COLON)) {
+				array_length_type = parse_type (true, false);
+			}
 			expect (TokenType.CLOSE_BRACKET);
 
 			type.value_owned = inner_type_owned;
@@ -565,6 +608,9 @@ public class Vala.Parser : CodeVisitor {
 			var array_type = new ArrayType (type, array_rank, get_src (begin));
 			array_type.nullable = accept (TokenType.INTERR);
 			array_type.invalid_syntax = invalid_array;
+			if (array_length_type != null) {
+				array_type.length_type = array_length_type.copy ();
+			}
 
 			type = array_type;
 		}
@@ -588,9 +634,13 @@ public class Vala.Parser : CodeVisitor {
 		// inline-allocated array
 		if (type != null && accept (TokenType.OPEN_BRACKET)) {
 			Expression array_length = null;
+			DataType? array_length_type = null;
 
 			if (current () != TokenType.CLOSE_BRACKET) {
 				array_length = parse_expression ();
+			}
+			if (accept (TokenType.COLON)) {
+				array_length_type = parse_type (true, false);
 			}
 			expect (TokenType.CLOSE_BRACKET);
 
@@ -599,6 +649,9 @@ public class Vala.Parser : CodeVisitor {
 			if (array_length != null) {
 				array_type.fixed_length = true;
 				array_type.length = array_length;
+			}
+			if (array_length_type != null) {
+				array_type.length_type = array_length_type;
 			}
 			array_type.value_owned = type.value_owned;
 
@@ -859,7 +912,6 @@ public class Vala.Parser : CodeVisitor {
 		if (init_list.size > 0 && inner is MemberAccess) {
 			// struct creation expression
 			unowned MemberAccess member = (MemberAccess) inner;
-			member.creation_member = true;
 
 			var expr = new ObjectCreationExpression (member, src);
 			expr.struct_creation = true;
@@ -979,7 +1031,6 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
-		member.creation_member = true;
 		var arg_list = parse_argument_list ();
 		var src = get_src (begin);
 
@@ -1030,6 +1081,7 @@ public class Vala.Parser : CodeVisitor {
 		bool size_specified = false;
 		List<Expression> size_specifier_list = null;
 		bool first = true;
+		DataType? array_length_type = null;
 		do {
 			if (!first) {
 				// array of arrays: new T[][42]
@@ -1039,6 +1091,9 @@ public class Vala.Parser : CodeVisitor {
 				}
 
 				element_type = new ArrayType (element_type, size_specifier_list.size, element_type.source_reference);
+				if (array_length_type != null) {
+					((ArrayType) element_type).length_type = array_length_type.copy ();
+				}
 			} else {
 				first = false;
 			}
@@ -1046,12 +1101,15 @@ public class Vala.Parser : CodeVisitor {
 			size_specifier_list = new ArrayList<Expression> ();
 			do {
 				Expression size = null;
-				if (current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA) {
+				if (current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA && current () != TokenType.COLON) {
 					size = parse_expression ();
 					size_specified = true;
 				}
 				size_specifier_list.add (size);
 			} while (accept (TokenType.COMMA));
+			if (accept (TokenType.COLON)) {
+				array_length_type = parse_type (true, false);
+			}
 			expect (TokenType.CLOSE_BRACKET);
 		} while (accept (TokenType.OPEN_BRACKET));
 
@@ -1062,6 +1120,9 @@ public class Vala.Parser : CodeVisitor {
 			initializer = parse_initializer ();
 		}
 		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, src);
+		if (array_length_type != null) {
+			expr.length_type = array_length_type.copy ();
+		}
 		if (size_specified) {
 			foreach (Expression size in size_specifier_list) {
 				expr.append_size (size);
@@ -1360,9 +1421,22 @@ public class Vala.Parser : CodeVisitor {
 		return left;
 	}
 
-	Expression parse_relational_expression () throws ParseError {
+	Expression parse_type_check_expression () throws ParseError {
 		var begin = get_location ();
 		var left = parse_shift_expression ();
+		if (accept (TokenType.IS)) {
+			var type = parse_type (true, false);
+			left = new TypeCheck (left, type, get_src (begin));
+		} else if (accept (TokenType.AS)) {
+			var type = parse_type (true, false);
+			left = new CastExpression.silent (left, type, get_src (begin));
+		}
+		return left;
+	}
+
+	Expression parse_relational_expression () throws ParseError {
+		var begin = get_location ();
+		var left = parse_type_check_expression ();
 
 		bool first = true;
 		bool found = true;
@@ -1372,8 +1446,10 @@ public class Vala.Parser : CodeVisitor {
 			case BinaryOperator.LESS_THAN:
 			case BinaryOperator.LESS_THAN_OR_EQUAL:
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
+			case BinaryOperator.EQUALITY:
+			case BinaryOperator.INEQUALITY:
 				next ();
-				var right = parse_shift_expression ();
+				var right = parse_type_check_expression ();
 				if (first) {
 					left = new BinaryExpression (operator, left, right, get_src (begin));
 				} else {
@@ -1385,7 +1461,7 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				// ignore >> and >>= (two tokens due to generics)
 				if (current () != TokenType.OP_GT && current () != TokenType.OP_GE) {
-					var right = parse_shift_expression ();
+					var right = parse_type_check_expression ();
 					if (first) {
 						left = new BinaryExpression (operator, left, right, get_src (begin));
 					} else {
@@ -1398,41 +1474,6 @@ public class Vala.Parser : CodeVisitor {
 				}
 				break;
 			default:
-				switch (current ()) {
-				case TokenType.IS:
-					next ();
-					var type = parse_type (true, false);
-					left = new TypeCheck (left, type, get_src (begin));
-					break;
-				case TokenType.AS:
-					next ();
-					var type = parse_type (true, false);
-					left = new CastExpression.silent (left, type, get_src (begin));
-					break;
-				default:
-					found = false;
-					break;
-				}
-				break;
-			}
-		}
-		return left;
-	}
-
-	Expression parse_equality_expression () throws ParseError {
-		var begin = get_location ();
-		var left = parse_relational_expression ();
-		bool found = true;
-		while (found) {
-			var operator = get_binary_operator (current ());
-			switch (operator) {
-			case BinaryOperator.EQUALITY:
-			case BinaryOperator.INEQUALITY:
-				next ();
-				var right = parse_relational_expression ();
-				left = new BinaryExpression (operator, left, right, get_src (begin));
-				break;
-			default:
 				found = false;
 				break;
 			}
@@ -1442,9 +1483,9 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_and_expression () throws ParseError {
 		var begin = get_location ();
-		var left = parse_equality_expression ();
+		var left = parse_relational_expression ();
 		while (accept (TokenType.BITWISE_AND)) {
-			var right = parse_equality_expression ();
+			var right = parse_relational_expression ();
 			left = new BinaryExpression (BinaryOperator.BITWISE_AND, left, right, get_src (begin));
 		}
 		return left;
@@ -1631,6 +1672,10 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.SWITCH:
 				stmt = parse_switch_statement ();
 				break;
+			case TokenType.CASE:
+			case TokenType.DEFAULT:
+				stmt = parse_switch_section_statement ();
+				break;
 			case TokenType.WHILE:
 				stmt = parse_while_statement ();
 				break;
@@ -1679,8 +1724,12 @@ public class Vala.Parser : CodeVisitor {
 		} catch (ParseError e) {
 			var e_begin = get_location ();
 			string token = ((EnumClass) typeof (TokenType).class_ref ()).get_value (type).value_nick;
+			rollback (begin);
+			if (!is_expression ()) {
+				rollback (e_begin);
+				throw e;
+			}
 			try {
-				rollback (begin);
 				stmt = parse_expression_statement ();
 				Report.warning (get_src (begin), "`%s' is a syntax keyword, replace with `@%s'", token, token);
 			} catch (ParseError e2) {
@@ -1697,8 +1746,6 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_statements (Block block) throws ParseError {
 		while (current () != TokenType.CLOSE_BRACE
-		       && current () != TokenType.CASE
-		       && current () != TokenType.DEFAULT
 		       && current () != TokenType.EOF) {
 			try {
 				Statement stmt = null;
@@ -1730,6 +1777,15 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.WITH:
 					stmt = parse_statement (current ());
 					break;
+				case TokenType.CASE:
+				case TokenType.DEFAULT:
+					if (block is SwitchSection) {
+						// begin a new switch case
+						return;
+					} else {
+						stmt = parse_statement (current ());
+					}
+					break;
 				case TokenType.VAR:
 					is_decl = true;
 					parse_local_variable_declarations (block);
@@ -1752,7 +1808,12 @@ public class Vala.Parser : CodeVisitor {
 						stmt = parse_expression_statement ();
 					} else {
 						is_decl = true;
-						parse_local_variable_declarations (block);
+						bool is_local_func = is_local_function ();
+						if (is_local_func) {
+							parse_local_function_declaration (block);
+						} else {
+							parse_local_variable_declarations (block);
+						}
 					}
 					break;
 				}
@@ -1869,6 +1930,22 @@ public class Vala.Parser : CodeVisitor {
 		return false;
 	}
 
+	bool is_local_function () {
+		var begin = get_location ();
+
+		try {
+			skip_type ();
+			if (accept (TokenType.IDENTIFIER) && accept (TokenType.OPEN_PARENS)) {
+				rollback (begin);
+				return true;
+			}
+		} catch {
+		}
+
+		rollback (begin);
+		return false;
+	}
+
 	Block parse_embedded_statement (string statement_name, bool accept_empty_body = true) throws ParseError {
 		if (current () == TokenType.OPEN_BRACE) {
 			var block = parse_block ();
@@ -1965,15 +2042,20 @@ public class Vala.Parser : CodeVisitor {
 	void parse_local_variable_declarations (Block block) throws ParseError {
 		var begin = get_location ();
 		DataType variable_type;
+		bool is_dynamic = accept (TokenType.DYNAMIC);
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			variable_type = new VarType (false);
 			variable_type.nullable = accept (TokenType.INTERR);
+			variable_type.is_dynamic = is_dynamic;
 		} else {
 			rollback (begin);
+			is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.VAR)) {
 				variable_type = new VarType ();
 				variable_type.nullable = accept (TokenType.INTERR);
+				variable_type.is_dynamic = is_dynamic;
 			} else {
+				rollback (begin);
 				variable_type = parse_type (true, true);
 			}
 		}
@@ -2082,6 +2164,43 @@ public class Vala.Parser : CodeVisitor {
 		return new Constant (id, type, initializer, src);
 	}
 
+	void parse_local_function_declaration (Block block) throws ParseError {
+		var begin = get_location ();
+		var type = parse_type (true, false);
+		var sym = parse_symbol_name ();
+
+		expect (TokenType.OPEN_PARENS);
+		List<Parameter> params = new ArrayList<Parameter> ();
+		if (current () != TokenType.CLOSE_PARENS) {
+			do {
+				params.add (parse_parameter ());
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_PARENS);
+
+		var src = get_src (begin);
+
+		var d = new Delegate ("_LocalFunc%i_".printf (next_local_func_id++), type, src);
+		foreach (var param in params) {
+			d.add_parameter (param);
+		}
+		context.root.add_delegate (d);
+
+		var lambda = new LambdaExpression.with_statement_body (parse_block (), src);
+		foreach (var p in params) {
+			var param = new Parameter (p.name, null, p.source_reference);
+			param.direction = p.direction;
+			lambda.add_parameter (param);
+		}
+
+		if (!context.experimental) {
+			Report.warning (src, "local functions are experimental");
+		}
+
+		var local = new LocalVariable (new DelegateType (d), sym.name, lambda, src);
+		block.add_statement (new DeclarationStatement (local, src));
+	}
+
 	Statement parse_expression_statement () throws ParseError {
 		var begin = get_location ();
 		var expr = parse_statement_expression ();
@@ -2121,26 +2240,32 @@ public class Vala.Parser : CodeVisitor {
 		var stmt = new SwitchStatement (condition, get_src (begin));
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
-			begin = get_location ();
-			var section = new SwitchSection (get_src (begin));
-			do {
-				if (accept (TokenType.CASE)) {
-					section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
-					while (current () == TokenType.COMMA) {
-						expect (TokenType.COMMA);
-						section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
-					}
-				} else {
-					expect (TokenType.DEFAULT);
-					section.add_label (new SwitchLabel.with_default (get_src (begin)));
-				}
-				expect (TokenType.COLON);
-			} while (current () == TokenType.CASE || current () == TokenType.DEFAULT);
-			parse_statements (section);
-			stmt.add_section (section);
+			stmt.add_section ((SwitchSection) parse_switch_section_statement ());
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return stmt;
+	}
+
+	Statement parse_switch_section_statement () throws ParseError {
+		var begin = get_location ();
+		var section = new SwitchSection (get_src (begin));
+		do {
+			if (accept (TokenType.CASE)) {
+				section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+				while (current () == TokenType.COMMA) {
+					expect (TokenType.COMMA);
+					section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+				}
+				expect (TokenType.COLON);
+			} else if (accept (TokenType.DEFAULT)) {
+				section.add_label (new SwitchLabel.with_default (get_src (begin)));
+				expect (TokenType.COLON);
+			} else {
+				throw new ParseError.SYNTAX ("expected `case' or `default' switch label");
+			}
+		} while (current () == TokenType.CASE || current () == TokenType.DEFAULT);
+		parse_statements (section);
+		return section;
 	}
 
 	Statement parse_while_statement () throws ParseError {
@@ -2234,15 +2359,20 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var var_or_type = get_location ();
 		DataType type;
+		bool is_dynamic = accept (TokenType.DYNAMIC);
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			type = new VarType (false);
 			type.nullable = accept (TokenType.INTERR);
+			type.is_dynamic = is_dynamic;
 		} else {
 			rollback (var_or_type);
+			is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.VAR)) {
 				type = new VarType ();
 				type.nullable = accept (TokenType.INTERR);
+				type.is_dynamic = is_dynamic;
 			} else {
+				rollback (var_or_type);
 				type = parse_type (true, true);
 				if (accept (TokenType.IN)) {
 					Report.error (type.source_reference, "syntax error, expected `unowned var', `var' or type");
@@ -2324,8 +2454,10 @@ public class Vala.Parser : CodeVisitor {
 			if (current () == TokenType.FINALLY) {
 				finally_clause = parse_finally_clause ();
 			}
-		} else {
+		} else if (current () == TokenType.FINALLY) {
 			finally_clause = parse_finally_clause ();
+		} else {
+			report_parse_error (new ParseError.SYNTAX ("expected `catch' or `finally'"));
 		}
 		var stmt = new TryStatement (try_block, finally_clause, get_src (begin));
 		foreach (CatchClause clause in catch_clauses) {
@@ -2400,19 +2532,28 @@ public class Vala.Parser : CodeVisitor {
 		LocalVariable? local = null;
 
 		// Try "with (expr)"
-		Expression expr = parse_expression ();
-		if (!accept (TokenType.CLOSE_PARENS)) {
+		Expression expr;
+		try {
+			expr = parse_expression ();
+		} catch {
+			expr = null;
+		}
+		if (expr == null || !accept (TokenType.CLOSE_PARENS)) {
 			// Try "with (var identifier = expr)"
 			rollback (expr_or_decl);
 			DataType variable_type;
+			bool is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 				variable_type = new VarType (false);
 				variable_type.nullable = accept (TokenType.INTERR);
+				variable_type.is_dynamic = is_dynamic;
 			} else {
 				rollback (expr_or_decl);
+				is_dynamic = accept (TokenType.DYNAMIC);
 				if (accept (TokenType.VAR)) {
 					variable_type = new VarType ();
 					variable_type.nullable = accept (TokenType.INTERR);
+					variable_type.is_dynamic = is_dynamic;
 				} else {
 					variable_type = parse_type (true, true);
 				}
@@ -2485,7 +2626,7 @@ public class Vala.Parser : CodeVisitor {
 	void set_attributes (CodeNode node, List<Attribute>? attributes) {
 		if (attributes != null) {
 			foreach (Attribute attr in (List<Attribute>) attributes) {
-				if (node.get_attribute (attr.name) != null) {
+				if (node.has_attribute (attr.name)) {
 					Report.error (attr.source_reference, "duplicate attribute `%s'", attr.name);
 				}
 				node.attributes.append (attr);
@@ -2496,7 +2637,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_main_block (Symbol parent) throws ParseError {
 		var begin = get_location ();
 
-		var method = new Method ("main", new VoidType (), get_src (begin));
+		var method = new Method.main_block (new SourceReference (scanner.source_file, begin, begin));
 		method.access = SymbolAccessibility.PUBLIC;
 		method.binding = MemberBinding.STATIC;
 		method.body = new Block (get_src (begin));
@@ -2733,6 +2874,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.NAMESPACE:
 			case TokenType.NEW:
 			case TokenType.OVERRIDE:
+			case TokenType.PARTIAL:
 			case TokenType.PRIVATE:
 			case TokenType.PROTECTED:
 			case TokenType.PUBLIC:
@@ -2820,7 +2962,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	void parse_class_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
+	void parse_class_declaration (Symbol parent, List<Attribute>? attrs, bool partial_reparse = false) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -2842,9 +2984,65 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.SEALED in flags) {
 			cl.is_sealed = true;
 		}
+		if (ModifierFlags.PARTIAL in flags) {
+			if (!context.experimental) {
+				Report.warning (cl.source_reference, "`partial' classes are experimental");
+			}
+			cl.is_partial = true;
+		}
 		if (ModifierFlags.EXTERN in flags) {
 			cl.is_extern = true;
 		}
+
+		Class? old_cl = null;
+		if (partial_reparse) {
+			var names = new ArrayList<string> ();
+			while (sym.inner != null) {
+				sym = sym.inner;
+				names.insert (0, sym.name);
+			}
+			Symbol p = parent;
+			while (p != null && p != context.root) {
+				names.insert (0, p.name);
+				p = p.parent_symbol;
+			}
+			p = context.root;
+			foreach (var name in names) {
+				p = p.scope.lookup (name);
+				if (p == null) {
+					break;
+				}
+			}
+			if (p != null) {
+				old_cl = p.scope.lookup (cl.name) as Class;
+				parent = p;
+			}
+		}
+		if (old_cl != null && old_cl.is_partial) {
+			if (cl.is_partial != old_cl.is_partial) {
+				Report.error (cl.source_reference, "conflicting partial and not partial declarations of `%s'", cl.name);
+				cl.error = true;
+			}
+			if (cl.access != old_cl.access) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting accessiblity modifiers", cl.name);
+				cl.error = true;
+			}
+			if (cl.is_abstract != old_cl.is_abstract) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting abstract modifiers", cl.name);
+				cl.error = true;
+			}
+			if (cl.is_sealed != old_cl.is_sealed) {
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting sealed modifiers", cl.name);
+				cl.error = true;
+			}
+			if (cl.error) {
+				Report.notice (old_cl.source_reference, "previous declaration of `%s' was here", old_cl.name);
+				return;
+			}
+
+			cl = old_cl;
+		}
+
 		set_attributes (cl, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			cl.add_type_parameter (type_param);
@@ -2855,6 +3053,10 @@ public class Vala.Parser : CodeVisitor {
 
 		parse_declarations (cl);
 
+		if (old_cl != null && old_cl.is_partial) {
+			return;
+		}
+
 		// ensure there is always a default construction method
 		if (scanner.source_file.file_type == SourceFileType.SOURCE
 		    && cl.default_construction_method == null) {
@@ -2864,6 +3066,11 @@ public class Vala.Parser : CodeVisitor {
 			cl.add_method (m);
 		}
 
+		if (partial_reparse) {
+			parent.add_class (cl);
+			return;
+		}
+
 		Symbol result = cl;
 		while (sym != null) {
 			sym = sym.inner;
@@ -2871,7 +3078,10 @@ public class Vala.Parser : CodeVisitor {
 			Symbol next = (sym != null ? new Namespace (sym.name, cl.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
-			} else {
+			} else if (!partial_reparse && cl.is_partial) {
+				PartialInfo info = { parent, begin, attrs };
+				partials += info;
+			} else if (!cl.is_partial) {
 				next.add_class ((Class) result);
 			}
 			result = next;
@@ -2887,6 +3097,7 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 
 		type = parse_inline_array_type (type);
+		var src = get_src (begin);
 
 		// constant arrays don't own their element
 		unowned ArrayType? array_type = type as ArrayType;
@@ -2894,7 +3105,13 @@ public class Vala.Parser : CodeVisitor {
 			array_type.element_type.value_owned = false;
 		}
 
-		var c = new Constant (id, type, null, get_src (begin), comment);
+		Expression? initializer = null;
+		if (accept (TokenType.ASSIGN)) {
+			initializer = parse_expression ();
+		}
+		expect (TokenType.SEMICOLON);
+
+		var c = new Constant (id, type, initializer, src, comment);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			c.is_extern = true;
@@ -2911,11 +3128,6 @@ public class Vala.Parser : CodeVisitor {
 		if (type.value_owned) {
 			Report.error (c.source_reference, "`owned' is not allowed on constants");
 		}
-
-		if (accept (TokenType.ASSIGN)) {
-			c.value = parse_expression ();
-		}
-		expect (TokenType.SEMICOLON);
 
 		parent.add_constant (c);
 	}
@@ -3530,6 +3742,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.EXTERN;
 				break;
+			case TokenType.PARTIAL:
+				next ();
+				flags |= ModifierFlags.PARTIAL;
+				break;
 			case TokenType.SEALED:
 				next ();
 				flags |= ModifierFlags.SEALED;
@@ -3872,6 +4088,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NAMESPACE:
 		case TokenType.NEW:
 		case TokenType.OVERRIDE:
+		case TokenType.PARTIAL:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:

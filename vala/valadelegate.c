@@ -244,7 +244,7 @@ ValaList*
 vala_delegate_get_type_parameters (ValaDelegate* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->type_parameters;
 	result = _tmp0_;
@@ -256,7 +256,7 @@ vala_delegate_has_type_parameters (ValaDelegate* self)
 {
 	gboolean _tmp0_ = FALSE;
 	ValaList* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp1_ = self->priv->type_parameters;
 	if (_tmp1_ != NULL) {
@@ -280,7 +280,7 @@ vala_delegate_real_get_type_parameter_index (ValaTypeSymbol* base,
 {
 	ValaDelegate * self;
 	gint i = 0;
-	gint result = 0;
+	gint result;
 	self = (ValaDelegate*) base;
 	g_return_val_if_fail (name != NULL, 0);
 	i = 0;
@@ -371,7 +371,7 @@ vala_delegate_real_get_parameters (ValaCallable* base)
 {
 	ValaDelegate * self;
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	self = (ValaDelegate*) base;
 	_tmp0_ = self->priv->parameters;
 	result = _tmp0_;
@@ -426,7 +426,7 @@ vala_delegate_matches_method (ValaDelegate* self,
 	gboolean _tmp104_ = FALSE;
 	gboolean _tmp105_ = FALSE;
 	ValaList* _tmp106_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (m != NULL, FALSE);
 	g_return_val_if_fail (dt != NULL, FALSE);
@@ -1031,7 +1031,7 @@ static gboolean
 vala_delegate_real_is_reference_type (ValaTypeSymbol* base)
 {
 	ValaDelegate * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaDelegate*) base;
 	result = FALSE;
 	return result;
@@ -1225,12 +1225,12 @@ vala_delegate_real_check (ValaCodeNode* base,
 	ValaTypeSymbol* _tmp35_;
 	ValaTypeSymbol* _tmp36_;
 	ValaList* _tmp54_;
-	ValaSemanticAnalyzer* _tmp81_;
-	ValaSemanticAnalyzer* _tmp82_;
-	ValaSourceFile* _tmp83_;
-	gboolean _tmp84_;
-	gboolean _tmp85_;
-	gboolean result = FALSE;
+	ValaSemanticAnalyzer* _tmp79_;
+	ValaSemanticAnalyzer* _tmp80_;
+	ValaSourceFile* _tmp81_;
+	gboolean _tmp82_;
+	gboolean _tmp83_;
+	gboolean result;
 	self = (ValaDelegate*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -1402,9 +1402,7 @@ vala_delegate_real_check (ValaCodeNode* base,
 				gpointer _tmp62_;
 				ValaDataType* _tmp63_;
 				ValaDataType* _tmp70_;
-				ValaSemanticAnalyzer* _tmp71_;
-				ValaSemanticAnalyzer* _tmp72_;
-				ValaDataType* _tmp73_;
+				ValaDataType* _tmp71_;
 				_error_type_index = _error_type_index + 1;
 				_tmp59_ = _error_type_index;
 				_tmp60_ = _error_type_size;
@@ -1434,28 +1432,26 @@ vala_delegate_real_check (ValaCodeNode* base,
 				}
 				_tmp70_ = error_type;
 				vala_code_node_check ((ValaCodeNode*) _tmp70_, context);
-				_tmp71_ = vala_code_context_get_analyzer (context);
-				_tmp72_ = _tmp71_;
-				_tmp73_ = error_type;
-				if (!vala_semantic_analyzer_is_type_accessible (_tmp72_, (ValaSymbol*) self, _tmp73_)) {
-					ValaSourceReference* _tmp74_;
-					ValaSourceReference* _tmp75_;
-					ValaDataType* _tmp76_;
+				_tmp71_ = error_type;
+				if (!vala_data_type_is_accessible (_tmp71_, (ValaSymbol*) self)) {
+					ValaSourceReference* _tmp72_;
+					ValaSourceReference* _tmp73_;
+					ValaDataType* _tmp74_;
+					gchar* _tmp75_;
+					gchar* _tmp76_;
 					gchar* _tmp77_;
 					gchar* _tmp78_;
-					gchar* _tmp79_;
-					gchar* _tmp80_;
 					vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
-					_tmp74_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-					_tmp75_ = _tmp74_;
-					_tmp76_ = error_type;
-					_tmp77_ = vala_code_node_to_string ((ValaCodeNode*) _tmp76_);
+					_tmp72_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+					_tmp73_ = _tmp72_;
+					_tmp74_ = error_type;
+					_tmp75_ = vala_code_node_to_string ((ValaCodeNode*) _tmp74_);
+					_tmp76_ = _tmp75_;
+					_tmp77_ = vala_symbol_get_full_name ((ValaSymbol*) self);
 					_tmp78_ = _tmp77_;
-					_tmp79_ = vala_symbol_get_full_name ((ValaSymbol*) self);
-					_tmp80_ = _tmp79_;
-					vala_report_error (_tmp75_, "error type `%s' is less accessible than delegate `%s'", _tmp78_, _tmp80_);
-					_g_free0 (_tmp80_);
+					vala_report_error (_tmp73_, "error type `%s' is less accessible than delegate `%s'", _tmp76_, _tmp78_);
 					_g_free0 (_tmp78_);
+					_g_free0 (_tmp76_);
 					result = FALSE;
 					_vala_code_node_unref0 (error_type);
 					_vala_source_file_unref0 (old_source_file);
@@ -1465,13 +1461,13 @@ vala_delegate_real_check (ValaCodeNode* base,
 			}
 		}
 	}
-	_tmp81_ = vala_code_context_get_analyzer (context);
-	_tmp82_ = _tmp81_;
-	_tmp83_ = old_source_file;
-	vala_semantic_analyzer_set_current_source_file (_tmp82_, _tmp83_);
-	_tmp84_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp85_ = _tmp84_;
-	result = !_tmp85_;
+	_tmp79_ = vala_code_context_get_analyzer (context);
+	_tmp80_ = _tmp79_;
+	_tmp81_ = old_source_file;
+	vala_semantic_analyzer_set_current_source_file (_tmp80_, _tmp81_);
+	_tmp82_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp83_ = _tmp82_;
+	result = !_tmp83_;
 	_vala_source_file_unref0 (old_source_file);
 	return result;
 }
@@ -1552,12 +1548,12 @@ vala_delegate_get_type_once (void)
 GType
 vala_delegate_get_type (void)
 {
-	static volatile gsize vala_delegate_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_delegate_type_id__volatile)) {
+	static volatile gsize vala_delegate_type_id__once = 0;
+	if (g_once_init_enter (&vala_delegate_type_id__once)) {
 		GType vala_delegate_type_id;
 		vala_delegate_type_id = vala_delegate_get_type_once ();
-		g_once_init_leave (&vala_delegate_type_id__volatile, vala_delegate_type_id);
+		g_once_init_leave (&vala_delegate_type_id__once, vala_delegate_type_id);
 	}
-	return vala_delegate_type_id__volatile;
+	return vala_delegate_type_id__once;
 }
 

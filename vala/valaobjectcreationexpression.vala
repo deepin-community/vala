@@ -38,20 +38,27 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 	}
 
 	/**
+	 * The construction method to call.
+	 */
+	public Expression call {
+		get { return member_name; }
+	}
+
+	/**
 	 * The construction method to use or the data type to be created
 	 * with the default construction method.
 	 */
-	public MemberAccess? member_name {
+	public MemberAccess member_name {
 		get { return _member_name; }
 		private set {
 			_member_name = value;
-			if (_member_name != null) {
-				_member_name.parent_node = this;
-			}
+			_member_name.parent_node = this;
 		}
 	}
 
 	public bool is_yield_expression { get; set; }
+
+	public bool is_chainup { get; set; }
 
 	public bool struct_creation { get; set; }
 
@@ -60,7 +67,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 	private List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
 
 	private DataType _data_type;
-	private MemberAccess? _member_name;
+	private MemberAccess _member_name;
 
 	/**
 	 * Creates a new object creation expression.
@@ -69,7 +76,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created object creation expression
 	 */
-	public ObjectCreationExpression (MemberAccess? member_name, SourceReference? source_reference = null) {
+	public ObjectCreationExpression (MemberAccess member_name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
 	}
@@ -181,78 +188,76 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 		checked = true;
 
-		if (member_name != null) {
-			if (!member_name.check (context)) {
-				error = true;
-				return false;
-			}
+		if (!member_name.check (context)) {
+			error = true;
+			return false;
 		}
 
 		TypeSymbol type;
 
-		if (type_reference == null) {
-			if (member_name == null) {
+		if (member_name.symbol_reference == null) {
+			error = true;
+			return false;
+		}
+
+		var constructor_sym = member_name.symbol_reference;
+		var type_sym = member_name.symbol_reference;
+
+		var type_args = member_name.get_type_arguments ();
+
+		if (constructor_sym is Method) {
+			type_sym = constructor_sym.parent_symbol;
+
+			var constructor = (Method) constructor_sym;
+			if (!(constructor_sym is CreationMethod)) {
 				error = true;
-				Report.error (source_reference, "Incomplete object creation expression");
+				Report.error (source_reference, "`%s' is not a creation method", constructor.get_full_name ());
 				return false;
 			}
 
-			if (member_name.symbol_reference == null) {
-				error = true;
-				return false;
+			symbol_reference = constructor;
+
+			// inner expression can also be base access when chaining constructors
+			unowned MemberAccess? ma = member_name.inner as MemberAccess;
+			if (ma != null) {
+				type_args = ma.get_type_arguments ();
 			}
+		}
 
-			var constructor_sym = member_name.symbol_reference;
-			var type_sym = member_name.symbol_reference;
-
-			var type_args = member_name.get_type_arguments ();
-
-			if (constructor_sym is Method) {
-				type_sym = constructor_sym.parent_symbol;
-
-				var constructor = (Method) constructor_sym;
-				if (!(constructor_sym is CreationMethod)) {
-					error = true;
-					Report.error (source_reference, "`%s' is not a creation method", constructor.get_full_name ());
-					return false;
-				}
-
-				symbol_reference = constructor;
-
-				// inner expression can also be base access when chaining constructors
-				unowned MemberAccess? ma = member_name.inner as MemberAccess;
-				if (ma != null) {
-					type_args = ma.get_type_arguments ();
-				}
-			}
-
-			if (type_sym is Class) {
-				type = (TypeSymbol) type_sym;
-				if (((Class) type).is_error_base) {
-					type_reference = new ErrorType (null, null, source_reference);
-				} else {
-					type_reference = new ObjectType ((Class) type);
-					type_reference.source_reference = source_reference;
-				}
-			} else if (type_sym is Struct) {
-				type = (TypeSymbol) type_sym;
-				type_reference = new StructValueType ((Struct) type);
-				type_reference.source_reference = source_reference;
-			} else if (type_sym is ErrorCode) {
-				type = (TypeSymbol) type_sym;
-				type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
-				symbol_reference = type_sym;
+		if (type_sym is Class) {
+			type = (TypeSymbol) type_sym;
+			if (((Class) type).is_error_base) {
+				type_reference = new ErrorType (null, null, source_reference);
 			} else {
-				error = true;
-				Report.error (source_reference, "`%s' is not a class, struct, or error code", type_sym.get_full_name ());
-				return false;
+				type_reference = new ObjectType ((Class) type, source_reference);
 			}
-
-			foreach (DataType type_arg in type_args) {
-				type_reference.add_type_argument (type_arg);
-			}
+		} else if (type_sym is Struct) {
+			type = (TypeSymbol) type_sym;
+			type_reference = new StructValueType ((Struct) type, source_reference);
+		} else if (type_sym is ErrorCode) {
+			type = (TypeSymbol) type_sym;
+			type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
+			symbol_reference = type_sym;
 		} else {
-			type = type_reference.type_symbol;
+			error = true;
+			Report.error (source_reference, "`%s' is not a class, struct, or error code", type_sym.get_full_name ());
+			return false;
+		}
+
+		foreach (DataType type_arg in type_args) {
+			type_reference.add_type_argument (type_arg);
+		}
+
+		if (!type_reference.check (context)) {
+			error = true;
+			return false;
+		}
+
+		context.analyzer.check_type (type_reference);
+		// check whether there is the expected amount of type-arguments
+		if (!type_reference.check_type_arguments (context)) {
+			error = true;
+			return false;
 		}
 
 		value_type = type_reference.copy ();
@@ -307,7 +312,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			while (cl != null) {
 				// FIXME: use target values in the codegen
-				if (cl.get_attribute_string ("CCode", "ref_sink_function") != null) {
+				if (cl.has_attribute_argument ("CCode", "ref_sink_function")) {
 					value_type.floating_reference = true;
 					break;
 				}
@@ -330,12 +335,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				Report.error (source_reference, "`%s' does not have a default constructor", st.get_full_name ());
 				return false;
 			}
-		}
-
-		// check whether there is the expected amount of type-arguments
-		if (!type_reference.check_type_arguments (context)) {
-			error = true;
-			return false;
 		}
 
 		if (symbol_reference == null && argument_list.size != 0) {
@@ -439,10 +438,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), argument_list);
 		} else if (type_reference is ErrorType) {
-			if (type_reference != null) {
-				type_reference.check (context);
-			}
-
 			if (member_name != null) {
 				member_name.check (context);
 			}
@@ -492,10 +487,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (type_reference, type_reference.get_type_arguments (), this);
 				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
 			}
-		}
-
-		if (!type.external_package) {
-			context.analyzer.check_type (type_reference);
 		}
 
 		// Unwrap chained member initializers

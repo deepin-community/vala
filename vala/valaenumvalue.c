@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
@@ -61,7 +62,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -240,9 +241,9 @@ vala_enum_value_real_check (ValaCodeNode* base,
 	gboolean _tmp1_;
 	ValaExpression* _tmp4_;
 	ValaExpression* _tmp5_;
-	gboolean _tmp8_;
-	gboolean _tmp9_;
-	gboolean result = FALSE;
+	gboolean _tmp18_;
+	gboolean _tmp19_;
+	gboolean result;
 	self = (ValaEnumValue*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -261,13 +262,38 @@ vala_enum_value_real_check (ValaCodeNode* base,
 	if (_tmp5_ != NULL) {
 		ValaExpression* _tmp6_;
 		ValaExpression* _tmp7_;
+		ValaExpression* _tmp8_;
+		ValaExpression* _tmp9_;
 		_tmp6_ = vala_constant_get_value ((ValaConstant*) self);
 		_tmp7_ = _tmp6_;
 		vala_code_node_check ((ValaCodeNode*) _tmp7_, context);
+		_tmp8_ = vala_constant_get_value ((ValaConstant*) self);
+		_tmp9_ = _tmp8_;
+		if (!vala_expression_is_accessible (_tmp9_, (ValaSymbol*) self)) {
+			ValaExpression* _tmp10_;
+			ValaExpression* _tmp11_;
+			ValaSourceReference* _tmp12_;
+			ValaSourceReference* _tmp13_;
+			ValaSymbol* _tmp14_;
+			ValaSymbol* _tmp15_;
+			gchar* _tmp16_;
+			gchar* _tmp17_;
+			vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
+			_tmp10_ = vala_constant_get_value ((ValaConstant*) self);
+			_tmp11_ = _tmp10_;
+			_tmp12_ = vala_code_node_get_source_reference ((ValaCodeNode*) _tmp11_);
+			_tmp13_ = _tmp12_;
+			_tmp14_ = vala_symbol_get_parent_symbol ((ValaSymbol*) self);
+			_tmp15_ = _tmp14_;
+			_tmp16_ = vala_symbol_get_full_name (_tmp15_);
+			_tmp17_ = _tmp16_;
+			vala_report_error (_tmp13_, "value is less accessible than enum `%s'", _tmp17_);
+			_g_free0 (_tmp17_);
+		}
 	}
-	_tmp8_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp9_ = _tmp8_;
-	result = !_tmp9_;
+	_tmp18_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp19_ = _tmp18_;
+	result = !_tmp19_;
 	return result;
 }
 
@@ -316,12 +342,12 @@ vala_enum_value_get_type_once (void)
 GType
 vala_enum_value_get_type (void)
 {
-	static volatile gsize vala_enum_value_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_enum_value_type_id__volatile)) {
+	static volatile gsize vala_enum_value_type_id__once = 0;
+	if (g_once_init_enter (&vala_enum_value_type_id__once)) {
 		GType vala_enum_value_type_id;
 		vala_enum_value_type_id = vala_enum_value_get_type_once ();
-		g_once_init_leave (&vala_enum_value_type_id__volatile, vala_enum_value_type_id);
+		g_once_init_leave (&vala_enum_value_type_id__once, vala_enum_value_type_id);
 	}
-	return vala_enum_value_type_id__volatile;
+	return vala_enum_value_type_id__once;
 }
 

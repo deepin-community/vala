@@ -172,7 +172,7 @@ ValaList*
 vala_basic_block_get_nodes (ValaBasicBlock* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->nodes;
 	result = _tmp0_;
@@ -205,7 +205,7 @@ ValaList*
 vala_basic_block_get_predecessors (ValaBasicBlock* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->predecessors;
 	result = _tmp0_;
@@ -216,7 +216,7 @@ ValaList*
 vala_basic_block_get_successors (ValaBasicBlock* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->successors;
 	result = _tmp0_;
@@ -239,7 +239,7 @@ ValaList*
 vala_basic_block_get_children (ValaBasicBlock* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->children;
 	result = _tmp0_;
@@ -261,7 +261,7 @@ ValaSet*
 vala_basic_block_get_dominator_frontier (ValaBasicBlock* self)
 {
 	ValaSet* _tmp0_;
-	ValaSet* result = NULL;
+	ValaSet* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->df;
 	result = _tmp0_;
@@ -283,7 +283,7 @@ ValaSet*
 vala_basic_block_get_phi_functions (ValaBasicBlock* self)
 {
 	ValaSet* _tmp0_;
-	ValaSet* result = NULL;
+	ValaSet* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->phi_functions;
 	result = _tmp0_;
@@ -507,13 +507,13 @@ vala_basic_block_get_type_once (void)
 GType
 vala_basic_block_get_type (void)
 {
-	static volatile gsize vala_basic_block_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_basic_block_type_id__volatile)) {
+	static volatile gsize vala_basic_block_type_id__once = 0;
+	if (g_once_init_enter (&vala_basic_block_type_id__once)) {
 		GType vala_basic_block_type_id;
 		vala_basic_block_type_id = vala_basic_block_get_type_once ();
-		g_once_init_leave (&vala_basic_block_type_id__volatile, vala_basic_block_type_id);
+		g_once_init_leave (&vala_basic_block_type_id__once, vala_basic_block_type_id);
 	}
-	return vala_basic_block_type_id__volatile;
+	return vala_basic_block_type_id__once;
 }
 
 gpointer

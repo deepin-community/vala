@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_property_prototype_parent_class = NULL;
 
@@ -50,18 +51,20 @@ vala_property_prototype_get_property_symbol (ValaPropertyPrototype* self)
 
 ValaPropertyPrototype*
 vala_property_prototype_construct (GType object_type,
-                                   ValaProperty* property_symbol)
+                                   ValaProperty* property_symbol,
+                                   ValaSourceReference* source_reference)
 {
 	ValaPropertyPrototype* self = NULL;
 	g_return_val_if_fail (property_symbol != NULL, NULL);
-	self = (ValaPropertyPrototype*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) property_symbol);
+	self = (ValaPropertyPrototype*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) property_symbol, source_reference);
 	return self;
 }
 
 ValaPropertyPrototype*
-vala_property_prototype_new (ValaProperty* property_symbol)
+vala_property_prototype_new (ValaProperty* property_symbol,
+                             ValaSourceReference* source_reference)
 {
-	return vala_property_prototype_construct (VALA_TYPE_PROPERTY_PROTOTYPE, property_symbol);
+	return vala_property_prototype_construct (VALA_TYPE_PROPERTY_PROTOTYPE, property_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -71,13 +74,17 @@ vala_property_prototype_real_copy (ValaDataType* base)
 	ValaPropertyPrototype* _result_ = NULL;
 	ValaProperty* _tmp0_;
 	ValaProperty* _tmp1_;
-	ValaPropertyPrototype* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaSourceReference* _tmp2_;
+	ValaSourceReference* _tmp3_;
+	ValaPropertyPrototype* _tmp4_;
+	ValaDataType* result;
 	self = (ValaPropertyPrototype*) base;
 	_tmp0_ = vala_property_prototype_get_property_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_property_prototype_new (_tmp1_);
-	_result_ = _tmp2_;
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_property_prototype_new (_tmp1_, _tmp3_);
+	_result_ = _tmp4_;
 	result = (ValaDataType*) _result_;
 	return result;
 }
@@ -90,7 +97,7 @@ vala_property_prototype_real_to_qualified_string (ValaDataType* base,
 	ValaProperty* _tmp0_;
 	ValaProperty* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaPropertyPrototype*) base;
 	_tmp0_ = vala_property_prototype_get_property_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -129,12 +136,12 @@ vala_property_prototype_get_type_once (void)
 GType
 vala_property_prototype_get_type (void)
 {
-	static volatile gsize vala_property_prototype_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_property_prototype_type_id__volatile)) {
+	static volatile gsize vala_property_prototype_type_id__once = 0;
+	if (g_once_init_enter (&vala_property_prototype_type_id__once)) {
 		GType vala_property_prototype_type_id;
 		vala_property_prototype_type_id = vala_property_prototype_get_type_once ();
-		g_once_init_leave (&vala_property_prototype_type_id__volatile, vala_property_prototype_type_id);
+		g_once_init_leave (&vala_property_prototype_type_id__once, vala_property_prototype_type_id);
 	}
-	return vala_property_prototype_type_id__volatile;
+	return vala_property_prototype_type_id__once;
 }
 

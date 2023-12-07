@@ -346,7 +346,7 @@ gtkdoc_config_parse (gchar** rargs,
 	gint args_length1;
 	gint _args_size_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (reporter != NULL, FALSE);
 	_tmp0_ = g_strdup ("gtkdoc");
 	_tmp1_ = g_new0 (gchar*, 1 + 1);
@@ -544,7 +544,7 @@ gtkdoc_director_combine_string_arrays (gchar** a,
 	gint __result__size_;
 	gchar** _tmp4_;
 	gint _tmp4__length1;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = (a != NULL) ? _vala_array_dup3 (a, a_length1) : a;
 	_tmp0__length1 = a_length1;
 	_result_ = _tmp0_;
@@ -925,7 +925,7 @@ gtkdoc_director_prepare_files (GtkdocDirector* self,
 	ValadocErrorReporter* _tmp21_;
 	gint _tmp22_;
 	gint _tmp23_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (comments_dir != NULL, FALSE);
 	_tmp0_ = g_new0 (gchar*, 0 + 1);
@@ -1123,7 +1123,7 @@ gtkdoc_director_scan (GtkdocDirector* self,
 	const gchar* _tmp13_;
 	const gchar* _tmp17_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (output_dir != NULL, FALSE);
 	if (headers == NULL) {
@@ -1314,7 +1314,7 @@ string_strip (const gchar* self)
 {
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_strdup (self);
 	_result_ = _tmp0_;
@@ -1368,7 +1368,7 @@ gtkdoc_director_scangobj (GtkdocDirector* self)
 	gint _tmp44__length1;
 	gchar* _tmp48_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = gtkdoc_config_library_filenames;
 	_tmp0__length1 = _vala_array_length (gtkdoc_config_library_filenames);
@@ -1862,7 +1862,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -1979,7 +1979,7 @@ gtkdoc_director_mkdb (GtkdocDirector* self)
 	gint args_length1;
 	gint _args_size_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->settings;
 	_tmp1_ = _tmp0_->path;
@@ -2336,7 +2336,7 @@ gtkdoc_director_mkhtml (GtkdocDirector* self)
 	gchar* _tmp2_;
 	const gchar* _tmp3_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (gtkdoc_config_nohtml) {
 		result = TRUE;
@@ -2550,19 +2550,19 @@ gtkdoc_director_get_type_once (void)
 GType
 gtkdoc_director_get_type (void)
 {
-	static volatile gsize gtkdoc_director_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_director_type_id__volatile)) {
+	static volatile gsize gtkdoc_director_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_director_type_id__once)) {
 		GType gtkdoc_director_type_id;
 		gtkdoc_director_type_id = gtkdoc_director_get_type_once ();
-		g_once_init_leave (&gtkdoc_director_type_id__volatile, gtkdoc_director_type_id);
+		g_once_init_leave (&gtkdoc_director_type_id__once, gtkdoc_director_type_id);
 	}
-	return gtkdoc_director_type_id__volatile;
+	return gtkdoc_director_type_id__once;
 }
 
 GType
 register_plugin (ValadocModuleLoader* module_loader)
 {
-	GType result = 0UL;
+	GType result;
 	g_return_val_if_fail (module_loader != NULL, 0UL);
 	result = GTKDOC_TYPE_DIRECTOR;
 	return result;

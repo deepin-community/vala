@@ -185,7 +185,7 @@ valadoc_api_initializer_builder_resolve (ValadocApiInitializerBuilder* self,
 {
 	ValaHashMap* _tmp0_;
 	gpointer _tmp1_;
-	ValadocApiSymbol* result = NULL;
+	ValadocApiSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (symbol != NULL, NULL);
 	_tmp0_ = self->priv->symbol_map;
@@ -913,7 +913,7 @@ valadoc_api_initializer_builder_real_visit_method_call (ValaCodeVisitor* base,
 	ValadocApiSignatureBuilder* _tmp15_;
 	self = (ValadocApiInitializerBuilder*) base;
 	g_return_if_fail (expr != NULL);
-	_tmp0_ = vala_method_call_get_call (expr);
+	_tmp0_ = vala_callable_expression_get_call ((ValaCallableExpression*) expr);
 	_tmp1_ = _tmp0_;
 	_tmp2_ = vala_expression_get_symbol_reference (_tmp1_);
 	_tmp3_ = _tmp2_;
@@ -1657,12 +1657,12 @@ valadoc_api_initializer_builder_get_type_once (void)
  G_GNUC_INTERNAL GType
 valadoc_api_initializer_builder_get_type (void)
 {
-	static volatile gsize valadoc_api_initializer_builder_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_initializer_builder_type_id__volatile)) {
+	static volatile gsize valadoc_api_initializer_builder_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_initializer_builder_type_id__once)) {
 		GType valadoc_api_initializer_builder_type_id;
 		valadoc_api_initializer_builder_type_id = valadoc_api_initializer_builder_get_type_once ();
-		g_once_init_leave (&valadoc_api_initializer_builder_type_id__volatile, valadoc_api_initializer_builder_type_id);
+		g_once_init_leave (&valadoc_api_initializer_builder_type_id__once, valadoc_api_initializer_builder_type_id);
 	}
-	return valadoc_api_initializer_builder_type_id__volatile;
+	return valadoc_api_initializer_builder_type_id__once;
 }
 

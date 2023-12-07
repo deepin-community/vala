@@ -27,8 +27,8 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CONTENT_PAGE_0_PROPERTY,
@@ -126,7 +126,7 @@ valadoc_content_page_real_copy (ValadocContentContentElement* base,
 	ValadocContentPage* page = NULL;
 	ValadocContentPage* _tmp0_;
 	ValadocContentPage* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentPage*) base;
 	_vala_assert (new_parent == NULL, "new_parent == null");
 	_tmp0_ = valadoc_content_page_new ();
@@ -236,12 +236,12 @@ valadoc_content_page_get_type_once (void)
 GType
 valadoc_content_page_get_type (void)
 {
-	static volatile gsize valadoc_content_page_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_page_type_id__volatile)) {
+	static volatile gsize valadoc_content_page_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_page_type_id__once)) {
 		GType valadoc_content_page_type_id;
 		valadoc_content_page_type_id = valadoc_content_page_get_type_once ();
-		g_once_init_leave (&valadoc_content_page_type_id__volatile, valadoc_content_page_type_id);
+		g_once_init_leave (&valadoc_content_page_type_id__once, valadoc_content_page_type_id);
 	}
-	return valadoc_content_page_type_id__volatile;
+	return valadoc_content_page_type_id__once;
 }
 

@@ -115,7 +115,7 @@ ValaList*
 vala_switch_section_get_labels (ValaSwitchSection* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->labels;
 	result = _tmp0_;
@@ -125,7 +125,7 @@ vala_switch_section_get_labels (ValaSwitchSection* self)
 gboolean
 vala_switch_section_has_default_label (ValaSwitchSection* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	{
 		ValaList* _label_list = NULL;
@@ -238,9 +238,11 @@ vala_switch_section_real_check (ValaCodeNode* base,
 	ValaSwitchSection * self;
 	gboolean _tmp0_;
 	gboolean _tmp1_;
-	gboolean _tmp13_;
-	gboolean _tmp14_;
-	gboolean result = FALSE;
+	ValaCodeNode* _tmp4_;
+	ValaCodeNode* _tmp5_;
+	gboolean _tmp17_;
+	gboolean _tmp18_;
+	gboolean result;
 	self = (ValaSwitchSection*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -253,39 +255,51 @@ vala_switch_section_real_check (ValaCodeNode* base,
 		result = !_tmp3_;
 		return result;
 	}
+	_tmp4_ = vala_code_node_get_parent_node ((ValaCodeNode*) self);
+	_tmp5_ = _tmp4_;
+	if (!VALA_IS_SWITCH_STATEMENT (_tmp5_)) {
+		ValaSourceReference* _tmp6_;
+		ValaSourceReference* _tmp7_;
+		_tmp6_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+		_tmp7_ = _tmp6_;
+		vala_report_error (_tmp7_, "no enclosing switch statement found");
+		vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
+		result = FALSE;
+		return result;
+	}
 	{
 		ValaList* _label_list = NULL;
-		ValaList* _tmp4_;
+		ValaList* _tmp8_;
 		gint _label_size = 0;
-		ValaList* _tmp5_;
-		gint _tmp6_;
-		gint _tmp7_;
+		ValaList* _tmp9_;
+		gint _tmp10_;
+		gint _tmp11_;
 		gint _label_index = 0;
-		_tmp4_ = vala_switch_section_get_labels (self);
-		_label_list = _tmp4_;
-		_tmp5_ = _label_list;
-		_tmp6_ = vala_collection_get_size ((ValaCollection*) _tmp5_);
-		_tmp7_ = _tmp6_;
-		_label_size = _tmp7_;
+		_tmp8_ = vala_switch_section_get_labels (self);
+		_label_list = _tmp8_;
+		_tmp9_ = _label_list;
+		_tmp10_ = vala_collection_get_size ((ValaCollection*) _tmp9_);
+		_tmp11_ = _tmp10_;
+		_label_size = _tmp11_;
 		_label_index = -1;
 		while (TRUE) {
-			gint _tmp8_;
-			gint _tmp9_;
+			gint _tmp12_;
+			gint _tmp13_;
 			ValaSwitchLabel* label = NULL;
-			ValaList* _tmp10_;
-			gpointer _tmp11_;
-			ValaSwitchLabel* _tmp12_;
+			ValaList* _tmp14_;
+			gpointer _tmp15_;
+			ValaSwitchLabel* _tmp16_;
 			_label_index = _label_index + 1;
-			_tmp8_ = _label_index;
-			_tmp9_ = _label_size;
-			if (!(_tmp8_ < _tmp9_)) {
+			_tmp12_ = _label_index;
+			_tmp13_ = _label_size;
+			if (!(_tmp12_ < _tmp13_)) {
 				break;
 			}
-			_tmp10_ = _label_list;
-			_tmp11_ = vala_list_get (_tmp10_, _label_index);
-			label = (ValaSwitchLabel*) _tmp11_;
-			_tmp12_ = label;
-			vala_code_node_check ((ValaCodeNode*) _tmp12_, context);
+			_tmp14_ = _label_list;
+			_tmp15_ = vala_list_get (_tmp14_, _label_index);
+			label = (ValaSwitchLabel*) _tmp15_;
+			_tmp16_ = label;
+			vala_code_node_check ((ValaCodeNode*) _tmp16_, context);
 			_vala_code_node_unref0 (label);
 		}
 	}
@@ -293,9 +307,9 @@ vala_switch_section_real_check (ValaCodeNode* base,
 		vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
 	}
 	vala_code_node_set_checked ((ValaCodeNode*) self, TRUE);
-	_tmp13_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp14_ = _tmp13_;
-	result = !_tmp14_;
+	_tmp17_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp18_ = _tmp17_;
+	result = !_tmp18_;
 	return result;
 }
 
@@ -395,12 +409,12 @@ vala_switch_section_get_type_once (void)
 GType
 vala_switch_section_get_type (void)
 {
-	static volatile gsize vala_switch_section_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_switch_section_type_id__volatile)) {
+	static volatile gsize vala_switch_section_type_id__once = 0;
+	if (g_once_init_enter (&vala_switch_section_type_id__once)) {
 		GType vala_switch_section_type_id;
 		vala_switch_section_type_id = vala_switch_section_get_type_once ();
-		g_once_init_leave (&vala_switch_section_type_id__volatile, vala_switch_section_type_id);
+		g_once_init_leave (&vala_switch_section_type_id__once, vala_switch_section_type_id);
 	}
-	return vala_switch_section_type_id__volatile;
+	return vala_switch_section_type_id__once;
 }
 

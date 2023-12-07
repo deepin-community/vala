@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_code_generator_parent_class = NULL;
 
@@ -54,7 +55,8 @@ static void vala_code_generator_real_store_field (ValaCodeGenerator* self,
                                            ValaField* field,
                                            ValaTargetValue* instance,
                                            ValaTargetValue* value,
-                                           ValaSourceReference* source_reference);
+                                           ValaSourceReference* source_reference,
+                                           gboolean initializer);
 static GType vala_code_generator_get_type_once (void);
 
 /**
@@ -209,7 +211,8 @@ vala_code_generator_real_store_field (ValaCodeGenerator* self,
                                       ValaField* field,
                                       ValaTargetValue* instance,
                                       ValaTargetValue* value,
-                                      ValaSourceReference* source_reference)
+                                      ValaSourceReference* source_reference,
+                                      gboolean initializer)
 {
 	g_critical ("Type `%s' does not implement abstract method `vala_code_generator_store_field'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
 	return;
@@ -220,13 +223,14 @@ vala_code_generator_store_field (ValaCodeGenerator* self,
                                  ValaField* field,
                                  ValaTargetValue* instance,
                                  ValaTargetValue* value,
-                                 ValaSourceReference* source_reference)
+                                 ValaSourceReference* source_reference,
+                                 gboolean initializer)
 {
 	ValaCodeGeneratorClass* _klass_;
 	g_return_if_fail (self != NULL);
 	_klass_ = VALA_CODE_GENERATOR_GET_CLASS (self);
 	if (_klass_->store_field) {
-		_klass_->store_field (self, field, instance, value, source_reference);
+		_klass_->store_field (self, field, instance, value, source_reference, initializer);
 	}
 }
 
@@ -249,7 +253,7 @@ vala_code_generator_class_init (ValaCodeGeneratorClass * klass,
 	((ValaCodeGeneratorClass *) klass)->load_parameter = (ValaTargetValue* (*) (ValaCodeGenerator*, ValaParameter*, ValaExpression*)) vala_code_generator_real_load_parameter;
 	((ValaCodeGeneratorClass *) klass)->store_parameter = (void (*) (ValaCodeGenerator*, ValaParameter*, ValaTargetValue*, gboolean, ValaSourceReference*)) vala_code_generator_real_store_parameter;
 	((ValaCodeGeneratorClass *) klass)->load_field = (ValaTargetValue* (*) (ValaCodeGenerator*, ValaField*, ValaTargetValue*, ValaExpression*)) vala_code_generator_real_load_field;
-	((ValaCodeGeneratorClass *) klass)->store_field = (void (*) (ValaCodeGenerator*, ValaField*, ValaTargetValue*, ValaTargetValue*, ValaSourceReference*)) vala_code_generator_real_store_field;
+	((ValaCodeGeneratorClass *) klass)->store_field = (void (*) (ValaCodeGenerator*, ValaField*, ValaTargetValue*, ValaTargetValue*, ValaSourceReference*, gboolean)) vala_code_generator_real_store_field;
 }
 
 static void
@@ -273,12 +277,12 @@ vala_code_generator_get_type_once (void)
 GType
 vala_code_generator_get_type (void)
 {
-	static volatile gsize vala_code_generator_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_code_generator_type_id__volatile)) {
+	static volatile gsize vala_code_generator_type_id__once = 0;
+	if (g_once_init_enter (&vala_code_generator_type_id__once)) {
 		GType vala_code_generator_type_id;
 		vala_code_generator_type_id = vala_code_generator_get_type_once ();
-		g_once_init_leave (&vala_code_generator_type_id__volatile, vala_code_generator_type_id);
+		g_once_init_leave (&vala_code_generator_type_id__once, vala_code_generator_type_id);
 	}
-	return vala_code_generator_type_id__volatile;
+	return vala_code_generator_type_id__once;
 }
 

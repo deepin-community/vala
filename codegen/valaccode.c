@@ -70,7 +70,7 @@ vala_get_ccode_attribute (ValaCodeNode* node)
 	ValaAttributeCache* _tmp4_;
 	ValaAttributeCache* _tmp5_;
 	ValaAttributeCache* _tmp10_;
-	ValaCCodeAttribute* result = NULL;
+	ValaCCodeAttribute* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_ccode_attribute_cache_index;
 	if (_tmp0_ == NULL) {
@@ -80,6 +80,7 @@ vala_get_ccode_attribute (ValaCodeNode* node)
 		_tmp2_ = __int_dup0 (&_tmp1_);
 		_g_free0 (vala_ccode_attribute_cache_index);
 		vala_ccode_attribute_cache_index = _tmp2_;
+		vala_ccode_base_module_init ();
 	}
 	_tmp3_ = vala_ccode_attribute_cache_index;
 	_tmp4_ = vala_code_node_get_attribute_cache (node, *_tmp3_);
@@ -112,7 +113,7 @@ vala_get_ccode_name (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_name (_tmp0_);
@@ -129,7 +130,7 @@ vala_get_ccode_const_name (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_const_name (_tmp0_);
@@ -146,7 +147,7 @@ vala_get_ccode_type_name (ValaObjectTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_type_name (_tmp0_);
@@ -161,7 +162,7 @@ vala_get_ccode_type_cast_function (ValaObjectTypeSymbol* sym)
 {
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_CLASS)) {
 		gboolean _tmp1_;
@@ -184,7 +185,7 @@ vala_get_ccode_type_get_function (ValaObjectTypeSymbol* sym)
 	gchar* func_name = NULL;
 	gchar* _tmp0_;
 	const gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_code_node_get_attribute_string ((ValaCodeNode*) sym, "CCode", "type_get_function", NULL);
 	func_name = _tmp0_;
@@ -249,7 +250,7 @@ vala_get_ccode_class_get_private_function (ValaClass* cl)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (cl != NULL, NULL);
 	_tmp0_ = vala_class_get_is_compact (cl);
 	_tmp1_ = _tmp0_;
@@ -272,7 +273,7 @@ vala_get_ccode_class_type_function (ValaClass* cl)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (cl != NULL, NULL);
 	_tmp0_ = vala_class_get_is_compact (cl);
 	_tmp1_ = _tmp0_;
@@ -294,7 +295,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -375,7 +376,7 @@ vala_get_ccode_lower_case_name (ValaCodeNode* node,
 {
 	ValaSymbol* sym = NULL;
 	ValaSymbol* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	sym = G_TYPE_CHECK_INSTANCE_TYPE (node, VALA_TYPE_SYMBOL) ? ((ValaSymbol*) node) : NULL;
 	_tmp0_ = sym;
@@ -593,7 +594,7 @@ gchar*
 vala_get_ccode_upper_case_name (ValaSymbol* sym,
                                 const gchar* infix)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_PROPERTY)) {
 		ValaSymbol* _tmp0_;
@@ -647,7 +648,7 @@ vala_get_ccode_header_filenames (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_header_filenames (_tmp0_);
@@ -664,7 +665,7 @@ vala_get_ccode_feature_test_macros (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_feature_test_macros (_tmp0_);
@@ -681,7 +682,7 @@ vala_get_ccode_prefix (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_prefix (_tmp0_);
@@ -698,7 +699,7 @@ vala_get_ccode_lower_case_prefix (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_lower_case_prefix (_tmp0_);
@@ -715,7 +716,7 @@ vala_get_ccode_lower_case_suffix (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_lower_case_suffix (_tmp0_);
@@ -732,7 +733,7 @@ vala_get_ccode_ref_function (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_ref_function (_tmp0_);
@@ -751,7 +752,7 @@ vala_get_ccode_quark_name (ValaErrorDomain* edomain)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (edomain != NULL, NULL);
 	_tmp0_ = vala_get_ccode_lower_case_name ((ValaCodeNode*) edomain, NULL);
 	_tmp1_ = _tmp0_;
@@ -768,7 +769,7 @@ vala_get_ccode_quark_name (ValaErrorDomain* edomain)
 gboolean
 vala_is_reference_counting (ValaTypeSymbol* sym)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_CLASS)) {
 		gchar* _tmp0_;
@@ -798,7 +799,7 @@ vala_is_ref_function_void (ValaDataType* type)
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
 	ValaClass* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (type != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol (type);
 	_tmp1_ = _tmp0_;
@@ -822,7 +823,7 @@ vala_is_free_function_address_of (ValaDataType* type)
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
 	ValaClass* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (type != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol (type);
 	_tmp1_ = _tmp0_;
@@ -845,7 +846,7 @@ vala_get_ccode_ref_function_void (ValaClass* cl)
 	ValaCCodeAttribute* _tmp0_;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (cl != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) cl);
 	_tmp1_ = vala_ccode_attribute_get_ref_function_void (_tmp0_);
@@ -860,7 +861,7 @@ vala_get_ccode_free_function_address_of (ValaClass* cl)
 	ValaCCodeAttribute* _tmp0_;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (cl != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) cl);
 	_tmp1_ = vala_ccode_attribute_get_free_function_address_of (_tmp0_);
@@ -876,7 +877,7 @@ vala_get_ccode_unref_function (ValaObjectTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_unref_function (_tmp0_);
@@ -893,7 +894,7 @@ vala_get_ccode_ref_sink_function (ValaObjectTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_ref_sink_function (_tmp0_);
@@ -910,7 +911,7 @@ vala_get_ccode_copy_function (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_copy_function (_tmp0_);
@@ -927,7 +928,7 @@ vala_get_ccode_destroy_function (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_destroy_function (_tmp0_);
@@ -941,7 +942,7 @@ gchar*
 vala_get_ccode_dup_function (ValaTypeSymbol* sym)
 {
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_STRUCT)) {
 		ValaCCodeAttribute* _tmp0_;
@@ -967,7 +968,7 @@ vala_get_ccode_free_function (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_free_function (_tmp0_);
@@ -983,7 +984,7 @@ vala_get_ccode_is_gboxed (ValaTypeSymbol* sym)
 	gchar* _tmp0_;
 	gchar* _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_free_function (sym);
 	_tmp1_ = _tmp0_;
@@ -1001,7 +1002,7 @@ vala_get_ccode_finish_instance (ValaMethod* m)
 	ValaCCodeAttribute* _tmp2_;
 	gboolean _tmp3_;
 	gboolean _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
 	_tmp0_ = vala_method_get_coroutine (m);
 	_tmp1_ = _tmp0_;
@@ -1020,7 +1021,7 @@ vala_get_ccode_type_id (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_type_id (_tmp0_);
@@ -1036,44 +1037,38 @@ vala_get_ccode_type_function (ValaTypeSymbol* sym)
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	gboolean _tmp2_ = FALSE;
-	gboolean _tmp3_ = FALSE;
+	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp7_;
 	gchar* _tmp8_;
-	gchar* _tmp9_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_CLASS)) {
+		gboolean _tmp3_;
 		gboolean _tmp4_;
-		gboolean _tmp5_;
-		_tmp4_ = vala_class_get_is_compact (G_TYPE_CHECK_INSTANCE_CAST (sym, VALA_TYPE_CLASS, ValaClass));
-		_tmp5_ = _tmp4_;
-		_tmp3_ = _tmp5_;
+		_tmp3_ = vala_class_get_is_compact (G_TYPE_CHECK_INSTANCE_CAST (sym, VALA_TYPE_CLASS, ValaClass));
+		_tmp4_ = _tmp3_;
+		_tmp2_ = _tmp4_;
 	} else {
-		_tmp3_ = FALSE;
-	}
-	if (_tmp3_) {
-		_tmp2_ = TRUE;
-	} else {
-		_tmp2_ = G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_ERROR_CODE);
+		_tmp2_ = FALSE;
 	}
 	if (_tmp2_) {
 		_tmp1_ = TRUE;
 	} else {
-		_tmp1_ = G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_ERROR_DOMAIN);
+		_tmp1_ = G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_ERROR_CODE);
 	}
 	if (_tmp1_) {
 		_tmp0_ = TRUE;
 	} else {
 		_tmp0_ = G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_DELEGATE);
 	}
-	_vala_assert (!_tmp0_, "!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is ErrorDomain || sym is Delegate)");
-	_tmp6_ = vala_get_ccode_lower_case_name ((ValaCodeNode*) sym, NULL);
-	_tmp7_ = _tmp6_;
-	_tmp8_ = g_strdup_printf ("%s_get_type", _tmp7_);
-	_tmp9_ = _tmp8_;
-	_g_free0 (_tmp7_);
-	result = _tmp9_;
+	_vala_assert (!_tmp0_, "!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is Delegate)");
+	_tmp5_ = vala_get_ccode_lower_case_name ((ValaCodeNode*) sym, NULL);
+	_tmp6_ = _tmp5_;
+	_tmp7_ = g_strdup_printf ("%s_get_type", _tmp6_);
+	_tmp8_ = _tmp7_;
+	_g_free0 (_tmp6_);
+	result = _tmp8_;
 	return result;
 }
 
@@ -1084,7 +1079,7 @@ vala_get_ccode_marshaller_type_name (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_marshaller_type_name (_tmp0_);
@@ -1101,7 +1096,7 @@ vala_get_ccode_get_value_function (ValaCodeNode* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (sym);
 	_tmp1_ = vala_ccode_attribute_get_get_value_function (_tmp0_);
@@ -1118,7 +1113,7 @@ vala_get_ccode_set_value_function (ValaCodeNode* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (sym);
 	_tmp1_ = vala_ccode_attribute_get_set_value_function (_tmp0_);
@@ -1135,7 +1130,7 @@ vala_get_ccode_take_value_function (ValaCodeNode* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (sym);
 	_tmp1_ = vala_ccode_attribute_get_take_value_function (_tmp0_);
@@ -1152,7 +1147,7 @@ vala_get_ccode_param_spec_function (ValaCodeNode* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (sym);
 	_tmp1_ = vala_ccode_attribute_get_param_spec_function (_tmp0_);
@@ -1170,7 +1165,7 @@ vala_get_ccode_type_check_function (ValaTypeSymbol* sym)
 	gchar* _tmp0_;
 	gboolean _tmp1_ = FALSE;
 	ValaClass* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	cl = G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_CLASS) ? ((ValaClass*) sym) : NULL;
 	_tmp0_ = vala_code_node_get_attribute_string ((ValaCodeNode*) sym, "CCode", "type_check_function", NULL);
@@ -1244,7 +1239,7 @@ vala_get_ccode_class_type_check_function (ValaClass* cl)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (cl != NULL, NULL);
 	_tmp0_ = vala_class_get_is_compact (cl);
 	_tmp1_ = _tmp0_;
@@ -1265,7 +1260,7 @@ vala_get_ccode_default_value (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_default_value (_tmp0_);
@@ -1282,7 +1277,7 @@ vala_get_ccode_default_value_on_error (ValaTypeSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_default_value_on_error (_tmp0_);
@@ -1295,7 +1290,7 @@ vala_get_ccode_default_value_on_error (ValaTypeSymbol* sym)
 gboolean
 vala_get_ccode_has_copy_function (ValaStruct* st)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (st != NULL, FALSE);
 	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) st, "CCode", "has_copy_function", TRUE);
 	return result;
@@ -1304,7 +1299,7 @@ vala_get_ccode_has_copy_function (ValaStruct* st)
 gboolean
 vala_get_ccode_has_destroy_function (ValaStruct* st)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (st != NULL, FALSE);
 	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) st, "CCode", "has_destroy_function", TRUE);
 	return result;
@@ -1313,7 +1308,7 @@ vala_get_ccode_has_destroy_function (ValaStruct* st)
 gdouble
 vala_get_ccode_instance_pos (ValaCodeNode* node)
 {
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (node != NULL, 0.0);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (node, VALA_TYPE_DELEGATE)) {
 		result = vala_code_node_get_attribute_double (node, "CCode", "instance_pos", (gdouble) -2);
@@ -1327,7 +1322,7 @@ vala_get_ccode_instance_pos (ValaCodeNode* node)
 gdouble
 vala_get_ccode_error_pos (ValaCallable* c)
 {
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (c != NULL, 0.0);
 	result = vala_code_node_get_attribute_double ((ValaCodeNode*) c, "CCode", "error_pos", (gdouble) -1);
 	return result;
@@ -1339,7 +1334,7 @@ vala_get_ccode_array_length (ValaCodeNode* node)
 	ValaCCodeAttribute* _tmp0_;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (node != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_array_length (_tmp0_);
@@ -1351,7 +1346,7 @@ vala_get_ccode_array_length (ValaCodeNode* node)
 gchar*
 vala_get_ccode_array_length_type (ValaCodeNode* node)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (node, VALA_TYPE_ARRAY_TYPE)) {
 		ValaDataType* _tmp0_;
@@ -1419,7 +1414,7 @@ vala_get_ccode_array_null_terminated (ValaCodeNode* node)
 	ValaCCodeAttribute* _tmp0_;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (node != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_array_null_terminated (_tmp0_);
@@ -1435,7 +1430,7 @@ vala_get_ccode_array_length_name (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_array_length_name (_tmp0_);
@@ -1452,7 +1447,7 @@ vala_get_ccode_array_length_expr (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_array_length_expr (_tmp0_);
@@ -1476,7 +1471,7 @@ vala_get_ccode_array_length_pos (ValaCodeNode* node)
 	ValaAttribute* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaAttribute* _tmp3_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (node != NULL, 0.0);
 	_tmp0_ = vala_code_node_get_attribute (node, "CCode");
 	_tmp1_ = _vala_code_node_ref0 (_tmp0_);
@@ -1519,7 +1514,7 @@ vala_get_ccode_delegate_target_pos (ValaCodeNode* node)
 	ValaAttribute* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaAttribute* _tmp3_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (node != NULL, 0.0);
 	_tmp0_ = vala_code_node_get_attribute (node, "CCode");
 	_tmp1_ = _vala_code_node_ref0 (_tmp0_);
@@ -1562,7 +1557,7 @@ vala_get_ccode_destroy_notify_pos (ValaCodeNode* node)
 	ValaAttribute* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaAttribute* _tmp3_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (node != NULL, 0.0);
 	_tmp0_ = vala_code_node_get_attribute (node, "CCode");
 	_tmp1_ = _vala_code_node_ref0 (_tmp0_);
@@ -1593,7 +1588,7 @@ vala_get_ccode_delegate_target (ValaCodeNode* node)
 	ValaCCodeAttribute* _tmp0_;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (node != NULL, FALSE);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_delegate_target (_tmp0_);
@@ -1609,7 +1604,7 @@ vala_get_ccode_delegate_target_name (ValaVariable* variable)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (variable != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) variable);
 	_tmp1_ = vala_ccode_attribute_get_delegate_target_name (_tmp0_);
@@ -1626,7 +1621,7 @@ vala_get_ccode_delegate_target_destroy_notify_name (ValaVariable* variable)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (variable != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) variable);
 	_tmp1_ = vala_ccode_attribute_get_delegate_target_destroy_notify_name (_tmp0_);
@@ -1642,7 +1637,7 @@ vala_get_ccode_pos (ValaParameter* param)
 	ValaCCodeAttribute* _tmp0_;
 	gdouble _tmp1_;
 	gdouble _tmp2_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (param != NULL, 0.0);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) param);
 	_tmp1_ = vala_ccode_attribute_get_pos (_tmp0_);
@@ -1658,7 +1653,7 @@ vala_get_ccode_type (ValaCodeNode* node)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (node != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute (node);
 	_tmp1_ = vala_ccode_attribute_get_ctype (_tmp0_);
@@ -1671,7 +1666,7 @@ vala_get_ccode_type (ValaCodeNode* node)
 gboolean
 vala_get_ccode_simple_generics (ValaMethod* m)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
 	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) m, "CCode", "simple_generics", FALSE);
 	return result;
@@ -1684,7 +1679,7 @@ vala_get_ccode_real_name (ValaSymbol* sym)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) sym);
 	_tmp1_ = vala_ccode_attribute_get_real_name (_tmp0_);
@@ -1703,7 +1698,7 @@ vala_get_ccode_constructv_name (ValaCreationMethod* m)
 	ValaSymbol* _tmp1_;
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_symbol_get_parent_symbol ((ValaSymbol*) m);
 	_tmp1_ = _tmp0_;
@@ -1752,7 +1747,7 @@ vala_get_ccode_vfunc_name (ValaMethod* m)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) m);
 	_tmp1_ = vala_ccode_attribute_get_vfunc_name (_tmp0_);
@@ -1767,7 +1762,7 @@ vala_get_ccode_async_result_pos (ValaMethod* m)
 {
 	gboolean _tmp0_;
 	gboolean _tmp1_;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (m != NULL, 0.0);
 	_tmp0_ = vala_method_get_coroutine (m);
 	_tmp1_ = _tmp0_;
@@ -1785,7 +1780,7 @@ vala_get_ccode_finish_name (ValaMethod* m)
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_method_get_coroutine (m);
 	_tmp1_ = _tmp0_;
@@ -1807,7 +1802,7 @@ vala_get_ccode_finish_vfunc_name (ValaMethod* m)
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_method_get_coroutine (m);
 	_tmp1_ = _tmp0_;
@@ -1829,7 +1824,7 @@ vala_get_ccode_finish_real_name (ValaMethod* m)
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_method_get_coroutine (m);
 	_tmp1_ = _tmp0_;
@@ -1845,49 +1840,58 @@ vala_get_ccode_finish_real_name (ValaMethod* m)
 gboolean
 vala_get_ccode_no_accessor_method (ValaProperty* p)
 {
-	ValaAttribute* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (p != NULL, FALSE);
-	_tmp0_ = vala_code_node_get_attribute ((ValaCodeNode*) p, "NoAccessorMethod");
-	result = _tmp0_ != NULL;
+	result = vala_code_node_has_attribute ((ValaCodeNode*) p, "NoAccessorMethod");
 	return result;
 }
 
 gboolean
 vala_get_ccode_concrete_accessor (ValaProperty* p)
 {
-	ValaAttribute* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (p != NULL, FALSE);
-	_tmp0_ = vala_code_node_get_attribute ((ValaCodeNode*) p, "ConcreteAccessor");
-	result = _tmp0_ != NULL;
+	result = vala_code_node_has_attribute ((ValaCodeNode*) p, "ConcreteAccessor");
 	return result;
 }
 
 gboolean
 vala_get_ccode_has_emitter (ValaSignal* sig)
 {
-	ValaAttribute* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (sig != NULL, FALSE);
-	_tmp0_ = vala_code_node_get_attribute ((ValaCodeNode*) sig, "HasEmitter");
-	result = _tmp0_ != NULL;
+	result = vala_code_node_has_attribute ((ValaCodeNode*) sig, "HasEmitter");
 	return result;
 }
 
 gboolean
 vala_get_ccode_has_type_id (ValaTypeSymbol* sym)
 {
-	gboolean result = FALSE;
+	gboolean _tmp0_ = FALSE;
+	gboolean result;
 	g_return_val_if_fail (sym != NULL, FALSE);
-	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) sym, "CCode", "has_type_id", TRUE);
-	return result;
+	if (G_TYPE_CHECK_INSTANCE_TYPE (sym, VALA_TYPE_ERROR_DOMAIN)) {
+		gboolean _tmp1_;
+		gboolean _tmp2_;
+		_tmp1_ = vala_symbol_get_external_package ((ValaSymbol*) sym);
+		_tmp2_ = _tmp1_;
+		_tmp0_ = _tmp2_;
+	} else {
+		_tmp0_ = FALSE;
+	}
+	if (_tmp0_) {
+		result = vala_code_node_get_attribute_bool ((ValaCodeNode*) sym, "CCode", "has_type_id", FALSE);
+		return result;
+	} else {
+		result = vala_code_node_get_attribute_bool ((ValaCodeNode*) sym, "CCode", "has_type_id", TRUE);
+		return result;
+	}
 }
 
 gboolean
 vala_get_ccode_has_new_function (ValaMethod* m)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
 	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) m, "CCode", "has_new_function", TRUE);
 	return result;
@@ -1901,7 +1905,7 @@ vala_get_ccode_has_generic_type_parameter (ValaMethod* m)
 	ValaAttribute* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaAttribute* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_attribute ((ValaCodeNode*) m, "CCode");
 	_tmp1_ = _vala_code_node_ref0 (_tmp0_);
@@ -1922,7 +1926,7 @@ vala_get_ccode_has_generic_type_parameter (ValaMethod* m)
 gdouble
 vala_get_ccode_generic_type_pos (ValaMethod* m)
 {
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (m != NULL, 0.0);
 	result = vala_code_node_get_attribute_double ((ValaCodeNode*) m, "CCode", "generic_type_pos", (gdouble) 0);
 	return result;
@@ -1931,11 +1935,9 @@ vala_get_ccode_generic_type_pos (ValaMethod* m)
 gboolean
 vala_get_ccode_no_wrapper (ValaMethod* m)
 {
-	ValaAttribute* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
-	_tmp0_ = vala_code_node_get_attribute ((ValaCodeNode*) m, "NoWrapper");
-	result = _tmp0_ != NULL;
+	result = vala_code_node_has_attribute ((ValaCodeNode*) m, "NoWrapper");
 	return result;
 }
 
@@ -1946,7 +1948,7 @@ vala_get_ccode_sentinel (ValaMethod* m)
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_get_ccode_attribute ((ValaCodeNode*) m);
 	_tmp1_ = vala_ccode_attribute_get_sentinel (_tmp0_);

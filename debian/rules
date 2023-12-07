@@ -26,13 +26,13 @@ bootstrap: configure-bootstrap
 
 override_dh_auto_configure: bootstrap
 	find -name '*.vala.stamp' -delete
-	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.54:$$LD_LIBRARY_PATH" \
+	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.56:$$LD_LIBRARY_PATH" \
 		dh_auto_configure -- \
 			VALAC="$(CURDIR)/bootstrap/install/usr/bin/valac" \
 			--enable-unversioned
 
 override_dh_auto_build:
-	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.54:$$LD_LIBRARY_PATH" \
+	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.56:$$LD_LIBRARY_PATH" \
 		dh_auto_build
 
 # Make testsuite failures non-fatal for these architectures. The DBus
@@ -52,11 +52,13 @@ execute_after_dh_auto_install:
 
 override_dh_install-arch:
 	dh_install
-	printf '#!/bin/sh\nexec valac-0.54 "--cc=$${CC:-${DEB_HOST_GNU_TYPE}-gcc}" "--pkg-config=$${PKG_CONFIG:-${DEB_HOST_GNU_TYPE}-pkg-config}" "$$@"\n' > debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.54
-	chmod 755 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.54
-	ln -s valac-0.54.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac-0.54.1.gz
-	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.54 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac
-	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.54.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac.1.gz
+	printf '#!/bin/sh\nexec valac-0.56 "--cc=$${CC:-${DEB_HOST_GNU_TYPE}-gcc}" "--pkg-config=$${PKG_CONFIG:-${DEB_HOST_GNU_TYPE}-pkg-config}" "$$@"\n' > debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.56
+	chmod 755 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.56
+	ln -s valac-0.56.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac-0.56.1.gz
+	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.56 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac
+	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.56.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac.1.gz
 
 override_dh_installdocs:
 	dh_installdocs -A NEWS README README.md THANKS
+
+override_dh_gnome_clean:

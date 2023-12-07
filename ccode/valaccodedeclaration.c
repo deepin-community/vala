@@ -120,7 +120,7 @@ ValaList*
 vala_ccode_declaration_get_declarators (ValaCCodeDeclaration* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->declarators;
 	result = _tmp0_;
@@ -187,7 +187,7 @@ _vala_ccode_node_ref0 (gpointer self)
 static gboolean
 vala_ccode_declaration_has_initializer (ValaCCodeDeclaration* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	{
 		ValaList* _decl_list = NULL;
@@ -488,12 +488,12 @@ vala_ccode_declaration_get_type_once (void)
 GType
 vala_ccode_declaration_get_type (void)
 {
-	static volatile gsize vala_ccode_declaration_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_declaration_type_id__volatile)) {
+	static volatile gsize vala_ccode_declaration_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_declaration_type_id__once)) {
 		GType vala_ccode_declaration_type_id;
 		vala_ccode_declaration_type_id = vala_ccode_declaration_get_type_once ();
-		g_once_init_leave (&vala_ccode_declaration_type_id__volatile, vala_ccode_declaration_type_id);
+		g_once_init_leave (&vala_ccode_declaration_type_id__once, vala_ccode_declaration_type_id);
 	}
-	return vala_ccode_declaration_type_id__volatile;
+	return vala_ccode_declaration_type_id__once;
 }
 

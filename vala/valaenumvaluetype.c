@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _vala_code_context_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_context_unref (var), NULL)))
@@ -52,18 +53,20 @@ vala_enum_value_type_get_instance_private (ValaEnumValueType* self)
 
 ValaEnumValueType*
 vala_enum_value_type_construct (GType object_type,
-                                ValaEnum* type_symbol)
+                                ValaEnum* type_symbol,
+                                ValaSourceReference* source_reference)
 {
 	ValaEnumValueType* self = NULL;
 	g_return_val_if_fail (type_symbol != NULL, NULL);
-	self = (ValaEnumValueType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol);
+	self = (ValaEnumValueType*) vala_value_type_construct (object_type, (ValaTypeSymbol*) type_symbol, source_reference);
 	return self;
 }
 
 ValaEnumValueType*
-vala_enum_value_type_new (ValaEnum* type_symbol)
+vala_enum_value_type_new (ValaEnum* type_symbol,
+                          ValaSourceReference* source_reference)
 {
-	return vala_enum_value_type_construct (VALA_TYPE_ENUM_VALUE_TYPE, type_symbol);
+	return vala_enum_value_type_construct (VALA_TYPE_ENUM_VALUE_TYPE, type_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -73,22 +76,21 @@ vala_enum_value_type_real_copy (ValaDataType* base)
 	ValaEnumValueType* _result_ = NULL;
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
-	ValaEnumValueType* _tmp2_;
+	ValaSourceReference* _tmp2_;
 	ValaSourceReference* _tmp3_;
-	ValaSourceReference* _tmp4_;
+	ValaEnumValueType* _tmp4_;
 	gboolean _tmp5_;
 	gboolean _tmp6_;
 	gboolean _tmp7_;
 	gboolean _tmp8_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaEnumValueType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_enum_value_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_ENUM, ValaEnum));
-	_result_ = _tmp2_;
-	_tmp3_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
-	_tmp4_ = _tmp3_;
-	vala_code_node_set_source_reference ((ValaCodeNode*) _result_, _tmp4_);
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_enum_value_type_new (G_TYPE_CHECK_INSTANCE_CAST (_tmp1_, VALA_TYPE_ENUM, ValaEnum), _tmp3_);
+	_result_ = _tmp4_;
 	_tmp5_ = vala_data_type_get_value_owned ((ValaDataType*) self);
 	_tmp6_ = _tmp5_;
 	vala_data_type_set_value_owned ((ValaDataType*) _result_, _tmp6_);
@@ -104,7 +106,7 @@ vala_enum_value_type_get_to_string_method (ValaEnumValueType* self)
 {
 	ValaMethod* _tmp0_;
 	ValaMethod* _tmp45_;
-	ValaMethod* result = NULL;
+	ValaMethod* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->to_string_method;
 	if (_tmp0_ == NULL) {
@@ -237,7 +239,7 @@ vala_enum_value_type_real_get_member (ValaDataType* base,
 	ValaSymbol* _tmp0_;
 	gboolean _tmp1_ = FALSE;
 	ValaSymbol* _tmp2_;
-	ValaSymbol* result = NULL;
+	ValaSymbol* result;
 	self = (ValaEnumValueType*) base;
 	g_return_val_if_fail (member_name != NULL, NULL);
 	_tmp0_ = VALA_DATA_TYPE_CLASS (vala_enum_value_type_parent_class)->get_member ((ValaDataType*) G_TYPE_CHECK_INSTANCE_CAST (self, VALA_TYPE_VALUE_TYPE, ValaValueType), member_name);
@@ -304,12 +306,12 @@ vala_enum_value_type_get_type_once (void)
 GType
 vala_enum_value_type_get_type (void)
 {
-	static volatile gsize vala_enum_value_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_enum_value_type_type_id__volatile)) {
+	static volatile gsize vala_enum_value_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_enum_value_type_type_id__once)) {
 		GType vala_enum_value_type_type_id;
 		vala_enum_value_type_type_id = vala_enum_value_type_get_type_once ();
-		g_once_init_leave (&vala_enum_value_type_type_id__volatile, vala_enum_value_type_type_id);
+		g_once_init_leave (&vala_enum_value_type_type_id__once, vala_enum_value_type_type_id);
 	}
-	return vala_enum_value_type_type_id__volatile;
+	return vala_enum_value_type_type_id__once;
 }
 

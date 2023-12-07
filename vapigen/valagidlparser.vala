@@ -677,7 +677,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				ParameterDirection direction;
 				var param_type = parse_param (param, out direction);
-				var p = new Parameter (param_name, param_type);
+				var p = new Parameter (param_name, param_type, current_source_reference);
 				p.direction = direction;
 
 				bool hide_param = false;
@@ -1661,7 +1661,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				prop.set_attribute ("NoAccessorMethod", true);
 			}
 
-			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
+			if (prop.has_attribute ("NoAccessorMethod") && prop.get_accessor != null) {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
@@ -1773,7 +1773,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				prop.set_attribute ("NoAccessorMethod", true);
 			}
 
-			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
+			if (prop.has_attribute ("NoAccessorMethod") && prop.get_accessor != null) {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
@@ -1998,7 +1998,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		} else {
-			stdout.printf ("%d\n", type_node.tag);
+			print ("%d\n", type_node.tag);
 		}
 		return type;
 	}
@@ -2443,7 +2443,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new Parameter (param_name, param_type);
+			var p = new Parameter (param_name, param_type, current_source_reference);
 			p.direction = direction;
 
 			bool hide_param = false;
@@ -2622,7 +2622,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (last_param != null && last_param.name.has_prefix ("first_")) {
 			last_param.ellipsis = true;
 		} else if (add_ellipsis) {
-			m.add_parameter (new Parameter.with_ellipsis ());
+			m.add_parameter (new Parameter.with_ellipsis (current_source_reference));
 		}
 
 		if (container == null) {
@@ -3132,7 +3132,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new Parameter (param_node.name, param_type);
+			var p = new Parameter (param_node.name, param_type, current_source_reference);
 			p.direction = direction;
 
 			bool hide_param = false;

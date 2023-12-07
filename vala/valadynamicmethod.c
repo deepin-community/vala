@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -38,6 +39,8 @@ struct _ValaDynamicMethodPrivate {
 static gint ValaDynamicMethod_private_offset;
 static gpointer vala_dynamic_method_parent_class = NULL;
 
+static void vala_dynamic_method_set_dynamic_type (ValaDynamicMethod* self,
+                                           ValaDataType* value);
 static gboolean vala_dynamic_method_real_check (ValaCodeNode* base,
                                          ValaCodeContext* context);
 static void vala_dynamic_method_finalize (ValaCodeNode * obj);
@@ -66,7 +69,7 @@ _vala_code_node_ref0 (gpointer self)
 	return self ? vala_code_node_ref (self) : NULL;
 }
 
-void
+static void
 vala_dynamic_method_set_dynamic_type (ValaDynamicMethod* self,
                                       ValaDataType* value)
 {
@@ -131,7 +134,7 @@ vala_dynamic_method_real_check (ValaCodeNode* base,
                                 ValaCodeContext* context)
 {
 	ValaDynamicMethod * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaDynamicMethod*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	result = TRUE;
@@ -181,12 +184,12 @@ vala_dynamic_method_get_type_once (void)
 GType
 vala_dynamic_method_get_type (void)
 {
-	static volatile gsize vala_dynamic_method_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_dynamic_method_type_id__volatile)) {
+	static volatile gsize vala_dynamic_method_type_id__once = 0;
+	if (g_once_init_enter (&vala_dynamic_method_type_id__once)) {
 		GType vala_dynamic_method_type_id;
 		vala_dynamic_method_type_id = vala_dynamic_method_get_type_once ();
-		g_once_init_leave (&vala_dynamic_method_type_id__volatile, vala_dynamic_method_type_id);
+		g_once_init_leave (&vala_dynamic_method_type_id__once, vala_dynamic_method_type_id);
 	}
-	return vala_dynamic_method_type_id__volatile;
+	return vala_dynamic_method_type_id__once;
 }
 

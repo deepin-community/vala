@@ -86,21 +86,19 @@ vala_enum_get_is_flags (ValaEnum* self)
 {
 	gboolean result;
 	gboolean* _tmp0_;
-	gboolean* _tmp4_;
+	gboolean* _tmp3_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->_is_flags;
 	if (_tmp0_ == NULL) {
-		ValaAttribute* _tmp1_;
-		gboolean _tmp2_;
-		gboolean* _tmp3_;
-		_tmp1_ = vala_code_node_get_attribute ((ValaCodeNode*) self, "Flags");
-		_tmp2_ = _tmp1_ != NULL;
-		_tmp3_ = __bool_dup0 (&_tmp2_);
+		gboolean _tmp1_;
+		gboolean* _tmp2_;
+		_tmp1_ = vala_code_node_has_attribute ((ValaCodeNode*) self, "Flags");
+		_tmp2_ = __bool_dup0 (&_tmp1_);
 		_g_free0 (self->priv->_is_flags);
-		self->priv->_is_flags = _tmp3_;
+		self->priv->_is_flags = _tmp2_;
 	}
-	_tmp4_ = self->priv->_is_flags;
-	result = *_tmp4_;
+	_tmp3_ = self->priv->_is_flags;
+	result = *_tmp3_;
 	return result;
 }
 
@@ -205,7 +203,7 @@ vala_enum_real_add_method (ValaSymbol* base,
 		const gchar* _tmp15_;
 		ValaParameter* _tmp16_;
 		ValaParameter* _tmp17_;
-		_tmp4_ = vala_enum_value_type_new (self);
+		_tmp4_ = vala_enum_value_type_new (self, NULL);
 		_tmp5_ = _tmp4_;
 		_tmp6_ = vala_code_node_get_source_reference ((ValaCodeNode*) m);
 		_tmp7_ = _tmp6_;
@@ -307,7 +305,7 @@ ValaList*
 vala_enum_get_values (ValaEnum* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->values;
 	result = _tmp0_;
@@ -323,7 +321,7 @@ ValaList*
 vala_enum_get_methods (ValaEnum* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->methods;
 	result = _tmp0_;
@@ -339,7 +337,7 @@ ValaList*
 vala_enum_get_constants (ValaEnum* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->constants;
 	result = _tmp0_;
@@ -477,7 +475,7 @@ static gboolean
 vala_enum_real_is_reference_type (ValaTypeSymbol* base)
 {
 	ValaEnum * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaEnum*) base;
 	result = FALSE;
 	return result;
@@ -529,7 +527,7 @@ vala_enum_real_check (ValaCodeNode* base,
 	ValaSymbol* _tmp63_;
 	gboolean _tmp64_;
 	gboolean _tmp65_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaEnum*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -784,12 +782,12 @@ vala_enum_get_type_once (void)
 GType
 vala_enum_get_type (void)
 {
-	static volatile gsize vala_enum_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_enum_type_id__volatile)) {
+	static volatile gsize vala_enum_type_id__once = 0;
+	if (g_once_init_enter (&vala_enum_type_id__once)) {
 		GType vala_enum_type_id;
 		vala_enum_type_id = vala_enum_get_type_once ();
-		g_once_init_leave (&vala_enum_type_id__volatile, vala_enum_type_id);
+		g_once_init_leave (&vala_enum_type_id__once, vala_enum_type_id);
 	}
-	return vala_enum_type_id__volatile;
+	return vala_enum_type_id__once;
 }
 

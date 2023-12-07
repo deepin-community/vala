@@ -80,12 +80,12 @@ valadoc_documentation_get_type_once (void)
 GType
 valadoc_documentation_get_type (void)
 {
-	static volatile gsize valadoc_documentation_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_documentation_type_id__volatile)) {
+	static volatile gsize valadoc_documentation_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_documentation_type_id__once)) {
 		GType valadoc_documentation_type_id;
 		valadoc_documentation_type_id = valadoc_documentation_get_type_once ();
-		g_once_init_leave (&valadoc_documentation_type_id__volatile, valadoc_documentation_type_id);
+		g_once_init_leave (&valadoc_documentation_type_id__once, valadoc_documentation_type_id);
 	}
-	return valadoc_documentation_type_id__volatile;
+	return valadoc_documentation_type_id__once;
 }
 

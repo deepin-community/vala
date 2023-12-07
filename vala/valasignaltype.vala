@@ -35,13 +35,14 @@ public class Vala.SignalType : CallableType {
 	Method? connect_method;
 	Method? connect_after_method;
 	Method? disconnect_method;
+	Method? emit_method;
 
-	public SignalType (Signal signal_symbol) {
-		base (signal_symbol);
+	public SignalType (Signal signal_symbol, SourceReference? source_reference = null) {
+		base (signal_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		return new SignalType (signal_symbol);
+		return new SignalType (signal_symbol, source_reference);
 	}
 
 	public override bool compatible (DataType target_type) {
@@ -55,14 +56,12 @@ public class Vala.SignalType : CallableType {
 	public DelegateType get_handler_type () {
 		var type_sym = (ObjectTypeSymbol) signal_symbol.parent_symbol;
 		var sender_type = SemanticAnalyzer.get_data_type_for_symbol (type_sym);
-		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
-		result.source_reference = source_reference;
+		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this), source_reference);
 		result.value_owned = true;
 
 		if (result.delegate_symbol.has_type_parameters ()) {
 			foreach (var type_param in type_sym.get_type_parameters ()) {
-				var type_arg = new GenericType (type_param);
-				type_arg.source_reference = source_reference;
+				var type_arg = new GenericType (type_param, source_reference);
 				type_arg.value_owned = true;
 				result.add_type_argument (type_arg);
 			}
@@ -106,6 +105,16 @@ public class Vala.SignalType : CallableType {
 		return disconnect_method;
 	}
 
+	unowned Method get_emit_method () {
+		if (emit_method == null) {
+			emit_method = new Method ("emit", signal_symbol.return_type, source_reference);
+			emit_method.access = SymbolAccessibility.PUBLIC;
+			emit_method.external = true;
+			emit_method.owner = signal_symbol.scope;
+		}
+		return emit_method;
+	}
+
 	public override Symbol? get_member (string member_name) {
 		if (member_name == "connect") {
 			return get_connect_method ();
@@ -113,6 +122,8 @@ public class Vala.SignalType : CallableType {
 			return get_connect_after_method ();
 		} else if (member_name == "disconnect") {
 			return get_disconnect_method ();
+		} else if (member_name == "emit") {
+			return get_emit_method ();
 		}
 		return null;
 	}

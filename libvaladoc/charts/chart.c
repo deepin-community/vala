@@ -24,8 +24,9 @@
  */
 
 #include "valadoc.h"
-#include <graphviz/gvc.h>
+#include <gvc.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -148,7 +149,7 @@ valadoc_charts_chart_write_buffer (ValadocChartsChart* self,
 	unsigned int _tmp7_ = 0;
 	guint8* _tmp8_;
 	gint _tmp8__length1;
-	guint8* result = NULL;
+	guint8* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (file_type != NULL, NULL);
 	_tmp0_ = self->context;
@@ -225,12 +226,12 @@ valadoc_charts_chart_get_type_once (void)
 GType
 valadoc_charts_chart_get_type (void)
 {
-	static volatile gsize valadoc_charts_chart_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_charts_chart_type_id__volatile)) {
+	static volatile gsize valadoc_charts_chart_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_charts_chart_type_id__once)) {
 		GType valadoc_charts_chart_type_id;
 		valadoc_charts_chart_type_id = valadoc_charts_chart_get_type_once ();
-		g_once_init_leave (&valadoc_charts_chart_type_id__volatile, valadoc_charts_chart_type_id);
+		g_once_init_leave (&valadoc_charts_chart_type_id__once, valadoc_charts_chart_type_id);
 	}
-	return valadoc_charts_chart_type_id__volatile;
+	return valadoc_charts_chart_type_id__once;
 }
 

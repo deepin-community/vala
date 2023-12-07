@@ -152,7 +152,7 @@ valadoc_api_interface_get_implemented_interface_list (ValadocApiInterface* self)
 {
 	ValaArrayList* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->interfaces;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -169,7 +169,7 @@ valadoc_api_interface_get_full_implemented_interface_list (ValadocApiInterface* 
 	ValaCollection* _tmp0_;
 	ValaCollection* _tmp12_;
 	ValaCollection* _tmp13_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_full_implemented_interfaces;
 	if (_tmp0_ == NULL) {
@@ -217,7 +217,7 @@ valadoc_api_interface_get_cname (ValadocApiInterface* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -233,7 +233,7 @@ valadoc_api_interface_get_type_id (ValadocApiInterface* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->type_id;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -249,7 +249,7 @@ valadoc_api_interface_get_dbus_name (ValadocApiInterface* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dbus_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -265,7 +265,7 @@ valadoc_api_interface_get_interface_macro_name (ValadocApiInterface* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->interface_macro_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -337,7 +337,7 @@ valadoc_api_interface_get_known_implementations (ValadocApiInterface* self)
 {
 	ValaSet* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_known_implementations;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -353,7 +353,7 @@ valadoc_api_interface_get_known_related_interfaces (ValadocApiInterface* self)
 {
 	ValaSet* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_known_related_interfaces;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -410,7 +410,7 @@ valadoc_api_interface_real_build_signature (ValadocApiItem* base)
 	gint _tmp34_;
 	ValadocApiSignatureBuilder* _tmp49_;
 	ValadocContentRun* _tmp50_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiInterface*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	signature = _tmp0_;
@@ -577,7 +577,7 @@ valadoc_api_interface_class_init (ValadocApiInterfaceClass * klass,
 	g_type_class_adjust_private_offset (klass, &ValadocApiInterface_private_offset);
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_interface_real_accept;
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_interface_real_build_signature;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_interface_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_interface_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_interface_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_api_interface_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_interface_finalize;
@@ -651,13 +651,13 @@ valadoc_api_interface_get_type_once (void)
 GType
 valadoc_api_interface_get_type (void)
 {
-	static volatile gsize valadoc_api_interface_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_interface_type_id__volatile)) {
+	static volatile gsize valadoc_api_interface_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_interface_type_id__once)) {
 		GType valadoc_api_interface_type_id;
 		valadoc_api_interface_type_id = valadoc_api_interface_get_type_once ();
-		g_once_init_leave (&valadoc_api_interface_type_id__volatile, valadoc_api_interface_type_id);
+		g_once_init_leave (&valadoc_api_interface_type_id__once, valadoc_api_interface_type_id);
 	}
-	return valadoc_api_interface_type_id__volatile;
+	return valadoc_api_interface_type_id__once;
 }
 
 static void

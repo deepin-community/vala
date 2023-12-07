@@ -158,7 +158,7 @@ valadoc_ctype_resolver_convert_array_to_camelcase (ValadocCTypeResolver* self,
 	GString* _tmp0_;
 	GString* _tmp10_;
 	gchar* _tmp11_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -210,7 +210,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -224,7 +224,7 @@ valadoc_ctype_resolver_is_capitalized_and_underscored (ValadocCTypeResolver* sel
 	gunichar c = 0U;
 	gboolean _tmp0_ = FALSE;
 	gboolean last_was_underscore = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 	c = string_get_char (name, (glong) 0);
@@ -302,7 +302,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -325,7 +325,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -364,7 +364,7 @@ valadoc_ctype_resolver_translate_cname_to_g (ValadocCTypeResolver* self,
 	gint _tmp8_;
 	gint _tmp9_;
 	gboolean _tmp10_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	if (valadoc_ctype_resolver_is_capitalized_and_underscored (self, name)) {
@@ -463,7 +463,7 @@ valadoc_ctype_resolver_resolve_symbol_type (ValadocCTypeResolver* self,
 	ValaMap* _tmp0_;
 	gpointer _tmp1_;
 	ValadocApiTypeSymbol* _tmp2_;
-	ValadocApiTypeSymbol* result = NULL;
+	ValadocApiTypeSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->types;
@@ -568,7 +568,7 @@ valadoc_ctype_resolver_resolve_symbol_type (ValadocCTypeResolver* self,
 				_tmp20__length1 = segments_length1;
 				_tmp21_ = segments;
 				_tmp21__length1 = segments_length1;
-				_tmp22_ = ((_tmp20_ + 1) != NULL) ? _vala_array_dup1 (_tmp20_ + 1, _tmp21__length1 - 1) : (_tmp20_ + 1);
+				_tmp22_ = (_tmp20_ != NULL) ? _vala_array_dup1 (_tmp20_ + 1, _tmp21__length1 - 1) : _tmp20_;
 				_tmp22__length1 = _tmp21__length1 - 1;
 				_segments = _tmp22_;
 				_segments_length1 = _tmp22__length1;
@@ -617,7 +617,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -706,7 +706,7 @@ string_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -746,7 +746,7 @@ valadoc_ctype_resolver_resolve_symbol (ValadocCTypeResolver* self,
 	const gchar* _tmp74_;
 	gint dotpos = 0;
 	const gchar* _tmp80_;
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (_name != NULL, NULL);
 	_tmp0_ = string_replace (_name, "->", ".");
@@ -1103,7 +1103,7 @@ valadoc_ctype_resolver_get_parent_type_cname (ValadocCTypeResolver* self,
 	gchar* parent_cname = NULL;
 	ValadocApiItem* _tmp0_;
 	ValadocApiItem* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (item != NULL, NULL);
 	parent_cname = NULL;
@@ -2062,13 +2062,13 @@ valadoc_ctype_resolver_get_type_once (void)
 GType
 valadoc_ctype_resolver_get_type (void)
 {
-	static volatile gsize valadoc_ctype_resolver_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_ctype_resolver_type_id__volatile)) {
+	static volatile gsize valadoc_ctype_resolver_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_ctype_resolver_type_id__once)) {
 		GType valadoc_ctype_resolver_type_id;
 		valadoc_ctype_resolver_type_id = valadoc_ctype_resolver_get_type_once ();
-		g_once_init_leave (&valadoc_ctype_resolver_type_id__volatile, valadoc_ctype_resolver_type_id);
+		g_once_init_leave (&valadoc_ctype_resolver_type_id__once, valadoc_ctype_resolver_type_id);
 	}
-	return valadoc_ctype_resolver_type_id__volatile;
+	return valadoc_ctype_resolver_type_id__once;
 }
 
 static void

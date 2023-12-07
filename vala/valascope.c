@@ -272,7 +272,7 @@ vala_scope_lookup (ValaScope* self,
 	gpointer _tmp2_;
 	gboolean _tmp3_ = FALSE;
 	ValaSymbol* _tmp4_;
-	ValaSymbol* result = NULL;
+	ValaSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = self->priv->symbol_table;
@@ -315,7 +315,7 @@ vala_scope_is_subscope_of (ValaScope* self,
                            ValaScope* scope)
 {
 	ValaScope* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (scope == self) {
 		result = TRUE;
@@ -340,7 +340,7 @@ ValaMap*
 vala_scope_get_symbol_table (ValaScope* self)
 {
 	ValaMap* _tmp0_;
-	ValaMap* result = NULL;
+	ValaMap* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->symbol_table;
 	result = _tmp0_;
@@ -525,13 +525,13 @@ vala_scope_get_type_once (void)
 GType
 vala_scope_get_type (void)
 {
-	static volatile gsize vala_scope_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_scope_type_id__volatile)) {
+	static volatile gsize vala_scope_type_id__once = 0;
+	if (g_once_init_enter (&vala_scope_type_id__once)) {
 		GType vala_scope_type_id;
 		vala_scope_type_id = vala_scope_get_type_once ();
-		g_once_init_leave (&vala_scope_type_id__volatile, vala_scope_type_id);
+		g_once_init_leave (&vala_scope_type_id__once, vala_scope_type_id);
 	}
-	return vala_scope_type_id__volatile;
+	return vala_scope_type_id__once;
 }
 
 gpointer

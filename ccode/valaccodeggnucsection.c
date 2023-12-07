@@ -25,10 +25,10 @@
 
 #include "valaccode.h"
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
 #include <valagee.h>
-#include <glib-object.h>
 
 #define _vala_ccode_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_ccode_node_unref (var), NULL)))
 
@@ -56,10 +56,8 @@ ValaGGnucSectionType
 vala_ccode_ggnuc_section_get_section_type (ValaCCodeGGnucSection* self)
 {
 	ValaGGnucSectionType result;
-	ValaGGnucSectionType _tmp0_;
 	g_return_val_if_fail (self != NULL, 0);
-	_tmp0_ = self->priv->_section_type;
-	result = _tmp0_;
+	result = self->priv->_section_type;
 	return result;
 }
 
@@ -197,19 +195,19 @@ vala_ccode_ggnuc_section_get_type_once (void)
 GType
 vala_ccode_ggnuc_section_get_type (void)
 {
-	static volatile gsize vala_ccode_ggnuc_section_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_ggnuc_section_type_id__volatile)) {
+	static volatile gsize vala_ccode_ggnuc_section_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_ggnuc_section_type_id__once)) {
 		GType vala_ccode_ggnuc_section_type_id;
 		vala_ccode_ggnuc_section_type_id = vala_ccode_ggnuc_section_get_type_once ();
-		g_once_init_leave (&vala_ccode_ggnuc_section_type_id__volatile, vala_ccode_ggnuc_section_type_id);
+		g_once_init_leave (&vala_ccode_ggnuc_section_type_id__once, vala_ccode_ggnuc_section_type_id);
 	}
-	return vala_ccode_ggnuc_section_type_id__volatile;
+	return vala_ccode_ggnuc_section_type_id__once;
 }
 
 const gchar*
 vala_ggnuc_section_type_to_string (ValaGGnucSectionType self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	switch (self) {
 		case VALA_GGNUC_SECTION_TYPE_IGNORE_DEPRECATIONS:
 		{
@@ -235,12 +233,12 @@ vala_ggnuc_section_type_get_type_once (void)
 GType
 vala_ggnuc_section_type_get_type (void)
 {
-	static volatile gsize vala_ggnuc_section_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ggnuc_section_type_type_id__volatile)) {
+	static volatile gsize vala_ggnuc_section_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_ggnuc_section_type_type_id__once)) {
 		GType vala_ggnuc_section_type_type_id;
 		vala_ggnuc_section_type_type_id = vala_ggnuc_section_type_get_type_once ();
-		g_once_init_leave (&vala_ggnuc_section_type_type_id__volatile, vala_ggnuc_section_type_type_id);
+		g_once_init_leave (&vala_ggnuc_section_type_type_id__once, vala_ggnuc_section_type_type_id);
 	}
-	return vala_ggnuc_section_type_type_id__volatile;
+	return vala_ggnuc_section_type_type_id__once;
 }
 

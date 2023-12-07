@@ -26,6 +26,9 @@ namespace Vala {
 	static unowned CCodeAttribute get_ccode_attribute (CodeNode node) {
 		if (ccode_attribute_cache_index == null) {
 			ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
+
+			// make sure static collections are initialized
+			CCodeBaseModule.init ();
 		}
 
 		unowned AttributeCache? attr = node.get_attribute_cache (ccode_attribute_cache_index);
@@ -237,7 +240,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_type_function (TypeSymbol sym) {
-		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is ErrorDomain || sym is Delegate));
+		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is Delegate));
 		return "%s_get_type".printf (get_ccode_lower_case_name (sym));
 	}
 
@@ -433,19 +436,23 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_no_accessor_method (Property p) {
-		return p.get_attribute ("NoAccessorMethod") != null;
+		return p.has_attribute ("NoAccessorMethod");
 	}
 
 	public static bool get_ccode_concrete_accessor (Property p) {
-		return p.get_attribute ("ConcreteAccessor") != null;
+		return p.has_attribute ("ConcreteAccessor");
 	}
 
 	public static bool get_ccode_has_emitter (Signal sig) {
-		return sig.get_attribute ("HasEmitter") != null;
+		return sig.has_attribute ("HasEmitter");
 	}
 
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {
-		return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		if (sym is ErrorDomain && sym.external_package) {
+			return sym.get_attribute_bool ("CCode", "has_type_id", false);
+		} else {
+			return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		}
 	}
 
 	public static bool get_ccode_has_new_function (Method m) {
@@ -462,7 +469,7 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_no_wrapper (Method m) {
-		return m.get_attribute ("NoWrapper") != null;
+		return m.has_attribute ("NoWrapper");
 	}
 
 	public static string get_ccode_sentinel (Method m) {

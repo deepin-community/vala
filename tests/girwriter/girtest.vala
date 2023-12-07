@@ -14,6 +14,13 @@ namespace GirTest {
 
 		public void inv () {
 		}
+
+		public BoxedStruct ret () {
+			return this;
+		}
+
+		public void @set (BoxedStruct param1) {
+		}
 	}
 
 	[CCode (has_type_id = false)]
@@ -31,6 +38,13 @@ namespace GirTest {
 
 		public void inv () {
 		}
+
+		public Struct ret () {
+			return this;
+		}
+
+		public void @set (Struct param1) {
+		}
 	}
 
 	[GIR (visible = false)]
@@ -47,6 +61,13 @@ namespace GirTest {
 	public const string CONSTANT_STRING = "const ♥ utf8";
 	[GIR (name = "RENAMED_CONSTANT")]
 	public const int NAMED_CONSTANT = 23;
+
+	public const bool TRUE_LITERAL = true;
+	public const bool FALSE_LITERAL = false;
+	public const char CHAR_LITERAL = 'y';
+	public const double REAL_LITERAL = 3.1415;
+	public const float FLOAT_LITERAL = -3.1415f;
+	public const int INTEGER_LITERAL = -42;
 
 	public enum EnumTest {
 		VALUE1,
@@ -91,6 +112,13 @@ namespace GirTest {
 	}
 
 	public errordomain ErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY = 23
+	}
+
+	[CCode (has_type_id = false)]
+	public errordomain PlainErrorTest {
 		FAILED,
 		SMELLY,
 		FISHY = 23
@@ -169,6 +197,8 @@ namespace GirTest {
 		public signal void skipped_signal (int param);
 
 		public int field = 42;
+
+		public Struct struct_field;
 
 		internal int internal_field = 23;
 

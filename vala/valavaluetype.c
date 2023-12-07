@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 static gpointer vala_value_type_parent_class = NULL;
 
@@ -35,11 +36,12 @@ static GType vala_value_type_get_type_once (void);
 
 ValaValueType*
 vala_value_type_construct (GType object_type,
-                           ValaTypeSymbol* type_symbol)
+                           ValaTypeSymbol* type_symbol,
+                           ValaSourceReference* source_reference)
 {
 	ValaValueType* self = NULL;
 	g_return_val_if_fail (type_symbol != NULL, NULL);
-	self = (ValaValueType*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) type_symbol);
+	self = (ValaValueType*) vala_data_type_construct_with_symbol (object_type, (ValaSymbol*) type_symbol, source_reference);
 	return self;
 }
 
@@ -56,7 +58,7 @@ vala_value_type_real_is_disposable (ValaDataType* base)
 	ValaTypeSymbol* _tmp5_;
 	gboolean _tmp6_ = FALSE;
 	ValaStruct* _tmp7_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaValueType*) base;
 	_tmp0_ = vala_data_type_get_value_owned ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
@@ -102,7 +104,7 @@ vala_value_type_real_check (ValaCodeNode* base,
 	ValaValueType * self;
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaValueType*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
@@ -151,12 +153,12 @@ vala_value_type_get_type_once (void)
 GType
 vala_value_type_get_type (void)
 {
-	static volatile gsize vala_value_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_value_type_type_id__volatile)) {
+	static volatile gsize vala_value_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_value_type_type_id__once)) {
 		GType vala_value_type_type_id;
 		vala_value_type_type_id = vala_value_type_get_type_once ();
-		g_once_init_leave (&vala_value_type_type_id__volatile, vala_value_type_type_id);
+		g_once_init_leave (&vala_value_type_type_id__once, vala_value_type_type_id);
 	}
-	return vala_value_type_type_id__volatile;
+	return vala_value_type_type_id__once;
 }
 

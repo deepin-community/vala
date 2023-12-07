@@ -129,7 +129,7 @@ valadoc_html_link_helper_real_get_package_link (ValadocHtmlLinkHelper* self,
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (package != NULL, NULL);
 	g_return_val_if_fail (settings != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -176,7 +176,7 @@ valadoc_html_link_helper_get_relative_link (ValadocHtmlLinkHelper* self,
                                             ValadocSettings* settings)
 {
 	ValadocSettings* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
@@ -271,7 +271,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -294,7 +294,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -333,7 +333,7 @@ string_last_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strrchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -357,7 +357,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -446,7 +446,7 @@ valadoc_html_link_helper_translate_wiki_name (ValadocHtmlLinkHelper* self,
 	gchar* _tmp6_;
 	gchar* _tmp7_;
 	gchar* _tmp8_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (page != NULL, NULL);
 	_tmp0_ = valadoc_wiki_page_get_name (page);
@@ -473,7 +473,7 @@ valadoc_html_link_helper_real_from_package_to_package (ValadocHtmlLinkHelper* se
 {
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -526,7 +526,7 @@ valadoc_html_link_helper_real_from_package_to_wiki (ValadocHtmlLinkHelper* self,
 {
 	gboolean _tmp0_;
 	gboolean _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp0_ = valadoc_api_package_get_is_package (from);
@@ -578,7 +578,7 @@ valadoc_html_link_helper_real_from_package_to_node (ValadocHtmlLinkHelper* self,
 	gboolean _tmp1_;
 	ValadocApiPackage* _tmp7_;
 	ValadocApiPackage* _tmp8_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -675,7 +675,7 @@ valadoc_html_link_helper_real_from_wiki_to_package (ValadocHtmlLinkHelper* self,
 	gboolean _tmp1_;
 	gboolean _tmp3_;
 	gboolean _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -729,7 +729,7 @@ valadoc_html_link_helper_real_from_wiki_to_wiki (ValadocHtmlLinkHelper* self,
                                                  ValadocWikiPage* to)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp0_ = valadoc_html_link_helper_translate_wiki_name (self, to);
@@ -762,7 +762,7 @@ valadoc_html_link_helper_real_from_wiki_to_node (ValadocHtmlLinkHelper* self,
 	ValadocApiPackage* _tmp8_;
 	gboolean _tmp9_;
 	gboolean _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -856,7 +856,7 @@ valadoc_html_link_helper_real_from_node_to_package (ValadocHtmlLinkHelper* self,
 	gboolean _tmp1_;
 	ValadocApiPackage* _tmp3_;
 	ValadocApiPackage* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -913,7 +913,7 @@ valadoc_html_link_helper_real_from_node_to_wiki (ValadocHtmlLinkHelper* self,
 	ValadocApiPackage* _tmp1_;
 	gboolean _tmp2_;
 	gboolean _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp0_ = valadoc_documentation_get_package ((ValadocDocumentation*) from);
@@ -969,7 +969,7 @@ valadoc_html_link_helper_real_from_node_to_node (ValadocHtmlLinkHelper* self,
 	ValadocApiPackage* _tmp8_;
 	ValadocApiPackage* _tmp9_;
 	ValadocApiPackage* _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (from != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	_tmp1_ = self->priv->_enable_browsable_check;
@@ -1126,13 +1126,13 @@ valadoc_html_link_helper_get_type_once (void)
 GType
 valadoc_html_link_helper_get_type (void)
 {
-	static volatile gsize valadoc_html_link_helper_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_link_helper_type_id__volatile)) {
+	static volatile gsize valadoc_html_link_helper_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_link_helper_type_id__once)) {
 		GType valadoc_html_link_helper_type_id;
 		valadoc_html_link_helper_type_id = valadoc_html_link_helper_get_type_once ();
-		g_once_init_leave (&valadoc_html_link_helper_type_id__volatile, valadoc_html_link_helper_type_id);
+		g_once_init_leave (&valadoc_html_link_helper_type_id__once, valadoc_html_link_helper_type_id);
 	}
-	return valadoc_html_link_helper_type_id__volatile;
+	return valadoc_html_link_helper_type_id__once;
 }
 
 static void

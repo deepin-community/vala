@@ -305,6 +305,7 @@ namespace Cairo {
 		public Cairo.Filter get_filter ();
 		public Cairo.Status get_linear_points (out double x0, out double y0, out double x1, out double y1);
 		public void get_matrix (out Cairo.Matrix matrix);
+		public Cairo.Status get_rgba (out double red, out double green, out double blue, out double alpha);
 		public Cairo.Status get_surface (out unowned Cairo.Surface surface);
 		public Cairo.PatternType get_type ();
 		[CCode (simple_generics = true)]
@@ -361,7 +362,6 @@ namespace Cairo {
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
 		public PsSurface.for_stream (Cairo.WriteFunc write_func, double width_in_points, double height_in_points);
 		public bool get_eps ();
-		public static void get_levels (out unowned Cairo.PsLevel[] levels);
 		public void restrict_to_level (Cairo.PsLevel level);
 		public void set_eps (bool eps);
 		public void set_size (double width_in_points, double height_in_points);

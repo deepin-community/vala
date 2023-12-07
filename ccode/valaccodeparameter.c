@@ -27,13 +27,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
+#define _vala_ccode_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_ccode_node_unref (var), NULL)))
 
 struct _ValaCCodeParameterPrivate {
 	gchar* _name;
 	gchar* _type_name;
 	gboolean _ellipsis;
+	ValaCCodeDeclarator* declarator;
 };
 
 static gint ValaCCodeParameter_private_offset;
@@ -147,6 +150,41 @@ vala_ccode_parameter_new_with_ellipsis (void)
 	return vala_ccode_parameter_construct_with_ellipsis (VALA_TYPE_CCODE_PARAMETER);
 }
 
+static gpointer
+_vala_ccode_node_ref0 (gpointer self)
+{
+	return self ? vala_ccode_node_ref (self) : NULL;
+}
+
+ValaCCodeParameter*
+vala_ccode_parameter_construct_with_declarator (GType object_type,
+                                                const gchar* type,
+                                                ValaCCodeDeclarator* decl)
+{
+	ValaCCodeParameter* self = NULL;
+	const gchar* _tmp0_;
+	const gchar* _tmp1_;
+	ValaCCodeDeclarator* _tmp2_;
+	g_return_val_if_fail (type != NULL, NULL);
+	g_return_val_if_fail (decl != NULL, NULL);
+	self = (ValaCCodeParameter*) vala_ccode_node_construct (object_type);
+	_tmp0_ = vala_ccode_declarator_get_name (decl);
+	_tmp1_ = _tmp0_;
+	vala_ccode_parameter_set_name (self, _tmp1_);
+	vala_ccode_parameter_set_type_name (self, type);
+	_tmp2_ = _vala_ccode_node_ref0 (decl);
+	_vala_ccode_node_unref0 (self->priv->declarator);
+	self->priv->declarator = _tmp2_;
+	return self;
+}
+
+ValaCCodeParameter*
+vala_ccode_parameter_new_with_declarator (const gchar* type,
+                                          ValaCCodeDeclarator* decl)
+{
+	return vala_ccode_parameter_construct_with_declarator (VALA_TYPE_CCODE_PARAMETER, type, decl);
+}
+
 static void
 vala_ccode_parameter_real_write (ValaCCodeNode* base,
                                  ValaCCodeWriter* writer)
@@ -158,12 +196,20 @@ vala_ccode_parameter_real_write (ValaCCodeNode* base,
 	_tmp0_ = self->priv->_ellipsis;
 	if (!_tmp0_) {
 		const gchar* _tmp1_;
-		const gchar* _tmp2_;
+		ValaCCodeDeclarator* _tmp2_;
 		_tmp1_ = self->priv->_type_name;
 		vala_ccode_writer_write_string (writer, _tmp1_);
 		vala_ccode_writer_write_string (writer, " ");
-		_tmp2_ = self->priv->_name;
-		vala_ccode_writer_write_string (writer, _tmp2_);
+		_tmp2_ = self->priv->declarator;
+		if (_tmp2_ != NULL) {
+			ValaCCodeDeclarator* _tmp3_;
+			_tmp3_ = self->priv->declarator;
+			vala_ccode_node_write ((ValaCCodeNode*) _tmp3_, writer);
+		} else {
+			const gchar* _tmp4_;
+			_tmp4_ = self->priv->_name;
+			vala_ccode_writer_write_string (writer, _tmp4_);
+		}
 	} else {
 		vala_ccode_writer_write_string (writer, "...");
 	}
@@ -193,6 +239,7 @@ vala_ccode_parameter_finalize (ValaCCodeNode * obj)
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, VALA_TYPE_CCODE_PARAMETER, ValaCCodeParameter);
 	_g_free0 (self->priv->_name);
 	_g_free0 (self->priv->_type_name);
+	_vala_ccode_node_unref0 (self->priv->declarator);
 	VALA_CCODE_NODE_CLASS (vala_ccode_parameter_parent_class)->finalize (obj);
 }
 
@@ -212,12 +259,12 @@ vala_ccode_parameter_get_type_once (void)
 GType
 vala_ccode_parameter_get_type (void)
 {
-	static volatile gsize vala_ccode_parameter_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_parameter_type_id__volatile)) {
+	static volatile gsize vala_ccode_parameter_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_parameter_type_id__once)) {
 		GType vala_ccode_parameter_type_id;
 		vala_ccode_parameter_type_id = vala_ccode_parameter_get_type_once ();
-		g_once_init_leave (&vala_ccode_parameter_type_id__volatile, vala_ccode_parameter_type_id);
+		g_once_init_leave (&vala_ccode_parameter_type_id__once, vala_ccode_parameter_type_id);
 	}
-	return vala_ccode_parameter_type_id__volatile;
+	return vala_ccode_parameter_type_id__once;
 }
 

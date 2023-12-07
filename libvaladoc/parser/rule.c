@@ -197,13 +197,13 @@ valadoc_rule_forward_get_type_once (void)
 GType
 valadoc_rule_forward_get_type (void)
 {
-	static volatile gsize valadoc_rule_forward_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_rule_forward_type_id__volatile)) {
+	static volatile gsize valadoc_rule_forward_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_rule_forward_type_id__once)) {
 		GType valadoc_rule_forward_type_id;
 		valadoc_rule_forward_type_id = valadoc_rule_forward_get_type_once ();
-		g_once_init_leave (&valadoc_rule_forward_type_id__volatile, valadoc_rule_forward_type_id);
+		g_once_init_leave (&valadoc_rule_forward_type_id__once, valadoc_rule_forward_type_id);
 	}
-	return valadoc_rule_forward_type_id__volatile;
+	return valadoc_rule_forward_type_id__once;
 }
 
 ValadocRule*
@@ -211,7 +211,7 @@ valadoc_rule_seq (GObject** scheme,
                   gint scheme_length1)
 {
 	ValadocSequenceRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	_tmp0_ = valadoc_sequence_rule_new (scheme, scheme_length1);
 	result = (ValadocRule*) _tmp0_;
 	return result;
@@ -222,7 +222,7 @@ valadoc_rule_one_of (GObject** scheme,
                      gint scheme_length1)
 {
 	ValadocOneOfRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	_tmp0_ = valadoc_one_of_rule_new (scheme, scheme_length1);
 	result = (ValadocRule*) _tmp0_;
 	return result;
@@ -232,7 +232,7 @@ ValadocRule*
 valadoc_rule_many (GObject** scheme,
                    gint scheme_length1)
 {
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	if (scheme_length1 == 1) {
 		GObject* _tmp0_;
 		ValadocManyRule* _tmp1_;
@@ -259,7 +259,7 @@ ValadocRule*
 valadoc_rule_option (GObject** scheme,
                      gint scheme_length1)
 {
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	if (scheme_length1 == 1) {
 		GObject* _tmp0_;
 		ValadocOptionalRule* _tmp1_;
@@ -313,7 +313,7 @@ valadoc_rule_set_name (ValadocRule* self,
 {
 	gchar* _tmp0_;
 	ValadocRule* _tmp1_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = g_strdup (name);
@@ -378,7 +378,7 @@ valadoc_rule_set_start (ValadocRule* self,
 {
 	Block3Data* _data3_;
 	ValadocRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_data3_ = g_slice_new0 (Block3Data);
 	_data3_->_ref_count_ = 1;
@@ -453,7 +453,7 @@ valadoc_rule_set_reduce (ValadocRule* self,
 {
 	Block4Data* _data4_;
 	ValadocRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_data4_ = g_slice_new0 (Block4Data);
 	_data4_->_ref_count_ = 1;
@@ -528,7 +528,7 @@ valadoc_rule_set_skip (ValadocRule* self,
 {
 	Block5Data* _data5_;
 	ValadocRule* _tmp0_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_data5_ = g_slice_new0 (Block5Data);
 	_data5_->_ref_count_ = 1;
@@ -695,7 +695,7 @@ valadoc_rule_is_optional_rule (ValadocRule* self,
 	ValadocRule* scheme_rule = NULL;
 	ValadocRule* _tmp0_;
 	ValadocRule* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = _g_object_ref0 (VALADOC_IS_RULE (scheme_element) ? ((ValadocRule*) scheme_element) : NULL);
 	scheme_rule = _tmp0_;
@@ -723,7 +723,7 @@ valadoc_rule_has_start_token (ValadocRule* self,
 	ValadocRule* scheme_rule = NULL;
 	ValadocRule* _tmp3_;
 	ValadocRule* _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (token != NULL, FALSE);
 	_tmp0_ = _g_object_ref0 (VALADOC_IS_TOKEN_TYPE (scheme_element) ? ((ValadocTokenType*) scheme_element) : NULL);
@@ -771,7 +771,7 @@ valadoc_rule_try_to_apply (ValadocRule* self,
 	gboolean _tmp8_ = FALSE;
 	ValadocRule* _tmp9_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (token != NULL, FALSE);
 	g_return_val_if_fail (parser != NULL, FALSE);
@@ -997,13 +997,13 @@ valadoc_rule_get_type_once (void)
 GType
 valadoc_rule_get_type (void)
 {
-	static volatile gsize valadoc_rule_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_rule_type_id__volatile)) {
+	static volatile gsize valadoc_rule_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_rule_type_id__once)) {
 		GType valadoc_rule_type_id;
 		valadoc_rule_type_id = valadoc_rule_get_type_once ();
-		g_once_init_leave (&valadoc_rule_type_id__volatile, valadoc_rule_type_id);
+		g_once_init_leave (&valadoc_rule_type_id__once, valadoc_rule_type_id);
 	}
-	return valadoc_rule_type_id__volatile;
+	return valadoc_rule_type_id__once;
 }
 
 static void

@@ -54,7 +54,7 @@ static gchar* vala_ccode_delegate_module_real_get_delegate_target_cname (ValaCCo
                                                                   const gchar* delegate_cname);
 static ValaCCodeExpression* vala_ccode_delegate_module_real_get_delegate_target_cexpression (ValaCCodeBaseModule* base,
                                                                                       ValaExpression* delegate_expr,
-                                                                                      ValaCCodeExpression* * delegate_target_destroy_notify);
+                                                                                      ValaCCodeExpression** delegate_target_destroy_notify);
 static ValaCCodeExpression* vala_ccode_delegate_module_real_get_delegate_target_cvalue (ValaCCodeBaseModule* base,
                                                                                  ValaTargetValue* value);
 static ValaCCodeExpression* vala_ccode_delegate_module_real_get_delegate_target_destroy_notify_cvalue (ValaCCodeBaseModule* base,
@@ -180,7 +180,7 @@ vala_ccode_delegate_module_real_generate_delegate_declaration (ValaCCodeBaseModu
 		_tmp20_ = _tmp19_;
 		_tmp21_ = vala_scope_lookup (_tmp20_, "Callback");
 		_tmp22_ = G_TYPE_CHECK_INSTANCE_CAST (_tmp21_, VALA_TYPE_DELEGATE, ValaDelegate);
-		_tmp23_ = vala_delegate_type_new (_tmp22_);
+		_tmp23_ = vala_delegate_type_new (_tmp22_, NULL);
 		_vala_code_node_unref0 (creturn_type);
 		creturn_type = (ValaDataType*) _tmp23_;
 		_vala_code_node_unref0 (_tmp22_);
@@ -624,7 +624,7 @@ vala_ccode_delegate_module_real_get_delegate_target_cname (ValaCCodeBaseModule* 
 {
 	ValaCCodeDelegateModule * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (delegate_cname != NULL, NULL);
 	_tmp0_ = g_strdup_printf ("%s_target", delegate_cname);
@@ -635,7 +635,7 @@ vala_ccode_delegate_module_real_get_delegate_target_cname (ValaCCodeBaseModule* 
 static ValaCCodeExpression*
 vala_ccode_delegate_module_real_get_delegate_target_cexpression (ValaCCodeBaseModule* base,
                                                                  ValaExpression* delegate_expr,
-                                                                 ValaCCodeExpression* * delegate_target_destroy_notify)
+                                                                 ValaCCodeExpression** delegate_target_destroy_notify)
 {
 	ValaCCodeDelegateModule * self;
 	ValaCCodeExpression* _vala_delegate_target_destroy_notify = NULL;
@@ -645,7 +645,7 @@ vala_ccode_delegate_module_real_get_delegate_target_cexpression (ValaCCodeBaseMo
 	ValaTargetValue* _tmp3_;
 	ValaTargetValue* _tmp4_;
 	ValaCCodeExpression* _tmp5_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (delegate_expr != NULL, NULL);
 	_tmp0_ = vala_expression_get_target_value (delegate_expr);
@@ -678,7 +678,7 @@ vala_ccode_delegate_module_real_get_delegate_target_cvalue (ValaCCodeBaseModule*
 	ValaCCodeDelegateModule * self;
 	ValaCCodeExpression* _tmp0_;
 	ValaCCodeExpression* _tmp1_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->delegate_target_cvalue;
@@ -694,7 +694,7 @@ vala_ccode_delegate_module_real_get_delegate_target_destroy_notify_cvalue (ValaC
 	ValaCCodeDelegateModule * self;
 	ValaCCodeExpression* _tmp0_;
 	ValaCCodeExpression* _tmp1_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (value != NULL, NULL);
 	_tmp0_ = G_TYPE_CHECK_INSTANCE_CAST (value, VALA_TYPE_GLIB_VALUE, ValaGLibValue)->delegate_target_destroy_notify_cvalue;
@@ -709,7 +709,7 @@ vala_ccode_delegate_module_real_get_delegate_target_destroy_notify_cname (ValaCC
 {
 	ValaCCodeDelegateModule * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (delegate_cname != NULL, NULL);
 	_tmp0_ = g_strdup_printf ("%s_target_destroy_notify", delegate_cname);
@@ -727,7 +727,7 @@ vala_ccode_delegate_module_real_get_implicit_cast_expression (ValaCCodeBaseModul
 	ValaCCodeDelegateModule * self;
 	gboolean _tmp0_ = FALSE;
 	ValaCCodeExpression* _tmp30_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (source_cexpr != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (target_type, VALA_TYPE_DELEGATE_TYPE)) {
@@ -931,7 +931,7 @@ vala_ccode_delegate_module_generate_delegate_wrapper (ValaCCodeDelegateModule* s
 	ValaCCodeFunction* _tmp552_;
 	ValaCCodeFile* _tmp553_;
 	ValaCCodeFunction* _tmp554_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (m != NULL, NULL);
 	g_return_val_if_fail (dt != NULL, NULL);
@@ -2572,7 +2572,7 @@ vala_ccode_delegate_module_real_generate_parameter (ValaCCodeMethodModule* base,
 	ValaCCodeParameter* _tmp48_;
 	ValaCCodeParameter* _tmp49_;
 	ValaDataType* _tmp52_;
-	ValaCCodeParameter* result = NULL;
+	ValaCCodeParameter* result;
 	self = (ValaCCodeDelegateModule*) base;
 	g_return_val_if_fail (param != NULL, NULL);
 	g_return_val_if_fail (decl_space != NULL, NULL);
@@ -2640,7 +2640,7 @@ vala_ccode_delegate_module_real_generate_parameter (ValaCCodeMethodModule* base,
 		_tmp25_ = _tmp24_;
 		_tmp26_ = vala_scope_lookup (_tmp25_, "Callback");
 		_tmp27_ = G_TYPE_CHECK_INSTANCE_CAST (_tmp26_, VALA_TYPE_DELEGATE, ValaDelegate);
-		_tmp28_ = vala_delegate_type_new (_tmp27_);
+		_tmp28_ = vala_delegate_type_new (_tmp27_, NULL);
 		_vala_code_node_unref0 (param_type);
 		param_type = (ValaDataType*) _tmp28_;
 		_vala_code_node_unref0 (_tmp27_);
@@ -2850,7 +2850,7 @@ vala_ccode_delegate_module_class_init (ValaCCodeDelegateModuleClass * klass,
 	((ValaCCodeBaseModuleClass *) klass)->generate_delegate_declaration = (void (*) (ValaCCodeBaseModule*, ValaDelegate*, ValaCCodeFile*)) vala_ccode_delegate_module_real_generate_delegate_declaration;
 	((ValaCodeVisitorClass *) klass)->visit_delegate = (void (*) (ValaCodeVisitor*, ValaDelegate*)) vala_ccode_delegate_module_real_visit_delegate;
 	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_cname = (gchar* (*) (ValaCCodeBaseModule*, const gchar*)) vala_ccode_delegate_module_real_get_delegate_target_cname;
-	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_cexpression = (ValaCCodeExpression* (*) (ValaCCodeBaseModule*, ValaExpression*, ValaCCodeExpression* *)) vala_ccode_delegate_module_real_get_delegate_target_cexpression;
+	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_cexpression = (ValaCCodeExpression* (*) (ValaCCodeBaseModule*, ValaExpression*, ValaCCodeExpression**)) vala_ccode_delegate_module_real_get_delegate_target_cexpression;
 	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_cvalue = (ValaCCodeExpression* (*) (ValaCCodeBaseModule*, ValaTargetValue*)) vala_ccode_delegate_module_real_get_delegate_target_cvalue;
 	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_destroy_notify_cvalue = (ValaCCodeExpression* (*) (ValaCCodeBaseModule*, ValaTargetValue*)) vala_ccode_delegate_module_real_get_delegate_target_destroy_notify_cvalue;
 	((ValaCCodeBaseModuleClass *) klass)->get_delegate_target_destroy_notify_cname = (gchar* (*) (ValaCCodeBaseModule*, const gchar*)) vala_ccode_delegate_module_real_get_delegate_target_destroy_notify_cname;
@@ -2879,12 +2879,12 @@ vala_ccode_delegate_module_get_type_once (void)
 GType
 vala_ccode_delegate_module_get_type (void)
 {
-	static volatile gsize vala_ccode_delegate_module_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_delegate_module_type_id__volatile)) {
+	static volatile gsize vala_ccode_delegate_module_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_delegate_module_type_id__once)) {
 		GType vala_ccode_delegate_module_type_id;
 		vala_ccode_delegate_module_type_id = vala_ccode_delegate_module_get_type_once ();
-		g_once_init_leave (&vala_ccode_delegate_module_type_id__volatile, vala_ccode_delegate_module_type_id);
+		g_once_init_leave (&vala_ccode_delegate_module_type_id__once, vala_ccode_delegate_module_type_id);
 	}
-	return vala_ccode_delegate_module_type_id__volatile;
+	return vala_ccode_delegate_module_type_id__once;
 }
 

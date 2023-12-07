@@ -206,7 +206,7 @@ vala_source_reference_contains (ValaSourceReference* self,
 	gboolean _tmp0_ = FALSE;
 	ValaSourceLocation _tmp1_;
 	ValaSourceLocation _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (location != NULL, FALSE);
 	_tmp1_ = *location;
@@ -305,7 +305,7 @@ vala_source_reference_to_string (ValaSourceReference* self)
 	ValaSourceLocation _tmp6_;
 	gchar* _tmp7_;
 	gchar* _tmp8_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_file;
 	_tmp1_ = vala_source_file_get_relative_filename (_tmp0_);
@@ -498,13 +498,13 @@ vala_source_reference_get_type_once (void)
 GType
 vala_source_reference_get_type (void)
 {
-	static volatile gsize vala_source_reference_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_source_reference_type_id__volatile)) {
+	static volatile gsize vala_source_reference_type_id__once = 0;
+	if (g_once_init_enter (&vala_source_reference_type_id__once)) {
 		GType vala_source_reference_type_id;
 		vala_source_reference_type_id = vala_source_reference_get_type_once ();
-		g_once_init_leave (&vala_source_reference_type_id__volatile, vala_source_reference_type_id);
+		g_once_init_leave (&vala_source_reference_type_id__once, vala_source_reference_type_id);
 	}
-	return vala_source_reference_type_id__volatile;
+	return vala_source_reference_type_id__once;
 }
 
 gpointer

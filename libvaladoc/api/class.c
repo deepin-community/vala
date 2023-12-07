@@ -253,7 +253,7 @@ _valadoc_api_class_get_private_cname (ValadocApiClass* self,
 	gchar* _tmp2_;
 	gchar* _tmp3_ = NULL;
 	const gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = vala_class_get_is_compact (element);
@@ -322,7 +322,7 @@ valadoc_api_class_get_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -338,7 +338,7 @@ valadoc_api_class_get_private_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->private_cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -354,7 +354,7 @@ valadoc_api_class_get_type_id (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->type_id;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -374,7 +374,7 @@ valadoc_api_class_get_ref_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->ref_function_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -394,7 +394,7 @@ valadoc_api_class_get_unref_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->unref_function_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -413,7 +413,7 @@ valadoc_api_class_get_free_function_name (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->free_function_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -429,7 +429,7 @@ valadoc_api_class_get_param_spec_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->param_spec_function_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -445,7 +445,7 @@ valadoc_api_class_get_set_value_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->set_value_function_cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -461,7 +461,7 @@ valadoc_api_class_get_get_value_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->get_value_function_cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -477,7 +477,7 @@ valadoc_api_class_get_take_value_function_cname (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->take_value_function_cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -493,7 +493,7 @@ valadoc_api_class_get_dbus_name (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dbus_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -509,7 +509,7 @@ valadoc_api_class_get_class_macro_name (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->class_macro_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -525,7 +525,7 @@ valadoc_api_class_get_class_type_macro_name (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->class_type_macro_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -541,7 +541,7 @@ valadoc_api_class_get_is_class_type_macro_name (ValadocApiClass* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->is_class_type_macro_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -565,7 +565,7 @@ valadoc_api_class_get_implemented_interface_list (ValadocApiClass* self)
 {
 	ValaArrayList* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->interfaces;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -584,7 +584,7 @@ valadoc_api_class_get_full_implemented_interface_list (ValadocApiClass* self)
 	ValaCollection* _tmp0_;
 	ValaCollection* _tmp12_;
 	ValaCollection* _tmp13_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_full_implemented_interfaces;
 	if (_tmp0_ == NULL) {
@@ -749,7 +749,7 @@ valadoc_api_class_get_known_child_classes (ValadocApiClass* self)
 {
 	ValaSet* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_known_child_classes;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -765,7 +765,7 @@ valadoc_api_class_get_known_derived_interfaces (ValadocApiClass* self)
 {
 	ValaSet* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_known_derived_interfaces;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -835,7 +835,7 @@ valadoc_api_class_real_build_signature (ValadocApiItem* base)
 	gint _tmp38_;
 	ValadocApiSignatureBuilder* _tmp53_;
 	ValadocContentRun* _tmp54_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiClass*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	signature = _tmp0_;
@@ -1014,7 +1014,7 @@ valadoc_api_class_class_init (ValadocApiClassClass * klass,
 	g_type_class_adjust_private_offset (klass, &ValadocApiClass_private_offset);
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_class_real_accept;
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_class_real_build_signature;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_class_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_class_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_class_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_api_class_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_class_finalize;
@@ -1107,13 +1107,13 @@ valadoc_api_class_get_type_once (void)
 GType
 valadoc_api_class_get_type (void)
 {
-	static volatile gsize valadoc_api_class_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_class_type_id__volatile)) {
+	static volatile gsize valadoc_api_class_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_class_type_id__once)) {
 		GType valadoc_api_class_type_id;
 		valadoc_api_class_type_id = valadoc_api_class_get_type_once ();
-		g_once_init_leave (&valadoc_api_class_type_id__volatile, valadoc_api_class_type_id);
+		g_once_init_leave (&valadoc_api_class_type_id__once, valadoc_api_class_type_id);
 	}
-	return valadoc_api_class_type_id__volatile;
+	return valadoc_api_class_type_id__once;
 }
 
 static void

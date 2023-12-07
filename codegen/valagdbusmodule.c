@@ -68,7 +68,7 @@ gchar*
 vala_gd_bus_module_get_dbus_name (ValaTypeSymbol* symbol)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (symbol != NULL, NULL);
 	_tmp0_ = vala_code_node_get_attribute_string ((ValaCodeNode*) symbol, "DBus", "name", NULL);
 	result = _tmp0_;
@@ -84,7 +84,7 @@ vala_gd_bus_module_get_dbus_name_for_member (ValaSymbol* symbol)
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (symbol != NULL, NULL);
 	_tmp0_ = vala_code_node_get_attribute_string ((ValaCodeNode*) symbol, "DBus", "name", NULL);
 	dbus_name = _tmp0_;
@@ -104,7 +104,7 @@ vala_gd_bus_module_get_dbus_name_for_member (ValaSymbol* symbol)
 gint
 vala_gd_bus_module_get_dbus_timeout_for_member (ValaSymbol* symbol)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (symbol != NULL, 0);
 	result = vala_code_node_get_attribute_integer ((ValaCodeNode*) symbol, "DBus", "timeout", -1);
 	return result;
@@ -125,7 +125,7 @@ vala_gd_bus_module_is_dbus_visible (ValaCodeNode* node)
 	gboolean _tmp2_ = FALSE;
 	gboolean _tmp3_ = FALSE;
 	ValaAttribute* _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (node != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_attribute (node, "DBus");
 	_tmp1_ = _vala_code_node_ref0 (_tmp0_);
@@ -158,7 +158,7 @@ vala_gd_bus_module_is_dbus_visible (ValaCodeNode* node)
 gboolean
 vala_gd_bus_module_is_dbus_no_reply (ValaMethod* m)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (m != NULL, FALSE);
 	result = vala_code_node_get_attribute_bool ((ValaCodeNode*) m, "DBus", "no_reply", FALSE);
 	return result;
@@ -172,7 +172,7 @@ vala_gd_bus_module_dbus_result_name (ValaMethod* m)
 	gboolean _tmp1_ = FALSE;
 	const gchar* _tmp2_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (m != NULL, NULL);
 	_tmp0_ = vala_code_node_get_attribute_string ((ValaCodeNode*) m, "DBus", "result", NULL);
 	dbus_name = _tmp0_;
@@ -571,7 +571,7 @@ static gboolean
 vala_gd_bus_module_is_file_descriptor (ValaGDBusModule* self,
                                        ValaDataType* type)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (type != NULL, FALSE);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (type, VALA_TYPE_OBJECT_TYPE)) {
@@ -646,7 +646,7 @@ vala_gd_bus_module_dbus_method_uses_file_descriptor (ValaGDBusModule* self,
 {
 	ValaDataType* _tmp11_;
 	ValaDataType* _tmp12_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (method != NULL, FALSE);
 	{
@@ -708,7 +708,7 @@ vala_gd_bus_module_get_file_descriptor (ValaGDBusModule* self,
                                         ValaDataType* type,
                                         ValaCCodeExpression* expr)
 {
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (type != NULL, NULL);
 	g_return_val_if_fail (expr != NULL, NULL);
@@ -939,7 +939,7 @@ vala_gd_bus_module_create_from_file_descriptor (ValaGDBusModule* self,
                                                 ValaDataType* type,
                                                 ValaCCodeExpression* expr)
 {
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (type != NULL, NULL);
 	g_return_val_if_fail (expr != NULL, NULL);
@@ -1349,7 +1349,7 @@ vala_gd_bus_module_get_method_info (ValaGDBusModule* self,
 	gchar* _tmp382_;
 	ValaCCodeIdentifier* _tmp383_;
 	ValaCCodeExpression* _tmp384_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_ccode_initializer_list_new ();
@@ -2384,7 +2384,7 @@ vala_gd_bus_module_get_signal_info (ValaGDBusModule* self,
 	gchar* _tmp209_;
 	ValaCCodeIdentifier* _tmp210_;
 	ValaCCodeExpression* _tmp211_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_ccode_initializer_list_new ();
@@ -2974,7 +2974,7 @@ vala_gd_bus_module_get_property_info (ValaGDBusModule* self,
 	gchar* _tmp126_;
 	ValaCCodeIdentifier* _tmp127_;
 	ValaCCodeExpression* _tmp128_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_ccode_initializer_list_new ();
@@ -3451,7 +3451,7 @@ vala_gd_bus_module_get_interface_info (ValaGDBusModule* self,
 	gchar* _tmp5_;
 	ValaCCodeIdentifier* _tmp6_;
 	ValaCCodeExpression* _tmp7_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (sym != NULL, NULL);
 	_tmp0_ = vala_get_ccode_lower_case_prefix ((ValaSymbol*) sym);
@@ -3552,12 +3552,12 @@ vala_gd_bus_module_get_type_once (void)
 GType
 vala_gd_bus_module_get_type (void)
 {
-	static volatile gsize vala_gd_bus_module_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_gd_bus_module_type_id__volatile)) {
+	static volatile gsize vala_gd_bus_module_type_id__once = 0;
+	if (g_once_init_enter (&vala_gd_bus_module_type_id__once)) {
 		GType vala_gd_bus_module_type_id;
 		vala_gd_bus_module_type_id = vala_gd_bus_module_get_type_once ();
-		g_once_init_leave (&vala_gd_bus_module_type_id__volatile, vala_gd_bus_module_type_id);
+		g_once_init_leave (&vala_gd_bus_module_type_id__once, vala_gd_bus_module_type_id);
 	}
-	return vala_gd_bus_module_type_id__volatile;
+	return vala_gd_bus_module_type_id__once;
 }
 

@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 enum  {
 	VALADOC_CONTENT_TABLE_CELL_0_PROPERTY,
@@ -94,10 +94,8 @@ valadoc_content_table_cell_real_get_horizontal_align (ValadocContentStyleAttribu
 {
 	ValadocContentHorizontalAlign result;
 	ValadocContentTableCell* self;
-	ValadocContentHorizontalAlign _tmp0_;
 	self = (ValadocContentTableCell*) base;
-	_tmp0_ = self->priv->_horizontal_align;
-	result = _tmp0_;
+	result = self->priv->_horizontal_align;
 	return result;
 }
 
@@ -120,10 +118,8 @@ valadoc_content_table_cell_real_get_vertical_align (ValadocContentStyleAttribute
 {
 	ValadocContentVerticalAlign result;
 	ValadocContentTableCell* self;
-	ValadocContentVerticalAlign _tmp0_;
 	self = (ValadocContentTableCell*) base;
-	_tmp0_ = self->priv->_vertical_align;
-	result = _tmp0_;
+	result = self->priv->_vertical_align;
 	return result;
 }
 
@@ -262,7 +258,7 @@ static gboolean
 valadoc_content_table_cell_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentTableCell * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentTableCell*) base;
 	result = FALSE;
 	return result;
@@ -289,7 +285,7 @@ valadoc_content_table_cell_real_copy (ValadocContentContentElement* base,
 	ValadocContentTableCell* _tmp12_;
 	const gchar* _tmp13_;
 	const gchar* _tmp14_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentTableCell*) base;
 	_tmp0_ = valadoc_content_table_cell_new ();
 	cell = _tmp0_;
@@ -439,13 +435,13 @@ valadoc_content_table_cell_get_type_once (void)
 GType
 valadoc_content_table_cell_get_type (void)
 {
-	static volatile gsize valadoc_content_table_cell_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_table_cell_type_id__volatile)) {
+	static volatile gsize valadoc_content_table_cell_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_table_cell_type_id__once)) {
 		GType valadoc_content_table_cell_type_id;
 		valadoc_content_table_cell_type_id = valadoc_content_table_cell_get_type_once ();
-		g_once_init_leave (&valadoc_content_table_cell_type_id__volatile, valadoc_content_table_cell_type_id);
+		g_once_init_leave (&valadoc_content_table_cell_type_id__once, valadoc_content_table_cell_type_id);
 	}
-	return valadoc_content_table_cell_type_id__volatile;
+	return valadoc_content_table_cell_type_id__once;
 }
 
 static void

@@ -25,8 +25,8 @@
 
 #include "vala.h"
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -50,18 +50,20 @@ vala_class_type_get_class_symbol (ValaClassType* self)
 
 ValaClassType*
 vala_class_type_construct (GType object_type,
-                           ValaClass* class_symbol)
+                           ValaClass* class_symbol,
+                           ValaSourceReference* source_reference)
 {
 	ValaClassType* self = NULL;
 	g_return_val_if_fail (class_symbol != NULL, NULL);
-	self = (ValaClassType*) vala_reference_type_construct (object_type, (ValaSymbol*) class_symbol);
+	self = (ValaClassType*) vala_reference_type_construct (object_type, (ValaSymbol*) class_symbol, source_reference);
 	return self;
 }
 
 ValaClassType*
-vala_class_type_new (ValaClass* class_symbol)
+vala_class_type_new (ValaClass* class_symbol,
+                     ValaSourceReference* source_reference)
 {
-	return vala_class_type_construct (VALA_TYPE_CLASS_TYPE, class_symbol);
+	return vala_class_type_construct (VALA_TYPE_CLASS_TYPE, class_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -87,11 +89,11 @@ vala_class_type_real_copy (ValaDataType* base)
 	ValaClassType* _tmp15_;
 	gboolean _tmp16_;
 	gboolean _tmp17_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaClassType*) base;
 	_tmp0_ = vala_class_type_get_class_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_class_type_new (_tmp1_);
+	_tmp2_ = vala_class_type_new (_tmp1_, NULL);
 	_result_ = _tmp2_;
 	_tmp3_ = _result_;
 	_tmp4_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
@@ -189,12 +191,12 @@ vala_class_type_get_type_once (void)
 GType
 vala_class_type_get_type (void)
 {
-	static volatile gsize vala_class_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_class_type_type_id__volatile)) {
+	static volatile gsize vala_class_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_class_type_type_id__once)) {
 		GType vala_class_type_type_id;
 		vala_class_type_type_id = vala_class_type_get_type_once ();
-		g_once_init_leave (&vala_class_type_type_id__volatile, vala_class_type_type_id);
+		g_once_init_leave (&vala_class_type_type_id__once, vala_class_type_type_id);
 	}
-	return vala_class_type_type_id__volatile;
+	return vala_class_type_type_id__once;
 }
 

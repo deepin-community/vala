@@ -146,7 +146,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -169,7 +169,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -208,7 +208,7 @@ string_last_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strrchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -231,7 +231,7 @@ gtkdoc_get_section (const gchar* filename)
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (filename != NULL, NULL);
 	_tmp0_ = string_substring (filename, (glong) 0, (glong) string_last_index_of_char (filename, (gunichar) '.', 0));
 	_tmp1_ = _tmp0_;
@@ -248,7 +248,7 @@ _vala_g_strjoinv (const gchar* separator,
                   gint str_array_length1)
 {
 	gboolean _tmp0_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	if (separator == NULL) {
 		separator = "";
 	}
@@ -278,11 +278,12 @@ _vala_g_strjoinv (const gchar* separator,
 		gint _tmp17_;
 		const gchar* res = NULL;
 		void* _tmp18_;
-		void* ptr = NULL;
-		const gchar* _tmp19_;
+		const gchar* _tmp19_ = NULL;
 		const gchar* _tmp20_;
-		void* _tmp21_;
-		const gchar* _tmp31_;
+		void* ptr = NULL;
+		const gchar* _tmp22_;
+		void* _tmp23_;
+		const gchar* _tmp33_;
 		len = (gsize) 1;
 		{
 			gboolean _tmp4_ = FALSE;
@@ -347,54 +348,61 @@ _vala_g_strjoinv (const gchar* separator,
 		len += (gsize) (_tmp17_ * (i - 1));
 		_tmp18_ = g_malloc (len);
 		res = _tmp18_;
-		_tmp19_ = res;
 		_tmp20_ = str_array[0];
-		_tmp21_ = g_stpcpy ((void*) _tmp19_, (const gchar*) _tmp20_);
-		ptr = _tmp21_;
+		if (_tmp20_ != NULL) {
+			const gchar* _tmp21_;
+			_tmp21_ = str_array[0];
+			_tmp19_ = (const gchar*) _tmp21_;
+		} else {
+			_tmp19_ = "";
+		}
+		_tmp22_ = res;
+		_tmp23_ = g_stpcpy ((void*) _tmp22_, _tmp19_);
+		ptr = _tmp23_;
 		{
-			gboolean _tmp22_ = FALSE;
+			gboolean _tmp24_ = FALSE;
 			i = 1;
-			_tmp22_ = TRUE;
+			_tmp24_ = TRUE;
 			while (TRUE) {
-				void* _tmp24_;
-				void* _tmp25_;
-				const gchar* _tmp26_ = NULL;
-				const gchar* _tmp27_;
-				void* _tmp29_;
-				void* _tmp30_;
-				if (!_tmp22_) {
-					gint _tmp23_;
-					_tmp23_ = i;
-					i = _tmp23_ + 1;
+				void* _tmp26_;
+				void* _tmp27_;
+				const gchar* _tmp28_ = NULL;
+				const gchar* _tmp29_;
+				void* _tmp31_;
+				void* _tmp32_;
+				if (!_tmp24_) {
+					gint _tmp25_;
+					_tmp25_ = i;
+					i = _tmp25_ + 1;
 				}
-				_tmp22_ = FALSE;
+				_tmp24_ = FALSE;
 				if (!(i < str_array_length1)) {
 					break;
 				}
-				_tmp24_ = ptr;
-				_tmp25_ = g_stpcpy (_tmp24_, (const gchar*) separator);
-				ptr = _tmp25_;
-				_tmp27_ = str_array[i];
-				if (_tmp27_ != NULL) {
-					const gchar* _tmp28_;
-					_tmp28_ = str_array[i];
-					_tmp26_ = (const gchar*) _tmp28_;
+				_tmp26_ = ptr;
+				_tmp27_ = g_stpcpy (_tmp26_, (const gchar*) separator);
+				ptr = _tmp27_;
+				_tmp29_ = str_array[i];
+				if (_tmp29_ != NULL) {
+					const gchar* _tmp30_;
+					_tmp30_ = str_array[i];
+					_tmp28_ = (const gchar*) _tmp30_;
 				} else {
-					_tmp26_ = "";
+					_tmp28_ = "";
 				}
-				_tmp29_ = ptr;
-				_tmp30_ = g_stpcpy (_tmp29_, _tmp26_);
-				ptr = _tmp30_;
+				_tmp31_ = ptr;
+				_tmp32_ = g_stpcpy (_tmp31_, _tmp28_);
+				ptr = _tmp32_;
 			}
 		}
-		_tmp31_ = res;
+		_tmp33_ = res;
 		res = NULL;
-		result = (gchar*) _tmp31_;
+		result = (gchar*) _tmp33_;
 		return result;
 	} else {
-		gchar* _tmp32_;
-		_tmp32_ = g_strdup ("");
-		result = _tmp32_;
+		gchar* _tmp34_;
+		_tmp34_ = g_strdup ("");
+		result = _tmp34_;
 		return result;
 	}
 }
@@ -408,7 +416,7 @@ gtkdoc_commentize (const gchar* comment)
 	gint _tmp2__length1;
 	gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (comment != NULL, NULL);
 	_tmp1_ = _tmp0_ = g_strsplit (comment, "\n", 0);
 	_tmp2_ = _tmp1_;
@@ -428,7 +436,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -506,7 +514,7 @@ string_replace (const gchar* self,
 gchar*
 gtkdoc_get_cname (ValadocApiItem* item)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (item != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (item, VALADOC_API_TYPE_METHOD)) {
 		gchar* _tmp0_;
@@ -616,7 +624,7 @@ gtkdoc_get_cname (ValadocApiItem* item)
 gchar*
 gtkdoc_get_dbus_interface (ValadocApiItem* item)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (item != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (item, VALADOC_API_TYPE_CLASS)) {
 		gchar* _tmp0_;
@@ -646,7 +654,7 @@ gtkdoc_get_docbook_type_link (ValadocApiClass* cls)
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp7_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (cls != NULL, NULL);
 	_tmp0_ = valadoc_api_class_get_type_id (cls);
 	_tmp1_ = _tmp0_;
@@ -682,7 +690,7 @@ gtkdoc_get_gtkdoc_link (ValadocApiNode* symbol)
 	gchar* _tmp55_ = NULL;
 	gchar* _tmp56_;
 	gchar* _tmp58_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (symbol != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (symbol, VALADOC_API_TYPE_CLASS)) {
 		_tmp3_ = TRUE;
@@ -882,7 +890,7 @@ gtkdoc_get_docbook_link (ValadocApiItem* item,
                          gboolean is_dbus,
                          gboolean is_async_finish)
 {
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (item != NULL, NULL);
 	if (G_TYPE_CHECK_INSTANCE_TYPE (item, VALADOC_API_TYPE_METHOD)) {
 		gchar* name = NULL;
@@ -1157,7 +1165,7 @@ gtkdoc_get_parameter_pos (ValadocApiNode* node,
                           const gchar* name)
 {
 	gdouble pos = 0.0;
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (node != NULL, 0.0);
 	g_return_val_if_fail (name != NULL, 0.0);
 	pos = (gdouble) 1;
@@ -1219,7 +1227,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -1235,7 +1243,7 @@ gtkdoc_to_lower_case (const gchar* camel)
 	GString* _tmp8_;
 	const gchar* _tmp9_;
 	gchar* _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (camel != NULL, NULL);
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -1294,7 +1302,7 @@ gtkdoc_to_docbook_id (const gchar* name)
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (name != NULL, NULL);
 	_tmp0_ = string_replace (name, ".", "-");
 	_tmp1_ = _tmp0_;
@@ -1314,7 +1322,7 @@ gtkdoc_package_exists (const gchar* package_name,
 	gint exit_status = 0;
 	gboolean _tmp5_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (package_name != NULL, FALSE);
 	g_return_val_if_fail (reporter != NULL, FALSE);
 	_tmp0_ = g_strconcat ("pkg-config --exists ", package_name, NULL);
@@ -1366,7 +1374,7 @@ g_file_stream_read_line (FILE* self)
 	gint c = 0;
 	GString* ret = NULL;
 	GString* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	ret = NULL;
 	while (TRUE) {
@@ -1415,7 +1423,7 @@ string_index_of (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (needle != NULL, 0);
 	_tmp0_ = strstr (((gchar*) self) + start_index, (gchar*) needle);
@@ -1438,7 +1446,7 @@ gtkdoc_is_generated_by_vala (const gchar* filename)
 	FILE* stream = NULL;
 	FILE* _tmp0_;
 	FILE* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (filename != NULL, FALSE);
 	_tmp0_ = g_fopen (filename, "r");
 	stream = _tmp0_;
@@ -1507,7 +1515,7 @@ gtkdoc_text_writer_open (GtkdocTextWriter* self)
 	const gchar* _tmp1_;
 	FILE* _tmp2_;
 	FILE* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->filename;
 	_tmp1_ = self->mode;
@@ -1717,13 +1725,13 @@ gtkdoc_text_writer_get_type_once (void)
 GType
 gtkdoc_text_writer_get_type (void)
 {
-	static volatile gsize gtkdoc_text_writer_type_id__volatile = 0;
-	if (g_once_init_enter (&gtkdoc_text_writer_type_id__volatile)) {
+	static volatile gsize gtkdoc_text_writer_type_id__once = 0;
+	if (g_once_init_enter (&gtkdoc_text_writer_type_id__once)) {
 		GType gtkdoc_text_writer_type_id;
 		gtkdoc_text_writer_type_id = gtkdoc_text_writer_get_type_once ();
-		g_once_init_leave (&gtkdoc_text_writer_type_id__volatile, gtkdoc_text_writer_type_id);
+		g_once_init_leave (&gtkdoc_text_writer_type_id__once, gtkdoc_text_writer_type_id);
 	}
-	return gtkdoc_text_writer_type_id__volatile;
+	return gtkdoc_text_writer_type_id__once;
 }
 
 gpointer

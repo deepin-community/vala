@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
@@ -117,43 +118,11 @@ vala_real_literal_real_accept (ValaCodeNode* base,
 	vala_code_visitor_visit_expression (visitor, (ValaExpression*) self);
 }
 
-/**
- * Returns the type name of the value this literal represents.
- *
- * @return the name of literal type
- */
-gchar*
-vala_real_literal_get_type_name (ValaRealLiteral* self)
-{
-	gboolean _tmp0_ = FALSE;
-	const gchar* _tmp1_;
-	gchar* _tmp4_;
-	gchar* result = NULL;
-	g_return_val_if_fail (self != NULL, NULL);
-	_tmp1_ = self->priv->_value;
-	if (g_str_has_suffix (_tmp1_, "f")) {
-		_tmp0_ = TRUE;
-	} else {
-		const gchar* _tmp2_;
-		_tmp2_ = self->priv->_value;
-		_tmp0_ = g_str_has_suffix (_tmp2_, "F");
-	}
-	if (_tmp0_) {
-		gchar* _tmp3_;
-		_tmp3_ = g_strdup ("float");
-		result = _tmp3_;
-		return result;
-	}
-	_tmp4_ = g_strdup ("double");
-	result = _tmp4_;
-	return result;
-}
-
 static gboolean
 vala_real_literal_real_is_pure (ValaExpression* base)
 {
 	ValaRealLiteral * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaRealLiteral*) base;
 	result = TRUE;
 	return result;
@@ -165,7 +134,7 @@ vala_real_literal_real_to_string (ValaCodeNode* base)
 	ValaRealLiteral * self;
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaRealLiteral*) base;
 	_tmp0_ = self->priv->_value;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -180,22 +149,27 @@ vala_real_literal_real_check (ValaCodeNode* base,
 	ValaRealLiteral * self;
 	gboolean _tmp0_;
 	gboolean _tmp1_;
+	gchar* type_name = NULL;
+	gboolean _tmp4_ = FALSE;
+	const gchar* _tmp5_;
+	gboolean _tmp9_ = FALSE;
+	gboolean _tmp10_ = FALSE;
+	gboolean _tmp11_ = FALSE;
+	const gchar* _tmp12_;
 	ValaStruct* st = NULL;
-	ValaNamespace* _tmp4_;
-	ValaNamespace* _tmp5_;
-	ValaScope* _tmp6_;
-	ValaScope* _tmp7_;
-	gchar* _tmp8_;
-	gchar* _tmp9_;
-	ValaSymbol* _tmp10_;
-	ValaStruct* _tmp11_;
-	ValaStruct* _tmp12_;
-	ValaStruct* _tmp13_;
-	ValaFloatingType* _tmp14_;
-	ValaFloatingType* _tmp15_;
-	gboolean _tmp16_;
-	gboolean _tmp17_;
-	gboolean result = FALSE;
+	ValaNamespace* _tmp18_;
+	ValaNamespace* _tmp19_;
+	ValaScope* _tmp20_;
+	ValaScope* _tmp21_;
+	const gchar* _tmp22_;
+	ValaSymbol* _tmp23_;
+	ValaStruct* _tmp24_;
+	ValaStruct* _tmp25_;
+	ValaFloatingType* _tmp26_;
+	ValaFloatingType* _tmp27_;
+	gboolean _tmp28_;
+	gboolean _tmp29_;
+	gboolean result;
 	self = (ValaRealLiteral*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -209,27 +183,74 @@ vala_real_literal_real_check (ValaCodeNode* base,
 		return result;
 	}
 	vala_code_node_set_checked ((ValaCodeNode*) self, TRUE);
-	_tmp4_ = vala_code_context_get_root (context);
-	_tmp5_ = _tmp4_;
-	_tmp6_ = vala_symbol_get_scope ((ValaSymbol*) _tmp5_);
-	_tmp7_ = _tmp6_;
-	_tmp8_ = vala_real_literal_get_type_name (self);
-	_tmp9_ = _tmp8_;
-	_tmp10_ = vala_scope_lookup (_tmp7_, _tmp9_);
-	_tmp11_ = G_TYPE_CHECK_INSTANCE_CAST (_tmp10_, VALA_TYPE_STRUCT, ValaStruct);
-	_g_free0 (_tmp9_);
-	st = _tmp11_;
-	_tmp12_ = st;
-	vala_code_node_check ((ValaCodeNode*) _tmp12_, context);
-	_tmp13_ = st;
-	_tmp14_ = vala_floating_type_new (_tmp13_);
-	_tmp15_ = _tmp14_;
-	vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp15_);
-	_vala_code_node_unref0 (_tmp15_);
-	_tmp16_ = vala_code_node_get_error ((ValaCodeNode*) self);
-	_tmp17_ = _tmp16_;
-	result = !_tmp17_;
+	_tmp5_ = self->priv->_value;
+	if (g_str_has_suffix (_tmp5_, "f")) {
+		_tmp4_ = TRUE;
+	} else {
+		const gchar* _tmp6_;
+		_tmp6_ = self->priv->_value;
+		_tmp4_ = g_str_has_suffix (_tmp6_, "F");
+	}
+	if (_tmp4_) {
+		gchar* _tmp7_;
+		_tmp7_ = g_strdup ("float");
+		_g_free0 (type_name);
+		type_name = _tmp7_;
+	} else {
+		gchar* _tmp8_;
+		_tmp8_ = g_strdup ("double");
+		_g_free0 (type_name);
+		type_name = _tmp8_;
+	}
+	_tmp12_ = self->priv->_value;
+	if (g_str_has_suffix (_tmp12_, "e")) {
+		_tmp11_ = TRUE;
+	} else {
+		const gchar* _tmp13_;
+		_tmp13_ = self->priv->_value;
+		_tmp11_ = g_str_has_suffix (_tmp13_, "E");
+	}
+	if (_tmp11_) {
+		_tmp10_ = TRUE;
+	} else {
+		const gchar* _tmp14_;
+		_tmp14_ = self->priv->_value;
+		_tmp10_ = g_str_has_suffix (_tmp14_, "+");
+	}
+	if (_tmp10_) {
+		_tmp9_ = TRUE;
+	} else {
+		const gchar* _tmp15_;
+		_tmp15_ = self->priv->_value;
+		_tmp9_ = g_str_has_suffix (_tmp15_, "-");
+	}
+	if (_tmp9_) {
+		ValaSourceReference* _tmp16_;
+		ValaSourceReference* _tmp17_;
+		_tmp16_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+		_tmp17_ = _tmp16_;
+		vala_report_error (_tmp17_, "exponent has no digits");
+		vala_code_node_set_error ((ValaCodeNode*) self, TRUE);
+	}
+	_tmp18_ = vala_code_context_get_root (context);
+	_tmp19_ = _tmp18_;
+	_tmp20_ = vala_symbol_get_scope ((ValaSymbol*) _tmp19_);
+	_tmp21_ = _tmp20_;
+	_tmp22_ = type_name;
+	_tmp23_ = vala_scope_lookup (_tmp21_, _tmp22_);
+	st = G_TYPE_CHECK_INSTANCE_CAST (_tmp23_, VALA_TYPE_STRUCT, ValaStruct);
+	_tmp24_ = st;
+	vala_code_node_check ((ValaCodeNode*) _tmp24_, context);
+	_tmp25_ = st;
+	_tmp26_ = vala_floating_type_new (_tmp25_, NULL);
+	_tmp27_ = _tmp26_;
+	vala_expression_set_value_type ((ValaExpression*) self, (ValaDataType*) _tmp27_);
+	_vala_code_node_unref0 (_tmp27_);
+	_tmp28_ = vala_code_node_get_error ((ValaCodeNode*) self);
+	_tmp29_ = _tmp28_;
+	result = !_tmp29_;
 	_vala_code_node_unref0 (st);
+	_g_free0 (type_name);
 	return result;
 }
 
@@ -290,12 +311,12 @@ vala_real_literal_get_type_once (void)
 GType
 vala_real_literal_get_type (void)
 {
-	static volatile gsize vala_real_literal_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_real_literal_type_id__volatile)) {
+	static volatile gsize vala_real_literal_type_id__once = 0;
+	if (g_once_init_enter (&vala_real_literal_type_id__once)) {
 		GType vala_real_literal_type_id;
 		vala_real_literal_type_id = vala_real_literal_get_type_once ();
-		g_once_init_leave (&vala_real_literal_type_id__volatile, vala_real_literal_type_id);
+		g_once_init_leave (&vala_real_literal_type_id__once, vala_real_literal_type_id);
 	}
-	return vala_real_literal_type_id__volatile;
+	return vala_real_literal_type_id__once;
 }
 

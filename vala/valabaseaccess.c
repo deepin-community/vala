@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -82,7 +82,7 @@ vala_base_access_real_to_string (ValaCodeNode* base)
 {
 	ValaBaseAccess * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaBaseAccess*) base;
 	_tmp0_ = g_strdup ("base");
 	result = _tmp0_;
@@ -93,7 +93,7 @@ static gboolean
 vala_base_access_real_is_pure (ValaExpression* base)
 {
 	ValaBaseAccess * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaBaseAccess*) base;
 	result = TRUE;
 	return result;
@@ -118,7 +118,7 @@ vala_base_access_real_check (ValaCodeNode* base,
 	ValaTypeSymbol* _tmp126_;
 	gboolean _tmp127_;
 	gboolean _tmp128_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaBaseAccess*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -513,12 +513,12 @@ vala_base_access_get_type_once (void)
 GType
 vala_base_access_get_type (void)
 {
-	static volatile gsize vala_base_access_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_base_access_type_id__volatile)) {
+	static volatile gsize vala_base_access_type_id__once = 0;
+	if (g_once_init_enter (&vala_base_access_type_id__once)) {
 		GType vala_base_access_type_id;
 		vala_base_access_type_id = vala_base_access_get_type_once ();
-		g_once_init_leave (&vala_base_access_type_id__volatile, vala_base_access_type_id);
+		g_once_init_leave (&vala_base_access_type_id__once, vala_base_access_type_id);
 	}
-	return vala_base_access_type_id__volatile;
+	return vala_base_access_type_id__once;
 }
 

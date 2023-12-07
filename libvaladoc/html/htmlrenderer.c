@@ -24,11 +24,11 @@
  */
 
 #include "valadoc.h"
+#include <glib-object.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 #include <valagee.h>
-#include <glib-object.h>
 
 enum  {
 	VALADOC_HTML_HTML_RENDERER_0_PROPERTY,
@@ -283,7 +283,7 @@ valadoc_html_html_renderer_get_url (ValadocHtmlHtmlRenderer* self,
 	ValadocDocumentation* _tmp1_;
 	ValadocSettings* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (symbol != NULL, NULL);
 	_tmp0_ = self->linker;
@@ -658,7 +658,7 @@ __lambda143_ (ValadocHtmlHtmlRenderer* self,
 	ValadocTagletsParam* _tmp30_;
 	gint _tmp31_;
 	gint _tmp32_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (_a != NULL, 0);
 	g_return_val_if_fail (_b != NULL, 0);
 	_tmp0_ = _g_object_ref0 (VALADOC_TAGLETS_IS_PARAM (_a) ? ((ValadocTagletsParam*) _a) : NULL);
@@ -1571,7 +1571,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -1594,7 +1594,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -1633,7 +1633,7 @@ string_last_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strrchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -2742,7 +2742,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -2916,13 +2916,13 @@ valadoc_html_html_renderer_get_type_once (void)
 GType
 valadoc_html_html_renderer_get_type (void)
 {
-	static volatile gsize valadoc_html_html_renderer_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_html_renderer_type_id__volatile)) {
+	static volatile gsize valadoc_html_html_renderer_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_html_renderer_type_id__once)) {
 		GType valadoc_html_html_renderer_type_id;
 		valadoc_html_html_renderer_type_id = valadoc_html_html_renderer_get_type_once ();
-		g_once_init_leave (&valadoc_html_html_renderer_type_id__volatile, valadoc_html_html_renderer_type_id);
+		g_once_init_leave (&valadoc_html_html_renderer_type_id__once, valadoc_html_html_renderer_type_id);
 	}
-	return valadoc_html_html_renderer_type_id__volatile;
+	return valadoc_html_html_renderer_type_id__once;
 }
 
 static void

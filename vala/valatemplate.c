@@ -146,7 +146,7 @@ ValaList*
 vala_template_get_expressions (ValaTemplate* self)
 {
 	ValaList* _tmp0_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->expression_list;
 	result = _tmp0_;
@@ -157,7 +157,7 @@ static gboolean
 vala_template_real_is_pure (ValaExpression* base)
 {
 	ValaTemplate * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTemplate*) base;
 	result = FALSE;
 	return result;
@@ -173,7 +173,7 @@ static ValaExpression*
 vala_template_stringify (ValaTemplate* self,
                          ValaExpression* expr)
 {
-	ValaExpression* result = NULL;
+	ValaExpression* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (expr != NULL, NULL);
 	if (VALA_IS_STRING_LITERAL (expr)) {
@@ -246,7 +246,7 @@ vala_template_real_check (ValaCodeNode* base,
 	ValaCodeNode* _tmp46_;
 	ValaExpression* _tmp47_;
 	ValaExpression* _tmp48_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTemplate*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -427,12 +427,12 @@ vala_template_get_type_once (void)
 GType
 vala_template_get_type (void)
 {
-	static volatile gsize vala_template_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_template_type_id__volatile)) {
+	static volatile gsize vala_template_type_id__once = 0;
+	if (g_once_init_enter (&vala_template_type_id__once)) {
 		GType vala_template_type_id;
 		vala_template_type_id = vala_template_get_type_once ();
-		g_once_init_leave (&vala_template_type_id__volatile, vala_template_type_id);
+		g_once_init_leave (&vala_template_type_id__once, vala_template_type_id);
 	}
-	return vala_template_type_id__volatile;
+	return vala_template_type_id__once;
 }
 

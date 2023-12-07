@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <vala.h>
 #include <valacodegen.h>
 
@@ -122,7 +123,7 @@ _valadoc_api_error_domain_get_quark_function_name (ValadocApiErrorDomain* self,
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = vala_get_ccode_lower_case_prefix ((ValaSymbol*) element);
@@ -139,7 +140,7 @@ _valadoc_api_error_domain_get_quark_macro_name (ValadocApiErrorDomain* self,
                                                 ValaErrorDomain* element)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	_tmp0_ = vala_get_ccode_upper_case_name ((ValaSymbol*) element, NULL);
@@ -155,7 +156,7 @@ valadoc_api_error_domain_get_cname (ValadocApiErrorDomain* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -171,7 +172,7 @@ valadoc_api_error_domain_get_dbus_name (ValadocApiErrorDomain* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dbus_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -187,7 +188,7 @@ valadoc_api_error_domain_get_quark_function_name (ValadocApiErrorDomain* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->quark_function_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -203,7 +204,7 @@ valadoc_api_error_domain_get_quark_macro_name (ValadocApiErrorDomain* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->quark_macro_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -251,7 +252,7 @@ valadoc_api_error_domain_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp7_;
 	ValadocContentRun* _tmp8_;
 	ValadocContentInline* _tmp9_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiErrorDomain*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	_tmp1_ = _tmp0_;
@@ -276,7 +277,7 @@ valadoc_api_error_domain_class_init (ValadocApiErrorDomainClass * klass,
 	g_type_class_adjust_private_offset (klass, &ValadocApiErrorDomain_private_offset);
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_error_domain_real_accept;
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_error_domain_real_build_signature;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_error_domain_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_error_domain_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_error_domain_get_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_error_domain_finalize;
 	/**
@@ -320,13 +321,13 @@ valadoc_api_error_domain_get_type_once (void)
 GType
 valadoc_api_error_domain_get_type (void)
 {
-	static volatile gsize valadoc_api_error_domain_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_error_domain_type_id__volatile)) {
+	static volatile gsize valadoc_api_error_domain_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_error_domain_type_id__once)) {
 		GType valadoc_api_error_domain_type_id;
 		valadoc_api_error_domain_type_id = valadoc_api_error_domain_get_type_once ();
-		g_once_init_leave (&valadoc_api_error_domain_type_id__volatile, valadoc_api_error_domain_type_id);
+		g_once_init_leave (&valadoc_api_error_domain_type_id__once, valadoc_api_error_domain_type_id);
 	}
-	return valadoc_api_error_domain_type_id__volatile;
+	return valadoc_api_error_domain_type_id__once;
 }
 
 static void

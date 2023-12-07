@@ -33,43 +33,6 @@
 #include <stdio.h>
 #include <vala.h>
 
-enum  {
-	VALADOC_HTML_BASIC_DOCLET_0_PROPERTY,
-	VALADOC_HTML_BASIC_DOCLET_LINKER_PROPERTY,
-	VALADOC_HTML_BASIC_DOCLET_SETTINGS_PROPERTY,
-	VALADOC_HTML_BASIC_DOCLET_WIKI_INDEX_NAME_PROPERTY,
-	VALADOC_HTML_BASIC_DOCLET_NUM_PROPERTIES
-};
-static GParamSpec* valadoc_html_basic_doclet_properties[VALADOC_HTML_BASIC_DOCLET_NUM_PROPERTIES];
-#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
-#define _g_free0(var) (var = (g_free (var), NULL))
-#define _valadoc_api_tree_unref0(var) ((var == NULL) ? NULL : (var = (valadoc_api_tree_unref (var), NULL)))
-#define _valadoc_markup_writer_unref0(var) ((var == NULL) ? NULL : (var = (valadoc_markup_writer_unref (var), NULL)))
-#define _vala_iterable_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterable_unref (var), NULL)))
-#define _vala_iterator_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterator_unref (var), NULL)))
-#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
-#define _fclose0(var) ((var == NULL) ? NULL : (var = (fclose (var), NULL)))
-#define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
-#define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
-#define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
-#define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
-
-struct _ValadocHtmlBasicDocletPrivate {
-	ValadocHtmlLinkHelper* _linker;
-	ValadocSettings* _settings;
-	gchar* _wiki_index_name;
-	guint html_id_counter;
-};
-
-static gint ValadocHtmlBasicDoclet_private_offset;
-static gpointer valadoc_html_basic_doclet_parent_class = NULL;
-static ValadocApiNodeType* valadoc_html_basic_doclet_inheritable_members;
-static gint valadoc_html_basic_doclet_inheritable_members_length1;
-static ValadocApiNodeType* valadoc_html_basic_doclet_inheritable_members = NULL;
-static gint valadoc_html_basic_doclet_inheritable_members_length1 = 0;
-static gint _valadoc_html_basic_doclet_inheritable_members_size_ = 0;
-static ValadocDocletIface * valadoc_html_basic_doclet_valadoc_doclet_parent_iface = NULL;
-
 #define VALADOC_HTML_BASIC_DOCLET_css_inline_navigation "navi_inline"
 #define VALADOC_HTML_BASIC_DOCLET_css_package_index "package_index"
 #define VALADOC_HTML_BASIC_DOCLET_css_brief_description "brief_description"
@@ -126,6 +89,44 @@ static ValadocDocletIface * valadoc_html_basic_doclet_valadoc_doclet_parent_ifac
 #define VALADOC_HTML_BASIC_DOCLET_css_style_content "site_content"
 #define VALADOC_HTML_BASIC_DOCLET_css_style_body "site_body"
 #define VALADOC_HTML_BASIC_DOCLET_css_deprecated "deprecated"
+
+enum  {
+	VALADOC_HTML_BASIC_DOCLET_0_PROPERTY,
+	VALADOC_HTML_BASIC_DOCLET_LINKER_PROPERTY,
+	VALADOC_HTML_BASIC_DOCLET_SETTINGS_PROPERTY,
+	VALADOC_HTML_BASIC_DOCLET_WIKI_INDEX_NAME_PROPERTY,
+	VALADOC_HTML_BASIC_DOCLET_NUM_PROPERTIES
+};
+static GParamSpec* valadoc_html_basic_doclet_properties[VALADOC_HTML_BASIC_DOCLET_NUM_PROPERTIES];
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _valadoc_api_tree_unref0(var) ((var == NULL) ? NULL : (var = (valadoc_api_tree_unref (var), NULL)))
+#define _valadoc_markup_writer_unref0(var) ((var == NULL) ? NULL : (var = (valadoc_markup_writer_unref (var), NULL)))
+#define _vala_iterable_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterable_unref (var), NULL)))
+#define _vala_iterator_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterator_unref (var), NULL)))
+#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
+#define _fclose0(var) ((var == NULL) ? NULL : (var = (fclose (var), NULL)))
+#define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
+#define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
+#define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
+#define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
+
+struct _ValadocHtmlBasicDocletPrivate {
+	ValadocHtmlLinkHelper* _linker;
+	ValadocSettings* _settings;
+	gchar* _wiki_index_name;
+	guint html_id_counter;
+};
+
+static gint ValadocHtmlBasicDoclet_private_offset;
+static gpointer valadoc_html_basic_doclet_parent_class = NULL;
+static ValadocApiNodeType* valadoc_html_basic_doclet_inheritable_members;
+static gint valadoc_html_basic_doclet_inheritable_members_length1;
+static ValadocApiNodeType* valadoc_html_basic_doclet_inheritable_members = NULL;
+static gint valadoc_html_basic_doclet_inheritable_members_length1 = 0;
+static gint _valadoc_html_basic_doclet_inheritable_members_size_ = 0;
+static ValadocDocletIface * valadoc_html_basic_doclet_valadoc_doclet_parent_iface = NULL;
+
 static void valadoc_html_basic_doclet_real_process (ValadocHtmlBasicDoclet* self,
                                              ValadocSettings* settings,
                                              ValadocApiTree* tree,
@@ -363,7 +364,7 @@ valadoc_html_basic_doclet_get_link (ValadocHtmlBasicDoclet* self,
 	ValadocHtmlLinkHelper* _tmp0_;
 	ValadocSettings* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (to != NULL, NULL);
 	g_return_val_if_fail (from != NULL, NULL);
@@ -387,7 +388,7 @@ valadoc_html_basic_doclet_real_get_img_path_html (ValadocHtmlBasicDoclet* self,
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	gchar* _tmp7_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (type != NULL, NULL);
 	_tmp0_ = valadoc_api_node_get_full_name (element);
@@ -438,7 +439,7 @@ valadoc_html_basic_doclet_real_get_img_path (ValadocHtmlBasicDoclet* self,
 	gchar* _tmp11_;
 	gchar* _tmp12_;
 	gchar* _tmp13_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (type != NULL, NULL);
 	_tmp0_ = self->priv->_settings;
@@ -480,7 +481,7 @@ static gchar*
 valadoc_html_basic_doclet_real_get_icon_directory (ValadocHtmlBasicDoclet* self)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("..");
 	result = _tmp0_;
 	return result;
@@ -504,7 +505,7 @@ valadoc_html_basic_doclet_unpack_type_reference (ValadocHtmlBasicDoclet* self,
 {
 	ValadocApiItem* pos = NULL;
 	ValadocApiItem* _tmp0_;
-	ValadocApiTypeSymbol* result = NULL;
+	ValadocApiTypeSymbol* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = _g_object_ref0 ((ValadocApiItem*) type_reference);
 	pos = _tmp0_;
@@ -886,7 +887,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -909,7 +910,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -948,7 +949,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -1908,7 +1909,7 @@ valadoc_html_basic_doclet_has_brief_description (ValadocHtmlBasicDoclet* self,
 {
 	ValadocContentComment* _tmp0_;
 	ValadocContentComment* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (element != NULL, FALSE);
 	_tmp0_ = valadoc_api_node_get_documentation (element);
@@ -2403,7 +2404,7 @@ valadoc_html_basic_doclet_is_internal_node (ValadocHtmlBasicDoclet* self,
 	gboolean _tmp5_ = FALSE;
 	gboolean _tmp6_ = FALSE;
 	gboolean _tmp7_ = FALSE;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (node != NULL, FALSE);
 	if (VALADOC_API_IS_PACKAGE (node)) {
@@ -2770,7 +2771,7 @@ valadoc_html_basic_doclet_get_accessible_nodes_from_list (ValadocHtmlBasicDoclet
 	ValaArrayList* list = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
-	ValaArrayList* result = NULL;
+	ValaArrayList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (nodes != NULL, NULL);
 	_tmp0_ = g_direct_equal;
@@ -3446,7 +3447,7 @@ valadoc_html_basic_doclet_has_visible_inheritable_children (ValadocHtmlBasicDocl
 	ValadocApiNodeType* _tmp0_;
 	gint _tmp0__length1;
 	ValadocSettings* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (symbol != NULL, FALSE);
 	_tmp0_ = valadoc_html_basic_doclet_inheritable_members;
@@ -5214,6 +5215,7 @@ valadoc_html_basic_doclet_class_init (ValadocHtmlBasicDocletClass * klass,
 	_tmp0_[6] = VALADOC_API_NODE_TYPE_FIELD;
 	valadoc_html_basic_doclet_inheritable_members = _tmp0_;
 	valadoc_html_basic_doclet_inheritable_members_length1 = 7;
+	_valadoc_html_basic_doclet_inheritable_members_size_ = valadoc_html_basic_doclet_inheritable_members_length1;
 }
 
 static void
@@ -5271,13 +5273,13 @@ valadoc_html_basic_doclet_get_type_once (void)
 GType
 valadoc_html_basic_doclet_get_type (void)
 {
-	static volatile gsize valadoc_html_basic_doclet_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_html_basic_doclet_type_id__volatile)) {
+	static volatile gsize valadoc_html_basic_doclet_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_html_basic_doclet_type_id__once)) {
 		GType valadoc_html_basic_doclet_type_id;
 		valadoc_html_basic_doclet_type_id = valadoc_html_basic_doclet_get_type_once ();
-		g_once_init_leave (&valadoc_html_basic_doclet_type_id__volatile, valadoc_html_basic_doclet_type_id);
+		g_once_init_leave (&valadoc_html_basic_doclet_type_id__once, valadoc_html_basic_doclet_type_id);
 	}
-	return valadoc_html_basic_doclet_type_id__volatile;
+	return valadoc_html_basic_doclet_type_id__once;
 }
 
 static void

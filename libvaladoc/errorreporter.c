@@ -32,6 +32,8 @@
 #include <gmodule.h>
 #include <stdarg.h>
 
+#define VALADOC_ERROR_REPORTER_ANSI_COLOR_END "\x1b[0m"
+
 enum  {
 	VALADOC_ERROR_REPORTER_0_PROPERTY,
 	VALADOC_ERROR_REPORTER_WARNINGS_OFFSET_PROPERTY,
@@ -73,7 +75,6 @@ struct _ValadocErrorReporterPrivate {
 static gint ValadocErrorReporter_private_offset;
 static gpointer valadoc_error_reporter_parent_class = NULL;
 
-#define VALADOC_ERROR_REPORTER_ANSI_COLOR_END "\x1b[0m"
 static gboolean valadoc_error_reporter_is_atty (ValadocErrorReporter* self,
                                          gint fd);
 static inline void valadoc_error_reporter_msg (ValadocErrorReporter* self,
@@ -282,7 +283,7 @@ valadoc_error_reporter_set_colors (ValadocErrorReporter* self,
 	gint _tmp7__length1;
 	FILE* _tmp36_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (str != NULL, FALSE);
 	{
@@ -644,9 +645,9 @@ valadoc_error_reporter_is_atty (ValadocErrorReporter* self,
 	void* _tmp3_ = NULL;
 	void* _tmp4_;
 	ValadocErrorReporterAttyFunc func = NULL;
-	void* _tmp5_;
-	ValadocErrorReporterAttyFunc _tmp6_;
-	gboolean result = FALSE;
+	void* _tmp8_;
+	ValadocErrorReporterAttyFunc _tmp9_;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = g_module_open (NULL, G_MODULE_BIND_LAZY);
 	module = _tmp0_;
@@ -661,14 +662,23 @@ valadoc_error_reporter_is_atty (ValadocErrorReporter* self,
 	_func = _tmp3_;
 	_tmp4_ = _func;
 	if (_tmp4_ == NULL) {
-		result = FALSE;
-		_g_module_close0 (module);
-		return result;
+		GModule* _tmp5_;
+		void* _tmp6_ = NULL;
+		void* _tmp7_;
+		_tmp5_ = module;
+		g_module_symbol (_tmp5_, "_isatty", &_tmp6_);
+		_func = _tmp6_;
+		_tmp7_ = _func;
+		if (_tmp7_ == NULL) {
+			result = FALSE;
+			_g_module_close0 (module);
+			return result;
+		}
 	}
-	_tmp5_ = _func;
-	func = (ValadocErrorReporterAttyFunc) _tmp5_;
-	_tmp6_ = func;
-	result = _tmp6_ (fd) == 1;
+	_tmp8_ = _func;
+	func = (ValadocErrorReporterAttyFunc) _tmp8_;
+	_tmp9_ = func;
+	result = _tmp9_ (fd) > 0;
 	_g_module_close0 (module);
 	return result;
 }
@@ -678,7 +688,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -788,7 +798,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -811,7 +821,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -850,7 +860,7 @@ string_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -870,7 +880,7 @@ static const gchar*
 string_offset (const gchar* self,
                glong offset)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = (const gchar*) (((gchar*) self) + offset);
 	return result;
@@ -1292,13 +1302,13 @@ valadoc_error_reporter_get_type_once (void)
 GType
 valadoc_error_reporter_get_type (void)
 {
-	static volatile gsize valadoc_error_reporter_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_error_reporter_type_id__volatile)) {
+	static volatile gsize valadoc_error_reporter_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_error_reporter_type_id__once)) {
 		GType valadoc_error_reporter_type_id;
 		valadoc_error_reporter_type_id = valadoc_error_reporter_get_type_once ();
-		g_once_init_leave (&valadoc_error_reporter_type_id__volatile, valadoc_error_reporter_type_id);
+		g_once_init_leave (&valadoc_error_reporter_type_id__once, valadoc_error_reporter_type_id);
 	}
-	return valadoc_error_reporter_type_id__volatile;
+	return valadoc_error_reporter_type_id__once;
 }
 
 static void

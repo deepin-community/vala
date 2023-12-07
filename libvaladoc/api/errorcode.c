@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <vala.h>
 #include <valacodegen.h>
 
@@ -110,7 +111,7 @@ valadoc_api_error_code_get_cname (ValadocApiErrorCode* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->cname;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -126,7 +127,7 @@ valadoc_api_error_code_get_dbus_name (ValadocApiErrorCode* self)
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dbus_name;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -169,7 +170,7 @@ valadoc_api_error_code_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp2_;
 	ValadocContentRun* _tmp3_;
 	ValadocContentInline* _tmp4_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiErrorCode*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	_tmp1_ = _tmp0_;
@@ -189,7 +190,7 @@ valadoc_api_error_code_class_init (ValadocApiErrorCodeClass * klass,
 	g_type_class_adjust_private_offset (klass, &ValadocApiErrorCode_private_offset);
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_error_code_real_accept;
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_error_code_real_build_signature;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_error_code_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_error_code_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_error_code_get_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_error_code_finalize;
 	/**
@@ -231,13 +232,13 @@ valadoc_api_error_code_get_type_once (void)
 GType
 valadoc_api_error_code_get_type (void)
 {
-	static volatile gsize valadoc_api_error_code_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_error_code_type_id__volatile)) {
+	static volatile gsize valadoc_api_error_code_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_error_code_type_id__once)) {
 		GType valadoc_api_error_code_type_id;
 		valadoc_api_error_code_type_id = valadoc_api_error_code_get_type_once ();
-		g_once_init_leave (&valadoc_api_error_code_type_id__volatile, valadoc_api_error_code_type_id);
+		g_once_init_leave (&valadoc_api_error_code_type_id__once, valadoc_api_error_code_type_id);
 	}
-	return valadoc_api_error_code_type_id__volatile;
+	return valadoc_api_error_code_type_id__once;
 }
 
 static void

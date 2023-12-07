@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -192,7 +193,7 @@ vala_typecheck_real_is_pure (ValaExpression* base)
 	ValaTypeCheck * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTypeCheck*) base;
 	_tmp0_ = vala_typecheck_get_expression (self);
 	_tmp1_ = _tmp0_;
@@ -266,7 +267,7 @@ vala_typecheck_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp45_;
 	gboolean _tmp46_;
 	gboolean _tmp47_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaTypeCheck*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -411,7 +412,7 @@ vala_typecheck_real_to_string (ValaCodeNode* base)
 	gchar* _tmp7_;
 	gchar* _tmp8_;
 	gchar* _tmp9_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaTypeCheck*) base;
 	_tmp0_ = vala_typecheck_get_expression (self);
 	_tmp1_ = _tmp0_;
@@ -479,12 +480,12 @@ vala_typecheck_get_type_once (void)
 GType
 vala_typecheck_get_type (void)
 {
-	static volatile gsize vala_typecheck_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_typecheck_type_id__volatile)) {
+	static volatile gsize vala_typecheck_type_id__once = 0;
+	if (g_once_init_enter (&vala_typecheck_type_id__once)) {
 		GType vala_typecheck_type_id;
 		vala_typecheck_type_id = vala_typecheck_get_type_once ();
-		g_once_init_leave (&vala_typecheck_type_id__volatile, vala_typecheck_type_id);
+		g_once_init_leave (&vala_typecheck_type_id__once, vala_typecheck_type_id);
 	}
-	return vala_typecheck_type_id__volatile;
+	return vala_typecheck_type_id__once;
 }
 

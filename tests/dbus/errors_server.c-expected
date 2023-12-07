@@ -17,6 +17,8 @@
 #endif
 #endif
 
+#define TYPE_TEST_ERROR (test_error_get_type ())
+
 #define TYPE_TEST (test_get_type ())
 #define TEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_TEST, Test))
 #define TEST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_TEST, TestClass))
@@ -47,6 +49,7 @@ typedef enum  {
 	TEST_ERROR_WORSE
 } TestError;
 #define TEST_ERROR test_error_quark ()
+
 struct _Test {
 	GObject parent_instance;
 	TestPrivate * priv;
@@ -61,6 +64,7 @@ VALA_EXTERN GMainLoop* main_loop;
 GMainLoop* main_loop = NULL;
 
 VALA_EXTERN GQuark test_error_quark (void);
+VALA_EXTERN GType test_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN guint test_register_object (void* object,
@@ -75,7 +79,7 @@ VALA_EXTERN gint test_test_int (Test* self,
                     GError** error);
 VALA_EXTERN gchar* test_test_string (Test* self,
                          const gchar* s,
-                         gchar* * t,
+                         gchar** t,
                          GError** error);
 VALA_EXTERN void test_test_cancellable (Test* self,
                             GCancellable* cancellable,
@@ -207,7 +211,7 @@ test_test_int (Test* self,
 gchar*
 test_test_string (Test* self,
                   const gchar* s,
-                  gchar* * t,
+                  gchar** t,
                   GError** error)
 {
 	gchar* _vala_t = NULL;
@@ -290,13 +294,13 @@ test_get_type_once (void)
 GType
 test_get_type (void)
 {
-	static volatile gsize test_type_id__volatile = 0;
-	if (g_once_init_enter (&test_type_id__volatile)) {
+	static volatile gsize test_type_id__once = 0;
+	if (g_once_init_enter (&test_type_id__once)) {
 		GType test_type_id;
 		test_type_id = test_get_type_once ();
-		g_once_init_leave (&test_type_id__volatile, test_type_id);
+		g_once_init_leave (&test_type_id__once, test_type_id);
 	}
-	return test_type_id__volatile;
+	return test_type_id__once;
 }
 
 static void
@@ -312,8 +316,7 @@ _dbus_test_test_void (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_void (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -345,8 +348,7 @@ _dbus_test_test_int (Test* self,
 	g_variant_unref (_tmp0_);
 	result = test_test_int (self, i, &j, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -380,8 +382,7 @@ _dbus_test_test_string (Test* self,
 	g_variant_unref (_tmp1_);
 	result = test_test_string (self, s, &t, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -413,8 +414,7 @@ _dbus_test_test_cancellable (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_cancellable (self, NULL, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -439,8 +439,7 @@ _dbus_test_test_custom_error (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_custom_error (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

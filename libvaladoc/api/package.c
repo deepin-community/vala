@@ -132,7 +132,7 @@ valadoc_api_package_get_full_dependency_list (ValadocApiPackage* self)
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
 	ValaArrayList* _tmp2_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_API_TYPE_PACKAGE, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
@@ -237,7 +237,7 @@ valadoc_api_package_get_dependency_list (ValadocApiPackage* self)
 	ValaArrayList* _tmp0_;
 	ValaArrayList* _tmp3_;
 	ValaCollection* _tmp4_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_dependencies;
 	if (_tmp0_ == NULL) {
@@ -339,7 +339,7 @@ valadoc_api_package_get_deprecated_symbols (ValadocApiPackage* self)
 	ValaHashMap* _tmp0_;
 	ValaHashMap* _tmp5_;
 	ValaMap* _tmp6_;
-	ValaMap* result = NULL;
+	ValaMap* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->deprecated;
 	if (_tmp0_ == NULL) {
@@ -370,7 +370,7 @@ valadoc_api_package_real_is_browsable (ValadocApiNode* base,
 	ValadocApiPackage * self;
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocApiPackage*) base;
 	g_return_val_if_fail (settings != NULL, FALSE);
 	_tmp1_ = self->priv->_is_package;
@@ -421,7 +421,7 @@ valadoc_api_package_real_build_signature (ValadocApiItem* base)
 	ValadocApiSignatureBuilder* _tmp5_;
 	ValadocContentRun* _tmp6_;
 	ValadocContentInline* _tmp7_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiPackage*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	_tmp1_ = _tmp0_;
@@ -445,7 +445,7 @@ valadoc_api_package_class_init (ValadocApiPackageClass * klass,
 	((ValadocApiNodeClass *) klass)->is_browsable = (gboolean (*) (ValadocApiNode*, ValadocSettings*)) valadoc_api_package_real_is_browsable;
 	((ValadocApiNodeClass *) klass)->accept = (void (*) (ValadocApiNode*, ValadocApiVisitor*)) valadoc_api_package_real_accept;
 	((ValadocApiItemClass *) klass)->build_signature = (ValadocContentInline* (*) (ValadocApiItem*)) valadoc_api_package_real_build_signature;
-	VALADOC_API_NODE_CLASS (klass)->get_node_type = valadoc_api_package_real_get_node_type;
+	VALADOC_API_NODE_CLASS (klass)->get_node_type = (ValadocApiNodeType (*) (ValadocApiNode*)) valadoc_api_package_real_get_node_type;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_api_package_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_api_package_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_api_package_finalize;
@@ -489,13 +489,13 @@ valadoc_api_package_get_type_once (void)
 GType
 valadoc_api_package_get_type (void)
 {
-	static volatile gsize valadoc_api_package_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_package_type_id__volatile)) {
+	static volatile gsize valadoc_api_package_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_package_type_id__once)) {
 		GType valadoc_api_package_type_id;
 		valadoc_api_package_type_id = valadoc_api_package_get_type_once ();
-		g_once_init_leave (&valadoc_api_package_type_id__volatile, valadoc_api_package_type_id);
+		g_once_init_leave (&valadoc_api_package_type_id__once, valadoc_api_package_type_id);
 	}
-	return valadoc_api_package_type_id__volatile;
+	return valadoc_api_package_type_id__once;
 }
 
 static void

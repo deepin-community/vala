@@ -24,6 +24,7 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
 #include <glib.h>
 
 static gpointer vala_continue_statement_parent_class = NULL;
@@ -116,12 +117,12 @@ vala_continue_statement_get_type_once (void)
 GType
 vala_continue_statement_get_type (void)
 {
-	static volatile gsize vala_continue_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_continue_statement_type_id__volatile)) {
+	static volatile gsize vala_continue_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_continue_statement_type_id__once)) {
 		GType vala_continue_statement_type_id;
 		vala_continue_statement_type_id = vala_continue_statement_get_type_once ();
-		g_once_init_leave (&vala_continue_statement_type_id__volatile, vala_continue_statement_type_id);
+		g_once_init_leave (&vala_continue_statement_type_id__once, vala_continue_statement_type_id);
 	}
-	return vala_continue_statement_type_id__volatile;
+	return vala_continue_statement_type_id__once;
 }
 

@@ -59,11 +59,12 @@ vala_callable_type_get_callable_symbol (ValaCallableType* self)
 
 ValaCallableType*
 vala_callable_type_construct (GType object_type,
-                              ValaSymbol* symbol)
+                              ValaSymbol* symbol,
+                              ValaSourceReference* source_reference)
 {
 	ValaCallableType* self = NULL;
 	g_return_val_if_fail (symbol != NULL, NULL);
-	self = (ValaCallableType*) vala_data_type_construct_with_symbol (object_type, symbol);
+	self = (ValaCallableType*) vala_data_type_construct_with_symbol (object_type, symbol, source_reference);
 	return self;
 }
 
@@ -71,7 +72,7 @@ static gboolean
 vala_callable_type_real_is_invokable (ValaDataType* base)
 {
 	ValaCallableType * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaCallableType*) base;
 	result = TRUE;
 	return result;
@@ -85,7 +86,7 @@ vala_callable_type_real_get_return_type (ValaDataType* base)
 	ValaCallable* _tmp1_;
 	ValaDataType* _tmp2_;
 	ValaDataType* _tmp3_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaCallableType*) base;
 	_tmp0_ = vala_callable_type_get_callable_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -102,7 +103,7 @@ vala_callable_type_real_get_parameters (ValaDataType* base)
 	ValaCallable* _tmp0_;
 	ValaCallable* _tmp1_;
 	ValaList* _tmp2_;
-	ValaList* result = NULL;
+	ValaList* result;
 	self = (ValaCallableType*) base;
 	_tmp0_ = vala_callable_type_get_callable_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -146,7 +147,7 @@ vala_callable_type_real_to_prototype_string (ValaDataType* base,
 	GString* _tmp131_;
 	const gchar* _tmp132_;
 	gchar* _tmp133_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaCallableType*) base;
 	_tmp0_ = g_string_new ("");
 	builder = _tmp0_;
@@ -568,12 +569,12 @@ vala_callable_type_get_type_once (void)
 GType
 vala_callable_type_get_type (void)
 {
-	static volatile gsize vala_callable_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_callable_type_type_id__volatile)) {
+	static volatile gsize vala_callable_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_callable_type_type_id__once)) {
 		GType vala_callable_type_type_id;
 		vala_callable_type_type_id = vala_callable_type_get_type_once ();
-		g_once_init_leave (&vala_callable_type_type_id__volatile, vala_callable_type_type_id);
+		g_once_init_leave (&vala_callable_type_type_id__once, vala_callable_type_type_id);
 	}
-	return vala_callable_type_type_id__volatile;
+	return vala_callable_type_type_id__once;
 }
 

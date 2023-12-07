@@ -25,6 +25,7 @@
 
 #include "vala.h"
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 
@@ -125,7 +126,7 @@ vala_while_statement_real_check (ValaCodeNode* base,
 	ValaLoopStatement* _tmp54_;
 	gboolean _tmp55_;
 	gboolean _tmp56_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaWhileStatement*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -302,12 +303,12 @@ vala_while_statement_get_type_once (void)
 GType
 vala_while_statement_get_type (void)
 {
-	static volatile gsize vala_while_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_while_statement_type_id__volatile)) {
+	static volatile gsize vala_while_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_while_statement_type_id__once)) {
 		GType vala_while_statement_type_id;
 		vala_while_statement_type_id = vala_while_statement_get_type_once ();
-		g_once_init_leave (&vala_while_statement_type_id__volatile, vala_while_statement_type_id);
+		g_once_init_leave (&vala_while_statement_type_id__once, vala_while_statement_type_id);
 	}
-	return vala_while_statement_type_id__volatile;
+	return vala_while_statement_type_id__once;
 }
 

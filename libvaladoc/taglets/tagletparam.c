@@ -287,7 +287,7 @@ valadoc_taglets_param_real_get_parser_rule (ValadocContentTaglet* base,
 	gint _tmp13__length1;
 	ValadocRule* _tmp14_;
 	ValadocRule* _tmp15_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsParam*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	_tmp0_ = valadoc_token_type_SPACE;
@@ -669,7 +669,7 @@ static gboolean
 valadoc_taglets_param_has_instance (ValadocTagletsParam* self,
                                     ValadocApiItem* element)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (element != NULL, FALSE);
 	if (VALADOC_API_IS_METHOD (element)) {
@@ -707,7 +707,7 @@ valadoc_taglets_param_real_get_inheritable_documentation (ValadocContentTaglet* 
 	ValaList* _tmp0_;
 	ValaList* _tmp1_;
 	ValaList* _tmp2_;
-	ValaList* result = NULL;
+	ValaList* result;
 	self = (ValadocTagletsParam*) base;
 	_tmp0_ = valadoc_content_block_content_get_content ((ValadocContentBlockContent*) self);
 	_tmp1_ = _tmp0_;
@@ -727,7 +727,7 @@ valadoc_taglets_param_real_inheritable (ValadocContentTaglet* base,
 	ValadocApiSymbol* _tmp2_;
 	ValadocTagletsParam* _tmp3_;
 	ValadocApiSymbol* _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsParam*) base;
 	g_return_val_if_fail (taglet != NULL, FALSE);
 	if (VALADOC_TAGLETS_IS_PARAM (taglet) == FALSE) {
@@ -769,7 +769,7 @@ valadoc_taglets_param_real_copy (ValadocContentContentElement* base,
 	ValadocApiSymbol* _tmp5_;
 	ValadocTagletsParam* _tmp6_;
 	gint _tmp7_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsParam*) base;
 	_tmp0_ = valadoc_taglets_param_new ();
 	param = _tmp0_;
@@ -930,13 +930,13 @@ valadoc_taglets_param_get_type_once (void)
 GType
 valadoc_taglets_param_get_type (void)
 {
-	static volatile gsize valadoc_taglets_param_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_param_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_param_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_param_type_id__once)) {
 		GType valadoc_taglets_param_type_id;
 		valadoc_taglets_param_type_id = valadoc_taglets_param_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_param_type_id__volatile, valadoc_taglets_param_type_id);
+		g_once_init_leave (&valadoc_taglets_param_type_id__once, valadoc_taglets_param_type_id);
 	}
-	return valadoc_taglets_param_type_id__volatile;
+	return valadoc_taglets_param_type_id__once;
 }
 
 static void

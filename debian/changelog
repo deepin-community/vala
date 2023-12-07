@@ -1,3 +1,166 @@
+vala (0.56.14-1) unstable; urgency=medium
+
+  [ Rico Tzschichholz ]
+  * New upstream release
+
+  [ Jeremy Bícha ]
+  * Stop using dh_gnome_clean and debian/control.in
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Mon, 13 Nov 2023 09:39:03 +0100
+
+vala (0.56.13-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Tue, 29 Aug 2023 21:10:36 +0200
+
+vala (0.56.12-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sat, 19 Aug 2023 15:02:51 +0200
+
+vala (0.56.11-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update symbols
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sun, 13 Aug 2023 12:40:24 +0200
+
+vala (0.56.10-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sat, 05 Aug 2023 18:07:49 +0200
+
+vala (0.56.9-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 18 Jul 2023 16:24:43 -0400
+
+vala (0.56.9-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sun, 02 Jul 2023 13:29:03 +0200
+
+vala (0.56.8-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 25 May 2023 11:04:48 +0200
+
+vala (0.56.7-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Tue, 18 Apr 2023 11:23:04 +0200
+
+vala (0.56.6-1) experimental; urgency=medium
+
+  * New upstream release (LP: #2015245)
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Tue, 04 Apr 2023 13:13:08 +0200
+
+vala (0.56.5-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sat, 25 Mar 2023 17:40:23 +0100
+
+vala (0.56.4-3) experimental; urgency=medium
+
+  * Loosen dependency on valac-0.56-vapi package to make lintian happy
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Fri, 24 Feb 2023 22:40:23 +0100
+
+vala (0.56.4-2) experimental; urgency=medium
+
+  [ Debian Janitor ]
+  * Add debian/upstream/metadata
+  * Fix day-of-week for changelog entries 0.0.8-3, 0.0.8-1, 0.0.7-2.
+  * Update standards version to 4.6.2, no changes needed.
+
+  [ Rico Tzschichholz ]
+  * Use strict internal dependency on valac-0.56-vapi package
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Fri, 24 Feb 2023 15:27:37 +0100
+
+vala (0.56.4-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sun, 12 Feb 2023 16:15:49 +0100
+
+vala (0.56.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sat, 03 Sep 2022 15:04:15 +0200
+
+vala (0.56.2-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 14 Jul 2022 19:51:46 +0200
+
+vala (0.56.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Wed, 27 Apr 2022 21:46:33 +0200
+
+vala (0.56.0-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 17 Mar 2022 12:19:32 +0100
+
+vala (0.55.91-2) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Fri, 04 Mar 2022 15:00:05 +0100
+
+vala (0.55.90-1) unstable; urgency=medium
+
+  * New upstream release
+  * Release to unstable
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Fri, 25 Feb 2022 17:18:14 +0100
+
+vala (0.55.3-1) experimental; urgency=medium
+
+  [ Rico Tzschichholz ]
+  * New upstream development release
+
+  [ Laurent Bigonville ]
+  * debian/control.in: Bump Standards-Version to 4.6.0 (no further changes)
+  * Drop lintian overrides for binary-or-shlib-defines-rpath, not needed
+    anymore
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 10 Feb 2022 14:50:14 +0100
+
+vala (0.54.6-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Sun, 09 Jan 2022 10:50:48 +0100
+
+vala (0.54.5-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update symbols
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 16 Dec 2021 09:37:25 +0100
+
+vala (0.54.4-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Mon, 29 Nov 2021 12:48:12 +0100
+
 vala (0.54.3-1) unstable; urgency=medium
 
   * New upstream release
@@ -1741,7 +1904,7 @@ vala (0.0.8-3) unstable; urgency=low
   * Update copyright file to match Debian standards.
   * Make sure config.guess and .sub are updated automatically.
 
- -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Thu, 01 Apr 2007 11:32:00 +0200
+ -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Sun, 01 Apr 2007 11:32:00 +0200
 
 vala (0.0.8-2) unstable; urgency=low
 
@@ -1759,14 +1922,14 @@ vala (0.0.8-1) unstable; urgency=low
   * Updating to release 0.0.8 which contains quite some bugfixes.
   * Remove invalid dependency on libvala for libvala0-dev
 
- -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Thu, 23 Mar 2007 08:14:00 +0100
+ -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Fri, 23 Mar 2007 08:14:00 +0100
 
 vala (0.0.7-2) unstable; urgency=low
 
   * Separated into valac, libvalac0 and libvala-dev package, as demonstrated
     by Marc-Andre Lureau. Added his man-page.
 
- -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Thu, 19 Mar 2007 13:17:00 +0100
+ -- Mathias Hasselmann <mathias.hasselmann@gmx.de>  Mon, 19 Mar 2007 13:17:00 +0100
 
 vala (0.0.7-1) unstable; urgency=low
 

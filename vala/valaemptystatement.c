@@ -24,6 +24,7 @@
  */
 
 #include "vala.h"
+#include <glib-object.h>
 #include <glib.h>
 
 static gpointer vala_empty_statement_parent_class = NULL;
@@ -116,12 +117,12 @@ vala_empty_statement_get_type_once (void)
 GType
 vala_empty_statement_get_type (void)
 {
-	static volatile gsize vala_empty_statement_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_empty_statement_type_id__volatile)) {
+	static volatile gsize vala_empty_statement_type_id__once = 0;
+	if (g_once_init_enter (&vala_empty_statement_type_id__once)) {
 		GType vala_empty_statement_type_id;
 		vala_empty_statement_type_id = vala_empty_statement_get_type_once ();
-		g_once_init_leave (&vala_empty_statement_type_id__volatile, vala_empty_statement_type_id);
+		g_once_init_leave (&vala_empty_statement_type_id__once, vala_empty_statement_type_id);
 	}
-	return vala_empty_statement_type_id__volatile;
+	return vala_empty_statement_type_id__once;
 }
 

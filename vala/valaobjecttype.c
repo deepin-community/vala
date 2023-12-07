@@ -57,18 +57,20 @@ vala_object_type_get_object_type_symbol (ValaObjectType* self)
 
 ValaObjectType*
 vala_object_type_construct (GType object_type,
-                            ValaObjectTypeSymbol* type_symbol)
+                            ValaObjectTypeSymbol* type_symbol,
+                            ValaSourceReference* source_reference)
 {
 	ValaObjectType* self = NULL;
 	g_return_val_if_fail (type_symbol != NULL, NULL);
-	self = (ValaObjectType*) vala_reference_type_construct (object_type, (ValaSymbol*) type_symbol);
+	self = (ValaObjectType*) vala_reference_type_construct (object_type, (ValaSymbol*) type_symbol, source_reference);
 	return self;
 }
 
 ValaObjectType*
-vala_object_type_new (ValaObjectTypeSymbol* type_symbol)
+vala_object_type_new (ValaObjectTypeSymbol* type_symbol,
+                      ValaSourceReference* source_reference)
 {
-	return vala_object_type_construct (VALA_TYPE_OBJECT_TYPE, type_symbol);
+	return vala_object_type_construct (VALA_TYPE_OBJECT_TYPE, type_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -94,11 +96,11 @@ vala_object_type_real_copy (ValaDataType* base)
 	ValaObjectType* _tmp15_;
 	gboolean _tmp16_;
 	gboolean _tmp17_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaObjectType*) base;
 	_tmp0_ = vala_object_type_get_object_type_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_object_type_new (_tmp1_);
+	_tmp2_ = vala_object_type_new (_tmp1_, NULL);
 	_result_ = _tmp2_;
 	_tmp3_ = _result_;
 	_tmp4_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
@@ -186,7 +188,7 @@ vala_object_type_real_stricter (ValaDataType* base,
 	ValaObjectType* _tmp12_;
 	ValaTypeSymbol* _tmp13_;
 	ValaTypeSymbol* _tmp14_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaObjectType*) base;
 	g_return_val_if_fail (target_type != NULL, FALSE);
 	obj_target_type = VALA_IS_OBJECT_TYPE (target_type) ? ((ValaObjectType*) target_type) : NULL;
@@ -236,7 +238,7 @@ vala_object_type_real_is_invokable (ValaDataType* base)
 	ValaTypeSymbol* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaClass* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaObjectType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
@@ -271,7 +273,7 @@ vala_object_type_real_get_return_type (ValaDataType* base)
 	ValaTypeSymbol* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaClass* _tmp3_;
-	ValaDataType* result = NULL;
+	ValaDataType* result;
 	self = (ValaObjectType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
@@ -316,7 +318,7 @@ vala_object_type_real_get_parameters (ValaDataType* base)
 	ValaTypeSymbol* _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaClass* _tmp3_;
-	ValaList* result = NULL;
+	ValaList* result;
 	self = (ValaObjectType*) base;
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
 	_tmp1_ = _tmp0_;
@@ -357,7 +359,7 @@ vala_object_type_real_check (ValaCodeNode* base,
 	ValaObjectType * self;
 	ValaTypeSymbol* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaObjectType*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_data_type_get_type_symbol ((ValaDataType*) self);
@@ -410,12 +412,12 @@ vala_object_type_get_type_once (void)
 GType
 vala_object_type_get_type (void)
 {
-	static volatile gsize vala_object_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_object_type_type_id__volatile)) {
+	static volatile gsize vala_object_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_object_type_type_id__once)) {
 		GType vala_object_type_type_id;
 		vala_object_type_type_id = vala_object_type_get_type_once ();
-		g_once_init_leave (&vala_object_type_type_id__volatile, vala_object_type_type_id);
+		g_once_init_leave (&vala_object_type_type_id__once, vala_object_type_type_id);
 	}
-	return vala_object_type_type_id__volatile;
+	return vala_object_type_type_id__once;
 }
 

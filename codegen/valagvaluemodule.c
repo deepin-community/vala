@@ -496,7 +496,7 @@ vala_gvalue_module_real_get_value_getter_function (ValaCCodeBaseModule* base,
 	ValaArrayType* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
 	ValaTypeSymbol* _tmp2_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaGValueModule*) base;
 	g_return_val_if_fail (type_reference != NULL, NULL);
 	_tmp0_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (type_reference, VALA_TYPE_ARRAY_TYPE) ? ((ValaArrayType*) type_reference) : NULL);
@@ -570,7 +570,7 @@ vala_gvalue_module_real_get_value_setter_function (ValaCCodeBaseModule* base,
 	ValaArrayType* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
 	ValaTypeSymbol* _tmp2_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaGValueModule*) base;
 	g_return_val_if_fail (type_reference != NULL, NULL);
 	_tmp0_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (type_reference, VALA_TYPE_ARRAY_TYPE) ? ((ValaArrayType*) type_reference) : NULL);
@@ -644,7 +644,7 @@ vala_gvalue_module_real_get_value_taker_function (ValaCCodeBaseModule* base,
 	ValaArrayType* _tmp0_;
 	ValaTypeSymbol* _tmp1_;
 	ValaTypeSymbol* _tmp2_;
-	ValaCCodeExpression* result = NULL;
+	ValaCCodeExpression* result;
 	self = (ValaGValueModule*) base;
 	g_return_val_if_fail (type_reference != NULL, NULL);
 	_tmp0_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_TYPE (type_reference, VALA_TYPE_ARRAY_TYPE) ? ((ValaArrayType*) type_reference) : NULL);
@@ -752,12 +752,12 @@ vala_gvalue_module_get_type_once (void)
 GType
 vala_gvalue_module_get_type (void)
 {
-	static volatile gsize vala_gvalue_module_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_gvalue_module_type_id__volatile)) {
+	static volatile gsize vala_gvalue_module_type_id__once = 0;
+	if (g_once_init_enter (&vala_gvalue_module_type_id__once)) {
 		GType vala_gvalue_module_type_id;
 		vala_gvalue_module_type_id = vala_gvalue_module_get_type_once ();
-		g_once_init_leave (&vala_gvalue_module_type_id__volatile, vala_gvalue_module_type_id);
+		g_once_init_leave (&vala_gvalue_module_type_id__once, vala_gvalue_module_type_id);
 	}
-	return vala_gvalue_module_type_id__volatile;
+	return vala_gvalue_module_type_id__once;
 }
 

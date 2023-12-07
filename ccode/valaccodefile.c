@@ -85,10 +85,8 @@ CCodeFileType
 vala_ccode_file_get_file_type (ValaCCodeFile* self)
 {
 	CCodeFileType result;
-	CCodeFileType _tmp0_;
 	g_return_val_if_fail (self != NULL, 0U);
-	_tmp0_ = self->priv->_file_type;
-	result = _tmp0_;
+	result = self->priv->_file_type;
 	return result;
 }
 
@@ -144,7 +142,7 @@ vala_ccode_file_add_declaration (ValaCCodeFile* self,
 {
 	ValaSet* _tmp0_;
 	ValaSet* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 	_tmp0_ = self->priv->declarations;
@@ -338,7 +336,7 @@ vala_ccode_file_get_symbols (ValaCCodeFile* self)
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
 	ValaCCodeFragment* _tmp2_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_str_equal;
 	_tmp1_ = vala_array_list_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free, _tmp0_);
@@ -428,7 +426,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -445,7 +443,7 @@ vala_ccode_file_get_define_for_filename (const gchar* filename)
 	GString* _tmp13_;
 	const gchar* _tmp14_;
 	gchar* _tmp15_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (filename != NULL, NULL);
 	_tmp0_ = g_string_new ("__");
 	define = _tmp0_;
@@ -514,7 +512,7 @@ vala_ccode_file_store (ValaCCodeFile* self,
 	ValaCCodeWriter* _tmp1_;
 	CCodeFileType _tmp2_;
 	ValaCCodeWriter* _tmp95_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (filename != NULL, FALSE);
 	_tmp0_ = vala_ccode_writer_new (filename, source_filename);
@@ -1024,13 +1022,13 @@ vala_ccode_file_get_type_once (void)
 GType
 vala_ccode_file_get_type (void)
 {
-	static volatile gsize vala_ccode_file_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_file_type_id__volatile)) {
+	static volatile gsize vala_ccode_file_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_file_type_id__once)) {
 		GType vala_ccode_file_type_id;
 		vala_ccode_file_type_id = vala_ccode_file_get_type_once ();
-		g_once_init_leave (&vala_ccode_file_type_id__volatile, vala_ccode_file_type_id);
+		g_once_init_leave (&vala_ccode_file_type_id__once, vala_ccode_file_type_id);
 	}
-	return vala_ccode_file_type_id__volatile;
+	return vala_ccode_file_type_id__once;
 }
 
 gpointer
@@ -1065,12 +1063,12 @@ ccode_file_type_get_type_once (void)
 GType
 ccode_file_type_get_type (void)
 {
-	static volatile gsize ccode_file_type_type_id__volatile = 0;
-	if (g_once_init_enter (&ccode_file_type_type_id__volatile)) {
+	static volatile gsize ccode_file_type_type_id__once = 0;
+	if (g_once_init_enter (&ccode_file_type_type_id__once)) {
 		GType ccode_file_type_type_id;
 		ccode_file_type_type_id = ccode_file_type_get_type_once ();
-		g_once_init_leave (&ccode_file_type_type_id__volatile, ccode_file_type_type_id);
+		g_once_init_leave (&ccode_file_type_type_id__once, ccode_file_type_type_id);
 	}
-	return ccode_file_type_type_id__volatile;
+	return ccode_file_type_type_id__once;
 }
 

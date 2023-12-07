@@ -196,7 +196,7 @@ vala_named_argument_real_is_pure (ValaExpression* base)
 	ValaNamedArgument * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNamedArgument*) base;
 	_tmp0_ = vala_named_argument_get_inner (self);
 	_tmp1_ = _tmp0_;
@@ -229,7 +229,7 @@ vala_named_argument_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp19_;
 	gboolean _tmp20_;
 	gboolean _tmp21_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaNamedArgument*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -364,12 +364,12 @@ vala_named_argument_get_type_once (void)
 GType
 vala_named_argument_get_type (void)
 {
-	static volatile gsize vala_named_argument_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_named_argument_type_id__volatile)) {
+	static volatile gsize vala_named_argument_type_id__once = 0;
+	if (g_once_init_enter (&vala_named_argument_type_id__once)) {
 		GType vala_named_argument_type_id;
 		vala_named_argument_type_id = vala_named_argument_get_type_once ();
-		g_once_init_leave (&vala_named_argument_type_id__volatile, vala_named_argument_type_id);
+		g_once_init_leave (&vala_named_argument_type_id__once, vala_named_argument_type_id);
 	}
-	return vala_named_argument_type_id__volatile;
+	return vala_named_argument_type_id__once;
 }
 

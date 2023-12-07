@@ -47,6 +47,8 @@ struct _ValadocContentTableRowPrivate {
 static gint ValadocContentTableRow_private_offset;
 static gpointer valadoc_content_table_row_parent_class = NULL;
 
+static void valadoc_content_table_row_set_cells (ValadocContentTableRow* self,
+                                          ValaList* value);
  G_GNUC_INTERNAL ValadocContentTableRow* valadoc_content_table_row_new (void);
  G_GNUC_INTERNAL ValadocContentTableRow* valadoc_content_table_row_construct (GType object_type);
 static void valadoc_content_table_row_real_check (ValadocContentContentElement* base,
@@ -70,6 +72,10 @@ static void _vala_valadoc_content_table_row_get_property (GObject * object,
                                                    guint property_id,
                                                    GValue * value,
                                                    GParamSpec * pspec);
+static void _vala_valadoc_content_table_row_set_property (GObject * object,
+                                                   guint property_id,
+                                                   const GValue * value,
+                                                   GParamSpec * pspec);
 
 static inline gpointer
 valadoc_content_table_row_get_instance_private (ValadocContentTableRow* self)
@@ -88,17 +94,41 @@ valadoc_content_table_row_get_cells (ValadocContentTableRow* self)
 	return result;
 }
 
+static gpointer
+_vala_iterable_ref0 (gpointer self)
+{
+	return self ? vala_iterable_ref (self) : NULL;
+}
+
+static void
+valadoc_content_table_row_set_cells (ValadocContentTableRow* self,
+                                     ValaList* value)
+{
+	ValaList* old_value;
+	g_return_if_fail (self != NULL);
+	old_value = valadoc_content_table_row_get_cells (self);
+	if (old_value != value) {
+		ValaList* _tmp0_;
+		_tmp0_ = _vala_iterable_ref0 (value);
+		_vala_iterable_unref0 (self->priv->_cells);
+		self->priv->_cells = _tmp0_;
+		g_object_notify_by_pspec ((GObject *) self, valadoc_content_table_row_properties[VALADOC_CONTENT_TABLE_ROW_CELLS_PROPERTY]);
+	}
+}
+
  G_GNUC_INTERNAL ValadocContentTableRow*
 valadoc_content_table_row_construct (GType object_type)
 {
 	ValadocContentTableRow * self = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
+	ValaArrayList* _tmp2_;
 	self = (ValadocContentTableRow*) valadoc_content_content_element_construct (object_type);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_CONTENT_TYPE_TABLE_CELL, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
-	_vala_iterable_unref0 (self->priv->_cells);
-	self->priv->_cells = (ValaList*) _tmp1_;
+	_tmp2_ = _tmp1_;
+	valadoc_content_table_row_set_cells (self, (ValaList*) _tmp2_);
+	_vala_iterable_unref0 (_tmp2_);
 	return self;
 }
 
@@ -223,7 +253,7 @@ static gboolean
 valadoc_content_table_row_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentTableRow * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentTableRow*) base;
 	result = FALSE;
 	return result;
@@ -237,7 +267,7 @@ valadoc_content_table_row_real_copy (ValadocContentContentElement* base,
 	ValadocContentTableRow* row = NULL;
 	ValadocContentTableRow* _tmp0_;
 	ValadocContentTableRow* _tmp1_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentTableRow*) base;
 	_tmp0_ = valadoc_content_table_row_new ();
 	row = _tmp0_;
@@ -271,8 +301,7 @@ valadoc_content_table_row_real_copy (ValadocContentContentElement* base,
 			ValadocContentTableCell* _tmp13_;
 			ValadocContentTableRow* _tmp14_;
 			ValaList* _tmp15_;
-			ValaList* _tmp16_;
-			ValadocContentTableCell* _tmp17_;
+			ValadocContentTableCell* _tmp16_;
 			_cell_index = _cell_index + 1;
 			_tmp6_ = _cell_index;
 			_tmp7_ = _cell_size;
@@ -291,10 +320,9 @@ valadoc_content_table_row_real_copy (ValadocContentContentElement* base,
 			}
 			copy = _tmp13_;
 			_tmp14_ = row;
-			_tmp15_ = valadoc_content_table_row_get_cells (_tmp14_);
-			_tmp16_ = _tmp15_;
-			_tmp17_ = copy;
-			vala_collection_add ((ValaCollection*) _tmp16_, _tmp17_);
+			_tmp15_ = _tmp14_->priv->_cells;
+			_tmp16_ = copy;
+			vala_collection_add ((ValaCollection*) _tmp15_, _tmp16_);
 			_g_object_unref0 (copy);
 			_g_object_unref0 (cell);
 		}
@@ -315,6 +343,7 @@ valadoc_content_table_row_class_init (ValadocContentTableRowClass * klass,
 	((ValadocContentContentElementClass *) klass)->is_empty = (gboolean (*) (ValadocContentContentElement*)) valadoc_content_table_row_real_is_empty;
 	((ValadocContentContentElementClass *) klass)->copy = (ValadocContentContentElement* (*) (ValadocContentContentElement*, ValadocContentContentElement*)) valadoc_content_table_row_real_copy;
 	G_OBJECT_CLASS (klass)->get_property = _vala_valadoc_content_table_row_get_property;
+	G_OBJECT_CLASS (klass)->set_property = _vala_valadoc_content_table_row_set_property;
 	G_OBJECT_CLASS (klass)->finalize = valadoc_content_table_row_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), VALADOC_CONTENT_TABLE_ROW_CELLS_PROPERTY, valadoc_content_table_row_properties[VALADOC_CONTENT_TABLE_ROW_CELLS_PROPERTY] = vala_param_spec_iterable ("cells", "cells", "cells", VALA_TYPE_LIST, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
@@ -348,13 +377,13 @@ valadoc_content_table_row_get_type_once (void)
 GType
 valadoc_content_table_row_get_type (void)
 {
-	static volatile gsize valadoc_content_table_row_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_table_row_type_id__volatile)) {
+	static volatile gsize valadoc_content_table_row_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_table_row_type_id__once)) {
 		GType valadoc_content_table_row_type_id;
 		valadoc_content_table_row_type_id = valadoc_content_table_row_get_type_once ();
-		g_once_init_leave (&valadoc_content_table_row_type_id__volatile, valadoc_content_table_row_type_id);
+		g_once_init_leave (&valadoc_content_table_row_type_id__once, valadoc_content_table_row_type_id);
 	}
-	return valadoc_content_table_row_type_id__volatile;
+	return valadoc_content_table_row_type_id__once;
 }
 
 static void
@@ -368,6 +397,24 @@ _vala_valadoc_content_table_row_get_property (GObject * object,
 	switch (property_id) {
 		case VALADOC_CONTENT_TABLE_ROW_CELLS_PROPERTY:
 		vala_value_set_iterable (value, valadoc_content_table_row_get_cells (self));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+static void
+_vala_valadoc_content_table_row_set_property (GObject * object,
+                                              guint property_id,
+                                              const GValue * value,
+                                              GParamSpec * pspec)
+{
+	ValadocContentTableRow * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, VALADOC_CONTENT_TYPE_TABLE_ROW, ValadocContentTableRow);
+	switch (property_id) {
+		case VALADOC_CONTENT_TABLE_ROW_CELLS_PROPERTY:
+		valadoc_content_table_row_set_cells (self, vala_value_get_iterable (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

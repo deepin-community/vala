@@ -25,8 +25,8 @@
 
 #include "vala.h"
 #include <glib.h>
-#include <valagee.h>
 #include <glib-object.h>
+#include <valagee.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -196,7 +196,7 @@ vala_switch_label_real_check (ValaCodeNode* base,
 	gboolean _tmp1_;
 	ValaExpression* _tmp4_;
 	ValaExpression* _tmp5_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaSwitchLabel*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -510,12 +510,12 @@ vala_switch_label_get_type_once (void)
 GType
 vala_switch_label_get_type (void)
 {
-	static volatile gsize vala_switch_label_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_switch_label_type_id__volatile)) {
+	static volatile gsize vala_switch_label_type_id__once = 0;
+	if (g_once_init_enter (&vala_switch_label_type_id__once)) {
 		GType vala_switch_label_type_id;
 		vala_switch_label_type_id = vala_switch_label_get_type_once ();
-		g_once_init_leave (&vala_switch_label_type_id__volatile, vala_switch_label_type_id);
+		g_once_init_leave (&vala_switch_label_type_id__once, vala_switch_label_type_id);
 	}
-	return vala_switch_label_type_id__volatile;
+	return vala_switch_label_type_id__once;
 }
 

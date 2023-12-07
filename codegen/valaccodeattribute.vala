@@ -255,7 +255,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (ccode != null) {
 					_dup_function = ccode.get_string ("dup_function");
 				}
-				if (_dup_function == null && !sym.external_package && sym is Struct) {
+				if (_dup_function == null && !sym.external_package
+				    && sym is Struct && !((Struct) sym).is_simple_type ()) {
 					_dup_function = "%sdup".printf (lower_case_prefix);
 				}
 				dup_function_set = true;
@@ -599,7 +600,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public bool array_length {
 		get {
 			if (_array_length == null) {
-				if (node.get_attribute ("NoArrayLength") != null) {
+				if (node.has_attribute ("NoArrayLength")) {
 					Report.deprecated (node.source_reference, "[NoArrayLength] is deprecated, use [CCode (array_length = false)] instead.");
 					_array_length = false;
 				} else if (ccode != null && ccode.has_argument ("array_length")) {
@@ -733,7 +734,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				if (cname[0].isdigit ()) {
 					Report.error (node.source_reference, "Field name starts with a digit. Use the `cname' attribute to provide a valid C name if intended");
-					return "";
+				} else if (CCodeBaseModule.reserved_identifiers.contains (cname)) {
+					Report.error (node.source_reference, "Field name `%s' collides with reserved identifier. Use the `cname' attribute to provide a valid C name if intended", cname);
 				}
 				return cname;
 			} else if (sym is CreationMethod) {
@@ -759,14 +761,23 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (m.signal_reference != null) {
 					return "%s%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), get_ccode_lower_case_name (m.signal_reference));
 				}
+				string cname;
 				if (sym.name == "main" && sym.parent_symbol.name == null) {
 					// avoid conflict with generated main function
-					return "_vala_main";
+					if (m.coroutine) {
+						return "_vala_main_async";
+					} else {
+						return "_vala_main";
+					}
 				} else if (sym.name.has_prefix ("_")) {
-					return "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
+					cname = "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
 				} else {
-					return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
+					cname = "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
+				if (CCodeBaseModule.reserved_identifiers.contains (cname)) {
+					Report.error (node.source_reference, "Method name `%s' collides with reserved identifier. Use the `cname' attribute to provide a valid C name if intended", cname);
+				}
+				return cname;
 			} else if (sym is Property) {
 				return sym.name.replace ("_", "-");
 			} else if (sym is PropertyAccessor) {
@@ -782,7 +793,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return Symbol.camel_case_to_lower_case (sym.name).replace ("_", "-");;
 			} else if (sym is LocalVariable) {
 				unowned string name = sym.name;
-				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
+				if (CCodeBaseModule.reserved_identifiers.contains (name) || CCodeBaseModule.reserved_vala_identifiers.contains (name)) {
 					return "_%s_".printf (name);
 				} else {
 					return name;
@@ -793,10 +804,26 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "...";
 				}
 				unowned string name = sym.name;
-				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
+				if (CCodeBaseModule.reserved_identifiers.contains (name) || CCodeBaseModule.reserved_vala_identifiers.contains (name)) {
 					return "_%s_".printf (name);
 				} else {
 					return name;
+				}
+			} else if (sym is TypeParameter) {
+				assert (node is GenericType);
+				var type = (GenericType) node;
+				if (type.value_owned) {
+					if (CodeContext.get ().profile == Profile.GOBJECT) {
+						return "gpointer";
+					} else {
+						return "void *";
+					}
+				} else {
+					if (CodeContext.get ().profile == Profile.GOBJECT) {
+						return "gconstpointer";
+					} else {
+						return "const void *";
+					}
 				}
 			} else {
 				return "%s%s".printf (get_ccode_prefix (sym.parent_symbol), sym.name);
@@ -1021,7 +1048,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 			return "%sfree".printf (lower_case_prefix);
 		} else if (sym is Struct) {
-			if (!sym.external_package) {
+			if (!sym.external_package && !((Struct) sym).is_simple_type ()) {
 				return "%sfree".printf (lower_case_prefix);
 			}
 		}
@@ -1051,6 +1078,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return get_ccode_upper_case_name (en, "TYPE_");
 				} else {
 					return en.is_flags ? "G_TYPE_UINT" : "G_TYPE_INT";
+				}
+			} else if (sym is ErrorDomain) {
+				unowned ErrorDomain edomain = (ErrorDomain) sym;
+				if (get_ccode_has_type_id (edomain)) {
+					return get_ccode_upper_case_name (edomain, "TYPE_");
+				} else {
+					return "G_TYPE_ERROR";
 				}
 			} else {
 				return "G_TYPE_POINTER";
@@ -1140,7 +1174,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is PointerType || node is GenericType) {
 			return "POINTER";
 		} else if (node is ErrorType) {
-			return "POINTER";
+			return "BOXED";
 		} else if (node is ArrayType) {
 			unowned ArrayType array_type = (ArrayType) node;
 			if (array_type.element_type.type_symbol == CodeContext.get ().analyzer.string_type.type_symbol) {
@@ -1198,6 +1232,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "g_value_get_int";
 				}
 			}
+		} else if (sym is ErrorDomain) {
+			return "g_value_get_boxed";
 		} else if (sym is Interface) {
 			foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
 				var type_name = get_ccode_get_value_function (prereq.type_symbol);
@@ -1256,6 +1292,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "g_value_set_int";
 				}
 			}
+		} else if (sym is ErrorDomain) {
+			return "g_value_set_boxed";
 		} else if (sym is Interface) {
 			foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
 				var type_name = get_ccode_set_value_function (prereq.type_symbol);
@@ -1314,6 +1352,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "g_value_take_int";
 				}
 			}
+		} else if (sym is ErrorDomain) {
+			return "g_value_take_boxed";
 		} else if (sym is Interface) {
 			foreach (var prereq in ((Interface) sym).get_prerequisites ()) {
 				var func = get_ccode_take_value_function (prereq.type_symbol);
@@ -1381,6 +1421,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 						return "g_param_spec_int";
 					}
 				}
+			} else if (sym is ErrorDomain) {
+				return "g_param_spec_boxed";
 			} else if (sym is Struct) {
 				var type_id = get_ccode_type_id (sym);
 				if (type_id == "G_TYPE_INT") {

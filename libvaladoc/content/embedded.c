@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <glib/gstdio.h>
 
 enum  {
@@ -151,10 +152,8 @@ valadoc_content_embedded_real_get_horizontal_align (ValadocContentStyleAttribute
 {
 	ValadocContentHorizontalAlign result;
 	ValadocContentEmbedded* self;
-	ValadocContentHorizontalAlign _tmp0_;
 	self = (ValadocContentEmbedded*) base;
-	_tmp0_ = self->priv->_horizontal_align;
-	result = _tmp0_;
+	result = self->priv->_horizontal_align;
 	return result;
 }
 
@@ -177,10 +176,8 @@ valadoc_content_embedded_real_get_vertical_align (ValadocContentStyleAttributes*
 {
 	ValadocContentVerticalAlign result;
 	ValadocContentEmbedded* self;
-	ValadocContentVerticalAlign _tmp0_;
 	self = (ValadocContentEmbedded*) base;
-	_tmp0_ = self->priv->_vertical_align;
-	result = _tmp0_;
+	result = self->priv->_vertical_align;
 	return result;
 }
 
@@ -434,7 +431,7 @@ static gboolean
 valadoc_content_embedded_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocContentEmbedded * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocContentEmbedded*) base;
 	result = FALSE;
 	return result;
@@ -459,7 +456,7 @@ valadoc_content_embedded_real_copy (ValadocContentContentElement* base,
 	const gchar* _tmp10_;
 	const gchar* _tmp11_;
 	const gchar* _tmp12_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocContentEmbedded*) base;
 	_tmp0_ = valadoc_content_embedded_new ();
 	embedded = _tmp0_;
@@ -567,13 +564,13 @@ valadoc_content_embedded_get_type_once (void)
 GType
 valadoc_content_embedded_get_type (void)
 {
-	static volatile gsize valadoc_content_embedded_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_content_embedded_type_id__volatile)) {
+	static volatile gsize valadoc_content_embedded_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_content_embedded_type_id__once)) {
 		GType valadoc_content_embedded_type_id;
 		valadoc_content_embedded_type_id = valadoc_content_embedded_get_type_once ();
-		g_once_init_leave (&valadoc_content_embedded_type_id__volatile, valadoc_content_embedded_type_id);
+		g_once_init_leave (&valadoc_content_embedded_type_id__once, valadoc_content_embedded_type_id);
 	}
-	return valadoc_content_embedded_type_id__volatile;
+	return valadoc_content_embedded_type_id__once;
 }
 
 static void

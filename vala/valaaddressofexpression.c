@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -51,6 +52,7 @@ static void vala_addressof_expression_real_replace_expression (ValaCodeNode* bas
 static gboolean vala_addressof_expression_real_is_pure (ValaExpression* base);
 static gboolean vala_addressof_expression_real_is_accessible (ValaExpression* base,
                                                        ValaSymbol* sym);
+static gboolean vala_addressof_expression_real_is_non_null (ValaExpression* base);
 static gboolean vala_addressof_expression_real_check (ValaCodeNode* base,
                                                ValaCodeContext* context);
 static void vala_addressof_expression_real_emit (ValaCodeNode* base,
@@ -156,7 +158,7 @@ vala_addressof_expression_real_to_string (ValaCodeNode* base)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaAddressofExpression*) base;
 	_tmp0_ = vala_addressof_expression_get_inner (self);
 	_tmp1_ = _tmp0_;
@@ -193,7 +195,7 @@ vala_addressof_expression_real_is_pure (ValaExpression* base)
 	ValaAddressofExpression * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaAddressofExpression*) base;
 	_tmp0_ = vala_addressof_expression_get_inner (self);
 	_tmp1_ = _tmp0_;
@@ -208,12 +210,26 @@ vala_addressof_expression_real_is_accessible (ValaExpression* base,
 	ValaAddressofExpression * self;
 	ValaExpression* _tmp0_;
 	ValaExpression* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaAddressofExpression*) base;
 	g_return_val_if_fail (sym != NULL, FALSE);
 	_tmp0_ = vala_addressof_expression_get_inner (self);
 	_tmp1_ = _tmp0_;
 	result = vala_expression_is_accessible (_tmp1_, sym);
+	return result;
+}
+
+static gboolean
+vala_addressof_expression_real_is_non_null (ValaExpression* base)
+{
+	ValaAddressofExpression * self;
+	ValaExpression* _tmp0_;
+	ValaExpression* _tmp1_;
+	gboolean result;
+	self = (ValaAddressofExpression*) base;
+	_tmp0_ = vala_addressof_expression_get_inner (self);
+	_tmp1_ = _tmp0_;
+	result = vala_expression_is_non_null (_tmp1_);
 	return result;
 }
 
@@ -240,7 +256,7 @@ vala_addressof_expression_real_check (ValaCodeNode* base,
 	ValaDataType* _tmp35_;
 	gboolean _tmp54_;
 	gboolean _tmp55_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaAddressofExpression*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -413,6 +429,7 @@ vala_addressof_expression_class_init (ValaAddressofExpressionClass * klass,
 	((ValaCodeNodeClass *) klass)->replace_expression = (void (*) (ValaCodeNode*, ValaExpression*, ValaExpression*)) vala_addressof_expression_real_replace_expression;
 	((ValaExpressionClass *) klass)->is_pure = (gboolean (*) (ValaExpression*)) vala_addressof_expression_real_is_pure;
 	((ValaExpressionClass *) klass)->is_accessible = (gboolean (*) (ValaExpression*, ValaSymbol*)) vala_addressof_expression_real_is_accessible;
+	((ValaExpressionClass *) klass)->is_non_null = (gboolean (*) (ValaExpression*)) vala_addressof_expression_real_is_non_null;
 	((ValaCodeNodeClass *) klass)->check = (gboolean (*) (ValaCodeNode*, ValaCodeContext*)) vala_addressof_expression_real_check;
 	((ValaCodeNodeClass *) klass)->emit = (void (*) (ValaCodeNode*, ValaCodeGenerator*)) vala_addressof_expression_real_emit;
 }
@@ -451,12 +468,12 @@ vala_addressof_expression_get_type_once (void)
 GType
 vala_addressof_expression_get_type (void)
 {
-	static volatile gsize vala_addressof_expression_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_addressof_expression_type_id__volatile)) {
+	static volatile gsize vala_addressof_expression_type_id__once = 0;
+	if (g_once_init_enter (&vala_addressof_expression_type_id__once)) {
 		GType vala_addressof_expression_type_id;
 		vala_addressof_expression_type_id = vala_addressof_expression_get_type_once ();
-		g_once_init_leave (&vala_addressof_expression_type_id__volatile, vala_addressof_expression_type_id);
+		g_once_init_leave (&vala_addressof_expression_type_id__once, vala_addressof_expression_type_id);
 	}
-	return vala_addressof_expression_type_id__volatile;
+	return vala_addressof_expression_type_id__once;
 }
 

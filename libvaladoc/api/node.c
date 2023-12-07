@@ -140,7 +140,7 @@ valadoc_api_node_get_source_file (ValadocApiNode* self)
 {
 	ValadocApiSourceFile* _tmp0_;
 	ValadocApiSourceFile* _tmp1_;
-	ValadocApiSourceFile* result = NULL;
+	ValadocApiSourceFile* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->file;
 	_tmp1_ = _g_object_ref0 (_tmp0_);
@@ -165,7 +165,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -297,7 +297,7 @@ valadoc_api_node_real_get_filename (ValadocDocumentation* base)
 	const gchar* _tmp2_;
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocApiNode*) base;
 	_tmp0_ = self->priv->file;
 	if (_tmp0_ == NULL) {
@@ -515,7 +515,7 @@ valadoc_api_node_has_visible_children_by_type (ValadocApiNode* self,
 	ValaMap* _tmp0_;
 	gpointer _tmp1_;
 	ValaList* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (settings != NULL, FALSE);
 	_tmp0_ = self->priv->per_type_children;
@@ -581,7 +581,7 @@ valadoc_api_node_has_visible_children_by_types (ValadocApiNode* self,
                                                 gint types_length1,
                                                 ValadocSettings* settings)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (settings != NULL, FALSE);
 	{
@@ -595,9 +595,7 @@ valadoc_api_node_has_visible_children_by_types (ValadocApiNode* self,
 			ValadocApiNodeType type = 0;
 			type = type_collection[type_it];
 			{
-				ValadocApiNodeType _tmp0_;
-				_tmp0_ = type;
-				if (valadoc_api_node_has_visible_children_by_type (self, _tmp0_, settings)) {
+				if (valadoc_api_node_has_visible_children_by_type (self, type, settings)) {
 					result = TRUE;
 					return result;
 				}
@@ -623,7 +621,7 @@ valadoc_api_node_has_visible_children (ValadocApiNode* self,
 	ValadocApiNodeType* _tmp5_;
 	gint _tmp5__length1;
 	gboolean _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (settings != NULL, FALSE);
 	_tmp0_ = self->priv->per_type_children;
@@ -653,7 +651,7 @@ valadoc_api_node_has_children_by_type (ValadocApiNode* self,
 	gpointer _tmp1_;
 	gboolean _tmp2_ = FALSE;
 	ValaList* _tmp3_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->priv->per_type_children;
 	_tmp1_ = vala_map_get (_tmp0_, (gpointer) ((gintptr) type));
@@ -685,7 +683,7 @@ valadoc_api_node_has_children (ValadocApiNode* self,
                                ValadocApiNodeType* types,
                                gint types_length1)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	{
 		ValadocApiNodeType* type_collection = NULL;
@@ -698,9 +696,7 @@ valadoc_api_node_has_children (ValadocApiNode* self,
 			ValadocApiNodeType type = 0;
 			type = type_collection[type_it];
 			{
-				ValadocApiNodeType _tmp0_;
-				_tmp0_ = type;
-				if (valadoc_api_node_has_children_by_type (self, _tmp0_)) {
+				if (valadoc_api_node_has_children_by_type (self, type)) {
 					result = TRUE;
 					return result;
 				}
@@ -729,7 +725,7 @@ valadoc_api_node_get_children_by_type (ValadocApiNode* self,
 	ValaMap* _tmp2_;
 	gpointer _tmp3_;
 	ValaList* _tmp4_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_API_TYPE_NODE, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
@@ -808,7 +804,7 @@ valadoc_api_node_get_children_by_types (ValadocApiNode* self,
 	ValaArrayList* children = NULL;
 	GEqualFunc _tmp0_;
 	ValaArrayList* _tmp1_;
-	ValaList* result = NULL;
+	ValaList* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = g_direct_equal;
 	_tmp1_ = vala_array_list_new (VALADOC_API_TYPE_NODE, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, _tmp0_);
@@ -825,15 +821,13 @@ valadoc_api_node_get_children_by_types (ValadocApiNode* self,
 			type = type_collection[type_it];
 			{
 				ValaArrayList* _tmp2_;
-				ValadocApiNodeType _tmp3_;
+				ValaList* _tmp3_;
 				ValaList* _tmp4_;
-				ValaList* _tmp5_;
 				_tmp2_ = children;
-				_tmp3_ = type;
-				_tmp4_ = valadoc_api_node_get_children_by_type (self, _tmp3_, filtered);
-				_tmp5_ = _tmp4_;
-				vala_collection_add_all ((ValaCollection*) _tmp2_, (ValaCollection*) _tmp5_);
-				_vala_iterable_unref0 (_tmp5_);
+				_tmp3_ = valadoc_api_node_get_children_by_type (self, type, filtered);
+				_tmp4_ = _tmp3_;
+				vala_collection_add_all ((ValaCollection*) _tmp2_, (ValaCollection*) _tmp4_);
+				_vala_iterable_unref0 (_tmp4_);
 			}
 		}
 	}
@@ -942,9 +936,7 @@ valadoc_api_node_accept_children (ValadocApiNode* self,
 			ValadocApiNodeType type = 0;
 			type = type_collection[type_it];
 			{
-				ValadocApiNodeType _tmp0_;
-				_tmp0_ = type;
-				valadoc_api_node_accept_children_by_type (self, _tmp0_, visitor, filtered);
+				valadoc_api_node_accept_children_by_type (self, type, visitor, filtered);
 			}
 		}
 	}
@@ -1062,7 +1054,7 @@ ValadocApiNode*
 valadoc_api_node_find_by_name (ValadocApiNode* self,
                                const gchar* name)
 {
-	ValadocApiNode* result = NULL;
+	ValadocApiNode* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	if (string_get (name, (glong) 0) == '@') {
@@ -1221,7 +1213,7 @@ valadoc_api_node_get_full_name (ValadocApiNode* self)
 	const gchar* _tmp0_;
 	const gchar* _tmp25_;
 	gchar* _tmp26_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_full_name;
 	if (_tmp0_ == NULL) {
@@ -1325,7 +1317,7 @@ valadoc_api_node_compare_to (ValadocApiNode* self,
 	GCompareFunc _tmp0_;
 	const gchar* _tmp1_;
 	const gchar* _tmp2_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_return_val_if_fail (node != NULL, 0);
 	_tmp0_ = ((GCompareFunc) g_strcmp0);
@@ -1421,13 +1413,13 @@ valadoc_api_node_get_type_once (void)
 GType
 valadoc_api_node_get_type (void)
 {
-	static volatile gsize valadoc_api_node_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_node_type_id__volatile)) {
+	static volatile gsize valadoc_api_node_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_node_type_id__once)) {
 		GType valadoc_api_node_type_id;
 		valadoc_api_node_type_id = valadoc_api_node_get_type_once ();
-		g_once_init_leave (&valadoc_api_node_type_id__volatile, valadoc_api_node_type_id);
+		g_once_init_leave (&valadoc_api_node_type_id__once, valadoc_api_node_type_id);
 	}
-	return valadoc_api_node_type_id__volatile;
+	return valadoc_api_node_type_id__once;
 }
 
 static void

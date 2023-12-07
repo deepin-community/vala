@@ -47,6 +47,8 @@ static GParamSpec* valadoc_gtkdoc_markdown_parser_properties[VALADOC_GTKDOC_MARK
 #define _g_match_info_unref0(var) ((var == NULL) ? NULL : (var = (g_match_info_unref (var), NULL)))
 #define _vala_map_iterator_unref0(var) ((var == NULL) ? NULL : (var = (vala_map_iterator_unref (var), NULL)))
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
+
+#define VALADOC_GTKDOC_TYPE_CONTENT_TO_STRING_ERROR (valadoc_gtkdoc_content_to_string_error_get_type ())
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -90,8 +92,8 @@ static gboolean valadoc_gtkdoc_markdown_parser_is_error_parameter (ValadocGtkdoc
  G_GNUC_INTERNAL gchar* valadoc_importer_helper_resolve_parameter_ctype (ValadocApiTree* tree,
                                                         ValadocApiNode* element,
                                                         const gchar* parameter_name,
-                                                        gchar* * param_name,
-                                                        gchar* * param_array_name,
+                                                        gchar** param_name,
+                                                        gchar** param_array_name,
                                                         gboolean* is_return_type_len);
 static void valadoc_gtkdoc_markdown_parser_push (ValadocGtkdocMarkdownParser* self,
                                           GObject* element);
@@ -328,10 +330,10 @@ static ValadocContentTaglet* _valadoc_gtkdoc_markdown_parser_parse_block_taglet 
 static ValadocContentNote* _valadoc_gtkdoc_markdown_parser_parse_note (ValadocGtkdocMarkdownParser* self,
                                                                 ValadocApiSourceComment* comment);
 static void valadoc_gtkdoc_markdown_parser_add_taglet (ValadocGtkdocMarkdownParser* self,
-                                                ValadocContentComment* * comment,
+                                                ValadocContentComment** comment,
                                                 ValadocContentTaglet* taglet);
 static void valadoc_gtkdoc_markdown_parser_add_note (ValadocGtkdocMarkdownParser* self,
-                                              ValadocContentComment* * comment,
+                                              ValadocContentComment** comment,
                                               ValadocContentNote* note);
  G_GNUC_INTERNAL void valadoc_importer_helper_extract_short_desc (ValadocContentComment* comment,
                                                  ValadocContentContentFactory* factory);
@@ -349,6 +351,7 @@ static void valadoc_gtkdoc_markdown_parser_inline_to_string (ValadocGtkdocMarkdo
                                                       GString* builder,
                                                       GError** error);
 VALA_EXTERN GQuark valadoc_gtkdoc_content_to_string_error_quark (void);
+ G_GNUC_INTERNAL GType valadoc_gtkdoc_content_to_string_error_get_type (void) G_GNUC_CONST ;
 static gchar* valadoc_gtkdoc_markdown_parser_real_resolve (ValadocResourceLocator* base,
                                                     const gchar* path);
 static void valadoc_gtkdoc_markdown_parser_finalize (GObject * obj);
@@ -1660,7 +1663,7 @@ static const gchar*
 string_offset (const gchar* self,
                glong offset)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = (const gchar*) (((gchar*) self) + offset);
 	return result;
@@ -1674,7 +1677,7 @@ string_index_of_char (const gchar* self,
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = g_utf8_strchr (((gchar*) self) + start_index, (gssize) -1, c);
 	_result_ = _tmp0_;
@@ -3551,7 +3554,7 @@ _valadoc_gtkdoc_markdown_parser_parse (ValadocGtkdocMarkdownParser* self,
                                        ValadocApiSourceComment* comment)
 {
 	GError* _inner_error0_ = NULL;
-	ValadocContentComment* result = NULL;
+	ValadocContentComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (comment != NULL, NULL);
 	{
@@ -3630,7 +3633,7 @@ _valadoc_gtkdoc_markdown_parser_parse_block_taglet (ValadocGtkdocMarkdownParser*
 	ValadocContentComment* _tmp12_;
 	ValaList* _tmp13_;
 	ValaList* _tmp14_;
-	ValadocContentTaglet* result = NULL;
+	ValadocContentTaglet* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (comment != NULL, NULL);
 	g_return_val_if_fail (taglet_name != NULL, NULL);
@@ -3686,7 +3689,7 @@ _valadoc_gtkdoc_markdown_parser_parse_note (ValadocGtkdocMarkdownParser* self,
 	ValadocContentComment* _tmp7_;
 	ValaList* _tmp8_;
 	ValaList* _tmp9_;
-	ValadocContentNote* result = NULL;
+	ValadocContentNote* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (comment != NULL, NULL);
 	_tmp0_ = _valadoc_gtkdoc_markdown_parser_parse (self, comment);
@@ -3714,7 +3717,7 @@ _valadoc_gtkdoc_markdown_parser_parse_note (ValadocGtkdocMarkdownParser* self,
 
 static void
 valadoc_gtkdoc_markdown_parser_add_taglet (ValadocGtkdocMarkdownParser* self,
-                                           ValadocContentComment* * comment,
+                                           ValadocContentComment** comment,
                                            ValadocContentTaglet* taglet)
 {
 	ValaList* _tmp2_;
@@ -3738,7 +3741,7 @@ valadoc_gtkdoc_markdown_parser_add_taglet (ValadocGtkdocMarkdownParser* self,
 
 static void
 valadoc_gtkdoc_markdown_parser_add_note (ValadocGtkdocMarkdownParser* self,
-                                         ValadocContentComment* * comment,
+                                         ValadocContentComment** comment,
                                          ValadocContentNote* note)
 {
 	ValaList* _tmp2_;
@@ -3819,7 +3822,7 @@ valadoc_gtkdoc_markdown_parser_parse (ValadocGtkdocMarkdownParser* self,
 	ValadocApiSourceComment* _tmp27_;
 	ValaMapIterator* iter = NULL;
 	ValaMapIterator* _tmp32_;
-	ValadocContentComment* result = NULL;
+	ValadocContentComment* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (element != NULL, NULL);
 	g_return_val_if_fail (gir_comment != NULL, NULL);
@@ -4128,7 +4131,7 @@ valadoc_gtkdoc_markdown_parser_pop_preserved_link (ValadocGtkdocMarkdownParser* 
 	const gchar* _tmp18_;
 	const gchar* _tmp19_;
 	gchar* _tmp20_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->preserved_token;
 	_vala_assert (_tmp0_ != NULL, "preserved_token != null");
@@ -4188,7 +4191,7 @@ valadoc_gtkdoc_markdown_parser_pop_preserved_path (ValadocGtkdocMarkdownParser* 
 	const gchar* _tmp4_;
 	const gchar* _tmp5_;
 	gchar* _tmp9_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->preserved_token;
 	_vala_assert (_tmp0_ != NULL, "preserved_token != null");
@@ -4224,7 +4227,7 @@ valadoc_gtkdoc_markdown_parser_run_to_string (ValadocGtkdocMarkdownParser* self,
 	GString* _tmp0_;
 	gchar* _tmp1_;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (run != NULL, NULL);
 	g_return_val_if_fail (rule_name != NULL, NULL);
@@ -4359,7 +4362,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -4370,7 +4373,7 @@ static gboolean
 valadoc_gtkdoc_markdown_parser_is_literal (ValadocGtkdocMarkdownParser* self,
                                            const gchar* str)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (str != NULL, FALSE);
 	if (g_strcmp0 (str, "TRUE") == 0) {
@@ -4410,7 +4413,7 @@ valadoc_gtkdoc_markdown_parser_is_error_parameter (ValadocGtkdocMarkdownParser* 
 	gint _tmp10_;
 	gint _tmp11_;
 	gboolean _tmp12_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (name != NULL, FALSE);
 	_tmp1_ = self->priv->element;
@@ -4458,7 +4461,7 @@ valadoc_gtkdoc_markdown_parser_real_resolve (ValadocResourceLocator* base,
 {
 	ValadocGtkdocMarkdownParser * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocGtkdocMarkdownParser*) base;
 	g_return_val_if_fail (path != NULL, NULL);
 	_tmp0_ = g_strdup (path);
@@ -4489,7 +4492,7 @@ valadoc_gtkdoc_markdown_parser_peek (ValadocGtkdocMarkdownParser* self,
 	gint _tmp5_;
 	gint _tmp6_;
 	gpointer _tmp7_;
-	GObject* result = NULL;
+	GObject* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_stack;
 	_tmp1_ = vala_collection_get_size ((ValaCollection*) _tmp0_);
@@ -4515,7 +4518,7 @@ valadoc_gtkdoc_markdown_parser_pop (ValadocGtkdocMarkdownParser* self)
 	gint _tmp4_;
 	gpointer _tmp5_;
 	GObject* _tmp6_;
-	GObject* result = NULL;
+	GObject* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = valadoc_gtkdoc_markdown_parser_peek (self, -1);
 	node = _tmp0_;
@@ -4536,7 +4539,7 @@ valadoc_gtkdoc_markdown_parser_fix_resource_path (ValadocGtkdocMarkdownParser* s
 {
 	ValadocGirMetaData* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (path != NULL, NULL);
 	_tmp0_ = self->priv->metadata;
@@ -4610,19 +4613,40 @@ valadoc_gtkdoc_markdown_parser_get_type_once (void)
 GType
 valadoc_gtkdoc_markdown_parser_get_type (void)
 {
-	static volatile gsize valadoc_gtkdoc_markdown_parser_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_gtkdoc_markdown_parser_type_id__volatile)) {
+	static volatile gsize valadoc_gtkdoc_markdown_parser_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_markdown_parser_type_id__once)) {
 		GType valadoc_gtkdoc_markdown_parser_type_id;
 		valadoc_gtkdoc_markdown_parser_type_id = valadoc_gtkdoc_markdown_parser_get_type_once ();
-		g_once_init_leave (&valadoc_gtkdoc_markdown_parser_type_id__volatile, valadoc_gtkdoc_markdown_parser_type_id);
+		g_once_init_leave (&valadoc_gtkdoc_markdown_parser_type_id__once, valadoc_gtkdoc_markdown_parser_type_id);
 	}
-	return valadoc_gtkdoc_markdown_parser_type_id__volatile;
+	return valadoc_gtkdoc_markdown_parser_type_id__once;
 }
 
 GQuark
 valadoc_gtkdoc_content_to_string_error_quark (void)
 {
 	return g_quark_from_static_string ("valadoc-gtkdoc-content-to-string-error-quark");
+}
+
+static GType
+valadoc_gtkdoc_content_to_string_error_get_type_once (void)
+{
+	static const GEnumValue values[] = {{VALADOC_GTKDOC_CONTENT_TO_STRING_ERROR_UNEXPECTED_ELEMENT, "VALADOC_GTKDOC_CONTENT_TO_STRING_ERROR_UNEXPECTED_ELEMENT", "unexpected-element"}, {0, NULL, NULL}};
+	GType valadoc_gtkdoc_content_to_string_error_type_id;
+	valadoc_gtkdoc_content_to_string_error_type_id = g_enum_register_static ("ValadocGtkdocContentToStringError", values);
+	return valadoc_gtkdoc_content_to_string_error_type_id;
+}
+
+ G_GNUC_INTERNAL GType
+valadoc_gtkdoc_content_to_string_error_get_type (void)
+{
+	static volatile gsize valadoc_gtkdoc_content_to_string_error_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_gtkdoc_content_to_string_error_type_id__once)) {
+		GType valadoc_gtkdoc_content_to_string_error_type_id;
+		valadoc_gtkdoc_content_to_string_error_type_id = valadoc_gtkdoc_content_to_string_error_get_type_once ();
+		g_once_init_leave (&valadoc_gtkdoc_content_to_string_error_type_id__once, valadoc_gtkdoc_content_to_string_error_type_id);
+	}
+	return valadoc_gtkdoc_content_to_string_error_type_id__once;
 }
 
 static void

@@ -24,15 +24,19 @@
  */
 
 #include "vala.h"
-#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
+#include <glib-object.h>
 
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
 
 struct _ValaErrorCodePrivate {
 	ValaExpression* _value;
 	ValaConstant* _code;
+	gchar* _nick;
 };
 
 static gint ValaErrorCode_private_offset;
@@ -121,6 +125,125 @@ vala_error_code_set_code (ValaErrorCode* self,
 		_tmp4_ = _tmp3_;
 		vala_symbol_set_owner ((ValaSymbol*) _tmp2_, _tmp4_);
 	}
+}
+
+static gchar*
+string_replace (const gchar* self,
+                const gchar* old,
+                const gchar* replacement)
+{
+	gboolean _tmp0_ = FALSE;
+	gboolean _tmp1_ = FALSE;
+	GError* _inner_error0_ = NULL;
+	gchar* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	g_return_val_if_fail (old != NULL, NULL);
+	g_return_val_if_fail (replacement != NULL, NULL);
+	if ((*((gchar*) self)) == '\0') {
+		_tmp1_ = TRUE;
+	} else {
+		_tmp1_ = (*((gchar*) old)) == '\0';
+	}
+	if (_tmp1_) {
+		_tmp0_ = TRUE;
+	} else {
+		_tmp0_ = g_strcmp0 (old, replacement) == 0;
+	}
+	if (_tmp0_) {
+		gchar* _tmp2_;
+		_tmp2_ = g_strdup (self);
+		result = _tmp2_;
+		return result;
+	}
+	{
+		GRegex* regex = NULL;
+		gchar* _tmp3_;
+		gchar* _tmp4_;
+		GRegex* _tmp5_;
+		GRegex* _tmp6_;
+		gchar* _tmp7_ = NULL;
+		GRegex* _tmp8_;
+		gchar* _tmp9_;
+		gchar* _tmp10_;
+		_tmp3_ = g_regex_escape_string (old, -1);
+		_tmp4_ = _tmp3_;
+		_tmp5_ = g_regex_new (_tmp4_, 0, 0, &_inner_error0_);
+		_tmp6_ = _tmp5_;
+		_g_free0 (_tmp4_);
+		regex = _tmp6_;
+		if (G_UNLIKELY (_inner_error0_ != NULL)) {
+			if (_inner_error0_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
+			g_clear_error (&_inner_error0_);
+			return NULL;
+		}
+		_tmp8_ = regex;
+		_tmp9_ = g_regex_replace_literal (_tmp8_, self, (gssize) -1, 0, replacement, 0, &_inner_error0_);
+		_tmp7_ = _tmp9_;
+		if (G_UNLIKELY (_inner_error0_ != NULL)) {
+			_g_regex_unref0 (regex);
+			if (_inner_error0_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
+			g_clear_error (&_inner_error0_);
+			return NULL;
+		}
+		_tmp10_ = _tmp7_;
+		_tmp7_ = NULL;
+		result = _tmp10_;
+		_g_free0 (_tmp7_);
+		_g_regex_unref0 (regex);
+		return result;
+	}
+	goto __finally0;
+	__catch0_g_regex_error:
+	{
+		g_clear_error (&_inner_error0_);
+		g_assert_not_reached ();
+	}
+	__finally0:
+	g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
+	g_clear_error (&_inner_error0_);
+	return NULL;
+}
+
+const gchar*
+vala_error_code_get_nick (ValaErrorCode* self)
+{
+	const gchar* result;
+	const gchar* _tmp0_;
+	const gchar* _tmp8_;
+	g_return_val_if_fail (self != NULL, NULL);
+	_tmp0_ = self->priv->_nick;
+	if (_tmp0_ == NULL) {
+		gchar* _tmp1_;
+		const gchar* _tmp2_;
+		_tmp1_ = vala_code_node_get_attribute_string ((ValaCodeNode*) self, "Description", "nick", NULL);
+		_g_free0 (self->priv->_nick);
+		self->priv->_nick = _tmp1_;
+		_tmp2_ = self->priv->_nick;
+		if (_tmp2_ == NULL) {
+			const gchar* _tmp3_;
+			const gchar* _tmp4_;
+			gchar* _tmp5_;
+			gchar* _tmp6_;
+			gchar* _tmp7_;
+			_tmp3_ = vala_symbol_get_name ((ValaSymbol*) self);
+			_tmp4_ = _tmp3_;
+			_tmp5_ = g_utf8_strdown (_tmp4_, (gssize) -1);
+			_tmp6_ = _tmp5_;
+			_tmp7_ = string_replace (_tmp6_, "_", "-");
+			_g_free0 (self->priv->_nick);
+			self->priv->_nick = _tmp7_;
+			_g_free0 (_tmp6_);
+		}
+	}
+	_tmp8_ = self->priv->_nick;
+	result = _tmp8_;
+	return result;
 }
 
 /**
@@ -236,7 +359,7 @@ vala_error_code_real_check (ValaCodeNode* base,
 	ValaConstant* _tmp24_;
 	gboolean _tmp25_;
 	gboolean _tmp26_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaErrorCode*) base;
 	g_return_val_if_fail (context != NULL, FALSE);
 	_tmp0_ = vala_code_node_get_checked ((ValaCodeNode*) self);
@@ -304,6 +427,7 @@ vala_error_code_instance_init (ValaErrorCode * self,
                                gpointer klass)
 {
 	self->priv = vala_error_code_get_instance_private (self);
+	self->priv->_nick = NULL;
 }
 
 static void
@@ -313,6 +437,7 @@ vala_error_code_finalize (ValaCodeNode * obj)
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, VALA_TYPE_ERROR_CODE, ValaErrorCode);
 	_vala_code_node_unref0 (self->priv->_value);
 	_vala_code_node_unref0 (self->priv->_code);
+	_g_free0 (self->priv->_nick);
 	VALA_CODE_NODE_CLASS (vala_error_code_parent_class)->finalize (obj);
 }
 
@@ -332,12 +457,12 @@ vala_error_code_get_type_once (void)
 GType
 vala_error_code_get_type (void)
 {
-	static volatile gsize vala_error_code_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_error_code_type_id__volatile)) {
+	static volatile gsize vala_error_code_type_id__once = 0;
+	if (g_once_init_enter (&vala_error_code_type_id__once)) {
 		GType vala_error_code_type_id;
 		vala_error_code_type_id = vala_error_code_get_type_once ();
-		g_once_init_leave (&vala_error_code_type_id__volatile, vala_error_code_type_id);
+		g_once_init_leave (&vala_error_code_type_id__once, vala_error_code_type_id);
 	}
-	return vala_error_code_type_id__volatile;
+	return vala_error_code_type_id__once;
 }
 

@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib-object.h>
 
 static gpointer vala_method_type_parent_class = NULL;
 
@@ -54,18 +55,20 @@ vala_method_type_get_method_symbol (ValaMethodType* self)
 
 ValaMethodType*
 vala_method_type_construct (GType object_type,
-                            ValaMethod* method_symbol)
+                            ValaMethod* method_symbol,
+                            ValaSourceReference* source_reference)
 {
 	ValaMethodType* self = NULL;
 	g_return_val_if_fail (method_symbol != NULL, NULL);
-	self = (ValaMethodType*) vala_callable_type_construct (object_type, (ValaSymbol*) method_symbol);
+	self = (ValaMethodType*) vala_callable_type_construct (object_type, (ValaSymbol*) method_symbol, source_reference);
 	return self;
 }
 
 ValaMethodType*
-vala_method_type_new (ValaMethod* method_symbol)
+vala_method_type_new (ValaMethod* method_symbol,
+                      ValaSourceReference* source_reference)
 {
-	return vala_method_type_construct (VALA_TYPE_METHOD_TYPE, method_symbol);
+	return vala_method_type_construct (VALA_TYPE_METHOD_TYPE, method_symbol, source_reference);
 }
 
 static ValaDataType*
@@ -74,13 +77,17 @@ vala_method_type_real_copy (ValaDataType* base)
 	ValaMethodType * self;
 	ValaMethod* _tmp0_;
 	ValaMethod* _tmp1_;
-	ValaMethodType* _tmp2_;
-	ValaDataType* result = NULL;
+	ValaSourceReference* _tmp2_;
+	ValaSourceReference* _tmp3_;
+	ValaMethodType* _tmp4_;
+	ValaDataType* result;
 	self = (ValaMethodType*) base;
 	_tmp0_ = vala_method_type_get_method_symbol (self);
 	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_method_type_new (_tmp1_);
-	result = (ValaDataType*) _tmp2_;
+	_tmp2_ = vala_code_node_get_source_reference ((ValaCodeNode*) self);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = vala_method_type_new (_tmp1_, _tmp3_);
+	result = (ValaDataType*) _tmp4_;
 	return result;
 }
 
@@ -97,7 +104,7 @@ vala_method_type_real_compatible (ValaDataType* base,
 	ValaMethod* _tmp4_;
 	ValaMethod* _tmp5_;
 	ValaDelegateType* _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaMethodType*) base;
 	g_return_val_if_fail (target_type != NULL, FALSE);
 	dt = VALA_IS_DELEGATE_TYPE (target_type) ? ((ValaDelegateType*) target_type) : NULL;
@@ -124,7 +131,7 @@ vala_method_type_real_to_qualified_string (ValaDataType* base,
 	ValaMethod* _tmp0_;
 	ValaMethod* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValaMethodType*) base;
 	_tmp0_ = vala_method_type_get_method_symbol (self);
 	_tmp1_ = _tmp0_;
@@ -149,7 +156,7 @@ vala_method_type_real_get_member (ValaDataType* base,
 	ValaMethod* _tmp2_;
 	gboolean _tmp3_;
 	gboolean _tmp4_;
-	ValaSymbol* result = NULL;
+	ValaSymbol* result;
 	self = (ValaMethodType*) base;
 	g_return_val_if_fail (member_name != NULL, NULL);
 	_tmp1_ = vala_method_type_get_method_symbol (self);
@@ -259,12 +266,12 @@ vala_method_type_get_type_once (void)
 GType
 vala_method_type_get_type (void)
 {
-	static volatile gsize vala_method_type_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_method_type_type_id__volatile)) {
+	static volatile gsize vala_method_type_type_id__once = 0;
+	if (g_once_init_enter (&vala_method_type_type_id__once)) {
 		GType vala_method_type_type_id;
 		vala_method_type_type_id = vala_method_type_get_type_once ();
-		g_once_init_leave (&vala_method_type_type_id__volatile, vala_method_type_type_id);
+		g_once_init_leave (&vala_method_type_type_id__once, vala_method_type_type_id);
 	}
-	return vala_method_type_type_id__volatile;
+	return vala_method_type_type_id__once;
 }
 

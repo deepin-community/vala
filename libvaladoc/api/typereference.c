@@ -121,7 +121,7 @@ valadoc_api_typereference_get_type_reference_ownership (ValadocApiTypeReference*
 {
 	ValaDataType* type = NULL;
 	ValaDataType* _tmp0_;
-	ValadocApiOwnership result = 0;
+	ValadocApiOwnership result;
 	g_return_val_if_fail (self != NULL, 0);
 	type = element;
 	_tmp0_ = type;
@@ -232,7 +232,7 @@ valadoc_api_typereference_get_type_arguments (ValadocApiTypeReference* self)
 {
 	ValaArrayList* _tmp0_;
 	ValaCollection* _tmp1_;
-	ValaCollection* result = NULL;
+	ValaCollection* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->type_arguments;
 	_tmp1_ = _vala_iterable_ref0 ((ValaCollection*) _tmp0_);
@@ -288,10 +288,8 @@ gboolean
 valadoc_api_typereference_get_is_owned (ValadocApiTypeReference* self)
 {
 	gboolean result;
-	ValadocApiOwnership _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
-	_tmp0_ = self->priv->ownership;
-	result = _tmp0_ == VALADOC_API_OWNERSHIP_OWNED;
+	result = self->priv->ownership == VALADOC_API_OWNERSHIP_OWNED;
 	return result;
 }
 
@@ -299,10 +297,8 @@ gboolean
 valadoc_api_typereference_get_is_weak (ValadocApiTypeReference* self)
 {
 	gboolean result;
-	ValadocApiOwnership _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
-	_tmp0_ = self->priv->ownership;
-	result = _tmp0_ == VALADOC_API_OWNERSHIP_WEAK;
+	result = self->priv->ownership == VALADOC_API_OWNERSHIP_WEAK;
 	return result;
 }
 
@@ -310,10 +306,8 @@ gboolean
 valadoc_api_typereference_get_is_unowned (ValadocApiTypeReference* self)
 {
 	gboolean result;
-	ValadocApiOwnership _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
-	_tmp0_ = self->priv->ownership;
-	result = _tmp0_ == VALADOC_API_OWNERSHIP_UNOWNED;
+	result = self->priv->ownership == VALADOC_API_OWNERSHIP_UNOWNED;
 	return result;
 }
 
@@ -366,7 +360,7 @@ valadoc_api_typereference_get_dbus_type_signature (ValadocApiTypeReference* self
 {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->dbus_type_signature;
 	_tmp1_ = g_strdup (_tmp0_);
@@ -393,7 +387,7 @@ valadoc_api_typereference_real_build_signature (ValadocApiItem* base)
 	gboolean _tmp39_;
 	ValadocApiSignatureBuilder* _tmp41_;
 	ValadocContentRun* _tmp42_;
-	ValadocContentInline* result = NULL;
+	ValadocContentInline* result;
 	self = (ValadocApiTypeReference*) base;
 	_tmp0_ = valadoc_api_signature_builder_new ();
 	signature = _tmp0_;
@@ -605,13 +599,13 @@ valadoc_api_typereference_get_type_once (void)
 GType
 valadoc_api_typereference_get_type (void)
 {
-	static volatile gsize valadoc_api_typereference_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_api_typereference_type_id__volatile)) {
+	static volatile gsize valadoc_api_typereference_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_api_typereference_type_id__once)) {
 		GType valadoc_api_typereference_type_id;
 		valadoc_api_typereference_type_id = valadoc_api_typereference_get_type_once ();
-		g_once_init_leave (&valadoc_api_typereference_type_id__volatile, valadoc_api_typereference_type_id);
+		g_once_init_leave (&valadoc_api_typereference_type_id__once, valadoc_api_typereference_type_id);
 	}
-	return valadoc_api_typereference_type_id__volatile;
+	return valadoc_api_typereference_type_id__once;
 }
 
 static void

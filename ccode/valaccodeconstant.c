@@ -27,6 +27,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <glib-object.h>
+
+#define VALA_CCODE_CONSTANT_LINE_LENGTH 70
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
@@ -42,7 +45,6 @@ struct _ValaCCodeConstantPrivate {
 static gint ValaCCodeConstant_private_offset;
 static gpointer vala_ccode_constant_parent_class = NULL;
 
-#define VALA_CCODE_CONSTANT_LINE_LENGTH 70
 static void vala_ccode_constant_real_write (ValaCCodeNode* base,
                                      ValaCCodeWriter* writer);
 static void vala_ccode_constant_finalize (ValaCCodeNode * obj);
@@ -98,7 +100,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -109,7 +111,7 @@ static gunichar
 string_get_char (const gchar* self,
                  glong index)
 {
-	gunichar result = 0U;
+	gunichar result;
 	g_return_val_if_fail (self != NULL, 0U);
 	result = g_utf8_get_char (((gchar*) self) + index);
 	return result;
@@ -384,12 +386,12 @@ vala_ccode_constant_get_type_once (void)
 GType
 vala_ccode_constant_get_type (void)
 {
-	static volatile gsize vala_ccode_constant_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_ccode_constant_type_id__volatile)) {
+	static volatile gsize vala_ccode_constant_type_id__once = 0;
+	if (g_once_init_enter (&vala_ccode_constant_type_id__once)) {
 		GType vala_ccode_constant_type_id;
 		vala_ccode_constant_type_id = vala_ccode_constant_get_type_once ();
-		g_once_init_leave (&vala_ccode_constant_type_id__volatile, vala_ccode_constant_type_id);
+		g_once_init_leave (&vala_ccode_constant_type_id__once, vala_ccode_constant_type_id);
 	}
-	return vala_ccode_constant_type_id__volatile;
+	return vala_ccode_constant_type_id__once;
 }
 

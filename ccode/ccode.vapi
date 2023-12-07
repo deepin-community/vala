@@ -11,6 +11,13 @@ namespace Vala {
 		public Vala.CCodeExpression right { get; set; }
 	}
 	[CCode (cheader_filename = "valaccode.h")]
+	public class CCodeBinaryCompareExpression : Vala.CCodeBinaryExpression {
+		public CCodeBinaryCompareExpression (Vala.CCodeExpression cmp, Vala.CCodeBinaryOperator op, Vala.CCodeExpression l, Vala.CCodeExpression r, Vala.CCodeExpression res);
+		public override void write (Vala.CCodeWriter writer);
+		public Vala.CCodeExpression call { get; set; }
+		public Vala.CCodeExpression result { get; set; }
+	}
+	[CCode (cheader_filename = "valaccode.h")]
 	public class CCodeBinaryExpression : Vala.CCodeExpression {
 		public CCodeBinaryExpression (Vala.CCodeBinaryOperator op, Vala.CCodeExpression l, Vala.CCodeExpression r);
 		public override void write (Vala.CCodeWriter writer);
@@ -75,6 +82,10 @@ namespace Vala {
 		public CCodeConstant.string (global::string _name);
 		public override void write (Vala.CCodeWriter writer);
 		public global::string name { get; set; }
+	}
+	[CCode (cheader_filename = "valaccode.h")]
+	public class CCodeConstantIdentifier : Vala.CCodeIdentifier {
+		public CCodeConstantIdentifier (string name);
 	}
 	[CCode (cheader_filename = "valaccode.h")]
 	public class CCodeContinueStatement : Vala.CCodeStatement {
@@ -352,6 +363,7 @@ namespace Vala {
 	[CCode (cheader_filename = "valaccode.h")]
 	public class CCodeParameter : Vala.CCodeNode {
 		public CCodeParameter (string n, string type);
+		public CCodeParameter.with_declarator (string type, Vala.CCodeDeclarator decl);
 		public CCodeParameter.with_ellipsis ();
 		public override void write (Vala.CCodeWriter writer);
 		public bool ellipsis { get; set; }

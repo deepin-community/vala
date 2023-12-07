@@ -195,7 +195,7 @@ static gboolean
 valadoc_sequence_rule_real_is_optional (ValadocRule* base)
 {
 	ValadocSequenceRule * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocSequenceRule*) base;
 	result = FALSE;
 	return result;
@@ -206,7 +206,7 @@ valadoc_sequence_rule_real_starts_with_token (ValadocRule* base,
                                               ValadocToken* token)
 {
 	ValadocSequenceRule * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocSequenceRule*) base;
 	g_return_val_if_fail (token != NULL, FALSE);
 	result = valadoc_sequence_rule_test_token (self, 0, token);
@@ -219,7 +219,7 @@ valadoc_sequence_rule_test_token (ValadocSequenceRule* self,
                                   ValadocToken* token)
 {
 	gint i = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (token != NULL, FALSE);
 	i = from_index;
@@ -264,7 +264,7 @@ valadoc_sequence_rule_test_reduce (ValadocSequenceRule* self,
                                    ValadocToken* token)
 {
 	gint i = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (token != NULL, FALSE);
 	i = from_index;
@@ -314,7 +314,7 @@ valadoc_sequence_rule_real_accept_token (ValadocRule* base,
 	gint _tmp34__length1;
 	GObject* _tmp37_;
 	GError* _inner_error0_ = NULL;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocSequenceRule*) base;
 	g_return_val_if_fail (token != NULL, FALSE);
 	g_return_val_if_fail (parser != NULL, FALSE);
@@ -559,7 +559,7 @@ valadoc_sequence_rule_real_would_accept_token (ValadocRule* base,
 	ValadocSequenceRule * self;
 	ValadocSequenceRuleState* state = NULL;
 	ValadocSequenceRuleState* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocSequenceRule*) base;
 	g_return_val_if_fail (token != NULL, FALSE);
 	_tmp0_ = _g_object_ref0 (VALADOC_SEQUENCE_RULE_IS_STATE (rule_state) ? ((ValadocSequenceRuleState*) rule_state) : NULL);
@@ -581,7 +581,7 @@ valadoc_sequence_rule_real_would_reduce (ValadocRule* base,
 	ValadocSequenceRuleState* _tmp2_;
 	GObject** _tmp3_;
 	gint _tmp3__length1;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocSequenceRule*) base;
 	g_return_val_if_fail (token != NULL, FALSE);
 	_tmp0_ = _g_object_ref0 (VALADOC_SEQUENCE_RULE_IS_STATE (rule_state) ? ((ValadocSequenceRuleState*) rule_state) : NULL);
@@ -616,7 +616,7 @@ valadoc_sequence_rule_real_to_string (ValadocRule* base,
 	GObject** _tmp9_;
 	gint _tmp9__length1;
 	gchar* _tmp10_;
-	gchar* result = NULL;
+	gchar* result;
 	self = (ValadocSequenceRule*) base;
 	_tmp0_ = _g_object_ref0 (VALADOC_SEQUENCE_RULE_IS_STATE (rule_state) ? ((ValadocSequenceRuleState*) rule_state) : NULL);
 	state = _tmp0_;
@@ -696,13 +696,13 @@ valadoc_sequence_rule_state_get_type_once (void)
 static GType
 valadoc_sequence_rule_state_get_type (void)
 {
-	static volatile gsize valadoc_sequence_rule_state_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_sequence_rule_state_type_id__volatile)) {
+	static volatile gsize valadoc_sequence_rule_state_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_sequence_rule_state_type_id__once)) {
 		GType valadoc_sequence_rule_state_type_id;
 		valadoc_sequence_rule_state_type_id = valadoc_sequence_rule_state_get_type_once ();
-		g_once_init_leave (&valadoc_sequence_rule_state_type_id__volatile, valadoc_sequence_rule_state_type_id);
+		g_once_init_leave (&valadoc_sequence_rule_state_type_id__once, valadoc_sequence_rule_state_type_id);
 	}
-	return valadoc_sequence_rule_state_type_id__volatile;
+	return valadoc_sequence_rule_state_type_id__once;
 }
 
 static void
@@ -749,13 +749,13 @@ valadoc_sequence_rule_get_type_once (void)
  G_GNUC_INTERNAL GType
 valadoc_sequence_rule_get_type (void)
 {
-	static volatile gsize valadoc_sequence_rule_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_sequence_rule_type_id__volatile)) {
+	static volatile gsize valadoc_sequence_rule_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_sequence_rule_type_id__once)) {
 		GType valadoc_sequence_rule_type_id;
 		valadoc_sequence_rule_type_id = valadoc_sequence_rule_get_type_once ();
-		g_once_init_leave (&valadoc_sequence_rule_type_id__volatile, valadoc_sequence_rule_type_id);
+		g_once_init_leave (&valadoc_sequence_rule_type_id__once, valadoc_sequence_rule_type_id);
 	}
-	return valadoc_sequence_rule_type_id__volatile;
+	return valadoc_sequence_rule_type_id__once;
 }
 
 static void

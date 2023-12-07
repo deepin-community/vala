@@ -15,7 +15,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn create_output_buffer (Gst.Buffer outbuffer);
 			[NoWrapper]
-			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, bool at_least_one_alpha);
+			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, out bool at_least_one_alpha);
 			[Version (since = "1.20")]
 			public Gst.TaskPool get_execution_task_pool ();
 			[NoWrapper]
@@ -76,13 +76,14 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstBufferPool*")]
 			public BufferPool ();
 		}
-		[CCode (cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "VideoChromaResample")]
 		public class ChromaResample {
+			[CCode (cname = "gst_video_chroma_resample_new", has_construct_function = false)]
 			public ChromaResample (Gst.Video.ChromaMethod method, Gst.Video.ChromaSite site, Gst.Video.ChromaFlags flags, Gst.Video.Format format, int h_factor, int v_factor);
 			public void free ();
-			public void get_info (uint n_lines, int offset);
+			public void get_info (out uint n_lines, out int offset);
 			[CCode (cname = "gst_video_chroma_resample")]
 			public void resample (void* lines, int width);
 		}
@@ -199,6 +200,9 @@ namespace Gst {
 			public virtual Gst.Caps getcaps (Gst.Caps filter);
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (owned Gst.Video.CodecFrame frame);
+			[NoWrapper]
+			[Version (since = "1.20")]
+			public virtual bool handle_missing_data (Gst.ClockTime timestamp, Gst.ClockTime duration);
 			public Gst.FlowReturn have_frame ();
 			[Version (since = "1.20")]
 			public Gst.FlowReturn have_last_subframe (Gst.Video.CodecFrame frame);
@@ -249,6 +253,12 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public Gst.Video.DecoderRequestSyncPointFlags automatic_request_sync_point_flags { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool automatic_request_sync_points { get; set; }
 			[NoAccessorMethod]
 			[Version (since = "1.20")]
 			public bool discard_corrupted_frames { get; set; }
@@ -403,6 +413,9 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public bool set_interlaced_format (Gst.Video.Format format, Gst.Video.InterlaceMode mode, uint width, uint height);
 			public Gst.Caps to_caps ();
+			[CCode (cname = "gst_video_info_new_from_caps", has_construct_function = false)]
+			[Version (since = "1.20")]
+			public Info.with_caps (Gst.Caps caps);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
 		[GIR (name = "VideoMultiviewFlagsSet")]
@@ -452,7 +465,7 @@ namespace Gst {
 		public class Scaler {
 			public void @2d (Gst.Video.Scaler vscale, Gst.Video.Format format, void* src, int src_stride, void* dest, int dest_stride, uint x, uint y, uint width, uint height);
 			public void free ();
-			public double get_coeff (uint out_offset, uint in_offset, uint n_taps);
+			public double get_coeff (uint out_offset, out uint in_offset, out uint n_taps);
 			public uint get_max_taps ();
 			public void horizontal (Gst.Video.Format format, void* src, void* dest, uint dest_offset, uint width);
 			public void vertical (Gst.Video.Format format, void* src_lines, void* dest, uint dest_offset, uint width);
@@ -545,7 +558,7 @@ namespace Gst {
 			public bool add_ancillary (bool composite, uint8 DID, uint8 SDID_block_number, [CCode (array_length_cname = "data_count", array_length_pos = 4.1, array_length_type = "guint")] uint8[] data);
 			public Gst.Video.VBIEncoder copy ();
 			public void free ();
-			public void write_line (uint8 data);
+			public void write_line ([CCode (array_length = false, type = "guint8*")] uint8[] data);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_vbi_parser_get_type ()")]
 		[Compact]
@@ -579,13 +592,47 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigation", lower_case_cprefix = "gst_navigation_", type_cname = "GstNavigationInterface", type_id = "gst_navigation_get_type ()")]
 		[GIR (name = "Navigation")]
 		public interface Navigation : GLib.Object {
+			[Version (since = "1.22")]
+			public static bool event_get_coordinates (Gst.Event event, out double x, out double y);
 			public static Gst.Video.NavigationEventType event_get_type (Gst.Event event);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_command (Gst.Video.NavigationCommand command);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_key_press (string key, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_key_release (string key, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_button_press (int button, double x, double y, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_button_release (int button, double x, double y, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_move (double x, double y, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_scroll (double x, double y, double delta_x, double delta_y, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_touch_cancel (Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_touch_down (uint identifier, double x, double y, double pressure, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_touch_frame (Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_touch_motion (uint identifier, double x, double y, double pressure, Gst.Video.NavigationModifierType state);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_touch_up (uint identifier, double x, double y, Gst.Video.NavigationModifierType state);
 			public static bool event_parse_command (Gst.Event event, out Gst.Video.NavigationCommand command);
 			public static bool event_parse_key_event (Gst.Event event, out unowned string key);
+			[Version (since = "1.22")]
+			public static bool event_parse_modifier_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 			public static bool event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
 			public static bool event_parse_mouse_move_event (Gst.Event event, out double x, out double y);
 			[Version (since = "1.18")]
 			public static bool event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
+			[Version (since = "1.22")]
+			public static bool event_parse_touch_event (Gst.Event event, out uint identifier, out double x, out double y, out double pressure);
+			[Version (since = "1.22")]
+			public static bool event_parse_touch_up_event (Gst.Event event, out uint identifier, out double x, out double y);
+			[Version (since = "1.22")]
+			public static bool event_set_coordinates (Gst.Event event, double x, double y);
 			public static Gst.Video.NavigationMessageType message_get_type (Gst.Message message);
 			public static Gst.Message message_new_angles_changed (Gst.Object src, uint cur_angle, uint n_angles);
 			public static Gst.Message message_new_commands_changed (Gst.Object src);
@@ -605,7 +652,10 @@ namespace Gst {
 			public static void query_set_angles (Gst.Query query, uint cur_angle, uint n_angles);
 			public static void query_set_commandsv (Gst.Query query, [CCode (array_length_cname = "n_cmds", array_length_pos = 1.5)] Gst.Video.NavigationCommand[] cmds);
 			public void send_command (Gst.Video.NavigationCommand command);
+			[Version (deprecated = true, deprecated_since = "1.22")]
 			public abstract void send_event (Gst.Structure structure);
+			[Version (since = "1.22")]
+			public abstract void send_event_simple (owned Gst.Event event);
 			public void send_key_event (string event, string key);
 			public void send_mouse_event (string event, int button, double x, double y);
 			[Version (since = "1.18")]
@@ -614,6 +664,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", type_cname = "GstVideoOrientationInterface", type_id = "gst_video_orientation_get_type ()")]
 		[GIR (name = "VideoOrientation")]
 		public interface Orientation : GLib.Object {
+			[Version (since = "1.20")]
+			public static bool from_tag (Gst.TagList taglist, out Gst.Video.OrientationMethod method);
 			public abstract bool get_hcenter (out int center);
 			public abstract bool get_hflip (out bool flip);
 			public abstract bool get_vcenter (out int center);
@@ -795,6 +847,8 @@ namespace Gst {
 			public uint tile_hs;
 			[Version (since = "1.18")]
 			public void component (uint plane, out int components);
+			[Version (since = "1.22")]
+			public int extrapolate_stride (int plane, int stride);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
@@ -1074,7 +1128,7 @@ namespace Gst {
 			[Version (since = "1.20")]
 			public string? to_string ();
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", type_id = "gst_video_codec_frame_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoCodecFrameFlags")]
 		public enum CodecFrameFlags {
@@ -1139,7 +1193,7 @@ namespace Gst {
 			@16_235;
 			public void offsets (Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DECODER_REQUEST_SYNC_POINT_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DECODER_REQUEST_SYNC_POINT_", type_id = "gst_video_decoder_request_sync_point_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoDecoderRequestSyncPointFlags")]
 		[Version (since = "1.20")]
@@ -1299,7 +1353,29 @@ namespace Gst {
 			[Version (since = "1.20")]
 			BGRP,
 			[Version (since = "1.20")]
-			AV12;
+			AV12,
+			[Version (since = "1.20")]
+			ARGB64_LE,
+			[Version (since = "1.20")]
+			ARGB64_BE,
+			[Version (since = "1.20")]
+			RGBA64_LE,
+			[Version (since = "1.20")]
+			RGBA64_BE,
+			[Version (since = "1.20")]
+			BGRA64_LE,
+			[Version (since = "1.20")]
+			BGRA64_BE,
+			[Version (since = "1.20")]
+			ABGR64_LE,
+			[Version (since = "1.20")]
+			ABGR64_BE,
+			[Version (since = "1.22")]
+			NV12_16L32S,
+			[Version (since = "1.22")]
+			NV12_8L128,
+			[Version (since = "1.22")]
+			NV12_10BE_8L128;
 			public static Gst.Video.Format from_fourcc (uint32 fourcc);
 			public static Gst.Video.Format from_masks (int depth, int bpp, int endianness, uint red_mask, uint green_mask, uint blue_mask, uint alpha_mask);
 			public static Gst.Video.Format from_string (string format);
@@ -1321,7 +1397,9 @@ namespace Gst {
 			PALETTE,
 			COMPLEX,
 			UNPACK,
-			TILED
+			TILED,
+			[Version (since = "1.22")]
+			SUBTILES
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FRAME_FLAG_", type_id = "gst_video_frame_flags_get_type ()")]
 		[Flags]
@@ -1345,7 +1423,7 @@ namespace Gst {
 			NO_REF,
 			LAST
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_ORIENTATION_X_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_ORIENTATION_X_", type_id = "gst_video_gl_texture_orientation_get_type ()")]
 		[GIR (name = "VideoGLTextureOrientation")]
 		public enum GLTextureOrientation {
 			NORMAL_Y_NORMAL,
@@ -1353,7 +1431,7 @@ namespace Gst {
 			FLIP_Y_NORMAL,
 			FLIP_Y_FLIP
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_TYPE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_TYPE_", type_id = "gst_video_gl_texture_type_get_type ()")]
 		[GIR (name = "VideoGLTextureType")]
 		public enum GLTextureType {
 			LUMINANCE,
@@ -1470,7 +1548,18 @@ namespace Gst {
 			MOUSE_BUTTON_RELEASE,
 			MOUSE_MOVE,
 			COMMAND,
-			MOUSE_SCROLL
+			[Version (since = "1.18")]
+			MOUSE_SCROLL,
+			[Version (since = "1.22")]
+			TOUCH_DOWN,
+			[Version (since = "1.22")]
+			TOUCH_MOTION,
+			[Version (since = "1.22")]
+			TOUCH_UP,
+			[Version (since = "1.22")]
+			TOUCH_FRAME,
+			[Version (since = "1.22")]
+			TOUCH_CANCEL
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationMessageType", cprefix = "GST_NAVIGATION_MESSAGE_", type_id = "gst_navigation_message_type_get_type ()")]
 		[GIR (name = "NavigationMessageType")]
@@ -1480,6 +1569,26 @@ namespace Gst {
 			COMMANDS_CHANGED,
 			ANGLES_CHANGED,
 			EVENT
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationModifierType", cprefix = "GST_NAVIGATION_MODIFIER_", type_id = "gst_navigation_modifier_type_get_type ()")]
+		[Flags]
+		[GIR (name = "NavigationModifierType")]
+		[Version (since = "1.22")]
+		public enum NavigationModifierType {
+			NONE,
+			SHIFT_MASK,
+			LOCK_MASK,
+			CONTROL_MASK,
+			ALT_MASK,
+			BUTTON1_MASK,
+			BUTTON2_MASK,
+			BUTTON3_MASK,
+			BUTTON4_MASK,
+			BUTTON5_MASK,
+			SUPER_MASK,
+			HYPER_MASK,
+			META_MASK,
+			MASK
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationQueryType", cprefix = "GST_NAVIGATION_QUERY_", type_id = "gst_navigation_query_type_get_type ()")]
 		[GIR (name = "NavigationQueryType")]
@@ -2031,15 +2140,57 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static void multiview_video_info_change_mode (Gst.Video.Info info, Gst.Video.MultiviewMode out_mview_mode, Gst.Video.MultiviewFlags out_mview_flags);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_get_coordinates")]
+		[Version (replacement = "Navigation.event_get_coordinates", since = "1.22")]
+		public static bool navigation_event_get_coordinates (Gst.Event event, out double x, out double y);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_get_type")]
 		[Version (replacement = "Navigation.event_get_type")]
 		public static Gst.Video.NavigationEventType navigation_event_get_type (Gst.Event event);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_command")]
+		[Version (replacement = "Navigation.event_new_command", since = "1.22")]
+		public static Gst.Event navigation_event_new_command (Gst.Video.NavigationCommand command);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_key_press")]
+		[Version (replacement = "Navigation.event_new_key_press", since = "1.22")]
+		public static Gst.Event navigation_event_new_key_press (string key, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_key_release")]
+		[Version (replacement = "Navigation.event_new_key_release", since = "1.22")]
+		public static Gst.Event navigation_event_new_key_release (string key, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_button_press")]
+		[Version (replacement = "Navigation.event_new_mouse_button_press", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_button_press (int button, double x, double y, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_button_release")]
+		[Version (replacement = "Navigation.event_new_mouse_button_release", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_button_release (int button, double x, double y, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_move")]
+		[Version (replacement = "Navigation.event_new_mouse_move", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_move (double x, double y, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_scroll")]
+		[Version (replacement = "Navigation.event_new_mouse_scroll", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_scroll (double x, double y, double delta_x, double delta_y, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_touch_cancel")]
+		[Version (replacement = "Navigation.event_new_touch_cancel", since = "1.22")]
+		public static Gst.Event navigation_event_new_touch_cancel (Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_touch_down")]
+		[Version (replacement = "Navigation.event_new_touch_down", since = "1.22")]
+		public static Gst.Event navigation_event_new_touch_down (uint identifier, double x, double y, double pressure, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_touch_frame")]
+		[Version (replacement = "Navigation.event_new_touch_frame", since = "1.22")]
+		public static Gst.Event navigation_event_new_touch_frame (Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_touch_motion")]
+		[Version (replacement = "Navigation.event_new_touch_motion", since = "1.22")]
+		public static Gst.Event navigation_event_new_touch_motion (uint identifier, double x, double y, double pressure, Gst.Video.NavigationModifierType state);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_touch_up")]
+		[Version (replacement = "Navigation.event_new_touch_up", since = "1.22")]
+		public static Gst.Event navigation_event_new_touch_up (uint identifier, double x, double y, Gst.Video.NavigationModifierType state);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_command")]
 		[Version (replacement = "Navigation.event_parse_command")]
 		public static bool navigation_event_parse_command (Gst.Event event, out Gst.Video.NavigationCommand command);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_key_event")]
 		[Version (replacement = "Navigation.event_parse_key_event")]
 		public static bool navigation_event_parse_key_event (Gst.Event event, out unowned string key);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_modifier_state")]
+		[Version (replacement = "Navigation.event_parse_modifier_state", since = "1.22")]
+		public static bool navigation_event_parse_modifier_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_button_event")]
 		[Version (replacement = "Navigation.event_parse_mouse_button_event")]
 		public static bool navigation_event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
@@ -2049,6 +2200,15 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_scroll_event")]
 		[Version (replacement = "Navigation.event_parse_mouse_scroll_event", since = "1.18")]
 		public static bool navigation_event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_touch_event")]
+		[Version (replacement = "Navigation.event_parse_touch_event", since = "1.22")]
+		public static bool navigation_event_parse_touch_event (Gst.Event event, out uint identifier, out double x, out double y, out double pressure);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_touch_up_event")]
+		[Version (replacement = "Navigation.event_parse_touch_up_event", since = "1.22")]
+		public static bool navigation_event_parse_touch_up_event (Gst.Event event, out uint identifier, out double x, out double y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_set_coordinates")]
+		[Version (replacement = "Navigation.event_set_coordinates", since = "1.22")]
+		public static bool navigation_event_set_coordinates (Gst.Event event, double x, double y);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_get_type")]
 		[Version (replacement = "Navigation.message_get_type")]
 		public static Gst.Video.NavigationMessageType navigation_message_get_type (Gst.Message message);
@@ -2097,6 +2257,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_set_commandsv")]
 		[Version (replacement = "Navigation.query_set_commandsv")]
 		public static void navigation_query_set_commandsv (Gst.Query query, [CCode (array_length_cname = "n_cmds", array_length_pos = 1.5)] Gst.Video.NavigationCommand[] cmds);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoOrientation.from_tag", since = "1.20")]
+		public static bool orientation_from_tag (Gst.TagList taglist, out Gst.Video.OrientationMethod method);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type overlay_composition_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]

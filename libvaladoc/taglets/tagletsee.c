@@ -204,7 +204,7 @@ valadoc_taglets_see_real_get_parser_rule (ValadocContentTaglet* base,
 	gint _tmp15__length1;
 	ValadocRule* _tmp16_;
 	ValadocRule* _tmp17_;
-	ValadocRule* result = NULL;
+	ValadocRule* result;
 	self = (ValadocTagletsSee*) base;
 	g_return_val_if_fail (run_rule != NULL, NULL);
 	_tmp0_ = valadoc_token_type_SPACE;
@@ -250,7 +250,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -273,7 +273,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -392,7 +392,7 @@ static gboolean
 valadoc_taglets_see_real_is_empty (ValadocContentContentElement* base)
 {
 	ValadocTagletsSee * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValadocTagletsSee*) base;
 	result = FALSE;
 	return result;
@@ -407,7 +407,7 @@ valadoc_taglets_see_real_copy (ValadocContentContentElement* base,
 	ValadocTagletsSee* _tmp0_;
 	const gchar* _tmp1_;
 	ValadocApiNode* _tmp2_;
-	ValadocContentContentElement* result = NULL;
+	ValadocContentContentElement* result;
 	self = (ValadocTagletsSee*) base;
 	_tmp0_ = valadoc_taglets_see_new ();
 	see = _tmp0_;
@@ -500,13 +500,13 @@ valadoc_taglets_see_get_type_once (void)
 GType
 valadoc_taglets_see_get_type (void)
 {
-	static volatile gsize valadoc_taglets_see_type_id__volatile = 0;
-	if (g_once_init_enter (&valadoc_taglets_see_type_id__volatile)) {
+	static volatile gsize valadoc_taglets_see_type_id__once = 0;
+	if (g_once_init_enter (&valadoc_taglets_see_type_id__once)) {
 		GType valadoc_taglets_see_type_id;
 		valadoc_taglets_see_type_id = valadoc_taglets_see_get_type_once ();
-		g_once_init_leave (&valadoc_taglets_see_type_id__volatile, valadoc_taglets_see_type_id);
+		g_once_init_leave (&valadoc_taglets_see_type_id__once, valadoc_taglets_see_type_id);
 	}
-	return valadoc_taglets_see_type_id__volatile;
+	return valadoc_taglets_see_type_id__once;
 }
 
 static void

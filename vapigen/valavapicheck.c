@@ -32,7 +32,6 @@
 #include <gidlmodule.h>
 #include <gidlparser.h>
 #include <gidlnode.h>
-#include <stdio.h>
 #include <glib/gstdio.h>
 #include <gobject/gvaluecollector.h>
 
@@ -160,7 +159,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -183,7 +182,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);
@@ -414,21 +413,19 @@ vala_vapi_check_parse_gidl (ValaVAPICheck* self)
 	__catch0_g_markup_error:
 	{
 		GError* e = NULL;
-		FILE* _tmp14_;
-		ValaSourceFile* _tmp15_;
+		ValaSourceFile* _tmp14_;
+		const gchar* _tmp15_;
 		const gchar* _tmp16_;
-		const gchar* _tmp17_;
-		GError* _tmp18_;
-		const gchar* _tmp19_;
+		GError* _tmp17_;
+		const gchar* _tmp18_;
 		e = _inner_error0_;
 		_inner_error0_ = NULL;
-		_tmp14_ = stderr;
-		_tmp15_ = self->priv->_gidl;
-		_tmp16_ = vala_source_file_get_filename (_tmp15_);
-		_tmp17_ = _tmp16_;
-		_tmp18_ = e;
-		_tmp19_ = _tmp18_->message;
-		fprintf (_tmp14_, "%s: %s\n", _tmp17_, _tmp19_);
+		_tmp14_ = self->priv->_gidl;
+		_tmp15_ = vala_source_file_get_filename (_tmp14_);
+		_tmp16_ = _tmp15_;
+		_tmp17_ = e;
+		_tmp18_ = _tmp17_->message;
+		g_printerr ("%s: %s\n", _tmp16_, _tmp18_);
 		_g_error_free0 (e);
 	}
 	__finally0:
@@ -484,7 +481,7 @@ vala_vapi_check_get_scope (ValaVAPICheck* self)
 	gint _tmp2_;
 	gint _tmp3_;
 	gpointer _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_scope;
 	_tmp1_ = self->priv->_scope;
@@ -543,94 +540,92 @@ vala_vapi_check_parse_members (ValaVAPICheck* self,
 			node = (GIdlNode*) node_it->data;
 			{
 				GIdlNode* _tmp0_;
-				GIdlNodeTypeId _tmp1_;
 				_tmp0_ = node;
-				_tmp1_ = _tmp0_->type;
-				switch (_tmp1_) {
+				switch (_tmp0_->type) {
 					case G_IDL_NODE_ENUM:
 					{
-						GIdlNode* _tmp2_;
-						const gchar* _tmp3_;
-						GIdlNode* _tmp4_;
-						GList* _tmp5_;
-						_tmp2_ = node;
-						_tmp3_ = ((GIdlNodeEnum*) _tmp2_)->gtype_name;
-						_tmp4_ = node;
-						_tmp5_ = ((GIdlNodeEnum*) _tmp4_)->values;
-						vala_vapi_check_parse_members (self, _tmp3_, _tmp5_);
+						GIdlNode* _tmp1_;
+						const gchar* _tmp2_;
+						GIdlNode* _tmp3_;
+						GList* _tmp4_;
+						_tmp1_ = node;
+						_tmp2_ = ((GIdlNodeEnum*) _tmp1_)->gtype_name;
+						_tmp3_ = node;
+						_tmp4_ = ((GIdlNodeEnum*) _tmp3_)->values;
+						vala_vapi_check_parse_members (self, _tmp2_, _tmp4_);
 						break;
 					}
 					case G_IDL_NODE_FUNCTION:
 					{
-						GIdlNode* _tmp6_;
-						const gchar* _tmp7_;
-						GIdlNode* _tmp8_;
-						GList* _tmp9_;
-						_tmp6_ = node;
-						_tmp7_ = ((GIdlNodeFunction*) _tmp6_)->symbol;
-						_tmp8_ = node;
-						_tmp9_ = ((GIdlNodeFunction*) _tmp8_)->parameters;
-						vala_vapi_check_parse_members (self, _tmp7_, (GList*) _tmp9_);
+						GIdlNode* _tmp5_;
+						const gchar* _tmp6_;
+						GIdlNode* _tmp7_;
+						GList* _tmp8_;
+						_tmp5_ = node;
+						_tmp6_ = ((GIdlNodeFunction*) _tmp5_)->symbol;
+						_tmp7_ = node;
+						_tmp8_ = ((GIdlNodeFunction*) _tmp7_)->parameters;
+						vala_vapi_check_parse_members (self, _tmp6_, (GList*) _tmp8_);
 						break;
 					}
 					case G_IDL_NODE_BOXED:
 					{
-						GIdlNode* _tmp10_;
-						const gchar* _tmp11_;
-						GIdlNode* _tmp12_;
-						GList* _tmp13_;
-						_tmp10_ = node;
-						_tmp11_ = ((GIdlNodeBoxed*) _tmp10_)->gtype_name;
-						_tmp12_ = node;
-						_tmp13_ = ((GIdlNodeBoxed*) _tmp12_)->members;
-						vala_vapi_check_parse_members (self, _tmp11_, _tmp13_);
+						GIdlNode* _tmp9_;
+						const gchar* _tmp10_;
+						GIdlNode* _tmp11_;
+						GList* _tmp12_;
+						_tmp9_ = node;
+						_tmp10_ = ((GIdlNodeBoxed*) _tmp9_)->gtype_name;
+						_tmp11_ = node;
+						_tmp12_ = ((GIdlNodeBoxed*) _tmp11_)->members;
+						vala_vapi_check_parse_members (self, _tmp10_, _tmp12_);
 						break;
 					}
 					case G_IDL_NODE_INTERFACE:
 					case G_IDL_NODE_OBJECT:
 					{
-						GIdlNode* _tmp14_;
-						const gchar* _tmp15_;
-						GIdlNode* _tmp16_;
-						GList* _tmp17_;
-						_tmp14_ = node;
-						_tmp15_ = ((GIdlNodeInterface*) _tmp14_)->gtype_name;
-						_tmp16_ = node;
-						_tmp17_ = ((GIdlNodeInterface*) _tmp16_)->members;
-						vala_vapi_check_parse_members (self, _tmp15_, _tmp17_);
+						GIdlNode* _tmp13_;
+						const gchar* _tmp14_;
+						GIdlNode* _tmp15_;
+						GList* _tmp16_;
+						_tmp13_ = node;
+						_tmp14_ = ((GIdlNodeInterface*) _tmp13_)->gtype_name;
+						_tmp15_ = node;
+						_tmp16_ = ((GIdlNodeInterface*) _tmp15_)->members;
+						vala_vapi_check_parse_members (self, _tmp14_, _tmp16_);
 						break;
 					}
 					case G_IDL_NODE_FIELD:
 					case G_IDL_NODE_PARAM:
 					{
-						GIdlNode* _tmp18_;
-						const gchar* _tmp19_;
-						_tmp18_ = node;
-						_tmp19_ = _tmp18_->name;
-						vala_vapi_check_add_symbol (self, _tmp19_, ".");
+						GIdlNode* _tmp17_;
+						const gchar* _tmp18_;
+						_tmp17_ = node;
+						_tmp18_ = _tmp17_->name;
+						vala_vapi_check_add_symbol (self, _tmp18_, ".");
 						break;
 					}
 					case G_IDL_NODE_PROPERTY:
 					case G_IDL_NODE_SIGNAL:
 					{
-						GIdlNode* _tmp20_;
-						const gchar* _tmp21_;
-						_tmp20_ = node;
-						_tmp21_ = _tmp20_->name;
-						vala_vapi_check_add_symbol (self, _tmp21_, "::");
+						GIdlNode* _tmp19_;
+						const gchar* _tmp20_;
+						_tmp19_ = node;
+						_tmp20_ = _tmp19_->name;
+						vala_vapi_check_add_symbol (self, _tmp20_, "::");
 						break;
 					}
 					case G_IDL_NODE_STRUCT:
 					{
-						GIdlNode* _tmp22_;
-						const gchar* _tmp23_;
-						GIdlNode* _tmp24_;
-						GList* _tmp25_;
-						_tmp22_ = node;
-						_tmp23_ = _tmp22_->name;
-						_tmp24_ = node;
-						_tmp25_ = ((GIdlNodeStruct*) _tmp24_)->members;
-						vala_vapi_check_parse_members (self, _tmp23_, _tmp25_);
+						GIdlNode* _tmp21_;
+						const gchar* _tmp22_;
+						GIdlNode* _tmp23_;
+						GList* _tmp24_;
+						_tmp21_ = node;
+						_tmp22_ = _tmp21_->name;
+						_tmp23_ = node;
+						_tmp24_ = ((GIdlNodeStruct*) _tmp23_)->members;
+						vala_vapi_check_parse_members (self, _tmp22_, _tmp24_);
 						break;
 					}
 					case G_IDL_NODE_VALUE:
@@ -640,15 +635,13 @@ vala_vapi_check_parse_members (ValaVAPICheck* self,
 					}
 					default:
 					{
-						GIdlNode* _tmp26_;
-						const gchar* _tmp27_;
-						GIdlNode* _tmp28_;
-						GIdlNodeTypeId _tmp29_;
-						_tmp26_ = node;
-						_tmp27_ = _tmp26_->name;
-						_tmp28_ = node;
-						_tmp29_ = _tmp28_->type;
-						g_warning ("valavapicheck.vala:121: TODO: %s: Implement support for type %d nodes", _tmp27_, (gint) _tmp29_);
+						GIdlNode* _tmp25_;
+						const gchar* _tmp26_;
+						GIdlNode* _tmp27_;
+						_tmp25_ = node;
+						_tmp26_ = _tmp25_->name;
+						_tmp27_ = node;
+						g_warning ("valavapicheck.vala:121: TODO: %s: Implement support for type %d nodes", _tmp26_, (gint) _tmp27_->type);
 						break;
 					}
 				}
@@ -663,7 +656,7 @@ vala_vapi_check_check_metadata (ValaVAPICheck* self)
 {
 	gint _tmp34_ = -1;
 	GError* _inner_error0_ = NULL;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	{
 		GIOChannel* metafile = NULL;
@@ -806,7 +799,7 @@ vala_vapi_check_run (ValaVAPICheck* self)
 	ValaSourceFile* _tmp6_;
 	const gchar* _tmp7_;
 	const gchar* _tmp8_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	_tmp0_ = self->priv->_gidl;
 	_tmp1_ = vala_source_file_get_filename (_tmp0_);
@@ -847,13 +840,13 @@ vala_vapi_check_main (gchar** args,
 {
 	gboolean _tmp0_ = FALSE;
 	ValaVAPICheck* vapicheck = NULL;
-	const gchar* _tmp6_;
+	const gchar* _tmp5_;
+	ValaCodeContext* _tmp6_;
 	ValaCodeContext* _tmp7_;
-	ValaCodeContext* _tmp8_;
+	ValaVAPICheck* _tmp8_;
 	ValaVAPICheck* _tmp9_;
 	ValaVAPICheck* _tmp10_;
-	ValaVAPICheck* _tmp11_;
-	gint result = 0;
+	gint result;
 	if (2 != args_length1) {
 		_tmp0_ = TRUE;
 	} else {
@@ -862,28 +855,26 @@ vala_vapi_check_main (gchar** args,
 		_tmp0_ = !g_str_has_suffix (_tmp1_, ".gidl");
 	}
 	if (_tmp0_) {
-		FILE* _tmp2_;
-		const gchar* _tmp3_;
+		const gchar* _tmp2_;
+		gchar* _tmp3_;
 		gchar* _tmp4_;
-		gchar* _tmp5_;
-		_tmp2_ = stdout;
-		_tmp3_ = args[0];
-		_tmp4_ = g_path_get_basename (_tmp3_);
-		_tmp5_ = _tmp4_;
-		fprintf (_tmp2_, "Usage: %s library.gidl\n", _tmp5_);
-		_g_free0 (_tmp5_);
+		_tmp2_ = args[0];
+		_tmp3_ = g_path_get_basename (_tmp2_);
+		_tmp4_ = _tmp3_;
+		g_print ("Usage: %s library.gidl\n", _tmp4_);
+		_g_free0 (_tmp4_);
 		result = 2;
 		return result;
 	}
-	_tmp6_ = args[1];
-	_tmp7_ = vala_code_context_new ();
-	_tmp8_ = _tmp7_;
-	_tmp9_ = vala_vapi_check_new (_tmp6_, _tmp8_);
-	_tmp10_ = _tmp9_;
-	_vala_code_context_unref0 (_tmp8_);
-	vapicheck = _tmp10_;
-	_tmp11_ = vapicheck;
-	result = vala_vapi_check_run (_tmp11_);
+	_tmp5_ = args[1];
+	_tmp6_ = vala_code_context_new ();
+	_tmp7_ = _tmp6_;
+	_tmp8_ = vala_vapi_check_new (_tmp5_, _tmp7_);
+	_tmp9_ = _tmp8_;
+	_vala_code_context_unref0 (_tmp7_);
+	vapicheck = _tmp9_;
+	_tmp10_ = vapicheck;
+	result = vala_vapi_check_run (_tmp10_);
 	_vala_vapi_check_unref0 (vapicheck);
 	return result;
 }
@@ -1073,13 +1064,13 @@ vala_vapi_check_get_type_once (void)
  G_GNUC_INTERNAL GType
 vala_vapi_check_get_type (void)
 {
-	static volatile gsize vala_vapi_check_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_vapi_check_type_id__volatile)) {
+	static volatile gsize vala_vapi_check_type_id__once = 0;
+	if (g_once_init_enter (&vala_vapi_check_type_id__once)) {
 		GType vala_vapi_check_type_id;
 		vala_vapi_check_type_id = vala_vapi_check_get_type_once ();
-		g_once_init_leave (&vala_vapi_check_type_id__volatile, vala_vapi_check_type_id);
+		g_once_init_leave (&vala_vapi_check_type_id__once, vala_vapi_check_type_id);
 	}
-	return vala_vapi_check_type_id__volatile;
+	return vala_vapi_check_type_id__once;
 }
 
  G_GNUC_INTERNAL gpointer

@@ -29,6 +29,9 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#define VALA_HASH_SET_MIN_SIZE 11
+#define VALA_HASH_SET_MAX_SIZE 13845163
+
 typedef struct _ValaHashSetNode ValaHashSetNode;
 
 #define VALA_HASH_SET_TYPE_ITERATOR (vala_hash_set_iterator_get_type ())
@@ -94,8 +97,6 @@ static gint ValaHashSetIterator_private_offset;
 static gpointer vala_hash_set_iterator_parent_class = NULL;
 
 static void vala_hash_set_node_free (ValaHashSetNode * self);
-#define VALA_HASH_SET_MIN_SIZE 11
-#define VALA_HASH_SET_MAX_SIZE 13845163
 static ValaHashSetNode** vala_hash_set_lookup_node (ValaHashSet* self,
                                              gconstpointer key);
 static gboolean vala_hash_set_real_contains (ValaCollection* base,
@@ -217,7 +218,7 @@ vala_hash_set_lookup_node (ValaHashSet* self,
 	ValaHashSetNode** _tmp1_;
 	gint _tmp1__length1;
 	ValaHashSetNode** _tmp10_;
-	ValaHashSetNode** result = NULL;
+	ValaHashSetNode** result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->_hash_func;
 	hash_value = _tmp0_ (key);
@@ -266,7 +267,7 @@ vala_hash_set_real_contains (ValaCollection* base,
 	ValaHashSet * self;
 	ValaHashSetNode** node = NULL;
 	ValaHashSetNode** _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaHashSet*) base;
 	_tmp0_ = vala_hash_set_lookup_node (self, key);
 	node = _tmp0_;
@@ -278,7 +279,7 @@ static GType
 vala_hash_set_real_get_element_type (ValaIterable* base)
 {
 	ValaHashSet * self;
-	GType result = 0UL;
+	GType result;
 	self = (ValaHashSet*) base;
 	result = self->priv->g_type;
 	return result;
@@ -289,7 +290,7 @@ vala_hash_set_real_iterator (ValaIterable* base)
 {
 	ValaHashSet * self;
 	ValaHashSetIterator* _tmp0_;
-	ValaIterator* result = NULL;
+	ValaIterator* result;
 	self = (ValaHashSet*) base;
 	_tmp0_ = vala_hash_set_iterator_new (self->priv->g_type, (GBoxedCopyFunc) self->priv->g_dup_func, (GDestroyNotify) self->priv->g_destroy_func, self);
 	result = (ValaIterator*) _tmp0_;
@@ -304,7 +305,7 @@ vala_hash_set_real_add (ValaCollection* base,
 	ValaHashSetNode** node = NULL;
 	ValaHashSetNode** _tmp0_;
 	ValaHashSetNode** _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaHashSet*) base;
 	_tmp0_ = vala_hash_set_lookup_node (self, key);
 	node = _tmp0_;
@@ -344,7 +345,7 @@ vala_hash_set_real_remove (ValaCollection* base,
 	ValaHashSetNode** node = NULL;
 	ValaHashSetNode** _tmp0_;
 	ValaHashSetNode** _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaHashSet*) base;
 	_tmp0_ = vala_hash_set_lookup_node (self, key);
 	node = _tmp0_;
@@ -454,7 +455,7 @@ vala_hash_set_remove_helper (ValaHashSet* self,
 	ValaHashSetNode** node = NULL;
 	ValaHashSetNode** _tmp0_;
 	ValaHashSetNode** _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = vala_hash_set_lookup_node (self, key);
 	node = _tmp0_;
@@ -715,7 +716,7 @@ vala_hash_set_iterator_real_next (ValaIterator* base)
 	ValaHashSet* _tmp0_;
 	ValaHashSetNode* _tmp1_;
 	ValaHashSetNode* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaHashSetIterator*) base;
 	_tmp0_ = self->priv->_set;
 	_vala_assert (self->priv->_stamp == _tmp0_->priv->_stamp, "_stamp == _set._stamp");
@@ -738,7 +739,7 @@ vala_hash_set_iterator_real_has_next (ValaIterator* base)
 	ValaHashSet* _tmp0_;
 	ValaHashSetNode* _tmp1_;
 	ValaHashSetNode* _tmp13_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ValaHashSetIterator*) base;
 	_tmp0_ = self->priv->_set;
 	_vala_assert (self->priv->_stamp == _tmp0_->priv->_stamp, "_stamp == _set._stamp");
@@ -798,7 +799,7 @@ vala_hash_set_iterator_real_get (ValaIterator* base)
 	ValaHashSetNode* _tmp2_;
 	gconstpointer _tmp3_;
 	gpointer _tmp4_;
-	gpointer result = NULL;
+	gpointer result;
 	self = (ValaHashSetIterator*) base;
 	_tmp0_ = self->priv->_set;
 	_vala_assert (self->priv->_stamp == _tmp0_->priv->_stamp, "_stamp == _set._stamp");
@@ -859,7 +860,7 @@ vala_hash_set_iterator_class_init (ValaHashSetIteratorClass * klass,
 	((ValaIteratorClass *) klass)->has_next = (gboolean (*) (ValaIterator*)) vala_hash_set_iterator_real_has_next;
 	((ValaIteratorClass *) klass)->get = (gpointer (*) (ValaIterator*)) vala_hash_set_iterator_real_get;
 	((ValaIteratorClass *) klass)->remove = (void (*) (ValaIterator*)) vala_hash_set_iterator_real_remove;
-	VALA_ITERATOR_CLASS (klass)->get_valid = vala_hash_set_iterator_real_get_valid;
+	VALA_ITERATOR_CLASS (klass)->get_valid = (gboolean (*) (ValaIterator*)) vala_hash_set_iterator_real_get_valid;
 }
 
 static void
@@ -893,13 +894,13 @@ vala_hash_set_iterator_get_type_once (void)
 static GType
 vala_hash_set_iterator_get_type (void)
 {
-	static volatile gsize vala_hash_set_iterator_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_hash_set_iterator_type_id__volatile)) {
+	static volatile gsize vala_hash_set_iterator_type_id__once = 0;
+	if (g_once_init_enter (&vala_hash_set_iterator_type_id__once)) {
 		GType vala_hash_set_iterator_type_id;
 		vala_hash_set_iterator_type_id = vala_hash_set_iterator_get_type_once ();
-		g_once_init_leave (&vala_hash_set_iterator_type_id__volatile, vala_hash_set_iterator_type_id);
+		g_once_init_leave (&vala_hash_set_iterator_type_id__once, vala_hash_set_iterator_type_id);
 	}
-	return vala_hash_set_iterator_type_id__volatile;
+	return vala_hash_set_iterator_type_id__once;
 }
 
 static void
@@ -915,7 +916,7 @@ vala_hash_set_class_init (ValaHashSetClass * klass,
 	((ValaCollectionClass *) klass)->add = (gboolean (*) (ValaCollection*, gconstpointer)) vala_hash_set_real_add;
 	((ValaCollectionClass *) klass)->remove = (gboolean (*) (ValaCollection*, gconstpointer)) vala_hash_set_real_remove;
 	((ValaCollectionClass *) klass)->clear = (void (*) (ValaCollection*)) vala_hash_set_real_clear;
-	VALA_COLLECTION_CLASS (klass)->get_size = vala_hash_set_real_get_size;
+	VALA_COLLECTION_CLASS (klass)->get_size = (gint (*) (ValaCollection*)) vala_hash_set_real_get_size;
 }
 
 static void
@@ -952,13 +953,13 @@ vala_hash_set_get_type_once (void)
 GType
 vala_hash_set_get_type (void)
 {
-	static volatile gsize vala_hash_set_type_id__volatile = 0;
-	if (g_once_init_enter (&vala_hash_set_type_id__volatile)) {
+	static volatile gsize vala_hash_set_type_id__once = 0;
+	if (g_once_init_enter (&vala_hash_set_type_id__once)) {
 		GType vala_hash_set_type_id;
 		vala_hash_set_type_id = vala_hash_set_get_type_once ();
-		g_once_init_leave (&vala_hash_set_type_id__volatile, vala_hash_set_type_id);
+		g_once_init_leave (&vala_hash_set_type_id__once, vala_hash_set_type_id);
 	}
-	return vala_hash_set_type_id__volatile;
+	return vala_hash_set_type_id__once;
 }
 
 static void

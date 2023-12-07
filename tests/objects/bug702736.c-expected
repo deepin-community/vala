@@ -210,13 +210,13 @@ class_a_get_type_once (void)
 GType
 class_a_get_type (void)
 {
-	static volatile gsize class_a_type_id__volatile = 0;
-	if (g_once_init_enter (&class_a_type_id__volatile)) {
+	static volatile gsize class_a_type_id__once = 0;
+	if (g_once_init_enter (&class_a_type_id__once)) {
 		GType class_a_type_id;
 		class_a_type_id = class_a_get_type_once ();
-		g_once_init_leave (&class_a_type_id__volatile, class_a_type_id);
+		g_once_init_leave (&class_a_type_id__once, class_a_type_id);
 	}
-	return class_a_type_id__volatile;
+	return class_a_type_id__once;
 }
 
 static void
@@ -263,7 +263,7 @@ class_b_class_init (ClassBClass * klass,
                     gpointer klass_data)
 {
 	class_b_parent_class = g_type_class_peek_parent (klass);
-	CLASS_A_CLASS (klass)->get_flags = class_b_real_get_flags;
+	CLASS_A_CLASS (klass)->get_flags = (gint (*) (ClassA*)) class_b_real_get_flags;
 	G_OBJECT_CLASS (klass)->get_property = _vala_class_b_get_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), CLASS_B_FLAGS_PROPERTY, class_b_properties[CLASS_B_FLAGS_PROPERTY] = g_param_spec_int ("flags", "flags", "flags", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
@@ -286,13 +286,13 @@ class_b_get_type_once (void)
 GType
 class_b_get_type (void)
 {
-	static volatile gsize class_b_type_id__volatile = 0;
-	if (g_once_init_enter (&class_b_type_id__volatile)) {
+	static volatile gsize class_b_type_id__once = 0;
+	if (g_once_init_enter (&class_b_type_id__once)) {
 		GType class_b_type_id;
 		class_b_type_id = class_b_get_type_once ();
-		g_once_init_leave (&class_b_type_id__volatile, class_b_type_id);
+		g_once_init_leave (&class_b_type_id__once, class_b_type_id);
 	}
-	return class_b_type_id__volatile;
+	return class_b_type_id__once;
 }
 
 static void
@@ -358,13 +358,13 @@ class_c_get_type_once (void)
 GType
 class_c_get_type (void)
 {
-	static volatile gsize class_c_type_id__volatile = 0;
-	if (g_once_init_enter (&class_c_type_id__volatile)) {
+	static volatile gsize class_c_type_id__once = 0;
+	if (g_once_init_enter (&class_c_type_id__once)) {
 		GType class_c_type_id;
 		class_c_type_id = class_c_get_type_once ();
-		g_once_init_leave (&class_c_type_id__volatile, class_c_type_id);
+		g_once_init_leave (&class_c_type_id__once, class_c_type_id);
 	}
-	return class_c_type_id__volatile;
+	return class_c_type_id__once;
 }
 
 ClassD*
@@ -400,7 +400,7 @@ class_d_class_init (ClassDClass * klass,
                     gpointer klass_data)
 {
 	class_d_parent_class = g_type_class_peek_parent (klass);
-	CLASS_A_CLASS (klass)->get_flags = class_d_real_get_flags;
+	CLASS_A_CLASS (klass)->get_flags = (gint (*) (ClassA*)) class_d_real_get_flags;
 	G_OBJECT_CLASS (klass)->get_property = _vala_class_d_get_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), CLASS_D_FLAGS_PROPERTY, class_d_properties[CLASS_D_FLAGS_PROPERTY] = g_param_spec_int ("flags", "flags", "flags", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
@@ -423,13 +423,13 @@ class_d_get_type_once (void)
 GType
 class_d_get_type (void)
 {
-	static volatile gsize class_d_type_id__volatile = 0;
-	if (g_once_init_enter (&class_d_type_id__volatile)) {
+	static volatile gsize class_d_type_id__once = 0;
+	if (g_once_init_enter (&class_d_type_id__once)) {
 		GType class_d_type_id;
 		class_d_type_id = class_d_get_type_once ();
-		g_once_init_leave (&class_d_type_id__volatile, class_d_type_id);
+		g_once_init_leave (&class_d_type_id__once, class_d_type_id);
 	}
-	return class_d_type_id__volatile;
+	return class_d_type_id__once;
 }
 
 static void

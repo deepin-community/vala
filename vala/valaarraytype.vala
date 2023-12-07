@@ -31,7 +31,7 @@ public class Vala.ArrayType : ReferenceType {
 	 */
 	public DataType element_type {
 		get { return _element_type; }
-		set {
+		private set {
 			_element_type = value;
 			_element_type.parent_node = this;
 		}
@@ -84,10 +84,9 @@ public class Vala.ArrayType : ReferenceType {
 	private ArrayCopyMethod copy_method;
 
 	public ArrayType (DataType element_type, int rank, SourceReference? source_reference = null) {
-		base (null);
+		base (null, source_reference);
 		this.element_type = element_type;
 		this.rank = rank;
-		this.source_reference = source_reference;
 	}
 
 	public override Symbol? get_member (string member_name) {
@@ -200,7 +199,13 @@ public class Vala.ArrayType : ReferenceType {
 		}
 
 		if (!fixed_length) {
-			return "%s[%s]%s".printf (elem_str, string.nfill (rank - 1, ','), nullable ? "?" : "");
+			var length_str = length_type == null ? "int" : length_type.to_qualified_string (scope);
+			if (length_str != "int") {
+				length_str = ":%s".printf (length_str);
+			} else {
+				length_str = "";
+			}
+			return "%s[%s%s]%s".printf (elem_str, string.nfill (rank - 1, ','), length_str, nullable ? "?" : "");
 		} else {
 			return elem_str;
 		}
@@ -251,6 +256,12 @@ public class Vala.ArrayType : ReferenceType {
 		if (element_type.compatible (target_array_type.element_type)
 		    && target_array_type.element_type.compatible (element_type)) {
 			return true;
+		} else if (element_type.type_symbol is Class) {
+			unowned Class cl = (Class) element_type.type_symbol;
+			if ((!cl.is_compact || cl == context.analyzer.string_type.type_symbol)
+			    && element_type.compatible (target_array_type.element_type)) {
+				return true;
+			}
 		}
 
 		return false;
