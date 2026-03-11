@@ -1,0 +1,32 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Sun, 28 Sep 2025 15:47:00 +0100
+Subject: vala-gen-introspect: Use $PKG_CONFIG, if set
+
+This allows pkg-config to be overridden at build time.
+
+Bug-Debian: https://bugs.debian.org/1116553
+Signed-off-by: Simon McVittie <smcv@debian.org>
+---
+ vapigen/vala-gen-introspect/vala-gen-introspect.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/vapigen/vala-gen-introspect/vala-gen-introspect.in b/vapigen/vala-gen-introspect/vala-gen-introspect.in
+index 587e2d1..7315b3a 100755
+--- a/vapigen/vala-gen-introspect/vala-gen-introspect.in
++++ b/vapigen/vala-gen-introspect/vala-gen-introspect.in
+@@ -13,7 +13,7 @@ fi
+ 
+ PKGNAME=$1
+ PKGBASE=$2/$1
+-PKGPREFIX=`pkg-config --variable=prefix $PKGNAME`
++PKGPREFIX=`${PKG_CONFIG:-pkg-config} --variable=prefix $PKGNAME`
+ 
+ PKGFILES=`cat $PKGBASE.files | grep ^[/.]`
+ 
+@@ -37,5 +37,5 @@ then
+ 	PKGDEFINES=$(cat $PKGBASE.defines)
+ fi
+ 
+-$pkglibdir/gen-introspect@PACKAGE_SUFFIX@ --namespace=`cat $PKGBASE.namespace` $PKGDEFINES `pkg-config --cflags $PKGNAME | sed 's/-pthread//g'` $FILES > $PKGBASE.gi
++$pkglibdir/gen-introspect@PACKAGE_SUFFIX@ --namespace=`cat $PKGBASE.namespace` $PKGDEFINES `${PKG_CONFIG:-pkg-config} --cflags $PKGNAME | sed 's/-pthread//g'` $FILES > $PKGBASE.gi
+ 

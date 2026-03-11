@@ -1018,6 +1018,49 @@ public struct double {
 	}
 }
 
+//FIXME [GIR (name = "off_t")]
+[GIR (name = "gsize")]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+[IntegerType (rank = 9)]
+public struct off_t {
+}
+
+//FIXME [GIR (name = "pid_t")]
+[GIR (name = "gint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct pid_t {
+}
+
+//FIXME [GIR (name = "uid_t")]
+[GIR (name = "guint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct uid_t {
+}
+
+//FIXME [GIR (name = "gid_t")]
+[GIR (name = "guint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct gid_t {
+}
+
+//FIXME [GIR (name = "dev_t")]
+[GIR (name = "gint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct dev_t {
+}
+
+//FIXME [GIR (name = "socklen_t")]
+[GIR (name = "gint32")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/socket.h", has_type_id = false, default_value = "0")]
+public struct socklen_t {
+}
+
+//FIXME [GIR (name = "time_t")]
 [GIR (name = "glong")]
 [CCode (cheader_filename = "time.h", has_type_id = false, default_value = "0")]
 [IntegerType (rank = 8)]
@@ -1705,7 +1748,9 @@ namespace GLib {
 		public static float sinhf (float x);
 		public static double tanh (double x);
 		public static float tanhf (float x);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static void sincos (double x, out double sinx, out double cosx);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static void sincosf (float x, out float sinx, out float cosx);
 		public static double acosh (double x);
 		public static float acoshf (float x);
@@ -2986,7 +3031,7 @@ namespace GLib {
 	public static string convert_with_iconv (string str, ssize_t len, IConv converter, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
 	[Version (since = "2.62")]
-	public static bool get_console_charset ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
+	public static bool get_console_charset (out unowned string charset);
 	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 
 	[SimpleType]
@@ -2994,7 +3039,7 @@ namespace GLib {
 	public struct IConv {
 		public static IConv open (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
-		public size_t iconv ([CCode (array_length = false)] ref char[] inbuf, ref size_t inbytes_left, [CCode (array_length = false)] ref char[] outbuf, ref size_t outbytes_left);
+		public size_t iconv ([CCode (array_length = false, array_null_terminated = true)] ref char[] inbuf, ref size_t inbytes_left, [CCode (array_length = false, array_null_terminated = true)] ref char[] outbuf, ref size_t outbytes_left);
 		public int close ();
 	}
 
@@ -4025,9 +4070,9 @@ namespace GLib {
 		public static FileStream? fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
-		public void printf (string format, ...);
+		public int printf (string format, ...);
 		[CCode (cname = "vfprintf")]
-		public void vprintf (string format, va_list args);
+		public int vprintf (string format, va_list args);
 		[CCode (cname = "fputc", instance_pos = -1)]
 		public int putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
@@ -4076,7 +4121,7 @@ namespace GLib {
 			if (ret == null) {
 				return null;
 			} else {
-				return ((!)(ret)).str;
+				return (owned) ((!)(ret)).str;
 			}
 		}
 	}
@@ -4552,6 +4597,8 @@ namespace GLib {
 	[CCode (cprefix = "G_REGEX_", has_type_id = false)]
 	[Flags]
 	public enum RegexCompileFlags {
+		[Version (since = "2.74")]
+		DEFAULT,
 		CASELESS,
 		MULTILINE,
 		DOTALL,
@@ -4568,6 +4615,7 @@ namespace GLib {
 		NEWLINE_CRLF,
 		NEWLINE_ANYCRLF,
 		BSR_ANYCRLF,
+		[Version (deprecated_since = "2.74")]
 		JAVASCRIPT_COMPAT
 	}
 
@@ -4575,6 +4623,8 @@ namespace GLib {
 	[CCode (cprefix = "G_REGEX_MATCH_", has_type_id = false)]
 	[Flags]
 	public enum RegexMatchFlags {
+		[Version (since = "2.74")]
+		DEFAULT,
 		ANCHORED,
 		NOTBOL,
 		NOTEOL,
@@ -4610,6 +4660,8 @@ namespace GLib {
 		public int get_capture_count ();
 		public int get_string_number (string name);
 		public static string escape_string (string str, int length = -1);
+		[Version (since = "2.30")]
+		public static string escape_nul (char[] str);
 		public static bool match_simple (string pattern, string str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		public bool match (string str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
 		public bool match_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
@@ -4648,9 +4700,6 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] fetch_all ();
 	}
-
-	/* Simple XML Subset Parser
-	   See http://live.gnome.org/Vala/MarkupSample for an example */
 
 	[CCode (has_type_id = false)]
 	public errordomain MarkupError {
@@ -7017,6 +7066,8 @@ namespace GLib {
 		OTHER_LETTER,
 		TITLECASE_LETTER,
 		UPPERCASE_LETTER,
+		SPACING_MARK,
+		[Version (deprecated_since = "2.30", replacement = "SPACING_MARK")]
 		COMBINING_MARK,
 		ENCLOSING_MARK,
 		NON_SPACING_MARK,

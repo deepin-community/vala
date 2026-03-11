@@ -34,6 +34,15 @@
 #include <config.h>
 #include <gobject/gvaluecollector.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _vala_report_unref0(var) ((var == NULL) ? NULL : (var = (vala_report_unref (var), NULL)))
@@ -145,6 +154,9 @@ static gchar* vala_code_context_get_file_path (ValaCodeContext* self,
                                         const gchar* data_dir,
                                         gchar** directories,
                                         gint directories_length1);
+static void vala_code_context_write_depfile (ValaCodeContext* self,
+                                      const gchar* filename,
+                                      ValaList* deps);
 static gboolean vala_code_context_ends_with_dir_separator (const gchar* s);
 static void vala_code_context_finalize (ValaCodeContext * obj);
 static GType vala_code_context_get_type_once (void);
@@ -2407,28 +2419,184 @@ gchar*
 vala_code_context_get_gir_path (ValaCodeContext* self,
                                 const gchar* gir)
 {
+	static const char GIR_SUFFIX[] = "gir-1.0";
+	gchar* girname = NULL;
 	gchar* _tmp0_;
-	gchar* _tmp1_;
-	gchar** _tmp2_;
-	gint _tmp2__length1;
-	gint _tmp3_ = 0;
-	gchar** _tmp4_;
-	gint _tmp4__length1;
-	gchar* _tmp5_;
-	gchar* _tmp6_;
+	gchar* path = NULL;
+	gchar** _tmp1_;
+	gint _tmp1__length1;
+	gint _tmp2_ = 0;
+	gchar** _tmp3_;
+	gint _tmp3__length1;
+	const gchar* gi_gir_path = NULL;
+	const gchar* _tmp8_;
+	const gchar* _tmp9_;
+	const gchar* _tmp18_;
+	const gchar* _tmp19_;
+	gchar* _tmp20_;
+	const gchar* _tmp21_;
+	gchar** _tmp22_;
+	gchar** _tmp23_;
+	const gchar* _tmp28_;
+	gchar* _tmp29_;
+	const gchar* _tmp30_;
+	const gchar* _tmp31_;
+	gchar* _tmp32_;
+	const gchar* _tmp33_;
 	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (gir != NULL, NULL);
 	_tmp0_ = g_strconcat (gir, ".gir", NULL);
-	_tmp1_ = _tmp0_;
-	_tmp2_ = vala_code_context_get_gir_directories (self, &_tmp3_);
-	_tmp2__length1 = _tmp3_;
-	_tmp4_ = _tmp2_;
-	_tmp4__length1 = _tmp2__length1;
-	_tmp5_ = vala_code_context_get_file_path (self, _tmp1_, "gir-1.0", NULL, _tmp4_, (gint) _tmp4__length1);
-	_tmp6_ = _tmp5_;
-	_g_free0 (_tmp1_);
-	result = _tmp6_;
+	girname = _tmp0_;
+	path = NULL;
+	_tmp1_ = vala_code_context_get_gir_directories (self, &_tmp2_);
+	_tmp1__length1 = _tmp2_;
+	_tmp3_ = _tmp1_;
+	_tmp3__length1 = _tmp1__length1;
+	{
+		gchar** dir_collection = NULL;
+		gint dir_collection_length1 = 0;
+		gint _dir_collection_size_ = 0;
+		gint dir_it = 0;
+		dir_collection = _tmp3_;
+		dir_collection_length1 = _tmp3__length1;
+		for (dir_it = 0; dir_it < dir_collection_length1; dir_it = dir_it + 1) {
+			const gchar* dir = NULL;
+			dir = dir_collection[dir_it];
+			{
+				const gchar* _tmp4_;
+				const gchar* _tmp5_;
+				gchar* _tmp6_;
+				const gchar* _tmp7_;
+				_tmp4_ = dir;
+				_tmp5_ = girname;
+				_tmp6_ = g_build_path ("/", _tmp4_, _tmp5_, NULL);
+				_g_free0 (path);
+				path = _tmp6_;
+				_tmp7_ = path;
+				if (g_file_test (_tmp7_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+					result = path;
+					_g_free0 (girname);
+					return result;
+				}
+			}
+		}
+	}
+	_tmp8_ = g_getenv ("GI_GIR_PATH");
+	gi_gir_path = _tmp8_;
+	_tmp9_ = gi_gir_path;
+	if (_tmp9_ != NULL) {
+		gchar** gir_dirs = NULL;
+		const gchar* _tmp10_;
+		gchar** _tmp11_;
+		gchar** _tmp12_;
+		gint gir_dirs_length1;
+		gint _gir_dirs_size_;
+		gchar** _tmp13_;
+		gint _tmp13__length1;
+		_tmp10_ = gi_gir_path;
+		_tmp12_ = _tmp11_ = g_strsplit (_tmp10_, G_SEARCHPATH_SEPARATOR_S, 0);
+		gir_dirs = _tmp12_;
+		gir_dirs_length1 = _vala_array_length (_tmp11_);
+		_gir_dirs_size_ = gir_dirs_length1;
+		_tmp13_ = gir_dirs;
+		_tmp13__length1 = gir_dirs_length1;
+		{
+			gchar** dir_collection = NULL;
+			gint dir_collection_length1 = 0;
+			gint _dir_collection_size_ = 0;
+			gint dir_it = 0;
+			dir_collection = _tmp13_;
+			dir_collection_length1 = _tmp13__length1;
+			for (dir_it = 0; dir_it < dir_collection_length1; dir_it = dir_it + 1) {
+				const gchar* dir = NULL;
+				dir = dir_collection[dir_it];
+				{
+					const gchar* _tmp14_;
+					const gchar* _tmp15_;
+					gchar* _tmp16_;
+					const gchar* _tmp17_;
+					_tmp14_ = dir;
+					_tmp15_ = girname;
+					_tmp16_ = g_build_path ("/", _tmp14_, _tmp15_, NULL);
+					_g_free0 (path);
+					path = _tmp16_;
+					_tmp17_ = path;
+					if (g_file_test (_tmp17_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+						result = path;
+						gir_dirs = (_vala_array_free (gir_dirs, gir_dirs_length1, (GDestroyNotify) g_free), NULL);
+						_g_free0 (girname);
+						return result;
+					}
+				}
+			}
+		}
+		gir_dirs = (_vala_array_free (gir_dirs, gir_dirs_length1, (GDestroyNotify) g_free), NULL);
+	}
+	_tmp18_ = g_get_user_data_dir ();
+	_tmp19_ = girname;
+	_tmp20_ = g_build_path ("/", _tmp18_, GIR_SUFFIX, _tmp19_, NULL);
+	_g_free0 (path);
+	path = _tmp20_;
+	_tmp21_ = path;
+	if (g_file_test (_tmp21_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+		result = path;
+		_g_free0 (girname);
+		return result;
+	}
+	_tmp23_ = _tmp22_ = g_get_system_data_dirs ();
+	{
+		gchar** dir_collection = NULL;
+		gint dir_collection_length1 = 0;
+		gint _dir_collection_size_ = 0;
+		gint dir_it = 0;
+		dir_collection = _tmp23_;
+		dir_collection_length1 = _vala_array_length (_tmp22_);
+		for (dir_it = 0; dir_it < dir_collection_length1; dir_it = dir_it + 1) {
+			const gchar* dir = NULL;
+			dir = dir_collection[dir_it];
+			{
+				const gchar* _tmp24_;
+				const gchar* _tmp25_;
+				gchar* _tmp26_;
+				const gchar* _tmp27_;
+				_tmp24_ = dir;
+				_tmp25_ = girname;
+				_tmp26_ = g_build_path ("/", _tmp24_, GIR_SUFFIX, _tmp25_, NULL);
+				_g_free0 (path);
+				path = _tmp26_;
+				_tmp27_ = path;
+				if (g_file_test (_tmp27_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+					result = path;
+					_g_free0 (girname);
+					return result;
+				}
+			}
+		}
+	}
+	_tmp28_ = girname;
+	_tmp29_ = g_build_path ("/", GI_GIRDIR, _tmp28_, NULL);
+	_g_free0 (path);
+	path = _tmp29_;
+	_tmp30_ = path;
+	if (g_file_test (_tmp30_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+		result = path;
+		_g_free0 (girname);
+		return result;
+	}
+	_tmp31_ = girname;
+	_tmp32_ = g_build_path ("/", "/usr", "share", GIR_SUFFIX, _tmp31_, NULL);
+	_g_free0 (path);
+	path = _tmp32_;
+	_tmp33_ = path;
+	if (g_file_test (_tmp33_, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+		result = path;
+		_g_free0 (girname);
+		return result;
+	}
+	result = NULL;
+	_g_free0 (path);
+	_g_free0 (girname);
 	return result;
 }
 
@@ -2730,105 +2898,18 @@ vala_code_context_get_file_path (ValaCodeContext* self,
 	return result;
 }
 
-void
-vala_code_context_write_dependencies (ValaCodeContext* self,
-                                      const gchar* filename)
-{
-	FILE* stream = NULL;
-	FILE* _tmp0_;
-	FILE* _tmp1_;
-	FILE* _tmp2_;
-	FILE* _tmp22_;
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (filename != NULL);
-	_tmp0_ = g_fopen (filename, "w");
-	stream = _tmp0_;
-	_tmp1_ = stream;
-	if (_tmp1_ == NULL) {
-		vala_report_error (NULL, "unable to open `%s' for writing", filename);
-		_fclose0 (stream);
-		return;
-	}
-	_tmp2_ = stream;
-	fprintf (_tmp2_, "%s:", filename);
-	{
-		ValaList* _src_list = NULL;
-		ValaList* _tmp3_;
-		gint _src_size = 0;
-		ValaList* _tmp4_;
-		gint _tmp5_;
-		gint _tmp6_;
-		gint _src_index = 0;
-		_tmp3_ = self->priv->source_files;
-		_src_list = _tmp3_;
-		_tmp4_ = _src_list;
-		_tmp5_ = vala_collection_get_size ((ValaCollection*) _tmp4_);
-		_tmp6_ = _tmp5_;
-		_src_size = _tmp6_;
-		_src_index = -1;
-		while (TRUE) {
-			gint _tmp7_;
-			gint _tmp8_;
-			ValaSourceFile* src = NULL;
-			ValaList* _tmp9_;
-			gpointer _tmp10_;
-			gboolean _tmp11_ = FALSE;
-			ValaSourceFile* _tmp12_;
-			ValaSourceFileType _tmp13_;
-			ValaSourceFileType _tmp14_;
-			_src_index = _src_index + 1;
-			_tmp7_ = _src_index;
-			_tmp8_ = _src_size;
-			if (!(_tmp7_ < _tmp8_)) {
-				break;
-			}
-			_tmp9_ = _src_list;
-			_tmp10_ = vala_list_get (_tmp9_, _src_index);
-			src = (ValaSourceFile*) _tmp10_;
-			_tmp12_ = src;
-			_tmp13_ = vala_source_file_get_file_type (_tmp12_);
-			_tmp14_ = _tmp13_;
-			if (_tmp14_ == VALA_SOURCE_FILE_TYPE_FAST) {
-				ValaSourceFile* _tmp15_;
-				gboolean _tmp16_;
-				gboolean _tmp17_;
-				_tmp15_ = src;
-				_tmp16_ = vala_source_file_get_used (_tmp15_);
-				_tmp17_ = _tmp16_;
-				_tmp11_ = _tmp17_;
-			} else {
-				_tmp11_ = FALSE;
-			}
-			if (_tmp11_) {
-				FILE* _tmp18_;
-				ValaSourceFile* _tmp19_;
-				const gchar* _tmp20_;
-				const gchar* _tmp21_;
-				_tmp18_ = stream;
-				_tmp19_ = src;
-				_tmp20_ = vala_source_file_get_filename (_tmp19_);
-				_tmp21_ = _tmp20_;
-				fprintf (_tmp18_, " %s", _tmp21_);
-			}
-			_vala_source_file_unref0 (src);
-		}
-	}
-	_tmp22_ = stream;
-	fprintf (_tmp22_, "\n\n");
-	_fclose0 (stream);
-}
-
-void
-vala_code_context_write_external_dependencies (ValaCodeContext* self,
-                                               const gchar* filename)
+static void
+vala_code_context_write_depfile (ValaCodeContext* self,
+                                 const gchar* filename,
+                                 ValaList* deps)
 {
 	FILE* stream = NULL;
 	FILE* _tmp0_;
 	FILE* _tmp1_;
 	gboolean first = FALSE;
-	FILE* _tmp23_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (filename != NULL);
+	g_return_if_fail (deps != NULL);
 	_tmp0_ = g_fopen (filename, "w");
 	stream = _tmp0_;
 	_tmp1_ = stream;
@@ -2838,6 +2919,153 @@ vala_code_context_write_external_dependencies (ValaCodeContext* self,
 		return;
 	}
 	first = TRUE;
+	{
+		ValaList* _dep_list = NULL;
+		gint _dep_size = 0;
+		ValaList* _tmp2_;
+		gint _tmp3_;
+		gint _tmp4_;
+		gint _dep_index = 0;
+		_dep_list = deps;
+		_tmp2_ = _dep_list;
+		_tmp3_ = vala_collection_get_size ((ValaCollection*) _tmp2_);
+		_tmp4_ = _tmp3_;
+		_dep_size = _tmp4_;
+		_dep_index = -1;
+		while (TRUE) {
+			gint _tmp5_;
+			gint _tmp6_;
+			gchar* dep = NULL;
+			ValaList* _tmp7_;
+			gpointer _tmp8_;
+			FILE* _tmp11_;
+			const gchar* _tmp12_;
+			_dep_index = _dep_index + 1;
+			_tmp5_ = _dep_index;
+			_tmp6_ = _dep_size;
+			if (!(_tmp5_ < _tmp6_)) {
+				break;
+			}
+			_tmp7_ = _dep_list;
+			_tmp8_ = vala_list_get (_tmp7_, _dep_index);
+			dep = (gchar*) _tmp8_;
+			if (first) {
+				FILE* _tmp9_;
+				first = FALSE;
+				_tmp9_ = stream;
+				fprintf (_tmp9_, "%s: ", filename);
+			} else {
+				FILE* _tmp10_;
+				_tmp10_ = stream;
+				fputs (" \\\n\t", _tmp10_);
+			}
+			_tmp11_ = stream;
+			_tmp12_ = dep;
+			fprintf (_tmp11_, "%s", _tmp12_);
+			_g_free0 (dep);
+		}
+	}
+	if (!first) {
+		FILE* _tmp13_;
+		_tmp13_ = stream;
+		fputs ("\n\n", _tmp13_);
+	}
+	_fclose0 (stream);
+}
+
+void
+vala_code_context_write_dependencies (ValaCodeContext* self,
+                                      const gchar* filename)
+{
+	ValaList* fastvapi_files = NULL;
+	GEqualFunc _tmp0_;
+	ValaArrayList* _tmp1_;
+	ValaList* _tmp21_;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (filename != NULL);
+	_tmp0_ = g_str_equal;
+	_tmp1_ = vala_array_list_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free, _tmp0_);
+	fastvapi_files = (ValaList*) _tmp1_;
+	{
+		ValaList* _src_list = NULL;
+		ValaList* _tmp2_;
+		gint _src_size = 0;
+		ValaList* _tmp3_;
+		gint _tmp4_;
+		gint _tmp5_;
+		gint _src_index = 0;
+		_tmp2_ = self->priv->source_files;
+		_src_list = _tmp2_;
+		_tmp3_ = _src_list;
+		_tmp4_ = vala_collection_get_size ((ValaCollection*) _tmp3_);
+		_tmp5_ = _tmp4_;
+		_src_size = _tmp5_;
+		_src_index = -1;
+		while (TRUE) {
+			gint _tmp6_;
+			gint _tmp7_;
+			ValaSourceFile* src = NULL;
+			ValaList* _tmp8_;
+			gpointer _tmp9_;
+			gboolean _tmp10_ = FALSE;
+			ValaSourceFile* _tmp11_;
+			ValaSourceFileType _tmp12_;
+			ValaSourceFileType _tmp13_;
+			_src_index = _src_index + 1;
+			_tmp6_ = _src_index;
+			_tmp7_ = _src_size;
+			if (!(_tmp6_ < _tmp7_)) {
+				break;
+			}
+			_tmp8_ = _src_list;
+			_tmp9_ = vala_list_get (_tmp8_, _src_index);
+			src = (ValaSourceFile*) _tmp9_;
+			_tmp11_ = src;
+			_tmp12_ = vala_source_file_get_file_type (_tmp11_);
+			_tmp13_ = _tmp12_;
+			if (_tmp13_ == VALA_SOURCE_FILE_TYPE_FAST) {
+				ValaSourceFile* _tmp14_;
+				gboolean _tmp15_;
+				gboolean _tmp16_;
+				_tmp14_ = src;
+				_tmp15_ = vala_source_file_get_used (_tmp14_);
+				_tmp16_ = _tmp15_;
+				_tmp10_ = _tmp16_;
+			} else {
+				_tmp10_ = FALSE;
+			}
+			if (_tmp10_) {
+				ValaList* _tmp17_;
+				ValaSourceFile* _tmp18_;
+				const gchar* _tmp19_;
+				const gchar* _tmp20_;
+				_tmp17_ = fastvapi_files;
+				_tmp18_ = src;
+				_tmp19_ = vala_source_file_get_filename (_tmp18_);
+				_tmp20_ = _tmp19_;
+				vala_collection_add ((ValaCollection*) _tmp17_, _tmp20_);
+			}
+			_vala_source_file_unref0 (src);
+		}
+	}
+	_tmp21_ = fastvapi_files;
+	vala_code_context_write_depfile (self, filename, _tmp21_);
+	_vala_iterable_unref0 (fastvapi_files);
+}
+
+void
+vala_code_context_write_external_dependencies (ValaCodeContext* self,
+                                               const gchar* filename)
+{
+	ValaList* external_files = NULL;
+	GEqualFunc _tmp0_;
+	ValaArrayList* _tmp1_;
+	ValaList* _tmp21_;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (filename != NULL);
+	_tmp0_ = g_str_equal;
+	_tmp1_ = vala_array_list_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free, _tmp0_);
+	external_files = (ValaList*) _tmp1_;
 	{
 		ValaList* _src_list = NULL;
 		ValaList* _tmp2_;
@@ -2887,32 +3115,22 @@ vala_code_context_write_external_dependencies (ValaCodeContext* self,
 				_tmp10_ = FALSE;
 			}
 			if (_tmp10_) {
-				FILE* _tmp19_;
-				ValaSourceFile* _tmp20_;
-				const gchar* _tmp21_;
-				const gchar* _tmp22_;
-				if (first) {
-					FILE* _tmp17_;
-					first = FALSE;
-					_tmp17_ = stream;
-					fprintf (_tmp17_, "%s: ", filename);
-				} else {
-					FILE* _tmp18_;
-					_tmp18_ = stream;
-					fputs (" \\\n\t", _tmp18_);
-				}
-				_tmp19_ = stream;
-				_tmp20_ = src;
-				_tmp21_ = vala_source_file_get_filename (_tmp20_);
-				_tmp22_ = _tmp21_;
-				fprintf (_tmp19_, "%s", _tmp22_);
+				ValaList* _tmp17_;
+				ValaSourceFile* _tmp18_;
+				const gchar* _tmp19_;
+				const gchar* _tmp20_;
+				_tmp17_ = external_files;
+				_tmp18_ = src;
+				_tmp19_ = vala_source_file_get_filename (_tmp18_);
+				_tmp20_ = _tmp19_;
+				vala_collection_add ((ValaCollection*) _tmp17_, _tmp20_);
 			}
 			_vala_source_file_unref0 (src);
 		}
 	}
-	_tmp23_ = stream;
-	fputs ("\n\n", _tmp23_);
-	_fclose0 (stream);
+	_tmp21_ = external_files;
+	vala_code_context_write_depfile (self, filename, _tmp21_);
+	_vala_iterable_unref0 (external_files);
 }
 
 static gunichar

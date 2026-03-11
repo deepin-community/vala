@@ -1,8 +1,9 @@
+debian/cross/*-vala.ini                 usr/share/meson/cross
+debian/cross/*-valac-*                  usr/bin
+debian/cross/*-vapigen-*                usr/bin
 usr/bin/vala-gen-introspect*
-usr/bin/vapi*
 usr/share/aclocal/
 usr/share/vala/Makefile.vapigen
 usr/share/man/man1/vala-gen-introspect*
-usr/share/man/man1/vapigen*
 usr/lib/*/pkgconfig/vapigen*.pc
 usr/lib/*/vala-*/gen-introspect-*

@@ -609,6 +609,17 @@ typedef struct _ValaCCodeParenthesizedExpression ValaCCodeParenthesizedExpressio
 typedef struct _ValaCCodeParenthesizedExpressionClass ValaCCodeParenthesizedExpressionClass;
 typedef struct _ValaCCodeParenthesizedExpressionPrivate ValaCCodeParenthesizedExpressionPrivate;
 
+#define VALA_TYPE_CCODE_PRAGMA (vala_ccode_pragma_get_type ())
+#define VALA_CCODE_PRAGMA(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_PRAGMA, ValaCCodePragma))
+#define VALA_CCODE_PRAGMA_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_PRAGMA, ValaCCodePragmaClass))
+#define VALA_IS_CCODE_PRAGMA(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), VALA_TYPE_CCODE_PRAGMA))
+#define VALA_IS_CCODE_PRAGMA_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), VALA_TYPE_CCODE_PRAGMA))
+#define VALA_CCODE_PRAGMA_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), VALA_TYPE_CCODE_PRAGMA, ValaCCodePragmaClass))
+
+typedef struct _ValaCCodePragma ValaCCodePragma;
+typedef struct _ValaCCodePragmaClass ValaCCodePragmaClass;
+typedef struct _ValaCCodePragmaPrivate ValaCCodePragmaPrivate;
+
 #define VALA_TYPE_CCODE_RETURN_STATEMENT (vala_ccode_return_statement_get_type ())
 #define VALA_CCODE_RETURN_STATEMENT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CCODE_RETURN_STATEMENT, ValaCCodeReturnStatement))
 #define VALA_CCODE_RETURN_STATEMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_TYPE_CCODE_RETURN_STATEMENT, ValaCCodeReturnStatementClass))
@@ -1144,6 +1155,15 @@ struct _ValaCCodeParenthesizedExpression {
 
 struct _ValaCCodeParenthesizedExpressionClass {
 	ValaCCodeExpressionClass parent_class;
+};
+
+struct _ValaCCodePragma {
+	ValaCCodeNode parent_instance;
+	ValaCCodePragmaPrivate * priv;
+};
+
+struct _ValaCCodePragmaClass {
+	ValaCCodeNodeClass parent_class;
 };
 
 struct _ValaCCodeReturnStatement {
@@ -1885,6 +1905,24 @@ VALA_EXTERN void vala_ccode_parenthesized_expression_set_inner (ValaCCodeParenth
 VALA_EXTERN ValaCCodeParenthesizedExpression* vala_ccode_parenthesized_expression_new (ValaCCodeExpression* expr);
 VALA_EXTERN ValaCCodeParenthesizedExpression* vala_ccode_parenthesized_expression_construct (GType object_type,
                                                                                  ValaCCodeExpression* expr);
+VALA_EXTERN GType vala_ccode_pragma_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodePragma, vala_ccode_node_unref)
+VALA_EXTERN const gchar* vala_ccode_pragma_get_prefix (ValaCCodePragma* self);
+VALA_EXTERN void vala_ccode_pragma_set_prefix (ValaCCodePragma* self,
+                                   const gchar* value);
+VALA_EXTERN const gchar* vala_ccode_pragma_get_directive (ValaCCodePragma* self);
+VALA_EXTERN void vala_ccode_pragma_set_directive (ValaCCodePragma* self,
+                                      const gchar* value);
+VALA_EXTERN const gchar* vala_ccode_pragma_get_value (ValaCCodePragma* self);
+VALA_EXTERN void vala_ccode_pragma_set_value (ValaCCodePragma* self,
+                                  const gchar* value);
+VALA_EXTERN ValaCCodePragma* vala_ccode_pragma_new (const gchar* prefix,
+                                        const gchar* directive,
+                                        const gchar* value);
+VALA_EXTERN ValaCCodePragma* vala_ccode_pragma_construct (GType object_type,
+                                              const gchar* prefix,
+                                              const gchar* directive,
+                                              const gchar* value);
 VALA_EXTERN GType vala_ccode_return_statement_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ValaCCodeReturnStatement, vala_ccode_node_unref)
 VALA_EXTERN ValaCCodeExpression* vala_ccode_return_statement_get_return_expression (ValaCCodeReturnStatement* self);

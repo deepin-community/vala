@@ -4,6 +4,14 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -26,8 +34,8 @@ struct _Foo {
 	gint i;
 };
 
-VALA_EXTERN gboolean true;
-gboolean true = TRUE;
+VALA_EXTERN gboolean truesy;
+gboolean truesy = TRUE;
 
 VALA_EXTERN GQuark foo_error_quark (void);
 VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
@@ -67,7 +75,7 @@ foo (GError** error)
 	Foo _tmp3_ = {0};
 	GError* _inner_error0_ = NULL;
 	Foo result;
-	if (true) {
+	if (truesy) {
 		GError* _tmp0_;
 		_tmp0_ = g_error_new_literal (FOO_ERROR, FOO_ERROR_BAR, "");
 		_inner_error0_ = _tmp0_;

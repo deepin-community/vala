@@ -1,3 +1,140 @@
+vala (0.56.18-7) unstable; urgency=medium
+
+  * Re-enable valadoc build for loong64
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 06 Jan 2026 17:47:13 -0500
+
+vala (0.56.18-6) unstable; urgency=medium
+
+  * Disable valadoc build for loong64 for bootstrapping
+  * Use Build-Depends: dbus-daemon instead of dbus (Closes: #1122734)
+  * vala-0.56-doc: Remove Suggests: devhelp, valac
+  * Bump Standards Version to 4.7.3
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 28 Dec 2025 08:44:22 -0500
+
+vala (0.56.18-5) unstable; urgency=medium
+
+  * Team upload
+  * Retry previous upload (no changes)
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 03 Oct 2025 17:55:37 +0100
+
+vala (0.56.18-4) unstable; urgency=medium
+
+  * Team upload
+  * d/patches, d/control: Make valac Multi-Arch co-installable.
+    By making the deprecated vala-gen-introspect script pick up
+    architecture-specific details from $PKG_CONFIG, we can make it
+    textually identical across all architectures. (Closes: #1116553)
+  * d/control: valac Recommends gcc | gcc-for-host, not just gcc.
+    The architecture-prefixed `${DEB_HOST_GNU_TYPE}-valac` wrappers tell
+    valac to use `${DEB_HOST_GNU_TYPE}-gcc`, so if those wrappers are
+    used, the gcc package is not strictly necessary.
+  * d/changelog: Point to #1116552 in previous changelog entry
+  * Release to unstable
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 03 Oct 2025 08:47:27 +0100
+
+vala (0.56.18-3) experimental; urgency=medium
+
+  * Team upload
+  * d/rules: Parameterize the vala major/minor version number
+  * d/rules: Generate cross valac wrapper from a template
+  * d/*.links: Create cross valac symlinks declaratively
+  * Use absolute path to run valac in the cross wrapper.
+    If the cross wrapper for valac has been found in /usr/bin, it
+    seems less surprising if it runs the corresponding system copy of
+    valac, bypassing any possible locally-installed valac that might
+    conceivably be the same major version number.
+  * Move vapigen, vapigen-0.56 to valac-bin, add required Breaks/Replaces
+  * d/rules: Generate a ${DEB_HOST_GNU_TYPE}-vapigen which searches
+    appropriate directories.
+    For example, this means we find GLib-2.0.gir in
+    /usr/lib/${DEB_HOST_MULTIARCH}/gir-1.0. (Closes: #1061107)
+  * Generate a ${DEB_HOST_GNU_TYPE}-vala.ini to use valac, vapigen wrappers.
+    This allows packages with a Meson build system to opt-in to using
+    the host architecture valac and vapigen during cross-builds. Ideally
+    this would be done more centrally, in `meson env2mfile` (#1116552)
+    or debhelper, but we should make the infrastructure available first.
+  * d/control, d/rules: Use build-architecture valac if cross-compiling.
+    This allows vala itself to be cross-compiled, as long as the
+    pkg.vala.nographviz build-profile is used (or #983886 is fixed)
+    and a native build for the build architecture has been done first.
+  * d/copyright: Don't quote the FSF's former postal address here
+  * Standards-Version: 4.7.2 (no changes required)
+  * Initially upload to experimental, since the cross-related changes
+    are somewhat intrusive
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 26 Sep 2025 14:18:47 +0100
+
+vala (0.56.18-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 03 Mar 2025 12:29:09 -0500
+
+vala (0.56.18-1) experimental; urgency=medium
+
+  [ Rico Tzschichholz ]
+  * New upstream release
+
+  [ Jeremy Bícha ]
+  * Bump Standards Version to 4.7.0
+  * Remove Breaks/Replaces/Conflicts not needed since oldstable
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Mon, 03 Mar 2025 11:27:43 -0500
+
+vala (0.56.17-1) unstable; urgency=medium
+
+  * New upstream release
+  * d/p/vala-Correctly-use-Path.build_path.patch:
+    Dropped, it is included upstream
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Fri, 19 Apr 2024 13:13:38 +0200
+
+vala (0.56.16-3) unstable; urgency=medium
+
+  * Team upload
+  * Reinstate valadoc on 32-bit non-x86
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 26 Mar 2024 10:47:15 +0000
+
+vala (0.56.16-2) unstable; urgency=medium
+
+  * Team upload
+
+  [ Samuel Thibault ]
+  * Add a pkg.vala.nographviz build-profile.
+    This avoids a build-dependency loop: vala, graphviz, librsvg, vala.
+    valadoc is rarely build-depended on, and mostly as Build-Depends-Indep
+    or with <!nodoc>, so it seems like a good candidate for the place
+    to break this cycle. (Closes: #1055530)
+
+  [ Simon McVittie ]
+  * Temporarily disable valadoc on 32-bit non-x86.
+    This allows it to be re-bootstrapped for the 64-bit time_t transition.
+  * d/p/vala-Correctly-use-Path.build_path.patch,
+    d/rules: Search /usr/lib/MULTIARCH/gir-1.0 for GIR XML
+    (Closes: #1060904)
+  * d/control: Avoid build-depending on libgirepository1.0-dev.
+    That package is not multi-arch friendly, and now that we search
+    /usr/lib/MULTIARCH/gir-1.0, we no longer need it.
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 19 Mar 2024 09:44:55 +0000
+
+vala (0.56.16-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 14 Mar 2024 11:57:04 +0100
+
+vala (0.56.15-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Rico Tzschichholz <ricotz@ubuntu.com>  Mon, 04 Mar 2024 18:12:06 +0100
+
 vala (0.56.14-1) unstable; urgency=medium
 
   [ Rico Tzschichholz ]

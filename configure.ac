@@ -2,7 +2,7 @@ AC_PREREQ([2.65])
 AC_INIT([vala], m4_esyscmd([build-aux/git-version-gen --prefix '' .tarball-version]),
 	[https://gitlab.gnome.org/GNOME/vala/issues],
 	[vala],
-	[https://wiki.gnome.org/Projects/Vala])
+	[https://vala.dev])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS(config.h)
@@ -121,6 +121,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=implicit \
 -Werror=implicit-fallthrough \
 -Werror=pointer-arith \
+-Werror=pointer-sign \
 -Werror=redundant-decls \
 -Werror=return-local-addr \
 -Werror=return-stack-address \
@@ -134,6 +135,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=compare-distinct-pointer-types \
 -Werror=empty-body \
 -Werror=comment \
+-Werror=null-dereference \
 -Werror=strict-overflow \
 -Werror=shift-overflow \
 -Wformat=2 \
@@ -193,6 +195,12 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
+
+AC_ARG_VAR([GI_GIRDIR],[Set an alternative system location of gir files])
+AC_MSG_CHECKING([for GI_GIRDIR])
+PKG_CHECK_VAR([GI_GIRDIR], [gobject-introspection-1.0], [girdir], [], [AC_MSG_ERROR([Unable to retrieve girdir from gobject-introspection-1.0.pc])])
+AC_MSG_RESULT([$GI_GIRDIR])
+AC_DEFINE_UNQUOTED(GI_GIRDIR, "$GI_GIRDIR", [Define to system location of gir files])
 
 AC_ARG_WITH(cgraph, AS_HELP_STRING([--with-cgraph], [Required flag for cross-compilation to define capability of graphviz]), [], with_cgraph=check)
 AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)

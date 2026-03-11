@@ -42,8 +42,12 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	basic-types/gassert.vala \
 	basic-types/integer-literals.vala \
+	basic-types/integer-negative-rank-incompatible.test \
+	basic-types/integer-negative-rank-incompatible2.test \
+	basic-types/integer-negative-rank-incompatible3.test \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
+	basic-types/integers-negative-rank.vala \
 	basic-types/escape-chars.vala \
 	basic-types/float-literals.vala \
 	basic-types/floats.vala \
@@ -141,6 +145,7 @@ TESTS = \
 	arrays/length-inline-assignment.vala \
 	arrays/length-type.vala \
 	arrays/length-type-include.vala \
+	arrays/length-type-no-integer.test \
 	arrays/length-no-int-type.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
@@ -191,10 +196,13 @@ TESTS = \
 	methods/extern.vala \
 	methods/iterator.vala \
 	methods/local-functions.vala \
+	methods/local-functions-to-delegate.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-out-free-on-error.vala \
+	methods/parameter-out-array-resize-null-terminated.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/parameter-ref-array-resize-captured.vala \
+	methods/parameter-ref-array-resize-null-terminated.vala \
 	methods/parameter-ref-delegate.vala \
 	methods/parameter-ref-element-access.vala \
 	methods/preconditions-temp-variables.vala \
@@ -763,6 +771,7 @@ TESTS = \
 	asynchronous/captured-fixed-array.vala \
 	asynchronous/catch-error-scope.vala \
 	asynchronous/catch-in-finally.vala \
+	asynchronous/creation-method-uncaught.vala \
 	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
 	asynchronous/constructor-argument-check.vala \
@@ -791,6 +800,7 @@ TESTS = \
 	generics/floating-type-cast.vala \
 	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
+	generics/inference-argument-may-fail-2.vala \
 	generics/inference-static-function.vala \
 	generics/integer-member-access.vala \
 	generics/integer-type-cast.vala \
@@ -870,14 +880,18 @@ TESTS = \
 	gir/delegate-array-length-type.gir \
 	gir/delegate-closure-destroy-index-conflict.gir \
 	gir/delegate-error-pos.gir \
+	gir/doc-format.gir \
 	gir/enum.gir \
 	gir/errordomain.gir \
 	gir/gtype-struct-name.gir \
 	gir/instance-parameter-owned.gir \
 	gir/method-array-length-type.gir \
+	gir/method-array-return.gir \
 	gir/method-class.gir \
 	gir/method-nowrapper.gir \
+	gir/off_t.gir \
 	gir/parameter-array-length-type.gir \
+	gir/parameter-array-out.gir \
 	gir/parameter-nullable-out-simple-type.gir \
 	gir/property-non-readable.gir \
 	gir/signal-virtual.gir \
@@ -885,6 +899,7 @@ TESTS = \
 	gir/symbol-redefined.gir \
 	gir/symbol-type-csuffix.gir \
 	gir/symbol-without-name.gir \
+	gir/time_t.gir \
 	gir/union.gir \
 	gir/union-transparent.gir \
 	girwriter/class-final.test \
@@ -1074,6 +1089,7 @@ TESTS = \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
 	semantic/assignment-invalid-type.test \
+	semantic/assignment-invalid-type-2.test \
 	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
 	semantic/cast-void-not-allowed.test \
@@ -1089,6 +1105,7 @@ TESTS = \
 	semantic/class-compact-field-lock.test \
 	semantic/class-compact-field-private.test \
 	semantic/class-compact-derived-instance-field.test \
+	semantic/class-compact-inheritance.test \
 	semantic/class-compact-interface.test \
 	semantic/class-compact-method-baseaccess.test \
 	semantic/class-compact-property-baseaccess.test \

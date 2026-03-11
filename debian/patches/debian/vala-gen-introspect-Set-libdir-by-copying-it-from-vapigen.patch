@@ -1,0 +1,29 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Sun, 28 Sep 2025 15:55:28 +0100
+Subject: vala-gen-introspect: Set libdir by copying it from vapigen-0.56.pc
+
+This makes the deprecated vala-gen-introspect script textually identical
+across all architectures, allowing it to become Multi-Arch
+co-installable.
+
+Forwarded: not-needed, Debian-specific
+Bug-Debian: https://bugs.debian.org/1116553
+Signed-off-by: Simon McVittie <smcv@debian.org>
+---
+ vapigen/vala-gen-introspect/vala-gen-introspect.in | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/vapigen/vala-gen-introspect/vala-gen-introspect.in b/vapigen/vala-gen-introspect/vala-gen-introspect.in
+index 7315b3a..1e53f44 100755
+--- a/vapigen/vala-gen-introspect/vala-gen-introspect.in
++++ b/vapigen/vala-gen-introspect/vala-gen-introspect.in
+@@ -1,8 +1,6 @@
+ #!/bin/sh
+ 
+-prefix=@prefix@
+-exec_prefix=@exec_prefix@
+-libdir=@libdir@
++libdir=$(${PKG_CONFIG:-pkg-config} --variable=libdir vapigen@PACKAGE_SUFFIX@)
+ pkglibdir=${libdir}/vala@PACKAGE_SUFFIX@
+ 
+ if [ $# -ne 2 ]

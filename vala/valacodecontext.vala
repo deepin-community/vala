@@ -688,7 +688,56 @@ public class Vala.CodeContext {
 	}
 
 	public string? get_gir_path (string gir) {
-		return get_file_path (gir + ".gir", "gir-1.0", null, gir_directories);
+		const string GIR_SUFFIX = "gir-1.0";
+		string girname = gir + ".gir";
+		string path = null;
+
+		foreach (unowned string dir in gir_directories) {
+			path = Path.build_path ("/", dir, girname);
+			if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+				return path;
+			}
+		}
+
+		// Search $GI_GIR_PATH
+		unowned string? gi_gir_path = Environment.get_variable ("GI_GIR_PATH");
+		if (gi_gir_path != null) {
+			var gir_dirs = gi_gir_path.split (Path.SEARCHPATH_SEPARATOR_S);
+			foreach (unowned string dir in gir_dirs) {
+				path = Path.build_path ("/", dir, girname);
+				if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+					return path;
+				}
+			}
+		}
+
+		// Search $XDG_DATA_HOME
+		path = Path.build_path ("/", Environment.get_user_data_dir (), GIR_SUFFIX, girname);
+		if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			return path;
+		}
+
+		// Search $XDG_DATA_DIRS
+		foreach (unowned string dir in Environment.get_system_data_dirs ()) {
+			path = Path.build_path ("/", dir, GIR_SUFFIX, girname);
+			if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+				return path;
+			}
+		}
+
+		// Search $GI_GIRDIR set by user or retrieved from gobject-introspection-1.0.pc
+		path = Path.build_path ("/", Config.GI_GIRDIR, girname);
+		if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			return path;
+		}
+
+		// Search /usr/share
+		path = Path.build_path ("/", "/usr", "share", GIR_SUFFIX, girname);
+		if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			return path;
+		}
+
+		return null;
 	}
 
 	public string? get_gresource_path (string gresource, string resource) {
@@ -754,24 +803,10 @@ public class Vala.CodeContext {
 		return null;
 	}
 
-	public void write_dependencies (string filename) {
-		var stream = FileStream.open (filename, "w");
-
-		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing", filename);
-			return;
-		}
-
-		stream.printf ("%s:", filename);
-		foreach (var src in source_files) {
-			if (src.file_type == SourceFileType.FAST && src.used) {
-				stream.printf (" %s", src.filename);
-			}
-		}
-		stream.printf ("\n\n");
-	}
-
-	public void write_external_dependencies (string filename) {
+	/*
+	 * Create make-style depfile for use by build systems.
+	 */
+	void write_depfile (string filename, List<string> deps) {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
@@ -780,18 +815,40 @@ public class Vala.CodeContext {
 		}
 
 		bool first = true;
+		foreach (var dep in deps) {
+			if (first) {
+				first = false;
+				stream.printf ("%s: ", filename);
+			} else {
+				stream.puts (" \\\n\t");
+			}
+			stream.printf ("%s", dep);
+		}
+		// Don't write newlines to otherwise empty files to work around
+		// https://github.com/ninja-build/ninja/issues/2357
+		if (!first) {
+			stream.puts ("\n\n");
+		}
+	}
+
+	public void write_dependencies (string filename) {
+		List<string> fastvapi_files = new ArrayList<string> (str_equal);
 		foreach (var src in source_files) {
-			if (src.file_type != SourceFileType.SOURCE && src.used) {
-				if (first) {
-					first = false;
-					stream.printf ("%s: ", filename);
-				} else {
-					stream.puts (" \\\n\t");
-				}
-				stream.printf ("%s", src.filename);
+			if (src.file_type == SourceFileType.FAST && src.used) {
+				fastvapi_files.add (src.filename);
 			}
 		}
-		stream.puts ("\n\n");
+		write_depfile (filename, fastvapi_files);
+	}
+
+	public void write_external_dependencies (string filename) {
+		List<string> external_files = new ArrayList<string> (str_equal);
+		foreach (var src in source_files) {
+			if (src.file_type != SourceFileType.SOURCE && src.used) {
+				external_files.add (src.filename);
+			}
+		}
+		write_depfile (filename, external_files);
 	}
 
 	private static bool ends_with_dir_separator (string s) {

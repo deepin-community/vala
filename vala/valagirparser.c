@@ -38,6 +38,14 @@
 #include <errno.h>
 
 #define VALA_GIR_PARSER_GIR_VERSION "1.2"
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 
 #define VALA_GIR_PARSER_TYPE_NODE (vala_gir_parser_node_get_type ())
 #define VALA_GIR_PARSER_NODE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_GIR_PARSER_TYPE_NODE, ValaGirParserNode))
@@ -3739,19 +3747,29 @@ vala_gir_parser_parse_repository (ValaGirParser* self)
 					if (g_strcmp0 (_tmp30_, "c:include") == 0) {
 						vala_gir_parser_parse_c_include (self);
 					} else {
-						ValaSourceReference* _tmp31_;
-						ValaSourceReference* _tmp32_;
-						ValaMarkupReader* _tmp33_;
-						const gchar* _tmp34_;
-						const gchar* _tmp35_;
-						_tmp31_ = vala_gir_parser_get_current_src (self);
-						_tmp32_ = _tmp31_;
-						_tmp33_ = self->priv->reader;
-						_tmp34_ = vala_markup_reader_get_name (_tmp33_);
-						_tmp35_ = _tmp34_;
-						vala_report_error (_tmp32_, "unknown child element `%s' in `repository'", _tmp35_);
-						_vala_source_reference_unref0 (_tmp32_);
-						vala_gir_parser_skip_element (self);
+						ValaMarkupReader* _tmp31_;
+						const gchar* _tmp32_;
+						const gchar* _tmp33_;
+						_tmp31_ = self->priv->reader;
+						_tmp32_ = vala_markup_reader_get_name (_tmp31_);
+						_tmp33_ = _tmp32_;
+						if (g_strcmp0 (_tmp33_, "doc:format") == 0) {
+							vala_gir_parser_skip_element (self);
+						} else {
+							ValaSourceReference* _tmp34_;
+							ValaSourceReference* _tmp35_;
+							ValaMarkupReader* _tmp36_;
+							const gchar* _tmp37_;
+							const gchar* _tmp38_;
+							_tmp34_ = vala_gir_parser_get_current_src (self);
+							_tmp35_ = _tmp34_;
+							_tmp36_ = self->priv->reader;
+							_tmp37_ = vala_markup_reader_get_name (_tmp36_);
+							_tmp38_ = _tmp37_;
+							vala_report_error (_tmp35_, "unknown child element `%s' in `repository'", _tmp38_);
+							_vala_source_reference_unref0 (_tmp35_);
+							vala_gir_parser_skip_element (self);
+						}
 					}
 				}
 			}
@@ -5913,7 +5931,7 @@ vala_gir_parser_parse_parameter (ValaGirParser* self,
 	ValaMarkupReader* _tmp57_;
 	const gchar* _tmp58_;
 	const gchar* _tmp59_;
-	const gchar* _tmp120_;
+	const gchar* _tmp123_;
 	ValaParameter* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = self->priv->begin;
@@ -6120,24 +6138,24 @@ vala_gir_parser_parse_parameter (ValaGirParser* self,
 		ValaDataType* _tmp85_;
 		gboolean _tmp86_ = FALSE;
 		ValaDataType* _tmp87_;
-		const gchar* _tmp88_;
-		ValaDataType* _tmp89_;
-		ValaSourceLocation _tmp90_;
-		ValaSourceReference* _tmp91_;
-		ValaSourceReference* _tmp92_;
-		ValaParameter* _tmp93_;
-		const gchar* _tmp94_;
+		const gchar* _tmp91_;
+		ValaDataType* _tmp92_;
+		ValaSourceLocation _tmp93_;
+		ValaSourceReference* _tmp94_;
+		ValaSourceReference* _tmp95_;
+		ValaParameter* _tmp96_;
 		const gchar* _tmp97_;
-		gboolean _tmp101_ = FALSE;
-		ValaDataType* _tmp102_;
-		ValaDataType* _tmp106_;
-		ValaParameter* _tmp112_;
-		ValaGirParserMetadata* _tmp113_;
-		ValaExpression* _tmp114_;
-		ValaExpression* _tmp115_;
-		ValaParameter* _tmp116_;
+		const gchar* _tmp100_;
+		gboolean _tmp104_ = FALSE;
+		ValaDataType* _tmp105_;
+		ValaDataType* _tmp109_;
+		ValaParameter* _tmp115_;
+		ValaGirParserMetadata* _tmp116_;
 		ValaExpression* _tmp117_;
 		ValaExpression* _tmp118_;
+		ValaParameter* _tmp119_;
+		ValaExpression* _tmp120_;
+		ValaExpression* _tmp121_;
 		_tmp64_ = transfer;
 		_tmp69_ = vala_gir_parser_parse_type (self, &_tmp65_, &_tmp66_, g_strcmp0 (_tmp64_, "container") != 0, &_tmp67_, &_tmp68_);
 		_g_free0 (ctype);
@@ -6201,101 +6219,112 @@ vala_gir_parser_parse_parameter (ValaGirParser* self,
 		_vala_code_node_unref0 (type);
 		type = _tmp87_;
 		if (!changed) {
-			_g_free0 (ctype);
-			ctype = NULL;
-		}
-		_tmp88_ = name;
-		_tmp89_ = type;
-		_tmp90_ = begin;
-		_tmp91_ = vala_gir_parser_get_src (self, &_tmp90_, NULL);
-		_tmp92_ = _tmp91_;
-		_tmp93_ = vala_parameter_new (_tmp88_, _tmp89_, _tmp92_);
-		_vala_code_node_unref0 (param);
-		param = _tmp93_;
-		_vala_source_reference_unref0 (_tmp92_);
-		_tmp94_ = ctype;
-		if (_tmp94_ != NULL) {
-			ValaParameter* _tmp95_;
-			const gchar* _tmp96_;
-			_tmp95_ = param;
-			_tmp96_ = ctype;
-			vala_code_node_set_attribute_string ((ValaCodeNode*) _tmp95_, "CCode", "type", _tmp96_, NULL);
-		}
-		_tmp97_ = direction;
-		if (g_strcmp0 (_tmp97_, "out") == 0) {
-			ValaParameter* _tmp98_;
-			_tmp98_ = param;
-			vala_parameter_set_direction (_tmp98_, VALA_PARAMETER_DIRECTION_OUT);
-		} else {
-			const gchar* _tmp99_;
-			_tmp99_ = direction;
-			if (g_strcmp0 (_tmp99_, "inout") == 0) {
-				ValaParameter* _tmp100_;
-				_tmp100_ = param;
-				vala_parameter_set_direction (_tmp100_, VALA_PARAMETER_DIRECTION_REF);
+			ValaGirParserMetadata* _tmp88_;
+			_tmp88_ = self->priv->metadata;
+			if (vala_gir_parser_metadata_has_argument (_tmp88_, VALA_GIR_PARSER_ARGUMENT_TYPE_CTYPE)) {
+				ValaGirParserMetadata* _tmp89_;
+				gchar* _tmp90_;
+				_tmp89_ = self->priv->metadata;
+				_tmp90_ = vala_gir_parser_metadata_get_string (_tmp89_, VALA_GIR_PARSER_ARGUMENT_TYPE_CTYPE);
+				_g_free0 (ctype);
+				ctype = _tmp90_;
+			} else {
+				_g_free0 (ctype);
+				ctype = NULL;
 			}
 		}
-		_tmp102_ = type;
-		if (VALA_IS_DELEGATE_TYPE (_tmp102_)) {
-			ValaGirParserMetadata* _tmp103_;
-			_tmp103_ = self->priv->metadata;
-			_tmp101_ = vala_gir_parser_metadata_has_argument (_tmp103_, VALA_GIR_PARSER_ARGUMENT_TYPE_DELEGATE_TARGET);
+		_tmp91_ = name;
+		_tmp92_ = type;
+		_tmp93_ = begin;
+		_tmp94_ = vala_gir_parser_get_src (self, &_tmp93_, NULL);
+		_tmp95_ = _tmp94_;
+		_tmp96_ = vala_parameter_new (_tmp91_, _tmp92_, _tmp95_);
+		_vala_code_node_unref0 (param);
+		param = _tmp96_;
+		_vala_source_reference_unref0 (_tmp95_);
+		_tmp97_ = ctype;
+		if (_tmp97_ != NULL) {
+			ValaParameter* _tmp98_;
+			const gchar* _tmp99_;
+			_tmp98_ = param;
+			_tmp99_ = ctype;
+			vala_code_node_set_attribute_string ((ValaCodeNode*) _tmp98_, "CCode", "type", _tmp99_, NULL);
+		}
+		_tmp100_ = direction;
+		if (g_strcmp0 (_tmp100_, "out") == 0) {
+			ValaParameter* _tmp101_;
+			_tmp101_ = param;
+			vala_parameter_set_direction (_tmp101_, VALA_PARAMETER_DIRECTION_OUT);
 		} else {
-			_tmp101_ = FALSE;
+			const gchar* _tmp102_;
+			_tmp102_ = direction;
+			if (g_strcmp0 (_tmp102_, "inout") == 0) {
+				ValaParameter* _tmp103_;
+				_tmp103_ = param;
+				vala_parameter_set_direction (_tmp103_, VALA_PARAMETER_DIRECTION_REF);
+			}
 		}
-		if (_tmp101_) {
-			ValaParameter* _tmp104_;
-			ValaGirParserMetadata* _tmp105_;
-			_tmp104_ = param;
-			_tmp105_ = self->priv->metadata;
-			vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp104_, "CCode", "delegate_target", vala_gir_parser_metadata_get_bool (_tmp105_, VALA_GIR_PARSER_ARGUMENT_TYPE_DELEGATE_TARGET, FALSE), NULL);
+		_tmp105_ = type;
+		if (VALA_IS_DELEGATE_TYPE (_tmp105_)) {
+			ValaGirParserMetadata* _tmp106_;
+			_tmp106_ = self->priv->metadata;
+			_tmp104_ = vala_gir_parser_metadata_has_argument (_tmp106_, VALA_GIR_PARSER_ARGUMENT_TYPE_DELEGATE_TARGET);
+		} else {
+			_tmp104_ = FALSE;
 		}
-		_tmp106_ = type;
-		if (VALA_IS_ARRAY_TYPE (_tmp106_)) {
-			ValaGirParserMetadata* _tmp107_;
-			_tmp107_ = self->priv->metadata;
-			if (vala_gir_parser_metadata_has_argument (_tmp107_, VALA_GIR_PARSER_ARGUMENT_TYPE_ARRAY_LENGTH_IDX)) {
-				ValaGirParserMetadata* _tmp108_;
-				_tmp108_ = self->priv->metadata;
-				_vala_array_length_idx = vala_gir_parser_metadata_get_integer (_tmp108_, VALA_GIR_PARSER_ARGUMENT_TYPE_ARRAY_LENGTH_IDX);
+		if (_tmp104_) {
+			ValaParameter* _tmp107_;
+			ValaGirParserMetadata* _tmp108_;
+			_tmp107_ = param;
+			_tmp108_ = self->priv->metadata;
+			vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp107_, "CCode", "delegate_target", vala_gir_parser_metadata_get_bool (_tmp108_, VALA_GIR_PARSER_ARGUMENT_TYPE_DELEGATE_TARGET, FALSE), NULL);
+		}
+		_tmp109_ = type;
+		if (VALA_IS_ARRAY_TYPE (_tmp109_)) {
+			ValaGirParserMetadata* _tmp110_;
+			_tmp110_ = self->priv->metadata;
+			if (vala_gir_parser_metadata_has_argument (_tmp110_, VALA_GIR_PARSER_ARGUMENT_TYPE_ARRAY_LENGTH_IDX)) {
+				ValaGirParserMetadata* _tmp111_;
+				_tmp111_ = self->priv->metadata;
+				_vala_array_length_idx = vala_gir_parser_metadata_get_integer (_tmp111_, VALA_GIR_PARSER_ARGUMENT_TYPE_ARRAY_LENGTH_IDX);
 			} else {
-				gboolean _tmp109_ = FALSE;
+				gboolean _tmp112_ = FALSE;
 				if (no_array_length) {
-					_tmp109_ = TRUE;
+					_tmp112_ = TRUE;
 				} else {
-					_tmp109_ = array_null_terminated;
+					_tmp112_ = array_null_terminated;
 				}
-				if (_tmp109_) {
-					ValaParameter* _tmp110_;
-					_tmp110_ = param;
-					vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp110_, "CCode", "array_length", !no_array_length, NULL);
+				if (_tmp112_) {
+					ValaParameter* _tmp113_;
+					_tmp113_ = param;
+					vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp113_, "CCode", "array_length", !no_array_length, NULL);
 				}
 				if (array_null_terminated) {
-					ValaParameter* _tmp111_;
-					_tmp111_ = param;
-					vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp111_, "CCode", "array_null_terminated", array_null_terminated, NULL);
+					ValaParameter* _tmp114_;
+					_tmp114_ = param;
+					vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp114_, "CCode", "array_null_terminated", array_null_terminated, NULL);
 				}
 			}
 		}
-		_tmp112_ = param;
-		_tmp113_ = self->priv->metadata;
-		_tmp114_ = vala_gir_parser_metadata_get_expression (_tmp113_, VALA_GIR_PARSER_ARGUMENT_TYPE_DEFAULT);
-		_tmp115_ = _tmp114_;
-		vala_variable_set_initializer ((ValaVariable*) _tmp112_, _tmp115_);
-		_vala_code_node_unref0 (_tmp115_);
-		_tmp116_ = param;
-		_tmp117_ = vala_variable_get_initializer ((ValaVariable*) _tmp116_);
+		_tmp115_ = param;
+		_tmp116_ = self->priv->metadata;
+		_tmp117_ = vala_gir_parser_metadata_get_expression (_tmp116_, VALA_GIR_PARSER_ARGUMENT_TYPE_DEFAULT);
 		_tmp118_ = _tmp117_;
-		if (VALA_IS_TUPLE (_tmp118_)) {
-			ValaParameter* _tmp119_;
-			_tmp119_ = param;
-			vala_variable_set_initializer ((ValaVariable*) _tmp119_, NULL);
+		vala_variable_set_initializer ((ValaVariable*) _tmp115_, _tmp118_);
+		_vala_code_node_unref0 (_tmp118_);
+		_tmp119_ = param;
+		_tmp120_ = vala_variable_get_initializer ((ValaVariable*) _tmp119_);
+		_tmp121_ = _tmp120_;
+		if (VALA_IS_TUPLE (_tmp121_)) {
+			ValaParameter* _tmp122_;
+			_tmp122_ = param;
+			vala_variable_set_initializer ((ValaVariable*) _tmp122_, NULL);
 		}
 		_vala_code_node_unref0 (type);
 		_g_free0 (ctype);
 	}
-	_tmp120_ = element_type;
-	vala_gir_parser_end_element (self, _tmp120_);
+	_tmp123_ = element_type;
+	vala_gir_parser_end_element (self, _tmp123_);
 	result = param;
 	_g_free0 (destroy);
 	_g_free0 (closure);
@@ -6770,31 +6799,53 @@ vala_gir_parser_parse_type_from_gir_name (ValaGirParser* self,
 				_vala_code_node_unref0 (element_type);
 			} else {
 				gboolean known_type = FALSE;
-				ValaDataType* _tmp31_;
+				ValaDataType* _tmp36_;
 				known_type = TRUE;
 				if (g_strcmp0 (type_name, "utf8") == 0) {
-					type_name = "string";
+					gboolean _tmp19_ = FALSE;
+					gboolean _tmp20_ = FALSE;
+					gboolean _tmp21_ = FALSE;
+					if (ctype == NULL) {
+						_tmp21_ = TRUE;
+					} else {
+						_tmp21_ = g_str_has_suffix (ctype, "*");
+					}
+					if (_tmp21_) {
+						_tmp20_ = TRUE;
+					} else {
+						_tmp20_ = g_strcmp0 (ctype, "gpointer") == 0;
+					}
+					if (_tmp20_) {
+						_tmp19_ = TRUE;
+					} else {
+						_tmp19_ = g_strcmp0 (ctype, "gconstpointer") == 0;
+					}
+					if (_tmp19_) {
+						type_name = "string";
+					} else {
+						type_name = "char";
+					}
 				} else {
 					if (g_strcmp0 (type_name, "gboolean") == 0) {
-						ValaCodeContext* _tmp19_;
-						ValaNamespace* _tmp20_;
-						ValaNamespace* _tmp21_;
-						ValaScope* _tmp22_;
-						ValaScope* _tmp23_;
-						ValaSymbol* _tmp24_;
-						ValaStruct* _tmp25_;
-						ValaBooleanType* _tmp26_;
-						_tmp19_ = self->priv->context;
-						_tmp20_ = vala_code_context_get_root (_tmp19_);
-						_tmp21_ = _tmp20_;
-						_tmp22_ = vala_symbol_get_scope ((ValaSymbol*) _tmp21_);
-						_tmp23_ = _tmp22_;
-						_tmp24_ = vala_scope_lookup (_tmp23_, "bool");
-						_tmp25_ = G_TYPE_CHECK_INSTANCE_CAST (_tmp24_, VALA_TYPE_STRUCT, ValaStruct);
-						_tmp26_ = vala_boolean_type_new (_tmp25_, NULL);
+						ValaCodeContext* _tmp22_;
+						ValaNamespace* _tmp23_;
+						ValaNamespace* _tmp24_;
+						ValaScope* _tmp25_;
+						ValaScope* _tmp26_;
+						ValaSymbol* _tmp27_;
+						ValaStruct* _tmp28_;
+						ValaBooleanType* _tmp29_;
+						_tmp22_ = self->priv->context;
+						_tmp23_ = vala_code_context_get_root (_tmp22_);
+						_tmp24_ = _tmp23_;
+						_tmp25_ = vala_symbol_get_scope ((ValaSymbol*) _tmp24_);
+						_tmp26_ = _tmp25_;
+						_tmp27_ = vala_scope_lookup (_tmp26_, "bool");
+						_tmp28_ = G_TYPE_CHECK_INSTANCE_CAST (_tmp27_, VALA_TYPE_STRUCT, ValaStruct);
+						_tmp29_ = vala_boolean_type_new (_tmp28_, NULL);
 						_vala_code_node_unref0 (type);
-						type = (ValaDataType*) _tmp26_;
-						_vala_code_node_unref0 (_tmp25_);
+						type = (ValaDataType*) _tmp29_;
+						_vala_code_node_unref0 (_tmp28_);
 					} else {
 						if (g_strcmp0 (type_name, "gchar") == 0) {
 							type_name = "char";
@@ -6812,45 +6863,55 @@ vala_gir_parser_parse_type_from_gir_name (ValaGirParser* self,
 											type_name = "uint";
 										} else {
 											if (g_strcmp0 (type_name, "glong") == 0) {
-												gboolean _tmp27_ = FALSE;
+												gboolean _tmp30_ = FALSE;
 												if (ctype != NULL) {
-													_tmp27_ = g_str_has_prefix (ctype, "gssize");
+													_tmp30_ = g_str_has_prefix (ctype, "gssize");
 												} else {
-													_tmp27_ = FALSE;
+													_tmp30_ = FALSE;
 												}
-												if (_tmp27_) {
+												if (_tmp30_) {
 													type_name = "ssize_t";
 												} else {
-													gboolean _tmp28_ = FALSE;
+													gboolean _tmp31_ = FALSE;
 													if (ctype != NULL) {
-														_tmp28_ = g_str_has_prefix (ctype, "gintptr");
+														_tmp31_ = g_str_has_prefix (ctype, "gintptr");
 													} else {
-														_tmp28_ = FALSE;
+														_tmp31_ = FALSE;
 													}
-													if (_tmp28_) {
+													if (_tmp31_) {
 														type_name = "intptr";
 													} else {
-														type_name = "long";
+														gboolean _tmp32_ = FALSE;
+														if (ctype != NULL) {
+															_tmp32_ = g_str_has_prefix (ctype, "time_t");
+														} else {
+															_tmp32_ = FALSE;
+														}
+														if (_tmp32_) {
+															type_name = "time_t";
+														} else {
+															type_name = "long";
+														}
 													}
 												}
 											} else {
 												if (g_strcmp0 (type_name, "gulong") == 0) {
-													gboolean _tmp29_ = FALSE;
+													gboolean _tmp33_ = FALSE;
 													if (ctype != NULL) {
-														_tmp29_ = g_str_has_prefix (ctype, "gsize");
+														_tmp33_ = g_str_has_prefix (ctype, "gsize");
 													} else {
-														_tmp29_ = FALSE;
+														_tmp33_ = FALSE;
 													}
-													if (_tmp29_) {
+													if (_tmp33_) {
 														type_name = "size_t";
 													} else {
-														gboolean _tmp30_ = FALSE;
+														gboolean _tmp34_ = FALSE;
 														if (ctype != NULL) {
-															_tmp30_ = g_str_has_prefix (ctype, "guintptr");
+															_tmp34_ = g_str_has_prefix (ctype, "guintptr");
 														} else {
-															_tmp30_ = FALSE;
+															_tmp34_ = FALSE;
 														}
-														if (_tmp30_) {
+														if (_tmp34_) {
 															type_name = "uintptr";
 														} else {
 															type_name = "ulong";
@@ -6894,7 +6955,17 @@ vala_gir_parser_parse_type_from_gir_name (ValaGirParser* self,
 																									type_name = "int64";
 																								} else {
 																									if (g_strcmp0 (type_name, "gsize") == 0) {
-																										type_name = "size_t";
+																										gboolean _tmp35_ = FALSE;
+																										if (ctype != NULL) {
+																											_tmp35_ = g_str_has_prefix (ctype, "off_t");
+																										} else {
+																											_tmp35_ = FALSE;
+																										}
+																										if (_tmp35_) {
+																											type_name = "off_t";
+																										} else {
+																											type_name = "size_t";
+																										}
 																									} else {
 																										if (g_strcmp0 (type_name, "gssize") == 0) {
 																											type_name = "ssize_t";
@@ -6947,36 +7018,36 @@ vala_gir_parser_parse_type_from_gir_name (ValaGirParser* self,
 						}
 					}
 				}
-				_tmp31_ = type;
-				if (_tmp31_ == NULL) {
+				_tmp36_ = type;
+				if (_tmp36_ == NULL) {
 					ValaUnresolvedSymbol* sym = NULL;
-					ValaSourceReference* _tmp32_;
-					ValaSourceReference* _tmp33_;
-					ValaUnresolvedSymbol* _tmp34_;
-					ValaUnresolvedSymbol* _tmp35_;
-					ValaUnresolvedSymbol* _tmp36_;
 					ValaSourceReference* _tmp37_;
 					ValaSourceReference* _tmp38_;
-					ValaUnresolvedType* _tmp39_;
-					_tmp32_ = vala_gir_parser_get_current_src (self);
-					_tmp33_ = _tmp32_;
-					_tmp34_ = vala_gir_parser_parse_symbol_from_string (self, type_name, _tmp33_);
-					_tmp35_ = _tmp34_;
-					_vala_source_reference_unref0 (_tmp33_);
-					sym = _tmp35_;
-					_tmp36_ = sym;
+					ValaUnresolvedSymbol* _tmp39_;
+					ValaUnresolvedSymbol* _tmp40_;
+					ValaUnresolvedSymbol* _tmp41_;
+					ValaSourceReference* _tmp42_;
+					ValaSourceReference* _tmp43_;
+					ValaUnresolvedType* _tmp44_;
 					_tmp37_ = vala_gir_parser_get_current_src (self);
 					_tmp38_ = _tmp37_;
-					_tmp39_ = vala_unresolved_type_new_from_symbol (_tmp36_, _tmp38_);
-					_vala_code_node_unref0 (type);
-					type = (ValaDataType*) _tmp39_;
+					_tmp39_ = vala_gir_parser_parse_symbol_from_string (self, type_name, _tmp38_);
+					_tmp40_ = _tmp39_;
 					_vala_source_reference_unref0 (_tmp38_);
+					sym = _tmp40_;
+					_tmp41_ = sym;
+					_tmp42_ = vala_gir_parser_get_current_src (self);
+					_tmp43_ = _tmp42_;
+					_tmp44_ = vala_unresolved_type_new_from_symbol (_tmp41_, _tmp43_);
+					_vala_code_node_unref0 (type);
+					type = (ValaDataType*) _tmp44_;
+					_vala_source_reference_unref0 (_tmp43_);
 					if (!known_type) {
-						ValaArrayList* _tmp40_;
-						ValaUnresolvedSymbol* _tmp41_;
-						_tmp40_ = self->priv->unresolved_gir_symbols;
-						_tmp41_ = sym;
-						vala_collection_add ((ValaCollection*) _tmp40_, _tmp41_);
+						ValaArrayList* _tmp45_;
+						ValaUnresolvedSymbol* _tmp46_;
+						_tmp45_ = self->priv->unresolved_gir_symbols;
+						_tmp46_ = sym;
+						vala_collection_add ((ValaCollection*) _tmp45_, _tmp46_);
 					}
 					_vala_code_node_unref0 (sym);
 				}
@@ -10068,13 +10139,13 @@ vala_gir_parser_parse_union (ValaGirParser* self)
 	gchar* element_name = NULL;
 	gchar* _tmp0_;
 	const gchar* _tmp1_;
-	const gchar* _tmp12_;
+	const gchar* _tmp20_;
 	ValaStruct* st = NULL;
-	ValaGirParserNode* _tmp13_;
-	ValaStruct* _tmp26_;
-	ValaStruct* _tmp27_;
-	ValaGirComment* _tmp28_;
-	ValaGirComment* _tmp29_;
+	ValaGirParserNode* _tmp21_;
+	ValaStruct* _tmp34_;
+	ValaStruct* _tmp35_;
+	ValaGirComment* _tmp36_;
+	ValaGirComment* _tmp37_;
 	g_return_if_fail (self != NULL);
 	vala_gir_parser_start_element (self, "union");
 	_tmp0_ = vala_gir_parser_element_get_name (self, NULL);
@@ -10104,19 +10175,41 @@ vala_gir_parser_parse_union (ValaGirParser* self)
 			if (g_strcmp0 (_tmp6_, "field") == 0) {
 				vala_gir_parser_parse_field (self);
 			} else {
-				ValaSourceReference* _tmp7_;
-				ValaSourceReference* _tmp8_;
-				ValaMarkupReader* _tmp9_;
-				const gchar* _tmp10_;
-				const gchar* _tmp11_;
-				_tmp7_ = vala_gir_parser_get_current_src (self);
-				_tmp8_ = _tmp7_;
-				_tmp9_ = self->priv->reader;
-				_tmp10_ = vala_markup_reader_get_name (_tmp9_);
-				_tmp11_ = _tmp10_;
-				vala_report_error (_tmp8_, "unknown child element `%s' in `transparent union'", _tmp11_);
-				_vala_source_reference_unref0 (_tmp8_);
-				vala_gir_parser_skip_element (self);
+				ValaMarkupReader* _tmp7_;
+				const gchar* _tmp8_;
+				const gchar* _tmp9_;
+				_tmp7_ = self->priv->reader;
+				_tmp8_ = vala_markup_reader_get_name (_tmp7_);
+				_tmp9_ = _tmp8_;
+				if (g_strcmp0 (_tmp9_, "record") == 0) {
+					ValaSourceReference* _tmp10_;
+					ValaSourceReference* _tmp11_;
+					ValaMarkupReader* _tmp12_;
+					const gchar* _tmp13_;
+					const gchar* _tmp14_;
+					_tmp10_ = vala_gir_parser_get_current_src (self);
+					_tmp11_ = _tmp10_;
+					_tmp12_ = self->priv->reader;
+					_tmp13_ = vala_markup_reader_get_name (_tmp12_);
+					_tmp14_ = _tmp13_;
+					vala_report_warning (_tmp11_, "unhandled child element `%s' in `transparent union'", _tmp14_);
+					_vala_source_reference_unref0 (_tmp11_);
+					vala_gir_parser_skip_element (self);
+				} else {
+					ValaSourceReference* _tmp15_;
+					ValaSourceReference* _tmp16_;
+					ValaMarkupReader* _tmp17_;
+					const gchar* _tmp18_;
+					const gchar* _tmp19_;
+					_tmp15_ = vala_gir_parser_get_current_src (self);
+					_tmp16_ = _tmp15_;
+					_tmp17_ = self->priv->reader;
+					_tmp18_ = vala_markup_reader_get_name (_tmp17_);
+					_tmp19_ = _tmp18_;
+					vala_report_error (_tmp16_, "unknown child element `%s' in `transparent union'", _tmp19_);
+					_vala_source_reference_unref0 (_tmp16_);
+					vala_gir_parser_skip_element (self);
+				}
 			}
 			vala_gir_parser_pop_metadata (self);
 		}
@@ -10124,55 +10217,55 @@ vala_gir_parser_parse_union (ValaGirParser* self)
 		_g_free0 (element_name);
 		return;
 	}
-	_tmp12_ = element_name;
-	vala_gir_parser_push_node (self, _tmp12_, TRUE);
-	_tmp13_ = self->priv->current;
-	if (_tmp13_->new_symbol) {
-		ValaMarkupReader* _tmp14_;
-		gchar* _tmp15_;
-		gchar* _tmp16_;
-		ValaGirParserNode* _tmp17_;
-		ValaSourceReference* _tmp18_;
-		ValaStruct* _tmp19_;
-		ValaGirParserNode* _tmp20_;
-		ValaStruct* _tmp21_;
-		ValaSymbol* _tmp22_;
-		_tmp14_ = self->priv->reader;
-		_tmp15_ = vala_markup_reader_get_attribute (_tmp14_, "name");
-		_tmp16_ = _tmp15_;
-		_tmp17_ = self->priv->current;
-		_tmp18_ = _tmp17_->source_reference;
-		_tmp19_ = vala_struct_new (_tmp16_, _tmp18_, NULL);
+	_tmp20_ = element_name;
+	vala_gir_parser_push_node (self, _tmp20_, TRUE);
+	_tmp21_ = self->priv->current;
+	if (_tmp21_->new_symbol) {
+		ValaMarkupReader* _tmp22_;
+		gchar* _tmp23_;
+		gchar* _tmp24_;
+		ValaGirParserNode* _tmp25_;
+		ValaSourceReference* _tmp26_;
+		ValaStruct* _tmp27_;
+		ValaGirParserNode* _tmp28_;
+		ValaStruct* _tmp29_;
+		ValaSymbol* _tmp30_;
+		_tmp22_ = self->priv->reader;
+		_tmp23_ = vala_markup_reader_get_attribute (_tmp22_, "name");
+		_tmp24_ = _tmp23_;
+		_tmp25_ = self->priv->current;
+		_tmp26_ = _tmp25_->source_reference;
+		_tmp27_ = vala_struct_new (_tmp24_, _tmp26_, NULL);
 		_vala_code_node_unref0 (st);
-		st = _tmp19_;
-		_g_free0 (_tmp16_);
-		_tmp20_ = self->priv->current;
-		_tmp21_ = st;
-		_tmp22_ = _vala_code_node_ref0 ((ValaSymbol*) _tmp21_);
-		_vala_code_node_unref0 (_tmp20_->symbol);
-		_tmp20_->symbol = _tmp22_;
+		st = _tmp27_;
+		_g_free0 (_tmp24_);
+		_tmp28_ = self->priv->current;
+		_tmp29_ = st;
+		_tmp30_ = _vala_code_node_ref0 ((ValaSymbol*) _tmp29_);
+		_vala_code_node_unref0 (_tmp28_->symbol);
+		_tmp28_->symbol = _tmp30_;
 	} else {
-		ValaGirParserNode* _tmp23_;
-		ValaSymbol* _tmp24_;
-		ValaStruct* _tmp25_;
-		_tmp23_ = self->priv->current;
-		_tmp24_ = _tmp23_->symbol;
-		_tmp25_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_CAST (_tmp24_, VALA_TYPE_STRUCT, ValaStruct));
+		ValaGirParserNode* _tmp31_;
+		ValaSymbol* _tmp32_;
+		ValaStruct* _tmp33_;
+		_tmp31_ = self->priv->current;
+		_tmp32_ = _tmp31_->symbol;
+		_tmp33_ = _vala_code_node_ref0 (G_TYPE_CHECK_INSTANCE_CAST (_tmp32_, VALA_TYPE_STRUCT, ValaStruct));
 		_vala_code_node_unref0 (st);
-		st = _tmp25_;
+		st = _tmp33_;
 	}
-	_tmp26_ = st;
-	vala_symbol_set_access ((ValaSymbol*) _tmp26_, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
+	_tmp34_ = st;
+	vala_symbol_set_access ((ValaSymbol*) _tmp34_, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 	vala_gir_parser_next (self);
-	_tmp27_ = st;
-	_tmp28_ = vala_gir_parser_parse_symbol_doc (self);
-	_tmp29_ = _tmp28_;
-	vala_symbol_set_comment ((ValaSymbol*) _tmp27_, (ValaComment*) _tmp29_);
-	_vala_comment_unref0 (_tmp29_);
+	_tmp35_ = st;
+	_tmp36_ = vala_gir_parser_parse_symbol_doc (self);
+	_tmp37_ = _tmp36_;
+	vala_symbol_set_comment ((ValaSymbol*) _tmp35_, (ValaComment*) _tmp37_);
+	_vala_comment_unref0 (_tmp37_);
 	while (TRUE) {
-		ValaMarkupReader* _tmp30_;
-		const gchar* _tmp31_;
-		const gchar* _tmp32_;
+		ValaMarkupReader* _tmp38_;
+		const gchar* _tmp39_;
+		const gchar* _tmp40_;
 		if (!(self->priv->current_token == VALA_MARKUP_TOKEN_TYPE_START_ELEMENT)) {
 			break;
 		}
@@ -10180,69 +10273,69 @@ vala_gir_parser_parse_union (ValaGirParser* self)
 			vala_gir_parser_skip_element (self);
 			continue;
 		}
-		_tmp30_ = self->priv->reader;
-		_tmp31_ = vala_markup_reader_get_name (_tmp30_);
-		_tmp32_ = _tmp31_;
-		if (g_strcmp0 (_tmp32_, "field") == 0) {
+		_tmp38_ = self->priv->reader;
+		_tmp39_ = vala_markup_reader_get_name (_tmp38_);
+		_tmp40_ = _tmp39_;
+		if (g_strcmp0 (_tmp40_, "field") == 0) {
 			vala_gir_parser_parse_field (self);
 		} else {
-			ValaMarkupReader* _tmp33_;
-			const gchar* _tmp34_;
-			const gchar* _tmp35_;
-			_tmp33_ = self->priv->reader;
-			_tmp34_ = vala_markup_reader_get_name (_tmp33_);
-			_tmp35_ = _tmp34_;
-			if (g_strcmp0 (_tmp35_, "constructor") == 0) {
+			ValaMarkupReader* _tmp41_;
+			const gchar* _tmp42_;
+			const gchar* _tmp43_;
+			_tmp41_ = self->priv->reader;
+			_tmp42_ = vala_markup_reader_get_name (_tmp41_);
+			_tmp43_ = _tmp42_;
+			if (g_strcmp0 (_tmp43_, "constructor") == 0) {
 				vala_gir_parser_parse_constructor (self);
 			} else {
-				ValaMarkupReader* _tmp36_;
-				const gchar* _tmp37_;
-				const gchar* _tmp38_;
-				_tmp36_ = self->priv->reader;
-				_tmp37_ = vala_markup_reader_get_name (_tmp36_);
-				_tmp38_ = _tmp37_;
-				if (g_strcmp0 (_tmp38_, "method") == 0) {
+				ValaMarkupReader* _tmp44_;
+				const gchar* _tmp45_;
+				const gchar* _tmp46_;
+				_tmp44_ = self->priv->reader;
+				_tmp45_ = vala_markup_reader_get_name (_tmp44_);
+				_tmp46_ = _tmp45_;
+				if (g_strcmp0 (_tmp46_, "method") == 0) {
 					vala_gir_parser_parse_method (self, "method");
 				} else {
-					ValaMarkupReader* _tmp39_;
-					const gchar* _tmp40_;
-					const gchar* _tmp41_;
-					_tmp39_ = self->priv->reader;
-					_tmp40_ = vala_markup_reader_get_name (_tmp39_);
-					_tmp41_ = _tmp40_;
-					if (g_strcmp0 (_tmp41_, "function") == 0) {
+					ValaMarkupReader* _tmp47_;
+					const gchar* _tmp48_;
+					const gchar* _tmp49_;
+					_tmp47_ = self->priv->reader;
+					_tmp48_ = vala_markup_reader_get_name (_tmp47_);
+					_tmp49_ = _tmp48_;
+					if (g_strcmp0 (_tmp49_, "function") == 0) {
 						vala_gir_parser_parse_method (self, "function");
 					} else {
-						ValaMarkupReader* _tmp42_;
-						const gchar* _tmp43_;
-						const gchar* _tmp44_;
-						_tmp42_ = self->priv->reader;
-						_tmp43_ = vala_markup_reader_get_name (_tmp42_);
-						_tmp44_ = _tmp43_;
-						if (g_strcmp0 (_tmp44_, "function-macro") == 0) {
+						ValaMarkupReader* _tmp50_;
+						const gchar* _tmp51_;
+						const gchar* _tmp52_;
+						_tmp50_ = self->priv->reader;
+						_tmp51_ = vala_markup_reader_get_name (_tmp50_);
+						_tmp52_ = _tmp51_;
+						if (g_strcmp0 (_tmp52_, "function-macro") == 0) {
 							vala_gir_parser_skip_element (self);
 						} else {
-							ValaMarkupReader* _tmp45_;
-							const gchar* _tmp46_;
-							const gchar* _tmp47_;
-							_tmp45_ = self->priv->reader;
-							_tmp46_ = vala_markup_reader_get_name (_tmp45_);
-							_tmp47_ = _tmp46_;
-							if (g_strcmp0 (_tmp47_, "record") == 0) {
+							ValaMarkupReader* _tmp53_;
+							const gchar* _tmp54_;
+							const gchar* _tmp55_;
+							_tmp53_ = self->priv->reader;
+							_tmp54_ = vala_markup_reader_get_name (_tmp53_);
+							_tmp55_ = _tmp54_;
+							if (g_strcmp0 (_tmp55_, "record") == 0) {
 								vala_gir_parser_parse_record (self);
 							} else {
-								ValaSourceReference* _tmp48_;
-								ValaSourceReference* _tmp49_;
-								ValaMarkupReader* _tmp50_;
-								const gchar* _tmp51_;
-								const gchar* _tmp52_;
-								_tmp48_ = vala_gir_parser_get_current_src (self);
-								_tmp49_ = _tmp48_;
-								_tmp50_ = self->priv->reader;
-								_tmp51_ = vala_markup_reader_get_name (_tmp50_);
-								_tmp52_ = _tmp51_;
-								vala_report_error (_tmp49_, "unknown child element `%s' in `union'", _tmp52_);
-								_vala_source_reference_unref0 (_tmp49_);
+								ValaSourceReference* _tmp56_;
+								ValaSourceReference* _tmp57_;
+								ValaMarkupReader* _tmp58_;
+								const gchar* _tmp59_;
+								const gchar* _tmp60_;
+								_tmp56_ = vala_gir_parser_get_current_src (self);
+								_tmp57_ = _tmp56_;
+								_tmp58_ = self->priv->reader;
+								_tmp59_ = vala_markup_reader_get_name (_tmp58_);
+								_tmp60_ = _tmp59_;
+								vala_report_error (_tmp57_, "unknown child element `%s' in `union'", _tmp60_);
+								_vala_source_reference_unref0 (_tmp57_);
 								vala_gir_parser_skip_element (self);
 							}
 						}

@@ -35,6 +35,15 @@
 #include <config.h>
 #include <vala.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define VALADOC_MODULE_LOADER_TYPE_MODULE_DATA (valadoc_module_loader_module_data_get_type ())
 #define VALADOC_MODULE_LOADER_MODULE_DATA(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALADOC_MODULE_LOADER_TYPE_MODULE_DATA, ValadocModuleLoaderModuleData))
 #define VALADOC_MODULE_LOADER_MODULE_DATA_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALADOC_MODULE_LOADER_TYPE_MODULE_DATA, ValadocModuleLoaderModuleDataClass))

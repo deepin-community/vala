@@ -31,6 +31,15 @@
 #include <string.h>
 #include <gobject/gvaluecollector.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define VALA_FLOW_ANALYZER_TYPE_JUMP_TARGET (vala_flow_analyzer_jump_target_get_type ())
 #define VALA_FLOW_ANALYZER_JUMP_TARGET(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_FLOW_ANALYZER_TYPE_JUMP_TARGET, ValaFlowAnalyzerJumpTarget))
 #define VALA_FLOW_ANALYZER_JUMP_TARGET_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_FLOW_ANALYZER_TYPE_JUMP_TARGET, ValaFlowAnalyzerJumpTargetClass))

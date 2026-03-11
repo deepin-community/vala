@@ -30,6 +30,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _vala_iterable_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterable_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
@@ -2506,6 +2515,7 @@ vala_object_creation_expression_real_check (ValaCodeNode* base,
 				_tmp597_ = vala_expression_get_formal_target_type ((ValaExpression*) self);
 				_tmp598_ = _tmp597_;
 				vala_expression_set_formal_target_type (_tmp596_, _tmp598_);
+				vala_expression_set_formal_target_type ((ValaExpression*) self, NULL);
 				_tmp599_ = local;
 				vala_variable_set_initializer ((ValaVariable*) _tmp599_, (ValaExpression*) self);
 				_tmp600_ = decl;

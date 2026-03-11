@@ -2057,6 +2057,9 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
+			} else if (reader.name == "doc:format") {
+				//TODO Handle this format information properly
+				skip_element ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `repository'", reader.name);
@@ -2669,8 +2672,12 @@ public class Vala.GirParser : CodeVisitor {
 			bool changed;
 			type = element_get_type (type, direction == "out" || direction == "inout", ref no_array_length, ref array_null_terminated, out changed);
 			if (!changed) {
-				// discard ctype, duplicated information
-				ctype = null;
+				if (metadata.has_argument (ArgumentType.CTYPE)) {
+					ctype = metadata.get_string (ArgumentType.CTYPE);
+				} else {
+					// discard ctype, duplicated information
+					ctype = null;
+				}
 			}
 
 			param = new Parameter (name, type, get_src (begin));
@@ -2824,7 +2831,12 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			bool known_type = true;
 			if (type_name == "utf8") {
-				type_name = "string";
+				if (ctype == null || ctype.has_suffix ("*") || ctype == "gpointer" || ctype == "gconstpointer") {
+					type_name = "string";
+				} else {
+					//FIXME Work around a g-ir-scanner bug
+					type_name = "char";
+				}
 			} else if (type_name == "gboolean") {
 				type = new BooleanType ((Struct) context.root.scope.lookup ("bool"));
 			} else if (type_name == "gchar") {
@@ -2842,6 +2854,8 @@ public class Vala.GirParser : CodeVisitor {
 					type_name = "ssize_t";
 				} else if (ctype != null && ctype.has_prefix ("gintptr")) {
 					type_name = "intptr";
+				} else if (ctype != null && ctype.has_prefix ("time_t")) {
+					type_name = "time_t";
 				} else {
 					type_name = "long";
 				}
@@ -2878,7 +2892,11 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "GLib.offset") {
 				type_name = "int64";
 			} else if (type_name == "gsize") {
-				type_name = "size_t";
+				if (ctype != null && ctype.has_prefix ("off_t")) {
+					type_name = "off_t";
+				} else {
+					type_name = "size_t";
+				}
 			} else if (type_name == "gssize") {
 				type_name = "ssize_t";
 			} else if (type_name == "guintptr") {
@@ -3728,6 +3746,9 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (reader.name == "field") {
 					parse_field ();
+				} else if (reader.name == "record") {
+					Report.warning (get_current_src (), "unhandled child element `%s' in `transparent union'", reader.name);
+					skip_element ();
 				} else {
 					// error
 					Report.error (get_current_src (), "unknown child element `%s' in `transparent union'", reader.name);

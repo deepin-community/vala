@@ -155,6 +155,7 @@ ETAGS = @ETAGS@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILECMD = @FILECMD@
+GI_GIRDIR = @GI_GIRDIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GMODULE_CFLAGS = @GMODULE_CFLAGS@
@@ -490,7 +491,7 @@ check-girwriter: $(top_builddir)/valadoc/valadoc
 		--directory $(builddir)/girtest \
 		--doclet=$(top_builddir)/valadoc/doclets/html/.libs \
 		--pkg gio-2.0 \
-		--gir GirTest-1.0.gir \
+		--gir $(builddir)/GirTest-1.0.gir \
 		$(srcdir)/girtest.vala; \
 	tail -n +3 GirTest-1.0.gir | diff -wu $(srcdir)/GirTest-1.0.gir-expected - || exit 1;
 @HAVE_G_IR_COMPILER_TRUE@	$(G_IR_COMPILER) -o GirTest-1.0.typelib GirTest-1.0.gir;

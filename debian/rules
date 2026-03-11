@@ -6,6 +6,15 @@ export DEB_CFLAGS_MAINT_APPEND = -Wall
 export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
 include /usr/share/dpkg/architecture.mk
 
+VALA_VERSION = 0.56
+
+configure_options := --enable-unversioned
+configure_options += GI_GIRDIR=/usr/lib/${DEB_HOST_MULTIARCH}/gir-1.0
+
+ifneq (,$(filter pkg.vala.nographviz,$(DEB_BUILD_PROFILES)))
+configure_options += --disable-valadoc
+endif
+
 %:
 	dh $@
 
@@ -17,8 +26,10 @@ override_dh_autoreconf:
 	touch vala/vala.vala.stamp
 	dh_autoreconf --as-needed
 
+ifeq (${DEB_BUILD_ARCH},${DEB_HOST_ARCH})
 configure-bootstrap:
-	dh_auto_configure --builddirectory=bootstrap/build
+	dh_auto_configure --builddirectory=bootstrap/build -- \
+		$(configure_options)
 
 bootstrap: configure-bootstrap
 	dh_auto_build --builddirectory=bootstrap/build
@@ -26,14 +37,21 @@ bootstrap: configure-bootstrap
 
 override_dh_auto_configure: bootstrap
 	find -name '*.vala.stamp' -delete
-	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.56:$$LD_LIBRARY_PATH" \
+	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-${VALA_VERSION}:$$LD_LIBRARY_PATH" \
 		dh_auto_configure -- \
 			VALAC="$(CURDIR)/bootstrap/install/usr/bin/valac" \
-			--enable-unversioned
+			$(configure_options)
 
 override_dh_auto_build:
-	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-0.56:$$LD_LIBRARY_PATH" \
+	LD_LIBRARY_PATH="$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH):$(CURDIR)/bootstrap/install/usr/lib/$(DEB_HOST_MULTIARCH)/vala-${VALA_VERSION}:$$LD_LIBRARY_PATH" \
 		dh_auto_build
+else
+override_dh_auto_configure: debian/cross/${DEB_HOST_GNU_TYPE}-valac-${VALA_VERSION}
+	find -name '*.vala.stamp' -delete
+	dh_auto_configure -- \
+		VALAC=${CURDIR}/debian/cross/${DEB_HOST_GNU_TYPE}-valac-${VALA_VERSION} \
+		$(configure_options)
+endif
 
 # Make testsuite failures non-fatal for these architectures. The DBus
 # tests are failing there and an yet unknown reason.
@@ -47,16 +65,46 @@ else
 	LD_PRELOAD= dh_auto_test
 endif
 
+debian/cross/${DEB_HOST_GNU_TYPE}-valac-${VALA_VERSION}: debian/cross/cross-valac.in debian/rules
+	sed \
+		-e 's|@bindir@|/usr/bin|g' \
+		-e 's|@DEB_HOST_GNU_TYPE@|${DEB_HOST_GNU_TYPE}|g' \
+		-e 's|@VALA_VERSION@|${VALA_VERSION}|g' \
+		< $< > $@.tmp
+	chmod 0755 $@.tmp
+	mv $@.tmp $@
+
+debian/cross/${DEB_HOST_GNU_TYPE}-vapigen-${VALA_VERSION}: debian/cross/cross-vapigen.in debian/rules
+	sed \
+		-e 's|@bindir@|/usr/bin|g' \
+		-e 's|@DEB_HOST_MULTIARCH@|${DEB_HOST_MULTIARCH}|g' \
+		-e 's|@VALA_VERSION@|${VALA_VERSION}|g' \
+		< $< > $@.tmp
+	chmod 0755 $@.tmp
+	mv $@.tmp $@
+
+debian/cross/${DEB_HOST_GNU_TYPE}-vala.ini: debian/cross/cross-vala.ini.in debian/rules
+	sed \
+		-e 's|@bindir@|/usr/bin|g' \
+		-e 's|@DEB_HOST_GNU_TYPE@|$(DEB_HOST_GNU_TYPE)|g' \
+		-e 's|@VALA_VERSION@|${VALA_VERSION}|g' \
+		< $< > $@.tmp
+	mv $@.tmp $@
+
+execute_after_dh_auto_install: debian/cross/${DEB_HOST_GNU_TYPE}-vala.ini
+execute_after_dh_auto_install: debian/cross/${DEB_HOST_GNU_TYPE}-valac-${VALA_VERSION}
+execute_after_dh_auto_install: debian/cross/${DEB_HOST_GNU_TYPE}-vapigen-${VALA_VERSION}
+
 execute_after_dh_auto_install:
 	find debian -name '*.la' -print -delete
+	sed -i \
+		-e 's|^vapigen=.*|vapigen=$${bindir}/${DEB_HOST_GNU_TYPE}-vapigen-${VALA_VERSION}|g' \
+		debian/tmp/usr/lib/*/pkgconfig/vapigen-*.pc \
+		debian/tmp/usr/lib/*/pkgconfig/libvala-*.pc \
+		${NULL}
 
-override_dh_install-arch:
-	dh_install
-	printf '#!/bin/sh\nexec valac-0.56 "--cc=$${CC:-${DEB_HOST_GNU_TYPE}-gcc}" "--pkg-config=$${PKG_CONFIG:-${DEB_HOST_GNU_TYPE}-pkg-config}" "$$@"\n' > debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.56
-	chmod 755 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac-0.56
-	ln -s valac-0.56.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac-0.56.1.gz
-	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.56 debian/valac/usr/bin/${DEB_HOST_GNU_TYPE}-valac
-	ln -s ${DEB_HOST_GNU_TYPE}-valac-0.56.1.gz debian/valac/usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac.1.gz
+override_dh_link:
+	VALA_VERSION=${VALA_VERSION} dh_link
 
 override_dh_installdocs:
 	dh_installdocs -A NEWS README README.md THANKS

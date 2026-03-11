@@ -5,6 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -208,7 +216,7 @@ static gboolean
 _g_node_free_all_node (GNode* node,
                        GDestroyNotify free_func)
 {
-	(node->data == NULL) ? NULL : free_func (node->data);
+	(node->data == NULL) ? NULL : (free_func (node->data), NULL);
 	return FALSE;
 }
 
@@ -216,7 +224,7 @@ static void
 _g_node_free_all (GNode* self,
                   GDestroyNotify free_func)
 {
-	(free_func == NULL) ? NULL : g_node_traverse (self, G_POST_ORDER, G_TRAVERSE_ALL, -1, (GNodeTraverseFunc) _g_node_free_all_node, free_func);
+	(free_func == NULL) ? NULL : (g_node_traverse (self, G_POST_ORDER, G_TRAVERSE_ALL, -1, (GNodeTraverseFunc) _g_node_free_all_node, free_func), NULL);
 	g_node_destroy (self);
 }
 

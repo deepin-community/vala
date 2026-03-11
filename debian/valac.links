@@ -1,0 +1,6 @@
+usr/bin/${DEB_HOST_GNU_TYPE}-valac-${env:VALA_VERSION}      usr/bin/${DEB_HOST_GNU_TYPE}-valac
+usr/bin/${DEB_HOST_GNU_TYPE}-vapigen-${env:VALA_VERSION}    usr/bin/${DEB_HOST_GNU_TYPE}-vapigen
+usr/share/man/man1/valac-${env:VALA_VERSION}.1.gz           usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac-${env:VALA_VERSION}.1.gz
+usr/share/man/man1/valac-${env:VALA_VERSION}.1.gz           usr/share/man/man1/${DEB_HOST_GNU_TYPE}-valac.1.gz
+usr/share/man/man1/vapigen-${env:VALA_VERSION}.1.gz         usr/share/man/man1/${DEB_HOST_GNU_TYPE}-vapigen-${env:VALA_VERSION}.1.gz
+usr/share/man/man1/vapigen-${env:VALA_VERSION}.1.gz         usr/share/man/man1/${DEB_HOST_GNU_TYPE}-vapigen.1.gz

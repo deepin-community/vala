@@ -32,6 +32,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define _vala_iterable_unref0(var) ((var == NULL) ? NULL : (var = (vala_iterable_unref (var), NULL)))
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _vala_scope_unref0(var) ((var == NULL) ? NULL : (var = (vala_scope_unref (var), NULL)))
@@ -1473,77 +1482,86 @@ vala_data_type_real_compatible (ValaDataType* self,
 		ValaStruct* expr_struct = NULL;
 		ValaTypeSymbol* _tmp121_;
 		ValaTypeSymbol* _tmp122_;
-		ValaStruct* expect_struct = NULL;
+		ValaStruct* target_struct = NULL;
 		ValaTypeSymbol* _tmp123_;
 		ValaTypeSymbol* _tmp124_;
-		gboolean _tmp125_ = FALSE;
+		ValaStruct* _tmp125_;
 		ValaStruct* _tmp126_;
+		gboolean _tmp127_ = FALSE;
 		gboolean _tmp128_ = FALSE;
-		gboolean _tmp129_ = FALSE;
-		ValaStruct* _tmp130_;
+		ValaStruct* _tmp129_;
 		gboolean _tmp141_ = FALSE;
 		ValaStruct* _tmp142_;
-		ValaStruct* _tmp144_;
-		ValaStruct* _tmp145_;
+		gboolean _tmp144_ = FALSE;
+		gboolean _tmp145_ = FALSE;
+		ValaStruct* _tmp146_;
+		gboolean _tmp157_ = FALSE;
+		ValaStruct* _tmp158_;
 		_tmp121_ = vala_data_type_get_type_symbol (self);
 		_tmp122_ = _tmp121_;
 		expr_struct = G_TYPE_CHECK_INSTANCE_CAST (_tmp122_, VALA_TYPE_STRUCT, ValaStruct);
 		_tmp123_ = vala_data_type_get_type_symbol (target_type);
 		_tmp124_ = _tmp123_;
-		expect_struct = G_TYPE_CHECK_INSTANCE_CAST (_tmp124_, VALA_TYPE_STRUCT, ValaStruct);
+		target_struct = G_TYPE_CHECK_INSTANCE_CAST (_tmp124_, VALA_TYPE_STRUCT, ValaStruct);
+		_tmp125_ = target_struct;
 		_tmp126_ = expr_struct;
-		if (vala_struct_is_integer_type (_tmp126_)) {
-			ValaStruct* _tmp127_;
-			_tmp127_ = expect_struct;
-			_tmp125_ = vala_struct_is_floating_type (_tmp127_);
-		} else {
-			_tmp125_ = FALSE;
-		}
-		if (_tmp125_) {
+		if (vala_typesymbol_is_subtype_of ((ValaTypeSymbol*) _tmp125_, (ValaTypeSymbol*) _tmp126_)) {
 			result = TRUE;
 			_vala_iterable_unref0 (target_type_args);
 			_vala_iterable_unref0 (type_args);
 			_vala_code_context_unref0 (context);
 			return result;
 		}
-		_tmp130_ = expr_struct;
-		if (vala_struct_is_integer_type (_tmp130_)) {
-			ValaStruct* _tmp131_;
-			_tmp131_ = expect_struct;
-			_tmp129_ = vala_struct_is_integer_type (_tmp131_);
-		} else {
-			_tmp129_ = FALSE;
-		}
-		if (_tmp129_) {
+		_tmp129_ = expr_struct;
+		if (vala_struct_is_integer_type (_tmp129_)) {
 			_tmp128_ = TRUE;
 		} else {
-			gboolean _tmp132_ = FALSE;
-			ValaStruct* _tmp133_;
-			_tmp133_ = expr_struct;
-			if (vala_struct_is_floating_type (_tmp133_)) {
-				ValaStruct* _tmp134_;
-				_tmp134_ = expect_struct;
-				_tmp132_ = vala_struct_is_floating_type (_tmp134_);
-			} else {
-				_tmp132_ = FALSE;
-			}
-			_tmp128_ = _tmp132_;
+			ValaStruct* _tmp130_;
+			_tmp130_ = expr_struct;
+			_tmp128_ = vala_struct_is_floating_type (_tmp130_);
 		}
 		if (_tmp128_) {
-			ValaStruct* _tmp135_;
-			gint _tmp136_;
-			gint _tmp137_;
-			ValaStruct* _tmp138_;
-			gint _tmp139_;
-			gint _tmp140_;
-			_tmp135_ = expr_struct;
-			_tmp136_ = vala_struct_get_rank (_tmp135_);
-			_tmp137_ = _tmp136_;
-			_tmp138_ = expect_struct;
-			_tmp139_ = vala_struct_get_rank (_tmp138_);
-			_tmp140_ = _tmp139_;
-			if (_tmp137_ <= _tmp140_) {
-				result = TRUE;
+			ValaStruct* _tmp131_;
+			gint _tmp132_;
+			gint _tmp133_;
+			_tmp131_ = expr_struct;
+			_tmp132_ = vala_struct_get_rank (_tmp131_);
+			_tmp133_ = _tmp132_;
+			_tmp127_ = _tmp133_ < 0;
+		} else {
+			_tmp127_ = FALSE;
+		}
+		if (_tmp127_) {
+			result = FALSE;
+			_vala_iterable_unref0 (target_type_args);
+			_vala_iterable_unref0 (type_args);
+			_vala_code_context_unref0 (context);
+			return result;
+		} else {
+			gboolean _tmp134_ = FALSE;
+			gboolean _tmp135_ = FALSE;
+			ValaStruct* _tmp136_;
+			_tmp136_ = target_struct;
+			if (vala_struct_is_integer_type (_tmp136_)) {
+				_tmp135_ = TRUE;
+			} else {
+				ValaStruct* _tmp137_;
+				_tmp137_ = target_struct;
+				_tmp135_ = vala_struct_is_floating_type (_tmp137_);
+			}
+			if (_tmp135_) {
+				ValaStruct* _tmp138_;
+				gint _tmp139_;
+				gint _tmp140_;
+				_tmp138_ = target_struct;
+				_tmp139_ = vala_struct_get_rank (_tmp138_);
+				_tmp140_ = _tmp139_;
+				_tmp134_ = _tmp140_ < 0;
+			} else {
+				_tmp134_ = FALSE;
+			}
+			if (_tmp134_) {
+				result = FALSE;
 				_vala_iterable_unref0 (target_type_args);
 				_vala_iterable_unref0 (type_args);
 				_vala_code_context_unref0 (context);
@@ -1551,10 +1569,10 @@ vala_data_type_real_compatible (ValaDataType* self,
 			}
 		}
 		_tmp142_ = expr_struct;
-		if (vala_struct_is_boolean_type (_tmp142_)) {
+		if (vala_struct_is_integer_type (_tmp142_)) {
 			ValaStruct* _tmp143_;
-			_tmp143_ = expect_struct;
-			_tmp141_ = vala_struct_is_boolean_type (_tmp143_);
+			_tmp143_ = target_struct;
+			_tmp141_ = vala_struct_is_floating_type (_tmp143_);
 		} else {
 			_tmp141_ = FALSE;
 		}
@@ -1565,9 +1583,59 @@ vala_data_type_real_compatible (ValaDataType* self,
 			_vala_code_context_unref0 (context);
 			return result;
 		}
-		_tmp144_ = expect_struct;
-		_tmp145_ = expr_struct;
-		if (vala_typesymbol_is_subtype_of ((ValaTypeSymbol*) _tmp144_, (ValaTypeSymbol*) _tmp145_)) {
+		_tmp146_ = expr_struct;
+		if (vala_struct_is_integer_type (_tmp146_)) {
+			ValaStruct* _tmp147_;
+			_tmp147_ = target_struct;
+			_tmp145_ = vala_struct_is_integer_type (_tmp147_);
+		} else {
+			_tmp145_ = FALSE;
+		}
+		if (_tmp145_) {
+			_tmp144_ = TRUE;
+		} else {
+			gboolean _tmp148_ = FALSE;
+			ValaStruct* _tmp149_;
+			_tmp149_ = expr_struct;
+			if (vala_struct_is_floating_type (_tmp149_)) {
+				ValaStruct* _tmp150_;
+				_tmp150_ = target_struct;
+				_tmp148_ = vala_struct_is_floating_type (_tmp150_);
+			} else {
+				_tmp148_ = FALSE;
+			}
+			_tmp144_ = _tmp148_;
+		}
+		if (_tmp144_) {
+			ValaStruct* _tmp151_;
+			gint _tmp152_;
+			gint _tmp153_;
+			ValaStruct* _tmp154_;
+			gint _tmp155_;
+			gint _tmp156_;
+			_tmp151_ = expr_struct;
+			_tmp152_ = vala_struct_get_rank (_tmp151_);
+			_tmp153_ = _tmp152_;
+			_tmp154_ = target_struct;
+			_tmp155_ = vala_struct_get_rank (_tmp154_);
+			_tmp156_ = _tmp155_;
+			if (_tmp153_ <= _tmp156_) {
+				result = TRUE;
+				_vala_iterable_unref0 (target_type_args);
+				_vala_iterable_unref0 (type_args);
+				_vala_code_context_unref0 (context);
+				return result;
+			}
+		}
+		_tmp158_ = expr_struct;
+		if (vala_struct_is_boolean_type (_tmp158_)) {
+			ValaStruct* _tmp159_;
+			_tmp159_ = target_struct;
+			_tmp157_ = vala_struct_is_boolean_type (_tmp159_);
+		} else {
+			_tmp157_ = FALSE;
+		}
+		if (_tmp157_) {
 			result = TRUE;
 			_vala_iterable_unref0 (target_type_args);
 			_vala_iterable_unref0 (type_args);

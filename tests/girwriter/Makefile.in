@@ -155,6 +155,7 @@ ETAGS = @ETAGS@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILECMD = @FILECMD@
+GI_GIRDIR = @GI_GIRDIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GMODULE_CFLAGS = @GMODULE_CFLAGS@
@@ -492,7 +493,7 @@ check-girwriter: $(top_builddir)/compiler/valac
 		--disable-version-header \
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gio-2.0 \
-		--gir GirTest-1.0.gir \
+		--gir $(builddir)/GirTest-1.0.gir \
 		--library girtest \
 		--shared-library girtest \
 		$(srcdir)/girtest.vala; \

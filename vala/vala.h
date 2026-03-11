@@ -24,9 +24,9 @@ G_BEGIN_DECLS
 #endif
 #define VALA_MAJOR_VERSION 0
 #define VALA_MINOR_VERSION 56
-#define VALA_MICRO_VERSION 14
+#define VALA_MICRO_VERSION 18
 #define VALA_API_VERSION "0.56"
-#define VALA_BUILD_VERSION "0.56.14"
+#define VALA_BUILD_VERSION "0.56.18"
 
 #define VALA_TYPE_CODE_NODE (vala_code_node_get_type ())
 #define VALA_CODE_NODE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_CODE_NODE, ValaCodeNode))

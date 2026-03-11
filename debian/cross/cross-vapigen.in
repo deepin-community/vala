@@ -1,0 +1,27 @@
+#!/bin/sh
+# Copyright 2024 Collabora Ltd.
+# SPDX-License-Identifier: LGPL-2.1-or-later
+set -eu
+
+# Add /usr/lib/@DEB_HOST_MULTIARCH@ to XDG_DATA_DIRS, with precedence
+# similar to /usr/share if present
+XDG_DATA_DIRS=$(
+    IFS=:
+    sep=
+    added=
+    for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share}; do
+        if [ "$dir" = /usr/share ]; then
+            printf '%s/usr/share:/usr/lib/@DEB_HOST_MULTIARCH@' "$sep"
+            added=1
+        else
+            printf '%s%s' "$sep" "$dir"
+        fi
+        sep=:
+    done
+    if [ -z "$added" ]; then
+        printf '%s%s' "$sep" '/usr/lib/@DEB_HOST_MULTIARCH@'
+    fi
+)
+
+export XDG_DATA_DIRS
+exec @bindir@/vapigen-@VALA_VERSION@ "$@"

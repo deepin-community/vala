@@ -837,6 +837,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		decl_space.add_define (extern_define);
 	}
 
+	void append_c_compiler_mitigations (CCodeFile decl_space) {
+		var vala_strict_c = new CCodeIfSection ("!defined(VALA_STRICT_C)");
+
+		CCodeIfSection if_section;
+		if_section = new CCodeIfSection ("!defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)");
+		vala_strict_c.append (if_section);
+		if_section.append (new CCodePragma ("GCC", "diagnostic", "warning \"-Wincompatible-pointer-types\""));
+		if_section = if_section.append_else ("defined(__clang__) && (__clang_major__ >= 16)");
+		if_section.append (new CCodePragma ("clang", "diagnostic", "ignored \"-Wincompatible-function-pointer-types\""));
+		if_section.append (new CCodePragma ("clang", "diagnostic", "ignored \"-Wincompatible-pointer-types\""));
+
+		decl_space.add_define (vala_strict_c);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
@@ -876,6 +890,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			return;
 		}
+
+		append_c_compiler_mitigations (cfile);
 
 		if (requires_assert) {
 			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_assert(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);")));
@@ -2568,7 +2584,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_this_interface_cexpression (Interface iface, TargetValue? instance = null) {
 		unowned Class? cl = current_class;
-		if (cl != null && cl.implements (iface)) {
+		if (instance == null && cl != null && cl.implements (iface)) {
 			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)));
 		}
 
@@ -3670,9 +3686,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			free_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"));
 
 			var data_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"), new CCodeConstant ("NULL"));
-			var ccomma_data = new CCodeCommaExpression ();
-			ccomma_data.append_expression (new CCodeConditionalExpression (data_isnull, new CCodeConstant ("NULL"), free_call));
-			ccode.add_expression (ccomma_data);
+			var ccomma_free = new CCodeCommaExpression ();
+			ccomma_free.append_expression (free_call);
+			ccomma_free.append_expression (new CCodeConstant ("NULL"));
+			ccode.add_expression (new CCodeConditionalExpression (data_isnull, new CCodeConstant ("NULL"), ccomma_free));
 
 			ccode.add_return (new CCodeConstant ("FALSE"));
 
@@ -3690,10 +3707,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			element_free_call.add_argument (new CCodeIdentifier ("free_func"));
 
 			var free_func_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("free_func"), new CCodeConstant ("NULL"));
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeConditionalExpression (free_func_isnull, new CCodeConstant ("NULL"), element_free_call));
-
-			ccode.add_expression (ccomma);
+			var ccomma_element_free = new CCodeCommaExpression ();
+			ccomma_element_free.append_expression (element_free_call);
+			ccomma_element_free.append_expression (new CCodeConstant ("NULL"));
+			ccode.add_expression (new CCodeConditionalExpression (free_func_isnull, new CCodeConstant ("NULL"), ccomma_element_free));
 
 			var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_free_function (gnode_type)));
 			cfreecall.add_argument (new CCodeIdentifier ("self"));

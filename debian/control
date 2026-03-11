@@ -1,20 +1,25 @@
 Source: vala
 Section: devel
-Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-Uploaders: Iain Lane <laney@debian.org>, Jeremy Bícha <jbicha@ubuntu.com>, Rico Tzschichholz <ricotz@ubuntu.com>
+Uploaders: Jeremy Bícha <jbicha@ubuntu.com>, Rico Tzschichholz <ricotz@ubuntu.com>
 Build-Depends: debhelper-compat (= 13),
                dh-sequence-gnome,
+               gir1.2-freedesktop <!nocheck>,
+               gir1.2-freedesktop-dev <!nocheck>,
+               gir1.2-glib-2.0 <!nocheck>,
+               gir1.2-glib-2.0-dev <!nocheck>,
+               gobject-introspection (>= 1.78.1-14~) <!nocheck>,
                libglib2.0-dev (>= 2.48),
-               libgraphviz-dev (>= 2.16),
+               libgraphviz-dev (>= 2.16) <!pkg.vala.nographviz>,
                bison (>= 2.3),
                flex,
                libdbus-1-dev <!nocheck>,
-               dbus (>= 1.8) <!nocheck>,
-               libgirepository1.0-dev <!nocheck>
+               dbus-daemon (>= 1.8) <!nocheck>,
+               valac:native (>= 0.56) <cross>,
+               valac:native (<< 0.57~) <cross>,
 Build-Depends-Indep: docbook-xml,
                      xsltproc
-Standards-Version: 4.6.2
+Standards-Version: 4.7.3
 Vcs-Git: https://salsa.debian.org/gnome-team/vala.git
 Vcs-Browser: https://salsa.debian.org/gnome-team/vala
 Homepage: https://wiki.gnome.org/Projects/Vala/
@@ -24,10 +29,6 @@ Architecture: any
 Multi-Arch: same
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-Conflicts: valac-0.12, valac-0.14, valac-0.16, valac-0.18, valac-0.20,
-           valac-0.22, valac-0.24, valac-0.26, valac-0.28, valac-0.30
-Breaks: valac (<< 0.46.5-1.1~)
-Replaces: valac (<< 0.46.5-1.1~)
 Description: internal package for C# like language for the GObject system
  Vala is a new programming language that aims to bring modern programming
  language features to GNOME developers without imposing any additional
@@ -44,10 +45,8 @@ Depends: ${shlibs:Depends},
          libvala-0.56-0 (= ${binary:Version}),
          libvalacodegen-0.56-0 (= ${binary:Version}),
          ${misc:Depends},
-Conflicts: valac-0.12, valac-0.14, valac-0.16, valac-0.18, valac-0.20,
-           valac-0.22, valac-0.24, valac-0.26, valac-0.28, valac-0.30
-Breaks: valac (<< 0.46.5-1.1~)
-Replaces: valac (<< 0.46.5-1.1~)
+Breaks: valac (<< ${binary:Version})
+Replaces: valac (<< ${binary:Version})
 Description: internal package for C# like language for the GObject system
  Vala is a new programming language that aims to bring modern programming
  language features to GNOME developers without imposing any additional
@@ -60,6 +59,7 @@ Description: internal package for C# like language for the GObject system
 
 Package: valac
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends},
          libvala-0.56-0 (= ${binary:Version}),
          libvalacodegen-0.56-0 (= ${binary:Version}),
@@ -67,9 +67,7 @@ Depends: ${shlibs:Depends},
          valac-0.56-vapi (>= ${source:Version}),
          valac-bin (= ${binary:Version}),
          ${misc:Depends}
-Recommends: gcc
-Conflicts: valac-0.12, valac-0.14, valac-0.16, valac-0.18, valac-0.20,
-           valac-0.22, valac-0.24, valac-0.26, valac-0.28, valac-0.30
+Recommends: gcc | gcc-for-host
 Description: C# like language for the GObject system
  Vala is a new programming language that aims to bring modern programming
  language features to GNOME developers without imposing any additional
@@ -105,8 +103,6 @@ Description: C# like language for the GObject system - vapi files
 Package: vala-0.56-doc
 Architecture: all
 Depends: ${misc:Depends}
-Suggests: valac,
-          devhelp
 Provides: vala-doc
 Section: doc
 Multi-Arch: foreign
@@ -152,6 +148,7 @@ Description: C# like language for the GObject system - development headers
 
 Package: valadoc
 Architecture: any
+Build-Profiles: <!pkg.vala.nographviz>
 Depends: ${shlibs:Depends},
          libvaladoc-0.56-0 (= ${binary:Version}),
          libvalacodegen-0.56-0 (= ${binary:Version}),
@@ -167,6 +164,7 @@ Description: API documentation generator for vala
 Package: libvaladoc-0.56-0
 Section: libs
 Architecture: any
+Build-Profiles: <!pkg.vala.nographviz>
 Multi-Arch: same
 Depends: ${shlibs:Depends},
          libvala-0.56-0 (= ${binary:Version}),
@@ -183,6 +181,7 @@ Description: API documentation generator for vala (library)
 Package: libvaladoc-0.56-data
 Section: misc
 Architecture: all
+Build-Profiles: <!pkg.vala.nographviz>
 Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: API documentation generator for vala (data)
@@ -195,6 +194,7 @@ Description: API documentation generator for vala (data)
 Package: libvaladoc-0.56-dev
 Section: libdevel
 Architecture: any
+Build-Profiles: <!pkg.vala.nographviz>
 Multi-Arch: same
 Depends: ${misc:Depends},
          libvala-0.56-dev (= ${binary:Version}),
