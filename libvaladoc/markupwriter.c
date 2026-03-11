@@ -31,6 +31,14 @@
 #include <gobject/gvaluecollector.h>
 
 #define VALADOC_MARKUP_WRITER_MAX_COLUMN 150
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))

@@ -377,6 +377,14 @@ namespace Vala {
 		public Vala.CCodeExpression inner { get; set; }
 	}
 	[CCode (cheader_filename = "valaccode.h")]
+	public class CCodePragma : Vala.CCodeNode {
+		public CCodePragma (string prefix, string directive, string? value = null);
+		public override void write (Vala.CCodeWriter writer);
+		public string directive { get; set; }
+		public string prefix { get; set; }
+		public string? value { get; set; }
+	}
+	[CCode (cheader_filename = "valaccode.h")]
 	public class CCodeReturnStatement : Vala.CCodeStatement {
 		public CCodeReturnStatement (Vala.CCodeExpression? expr = null);
 		public override void write (Vala.CCodeWriter writer);

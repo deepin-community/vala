@@ -29,17 +29,22 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <gmodule.h>
 #include <glib-object.h>
 #include <gobject/gvaluecollector.h>
 
 #define VALA_REPORT_ANSI_COLOR_END "\x1b[0m"
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
 #define _vala_code_context_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_context_unref (var), NULL)))
-#define _g_module_close0(var) ((var == NULL) ? NULL : (var = (g_module_close (var), NULL)))
-typedef gint (*ValaReportAttyFunc) (gint fd);
 typedef struct _ValaParamSpecReport ValaParamSpecReport;
 
 struct _ValaReportPrivate {
@@ -68,8 +73,6 @@ static gpointer vala_report_parent_class = NULL;
 static GRegex* vala_report_val_regex;
 static GRegex* vala_report_val_regex = NULL;
 
-static gboolean vala_report_is_atty (ValaReport* self,
-                              gint fd);
 static void vala_report_report_source (ValaReport* self,
                                 ValaSourceReference* source);
 static void vala_report_print_highlighted_message (ValaReport* self,
@@ -419,7 +422,7 @@ vala_report_set_colors (ValaReport* self,
 		if (colored_output == VALA_REPORT_COLORED_AUTO) {
 			FILE* _tmp39_;
 			_tmp39_ = stderr;
-			_tmp38_ = vala_report_is_atty (self, fileno (_tmp39_));
+			_tmp38_ = g_log_writer_supports_color (fileno (_tmp39_));
 		} else {
 			_tmp38_ = FALSE;
 		}
@@ -1295,56 +1298,6 @@ vala_report_error (ValaSourceReference* source,
 	_g_free0 (_tmp6_);
 	va_end (_tmp4_);
 	_vala_code_context_unref0 (_tmp1_);
-}
-
-static gboolean
-vala_report_is_atty (ValaReport* self,
-                     gint fd)
-{
-	GModule* module = NULL;
-	GModule* _tmp0_;
-	GModule* _tmp1_;
-	void* _func = NULL;
-	GModule* _tmp2_;
-	void* _tmp3_ = NULL;
-	void* _tmp4_;
-	ValaReportAttyFunc func = NULL;
-	void* _tmp8_;
-	ValaReportAttyFunc _tmp9_;
-	gboolean result;
-	g_return_val_if_fail (self != NULL, FALSE);
-	_tmp0_ = g_module_open (NULL, G_MODULE_BIND_LAZY);
-	module = _tmp0_;
-	_tmp1_ = module;
-	if (_tmp1_ == NULL) {
-		result = FALSE;
-		_g_module_close0 (module);
-		return result;
-	}
-	_tmp2_ = module;
-	g_module_symbol (_tmp2_, "isatty", &_tmp3_);
-	_func = _tmp3_;
-	_tmp4_ = _func;
-	if (_tmp4_ == NULL) {
-		GModule* _tmp5_;
-		void* _tmp6_ = NULL;
-		void* _tmp7_;
-		_tmp5_ = module;
-		g_module_symbol (_tmp5_, "_isatty", &_tmp6_);
-		_func = _tmp6_;
-		_tmp7_ = _func;
-		if (_tmp7_ == NULL) {
-			result = FALSE;
-			_g_module_close0 (module);
-			return result;
-		}
-	}
-	_tmp8_ = _func;
-	func = (ValaReportAttyFunc) _tmp8_;
-	_tmp9_ = func;
-	result = _tmp9_ (fd) > 0;
-	_g_module_close0 (module);
-	return result;
 }
 
 ValaReport*

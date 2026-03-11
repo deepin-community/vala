@@ -27,6 +27,15 @@
 #include <glib-object.h>
 #include <glib.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 static gpointer vala_ccode_invalid_expression_parent_class = NULL;
 
 static void vala_ccode_invalid_expression_real_write (ValaCCodeNode* base,

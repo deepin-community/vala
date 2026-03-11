@@ -33,6 +33,15 @@
 #include <glib-object.h>
 #include <glib/gstdio.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define VALA_GIR_WRITER_TYPE_GIR_NAMESPACE (vala_gir_writer_gir_namespace_get_type ())
 typedef struct _ValaGIRWriterGIRNamespace ValaGIRWriterGIRNamespace;
 #define _vala_code_context_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_context_unref (var), NULL)))

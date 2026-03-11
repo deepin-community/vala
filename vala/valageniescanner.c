@@ -31,6 +31,15 @@
 #include <string.h>
 #include <gobject/gvaluecollector.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define VALA_GENIE_SCANNER_TYPE_CONDITIONAL (vala_genie_scanner_conditional_get_type ())
 typedef struct _ValaGenieScannerConditional ValaGenieScannerConditional;
 typedef enum  {

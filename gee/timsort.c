@@ -30,6 +30,14 @@
 #include <gobject/gvaluecollector.h>
 
 #define VALA_TIM_SORT_MINIMUM_GALLOP 7
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 
 #define VALA_TYPE_TIM_SORT (vala_tim_sort_get_type ())
 #define VALA_TIM_SORT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_TYPE_TIM_SORT, ValaTimSort))

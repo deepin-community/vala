@@ -28,6 +28,15 @@
 #include <valagee.h>
 #include <glib-object.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 static ValaList* valadoc_content_taglet_real_get_inheritable_documentation (ValadocContentTaglet* self);
 static gboolean valadoc_content_taglet_real_inheritable (ValadocContentTaglet* self,
                                                   ValadocContentTaglet* taglet);

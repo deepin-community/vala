@@ -29,6 +29,15 @@
 #include <string.h>
 #include <glib-object.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 typedef struct _Block1Data Block1Data;
 #define _g_string_free0(var) ((var == NULL) ? NULL : (var = (g_string_free (var, TRUE), NULL)))
 #define _valadoc_markup_writer_unref0(var) ((var == NULL) ? NULL : (var = (valadoc_markup_writer_unref (var), NULL)))

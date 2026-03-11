@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+exec @bindir@/valac-@VALA_VERSION@ \
+--cc="${CC:-@DEB_HOST_GNU_TYPE@-gcc}" \
+--pkg-config="${PKG_CONFIG:-@DEB_HOST_GNU_TYPE@-pkg-config}" \
+"$@"

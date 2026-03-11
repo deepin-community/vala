@@ -29,10 +29,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib-object.h>
-#include <gmodule.h>
 #include <stdarg.h>
 
 #define VALADOC_ERROR_REPORTER_ANSI_COLOR_END "\x1b[0m"
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 
 enum  {
 	VALADOC_ERROR_REPORTER_0_PROPERTY,
@@ -48,8 +55,6 @@ static GParamSpec* valadoc_error_reporter_properties[VALADOC_ERROR_REPORTER_NUM_
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
-#define _g_module_close0(var) ((var == NULL) ? NULL : (var = (g_module_close (var), NULL)))
-typedef gint (*ValadocErrorReporterAttyFunc) (gint fd);
 
 struct _ValadocErrorReporterPrivate {
 	gint _warnings;
@@ -75,8 +80,6 @@ struct _ValadocErrorReporterPrivate {
 static gint ValadocErrorReporter_private_offset;
 static gpointer valadoc_error_reporter_parent_class = NULL;
 
-static gboolean valadoc_error_reporter_is_atty (ValadocErrorReporter* self,
-                                         gint fd);
 static inline void valadoc_error_reporter_msg (ValadocErrorReporter* self,
                                  const gchar* type,
                                  const gchar* type_color_start,
@@ -523,7 +526,7 @@ valadoc_error_reporter_set_colors (ValadocErrorReporter* self,
 		}
 	}
 	_tmp36_ = self->priv->_stream;
-	if (valadoc_error_reporter_is_atty (self, fileno (_tmp36_))) {
+	if (g_log_writer_supports_color (fileno (_tmp36_))) {
 		const gchar* _tmp37_;
 		const gchar* _tmp42_;
 		const gchar* _tmp47_;
@@ -630,56 +633,6 @@ valadoc_error_reporter_set_colors (ValadocErrorReporter* self,
 	_g_free0 (warning_color);
 	_g_free0 (error_color);
 	_g_regex_unref0 (val_regex);
-	return result;
-}
-
-static gboolean
-valadoc_error_reporter_is_atty (ValadocErrorReporter* self,
-                                gint fd)
-{
-	GModule* module = NULL;
-	GModule* _tmp0_;
-	GModule* _tmp1_;
-	void* _func = NULL;
-	GModule* _tmp2_;
-	void* _tmp3_ = NULL;
-	void* _tmp4_;
-	ValadocErrorReporterAttyFunc func = NULL;
-	void* _tmp8_;
-	ValadocErrorReporterAttyFunc _tmp9_;
-	gboolean result;
-	g_return_val_if_fail (self != NULL, FALSE);
-	_tmp0_ = g_module_open (NULL, G_MODULE_BIND_LAZY);
-	module = _tmp0_;
-	_tmp1_ = module;
-	if (_tmp1_ == NULL) {
-		result = FALSE;
-		_g_module_close0 (module);
-		return result;
-	}
-	_tmp2_ = module;
-	g_module_symbol (_tmp2_, "isatty", &_tmp3_);
-	_func = _tmp3_;
-	_tmp4_ = _func;
-	if (_tmp4_ == NULL) {
-		GModule* _tmp5_;
-		void* _tmp6_ = NULL;
-		void* _tmp7_;
-		_tmp5_ = module;
-		g_module_symbol (_tmp5_, "_isatty", &_tmp6_);
-		_func = _tmp6_;
-		_tmp7_ = _func;
-		if (_tmp7_ == NULL) {
-			result = FALSE;
-			_g_module_close0 (module);
-			return result;
-		}
-	}
-	_tmp8_ = _func;
-	func = (ValadocErrorReporterAttyFunc) _tmp8_;
-	_tmp9_ = func;
-	result = _tmp9_ (fd) > 0;
-	_g_module_close0 (module);
 	return result;
 }
 

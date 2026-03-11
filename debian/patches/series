@@ -1,0 +1,2 @@
+vala-gen-introspect-Use-PKG_CONFIG-if-set.patch
+debian/vala-gen-introspect-Set-libdir-by-copying-it-from-vapigen.patch

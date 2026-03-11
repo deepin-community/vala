@@ -30,6 +30,15 @@
 #include <glib-object.h>
 #include <string.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define VALA_ARRAY_LIST_TYPE_ITERATOR (vala_array_list_iterator_get_type ())
 #define VALA_ARRAY_LIST_ITERATOR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), VALA_ARRAY_LIST_TYPE_ITERATOR, ValaArrayListIterator))
 #define VALA_ARRAY_LIST_ITERATOR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), VALA_ARRAY_LIST_TYPE_ITERATOR, ValaArrayListIteratorClass))

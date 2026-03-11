@@ -1,0 +1,3 @@
+debian/cross/*-vala.ini
+debian/cross/*-valac-*
+debian/cross/*-vapigen-*

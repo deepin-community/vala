@@ -31,6 +31,15 @@
 #include <glib-object.h>
 #include <valagee.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
+
 #define _vala_code_node_unref0(var) ((var == NULL) ? NULL : (var = (vala_code_node_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
@@ -275,7 +284,7 @@ ValaField*
 vala_property_get_field (ValaProperty* self)
 {
 	ValaField* result;
-	ValaField* _tmp58_;
+	ValaField* _tmp62_;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (!self->priv->_field_checked) {
 		gboolean _tmp0_ = FALSE;
@@ -399,6 +408,10 @@ vala_property_get_field (ValaProperty* self)
 				ValaField* _tmp49_;
 				ValaField* _tmp50_;
 				ValaMemberBinding _tmp51_;
+				ValaField* _tmp58_;
+				ValaField* _tmp59_;
+				ValaField* _tmp60_;
+				ValaField* _tmp61_;
 				if (vala_code_node_has_attribute ((ValaCodeNode*) self, "GtkChild")) {
 					ValaDataType* _tmp28_;
 					ValaDataType* _tmp29_;
@@ -463,12 +476,20 @@ vala_property_get_field (ValaProperty* self)
 					_tmp57_ = self->priv->_field;
 					vala_code_node_set_attribute_bool ((ValaCodeNode*) _tmp57_, "GtkChild", "internal", vala_code_node_get_attribute_bool ((ValaCodeNode*) self, "GtkChild", "internal", FALSE), NULL);
 				}
+				_tmp58_ = self->priv->_field;
+				vala_code_node_copy_attribute_bool ((ValaCodeNode*) _tmp58_, (ValaCodeNode*) self, "CCode", "array_length");
+				_tmp59_ = self->priv->_field;
+				vala_code_node_copy_attribute_string ((ValaCodeNode*) _tmp59_, (ValaCodeNode*) self, "CCode", "array_length_type");
+				_tmp60_ = self->priv->_field;
+				vala_code_node_copy_attribute_bool ((ValaCodeNode*) _tmp60_, (ValaCodeNode*) self, "CCode", "array_null_terminated");
+				_tmp61_ = self->priv->_field;
+				vala_code_node_copy_attribute_bool ((ValaCodeNode*) _tmp61_, (ValaCodeNode*) self, "CCode", "delegate_target");
 			}
 		}
 		self->priv->_field_checked = TRUE;
 	}
-	_tmp58_ = self->priv->_field;
-	result = _tmp58_;
+	_tmp62_ = self->priv->_field;
+	result = _tmp62_;
 	return result;
 }
 

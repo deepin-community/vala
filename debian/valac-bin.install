@@ -1,4 +1,6 @@
 usr/bin/vala
 usr/bin/vala-0.*
 usr/bin/valac*
+usr/bin/vapigen*
 usr/share/man/man1/valac*
+usr/share/man/man1/vapigen*

@@ -36,6 +36,14 @@
 #include <glib/gstdio.h>
 #include <gobject/gvaluecollector.h>
 
+#if !defined(VALA_STRICT_C)
+#if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
+#pragma GCC diagnostic warning "-Wincompatible-pointer-types"
+#elif defined(__clang__) && (__clang_major__ >= 16)
+#pragma clang diagnostic ignored "-Wincompatible-function-pointer-types"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#endif
+#endif
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -1404,12 +1412,11 @@ g_file_stream_read_line (FILE* self)
 		return result;
 	} else {
 		GString* _tmp4_;
-		const gchar* _tmp5_;
-		gchar* _tmp6_;
+		gchar* _tmp5_;
 		_tmp4_ = ret;
 		_tmp5_ = ((GString*) _tmp4_)->str;
-		_tmp6_ = g_strdup (_tmp5_);
-		result = _tmp6_;
+		((GString*) _tmp4_)->str = NULL;
+		result = _tmp5_;
 		_g_string_free0 (ret);
 		return result;
 	}

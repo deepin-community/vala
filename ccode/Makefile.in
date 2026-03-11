@@ -130,11 +130,12 @@ am__objects_2 = valaccode.lo valaccodeassignment.lo \
 	valaccodememberaccess.lo valaccodemodifiers.lo \
 	valaccodenewline.lo valaccodenode.lo valaccodeoncesection.lo \
 	valaccodeparameter.lo valaccodeparenthesizedexpression.lo \
-	valaccodereturnstatement.lo valaccodestatement.lo \
-	valaccodestruct.lo valaccodeswitchstatement.lo \
-	valaccodetypedefinition.lo valaccodeunaryexpression.lo \
-	valaccodevariabledeclarator.lo valaccodewhilestatement.lo \
-	valaccodewriter.lo valaccodeelementaccess.lo $(am__objects_1)
+	valaccodepragma.lo valaccodereturnstatement.lo \
+	valaccodestatement.lo valaccodestruct.lo \
+	valaccodeswitchstatement.lo valaccodetypedefinition.lo \
+	valaccodeunaryexpression.lo valaccodevariabledeclarator.lo \
+	valaccodewhilestatement.lo valaccodewriter.lo \
+	valaccodeelementaccess.lo $(am__objects_1)
 am_libvalaccode_la_OBJECTS = $(am__objects_2) $(am__objects_1)
 libvalaccode_la_OBJECTS = $(am_libvalaccode_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -203,6 +204,7 @@ am__depfiles_remade = ./$(DEPDIR)/valaccode.Plo \
 	./$(DEPDIR)/valaccodeoncesection.Plo \
 	./$(DEPDIR)/valaccodeparameter.Plo \
 	./$(DEPDIR)/valaccodeparenthesizedexpression.Plo \
+	./$(DEPDIR)/valaccodepragma.Plo \
 	./$(DEPDIR)/valaccodereturnstatement.Plo \
 	./$(DEPDIR)/valaccodestatement.Plo \
 	./$(DEPDIR)/valaccodestruct.Plo \
@@ -292,6 +294,7 @@ ETAGS = @ETAGS@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FILECMD = @FILECMD@
+GI_GIRDIR = @GI_GIRDIR@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GMODULE_CFLAGS = @GMODULE_CFLAGS@
@@ -476,6 +479,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodeoncesection.vala \
 	valaccodeparameter.vala \
 	valaccodeparenthesizedexpression.vala \
+	valaccodepragma.vala \
 	valaccodereturnstatement.vala \
 	valaccodestatement.vala \
 	valaccodestruct.vala \
@@ -610,6 +614,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodeoncesection.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodeparameter.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodeparenthesizedexpression.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodepragma.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodereturnstatement.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodestatement.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/valaccodestruct.Plo@am__quote@ # am--include-marker
@@ -833,6 +838,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/valaccodeoncesection.Plo
 	-rm -f ./$(DEPDIR)/valaccodeparameter.Plo
 	-rm -f ./$(DEPDIR)/valaccodeparenthesizedexpression.Plo
+	-rm -f ./$(DEPDIR)/valaccodepragma.Plo
 	-rm -f ./$(DEPDIR)/valaccodereturnstatement.Plo
 	-rm -f ./$(DEPDIR)/valaccodestatement.Plo
 	-rm -f ./$(DEPDIR)/valaccodestruct.Plo
@@ -935,6 +941,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/valaccodeoncesection.Plo
 	-rm -f ./$(DEPDIR)/valaccodeparameter.Plo
 	-rm -f ./$(DEPDIR)/valaccodeparenthesizedexpression.Plo
+	-rm -f ./$(DEPDIR)/valaccodepragma.Plo
 	-rm -f ./$(DEPDIR)/valaccodereturnstatement.Plo
 	-rm -f ./$(DEPDIR)/valaccodestatement.Plo
 	-rm -f ./$(DEPDIR)/valaccodestruct.Plo
